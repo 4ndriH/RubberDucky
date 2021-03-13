@@ -1,3 +1,5 @@
+package services;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class config {

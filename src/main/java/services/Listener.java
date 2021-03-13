@@ -1,3 +1,5 @@
+package services;
+
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -5,8 +7,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ExecutorService;
 
 public class Listener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
@@ -25,10 +25,9 @@ public class Listener extends ListenerAdapter {
             return;
         }
 
-
         String prefix = config.get("PREFIX");
         String raw = event.getMessage().getContentRaw();
-        if (raw.equals(prefix + "shutdown") && user.getId().equals(config.get(("OWNER_ID")))) {
+        if (raw.equals(prefix + "shutdown") && user.getId().equals(config.get("OWNER_ID"))) {
             LOGGER.info("Shutting down");
             event.getJDA().shutdown();
             return;

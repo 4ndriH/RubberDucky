@@ -1,6 +1,9 @@
+package services;
+
 import commandHandling.CommandContext;
 
 import commandHandling.CommandInterface;
+import commandHandling.commands.Help;
 import commandHandling.commands.Ping;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
@@ -13,11 +16,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private final List<CommandInterface> commands = new ArrayList<>();
+    private final PermissionManager permissionManager = new PermissionManager();
 
     public CommandManager() {
         addCommand(new Ping(LOGGER));
+        addCommand(new Help(this, LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -30,8 +35,12 @@ public class CommandManager {
         commands.add(cmd);
     }
 
+    public List<CommandInterface> getCommands() {
+        return commands;
+    }
+
     @Nullable
-    private CommandInterface getCommand(String search) {
+    public CommandInterface getCommand(String search) {
         String searchLowerCase = search.toLowerCase();
 
         for (CommandInterface cmd : commands) {
@@ -43,7 +52,7 @@ public class CommandManager {
         return null;
     }
 
-    void handle(GuildMessageReceivedEvent event) {
+    public void handle(GuildMessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(config.get("PREFIX")), "").split("\\s+");
 
@@ -51,14 +60,19 @@ public class CommandManager {
         CommandInterface cmd = this.getCommand(invoke);
 
         if (cmd != null) {
-            LOGGER.info(event.getAuthor() + " running command " + invoke);
-            event.getChannel().sendTyping().queue();
-            List<String> arguments = Arrays.asList(split).subList(1, split.length);
 
-            CommandContext ctx = new CommandContext(event, arguments);
-            cmd.handle(ctx);
+            if (PermissionManager.permissionCheck(event, invoke)) {
+                LOGGER.info(event.getAuthor() + " running command " + invoke);
+                event.getChannel().sendTyping().queue();
+                List<String> arguments = Arrays.asList(split).subList(1, split.length);
+
+                CommandContext ctx = new CommandContext(event, arguments);
+                cmd.handle(ctx);
+            }
+
         } else {
             LOGGER.error(event.getAuthor() + " running invalid command \"" + invoke + "\"");
         }
     }
 }
+
