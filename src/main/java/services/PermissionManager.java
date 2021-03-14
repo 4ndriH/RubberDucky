@@ -80,7 +80,7 @@ public class PermissionManager {
         }
 
         while (scanner.hasNext()) {
-            if (scanner.nextLine().equals(event.getChannel().getId())) {
+            if (scanner.nextLine().equals(event.getChannel().getId()) && scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 List<String> roleNames = new ArrayList<>();
                 List<String> permittedRoles = Arrays.asList(line.split("\\s*,\\s*"));

@@ -15,17 +15,17 @@ public class Ping implements CommandInterface {
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(
-                (ping) -> ctx.getChannel().sendMessageFormat("Reset ping: %sms", ping).queue()
+                (ping) -> ctx.getChannel().sendMessageFormat("Ping: %sms", ping).queue()
         );
-    }
-
-    @Override
-    public String getHelp() {
-        return "shows the current ping from the bot to the disord servers";
     }
 
     @Override
     public String getName() {
         return "ping";
+    }
+
+    @Override
+    public String getHelp() {
+        return "shows the current ping from the bot to the disord servers";
     }
 }

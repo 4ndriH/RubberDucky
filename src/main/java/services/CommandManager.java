@@ -3,8 +3,7 @@ package services;
 import commandHandling.CommandContext;
 
 import commandHandling.CommandInterface;
-import commandHandling.commands.Help;
-import commandHandling.commands.Ping;
+import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +17,11 @@ import java.util.regex.Pattern;
 public class CommandManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private final List<CommandInterface> commands = new ArrayList<>();
-    private final PermissionManager permissionManager = new PermissionManager();
 
     public CommandManager() {
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
+        addCommand(new Place(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -60,18 +59,20 @@ public class CommandManager {
         CommandInterface cmd = this.getCommand(invoke);
 
         if (cmd != null) {
-
             if (PermissionManager.permissionCheck(event, invoke)) {
                 LOGGER.info(event.getAuthor() + " running command " + invoke);
-                event.getChannel().sendTyping().queue();
+                event.getMessage().addReaction(":RubberDuckyGreen:820700438084845568").queue();
+
                 List<String> arguments = Arrays.asList(split).subList(1, split.length);
 
                 CommandContext ctx = new CommandContext(event, arguments);
                 cmd.handle(ctx);
+            } else {
+                event.getMessage().addReaction(":RubberDuckyRed:820700478467604502").queue();
             }
 
         } else {
-            LOGGER.error(event.getAuthor() + " running invalid command \"" + invoke + "\"");
+            event.getMessage().addReaction(":RubberDuckyRed:820700478467604502").queue();
         }
     }
 }
