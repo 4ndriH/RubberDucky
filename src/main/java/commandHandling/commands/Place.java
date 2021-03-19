@@ -14,23 +14,14 @@ public class Place implements CommandInterface {
     public void handle(CommandContext ctx) {
         switch (ctx.getArguments().get(0)) {
             case "encode":
-                if (ctx.getArguments().size() != 5) invalidArgumentsException(ctx);
+                if (ctx.getArguments().size() < 5) invalidArgumentsException(ctx);
                  else new encode(ctx);
                 break;
             case "preview":
                 new preview(ctx);
                 break;
             case "draw":
-
-                break;
-            case "spread":
-
-                break;
-            case "decode":
-
-                break;
-            case "random":
-
+                new draw(ctx);
                 break;
             case "profilepicture":
 
