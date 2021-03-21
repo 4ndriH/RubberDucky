@@ -1,116 +1,126 @@
 package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
+import services.BotExceptions;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.util.concurrent.TimeUnit;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import javax.imageio.ImageIO;
 import java.net.URL;
 import java.util.*;
+import java.awt.*;
+import java.io.*;
 
 public class encode {
+    private final ArrayList<String> list = new ArrayList<>();
     private final CommandContext ctx;
+    private BufferedImage img = null;
+    private int x, y;
 
     public encode(CommandContext ctx) {
         this.ctx = ctx;
-        encode();
+        encoding();
     }
 
-    private void encode() {
-        PrintStream writer = null;
-        BufferedImage img = null;
+    private void encoding() {
+        String pattern = "", fileName;
+        PrintStream writer;
+        int width, height;
+
         try {
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            writer = new PrintStream("src/tempFiles/RDencoder.txt");
+            fileName = "RDencoder - " + ctx.getMessage().getAttachments().get(0).getFileName() + ".txt";
+            writer = new PrintStream("tempFiles/place/encode" + fileName);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
         ctx.getMessage().delete().queue();
 
-        int x = Integer.parseInt(ctx.getArguments().get(1));
-        int y = Integer.parseInt(ctx.getArguments().get(2));
-        int width = Integer.parseInt(ctx.getArguments().get(3));
-        int height = Integer.parseInt(ctx.getArguments().get(4));
-        String pattern = "";
+        try {
+            x = Integer.parseInt(ctx.getArguments().get(1));
+            y = Integer.parseInt(ctx.getArguments().get(2));
+            width = Integer.parseInt(ctx.getArguments().get(3));
+            height = Integer.parseInt(ctx.getArguments().get(4));
+        } catch (Exception e) {
+            BotExceptions.invalidArgumentsException(ctx);
+            return;
+        }
+
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
+        } else {
+            pattern = "lr";
         }
-        int linesCnt = 0;
+
         img = resize(img, width, height);
 
         switch (pattern) {
             case "lr":
-                linesCnt = leftToRight(linesCnt, x, y, img, writer);
+                leftToRight();
                 break;
             case "td":
-                linesCnt = topDown(linesCnt, x, y, img, writer);
+                topDown();
                 break;
             case "diagonal":
-                linesCnt = diagonal(linesCnt, x, y, img, writer);
+                diagonal();
                 break;
             case "spiral":
-                linesCnt = spiral(linesCnt, x, y, img, writer);
+                spiral();
                 break;
             case "random":
-                linesCnt = random(linesCnt, x, y, img, writer);
+                random();
                 break;
             case "circle":
-                linesCnt = circle(linesCnt, x, y, img, writer);
+                circle();
                 break;
             default:
-                linesCnt = leftToRight(linesCnt, x, y, img, writer);
+                BotExceptions.invalidArgumentsException(ctx);
+                return;
         }
 
-        ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(linesCnt) + "**")
-                .addFile(new File("src/tempFiles/RDencoder.txt")).queue();
+        for (String s : list) {
+            writer.println(s);
+        }
+
+        ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
+                .addFile(new File("tempFiles/place/encode" + fileName)).queue();
+
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+
+        File myObj = new File("tempFiles/place/encode" + fileName);
+        myObj.delete();
     }
 
-    private int leftToRight(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
+    private void leftToRight() {
         for (int i = 0; i < img.getWidth(); i++) {
             for (int j = 0; j < img.getHeight(); j++) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(i, j), true), i, j);
             }
         }
-        return linesCnt;
     }
 
-    private int topDown(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
+    private void topDown() {
         for (int i = 0; i < img.getWidth(); i++) {
             for (int j = 0; j < img.getHeight(); j++) {
-                Color color = new Color(img.getRGB(j, i), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + j) + " " + (y + i) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(j, i), true), j, i);
             }
         }
-        return linesCnt;
     }
 
-    private int diagonal(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
+    private void diagonal() {
         boolean isUp = true;
-
         int n = img.getWidth(), m = img.getHeight(), i = 0, j = 0;
 
         for (int k = 0; k < n * m;) {
             if (isUp) {
                 for (; i >= 0 && j < n; j++, i--) {
-                    Color color = new Color(img.getRGB(j, i), true);
-                    if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                        linesCnt++;
-                        writer.println(".place setpixel " + (x + j) + " " + (y + i) + " " +
-                                rgbToHex(color));
-                    }
+                    writerUtility(new Color(img.getRGB(i, j), true), i, j);
                     k++;
                 }
                 if (i < 0 && j <= n - 1)
@@ -121,15 +131,9 @@ public class encode {
                 }
             } else {
                 for (; j >= 0 && i < m; i++, j--) {
-                    Color color = new Color(img.getRGB(j, i), true);
-                    if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                        linesCnt++;
-                        writer.println(".place setpixel " + (x + j) + " " + (y + i) + " " +
-                                rgbToHex(color));
-                    }
+                    writerUtility(new Color(img.getRGB(i, j), true), i, j);
                     k++;
                 }
-
                 if (j < 0 && i <= m - 1)
                     j = 0;
                 if (i == m) {
@@ -137,110 +141,66 @@ public class encode {
                     i--;
                 }
             }
-
             isUp = !isUp;
         }
-
-        return linesCnt;
     }
 
-    private int spiral(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
+    private void spiral() {
         int n = img.getWidth(), m = img.getHeight();
-        int limit;
-        if (m > n) {
-            limit = m;
-        } else {
-            limit = n;
-        }
+        int limit = Math.max(m, n);
 
         for (int i = limit - 1; i >= limit / 2; i--) {
             //right side
             for (int j = m - i; j <= i; j++) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(i, j), true), i, j);
             }
 
             //bottom
             for (int j = i - 1; j >= n - i; j--) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(j, i), true), j, i);
             }
 
             //left side
             for (int j = i; j >= m - i; j--) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(i, j), true), (img.getHeight() - i - 1), j);
             }
 
             for (int j = n - i; j <= i - 1; j++) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    writer.println(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(j, i), true), j, (img.getWidth() - i - 1));
             }
         }
-        return linesCnt;
     }
 
-    private int random(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
-        ArrayList<String> list = new ArrayList<>();
-        Random random = new Random();
-
+    private void random() {
         for (int i = 0; i < 64; i++) {
             for (int j = 0; j < 64; j++) {
-                Color color = new Color(img.getRGB(i, j), true);
-                if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                    linesCnt++;
-                    list.add(".place setpixel " + (x + i) + " " + (y + j) + " " +
-                            rgbToHex(color));
-                }
+                writerUtility(new Color(img.getRGB(i, j), true), i, j);
             }
         }
-
         Collections.shuffle(list);
-
-        for (int i = 0; i < list.size(); i++) {
-            writer.println(list.get(i));
-        }
-        return linesCnt;
     }
 
-    private int circle(int linesCnt, int x, int y, BufferedImage img, PrintStream writer) {
-        int n = img.getWidth(), m = img.getHeight();
-        boolean[][] usedPixels = new boolean[512][256];
+    private void circle() {
+        int n = img.getWidth(), m = img.getHeight(), limit = (int)(Math.max(m, n) * 1.25);
+        boolean[][] usedPixels = new boolean[n][m];
 
-        for (int i = 750; i >= -10; i--) {
+        for (int i = limit; i >= -10; i--) {
             for (double j = 0; j < 2 * Math.PI; j += 0.0001) {
-                int xC = 256 + (int)(Math.sin(j) * i);
-                int yC = 128 - (int)(Math.cos(j) * i);
+                int xC = n / 2 + (int)(Math.sin(j) * i);
+                int yC = m / 2 - (int)(Math.cos(j) * i);
 
-
-                if (xC < 512 && xC >= 0 && yC < 256 && yC >= 0 && !usedPixels[xC][yC]) {
-                    Color color = new Color(img.getRGB(xC, yC), true);
-                    if (color.getAlpha() != 0 && x + i < 1000 && y + j < 1000) {
-                        linesCnt++;
-                        writer.println(".place setpixel " + (x + xC) + " " + (y + yC) + " " +
-                                rgbToHex(color));
-                    }
+                if (xC < n && xC >= 0 && yC < m && yC >= 0 && !usedPixels[xC][yC]) {
+                    writerUtility(new Color(img.getRGB(xC, yC), true), xC, yC);
                     usedPixels[xC][yC] = true;
                 }
             }
         }
-        return linesCnt;
+    }
+
+    private void writerUtility (Color color, int i, int j) {
+        if (color.getAlpha() != 0 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
+            list.add(".place setpixel " + (x + i) + " " + (y + j) + " " + rgbToHex(color));
+        }
     }
 
     private String rgbToHex(Color c) {
@@ -251,10 +211,12 @@ public class encode {
         int seconds = linesCnt % 60;
         int minutes = (linesCnt - seconds) / 60 % 60;
         int hours = ((linesCnt - seconds) / 60 - minutes) / 60;
+
         String days = "";
         if (hours > 23) {
-            hours %= 24;
-            days = (((linesCnt - seconds) / 60 - minutes) / 60 - hours) / 24 + "";
+//            hours %= 24;
+//            days = (((linesCnt - seconds) / 60 - minutes) / 60 - hours) / 24 + "";
+            days = (hours - (hours %= 24)) / 24 + "";
             if (Integer.parseInt(days) == 1) {
                 days += " day, ";
             } else {
@@ -267,11 +229,11 @@ public class encode {
     private BufferedImage resize(BufferedImage img, int newW, int newH) {
         int w = img.getWidth();
         int h = img.getHeight();
-        BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
-        Graphics2D g = dimg.createGraphics();
+        BufferedImage newImage = new BufferedImage(newW, newH, img.getType());
+        Graphics2D g = newImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
         g.dispose();
-        return dimg;
+        return newImage;
     }
 }

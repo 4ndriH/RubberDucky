@@ -12,29 +12,19 @@ public class draw {
 
     public draw(CommandContext ctx) {
         this.ctx = ctx;
-        draw();
+        drawing();
     }
 
-    private void draw() {
-        try {
-            ctx.getMessage().getAttachments().get(0).downloadToFile("src/tempFiles/RDdraw.txt");
-        } catch (Exception e) {
-            try {
-                ctx.getMessage().getReferencedMessage().getAttachments().get(0)
-                        .downloadToFile("src/tempFiles/RDdraw.txt");
-            } catch (Exception ee) {
-                ctx.getChannel().sendMessage("No file found").queue();
-            }
-        }
+    private void drawing() {
+        Scanner scanner = null;
 
-            Scanner scanner = null;
         try {
             scanner = new Scanner(new File("src/tempFiles/RDdraw.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950l);
+        TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
 
         while (scanner.hasNextLine()) {
             ethPlaceBots.sendMessage(scanner.nextLine()).queue();

@@ -1,33 +1,35 @@
 package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
+import services.BotExceptions;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URL;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.net.URL;
+import java.util.*;
+import java.awt.*;
+import java.io.*;
 
 public class preview {
     private final CommandContext ctx;
 
     public preview(CommandContext ctx) {
         this.ctx = ctx;
-        preview();
+        previewing();
     }
 
-    private void preview() {
+    private void previewing() {
         Scanner scanner = null;
         BufferedImage img = null;
+
         try {
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0).retrieveInputStream().get());
         } catch (IOException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            BotExceptions.missingAttachmentException(ctx);
+            return;
         }
-
 
         for (int i = 0; i < img.getHeight(); i++) {
             for (int j = 0; j < img.getWidth(); j++) {
@@ -44,8 +46,7 @@ public class preview {
             s.close();
         }
 
-        ctx.getMessage().delete().queue();
-        ctx.getChannel().sendMessage("test").addFile(convert(img), "preview.png").queue();
+        ctx.getChannel().sendMessage("").addFile(convert(img), "preview.png").queue();
     }
 
     private InputStream convert(BufferedImage img) {

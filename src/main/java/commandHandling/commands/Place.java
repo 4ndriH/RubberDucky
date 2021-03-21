@@ -4,6 +4,7 @@ import commandHandling.commands.place.*;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import org.slf4j.Logger;
+import services.BotExceptions;
 
 public class Place implements CommandInterface {
     public Place(Logger LOGGER) {
@@ -14,7 +15,7 @@ public class Place implements CommandInterface {
     public void handle(CommandContext ctx) {
         switch (ctx.getArguments().get(0)) {
             case "encode":
-                if (ctx.getArguments().size() < 5) invalidArgumentsException(ctx);
+                if (ctx.getArguments().size() < 5) BotExceptions.invalidArgumentsException(ctx);
                  else new encode(ctx);
                 break;
             case "preview":
@@ -23,14 +24,12 @@ public class Place implements CommandInterface {
             case "draw":
                 new draw(ctx);
                 break;
-            case "profilepicture":
-
+            case "queue":
+                new queue(ctx);
                 break;
+            default:
+                BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
         }
-    }
-
-    private void invalidArgumentsException(CommandContext ctx) {
-        ctx.getMessage().reply("Invalid Arguments!").queue();
     }
 
     @Override
