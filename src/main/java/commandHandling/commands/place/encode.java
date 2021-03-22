@@ -29,8 +29,8 @@ public class encode {
 
         try {
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            fileName = "RDencoder - " + ctx.getMessage().getAttachments().get(0).getFileName() + ".txt";
-            writer = new PrintStream("tempFiles/place/encode" + fileName);
+            fileName = "RDencode - " + ctx.getMessage().getAttachments().get(0).getFileName() + ".txt";
+            writer = new PrintStream("tempFiles/place/encode/" + fileName);
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -93,7 +93,7 @@ public class encode {
             ie.printStackTrace();
         }
 
-        File myObj = new File("tempFiles/place/encode" + fileName);
+        File myObj = new File("tempFiles/place/encode/" + fileName);
         myObj.delete();
     }
 

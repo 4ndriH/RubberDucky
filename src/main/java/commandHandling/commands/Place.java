@@ -13,6 +13,8 @@ public class Place implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        draw drawInstance = null;
+
         switch (ctx.getArguments().get(0)) {
             case "encode":
                 if (ctx.getArguments().size() < 5) BotExceptions.invalidArgumentsException(ctx);
@@ -22,10 +24,23 @@ public class Place implements CommandInterface {
                 new preview(ctx);
                 break;
             case "draw":
-                new draw(ctx);
+                if (drawInstance == null || !drawInstance.drawing)
+                    drawInstance = new draw(ctx);
+                else
+                    ctx.getMessage().reply("Already Drawing \n Progress: " +
+                            String.format("%,.2f", drawInstance.progress)).queue();
                 break;
             case "queue":
                 new queue(ctx);
+                break;
+            case "stop":
+                if (drawInstance != null)
+                    drawInstance.draw = false;
+                else
+                    ctx.getChannel().sendMessage("Currently not drawing").queue();
+                break;
+            case "stopQ":
+                drawInstance.stopQ = true;
                 break;
             default:
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
