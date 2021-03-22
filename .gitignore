@@ -1,5 +1,7 @@
 .idea/
 build/
 out/
-.env
+resources/
 tempFiles/
+permissions/
+.env
