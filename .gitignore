@@ -5,3 +5,4 @@ resources/
 tempFiles/
 permissions/
 .env
+DB/
