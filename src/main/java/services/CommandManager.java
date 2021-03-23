@@ -57,22 +57,17 @@ public class CommandManager {
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);
+        List<String> arguments = Arrays.asList(split).subList(1, split.length);
+        CommandContext ctx = new CommandContext(event, arguments);
 
-        if (cmd != null) {
-            if (PermissionManager.permissionCheck(event, invoke)) {
-                LOGGER.info(event.getAuthor() + " running command " + invoke);
-                event.getMessage().addReaction(":RubberDuckyGreen:820700438084845568").queue();
+        if (cmd != null && PermissionManager.permissionCheck(event, invoke)) {
+            LOGGER.info(event.getAuthor() + " running command " + invoke);
+            cmd.handle(ctx);
 
-                List<String> arguments = Arrays.asList(split).subList(1, split.length);
-
-                CommandContext ctx = new CommandContext(event, arguments);
-                cmd.handle(ctx);
-            } else {
-                event.getMessage().addReaction(":RubberDuckyRed:820700478467604502").queue();
-            }
-
+            if (!invoke.equals("place"))
+                CommandReaction.success(ctx);
         } else {
-            event.getMessage().addReaction(":RubberDuckyRed:820700478467604502").queue();
+            CommandReaction.fail(ctx);
         }
     }
 }
