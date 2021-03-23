@@ -2,7 +2,7 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
-import services.StorageHandler;
+import services.dbHandler;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,22 +16,20 @@ public class queue {
     }
 
     private void queueing () {
-        ArrayList<String> lines = StorageHandler.readData("resources/place/", "queue");
-        ArrayList<Integer> numbers = new ArrayList<>();
+        ArrayList<Integer> numbers = dbHandler.getIDs();
         Random random = new Random();
         String file;
         int number;
-
-        for (String s : lines) {
-            numbers.add(Integer.parseInt(s.substring(s.length() - 4)));
-        }
 
         do {
             number = random.nextInt(10000);
         } while (numbers.contains(number));
 
-        file = "RDdraw" + number + ".txt";
-        lines.add(file);
+        if (ctx.getArguments().size() > 1) {
+            file = ctx.getArguments().get(1) + ".txt";
+        } else {
+            file = "RDdraw" + number + ".txt";
+        }
 
         try {
             ctx.getMessage().getAttachments().get(0).downloadToFile("tempFiles/place/queue/" + file);
@@ -45,6 +43,6 @@ public class queue {
             }
         }
 
-        StorageHandler.writeData("resources/place/", "queue", lines);
+        dbHandler.addToQ(number, file);
     }
 }
