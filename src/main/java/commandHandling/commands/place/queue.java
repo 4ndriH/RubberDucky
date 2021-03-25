@@ -2,7 +2,7 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
-import services.dbHandler;
+import services.database.dbHandlerQ;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,7 +16,7 @@ public class queue {
     }
 
     private void queueing () {
-        ArrayList<Integer> numbers = dbHandler.getIDs();
+        ArrayList<Integer> numbers = dbHandlerQ.getIDs();
         Random random = new Random();
         String file;
         int number;
@@ -43,6 +43,6 @@ public class queue {
             }
         }
 
-        dbHandler.addToQ(number, file);
+        dbHandlerQ.addToQ(number, file);
     }
 }

@@ -38,6 +38,13 @@ public class Place implements CommandInterface {
             case "stopQ": case "stopq": case "sq":
                 if (drawInstance != null) drawInstance.stopQ = true;
                 break;
+            case "viewQ": case "vq":
+                new viewQ(ctx);
+                break;
+            case "getfile": case "gf":
+                if (ctx.getArguments().size() < 2) BotExceptions.invalidArgumentsException(ctx);
+                else new getFile(ctx);
+                break;
             default:
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
                 CommandReaction.fail(ctx);

@@ -1,9 +1,9 @@
-package services;
+package services.database;
 
 import java.sql.*;
 import java.util.*;
 
-public class dbHandler {
+public class dbHandlerQ {
     private static Connection connectToDB () {
         Connection connection = null;
         try {
@@ -96,5 +96,15 @@ public class dbHandler {
             throwables.printStackTrace();
         }
         return file;
+    }
+
+    public static ResultSet getAll () {
+        ResultSet rs = null;
+        try {
+            rs = connectToDB().createStatement().executeQuery("select * from queue");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return rs;
     }
 }

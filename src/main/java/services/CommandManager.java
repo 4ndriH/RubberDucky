@@ -60,7 +60,7 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
-        if (cmd != null && PermissionManager.permissionCheck(event, invoke)) {
+        if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
             LOGGER.info(event.getAuthor() + " running command " + invoke);
             cmd.handle(ctx);
 
