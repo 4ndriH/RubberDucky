@@ -1,7 +1,5 @@
 package services;
 
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -9,9 +7,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 public class Listener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
@@ -30,9 +28,9 @@ public class Listener extends ListenerAdapter {
             return;
         }
 
-        String prefix = config.get("PREFIX");
+        String prefix = CONFIG.Prefix.get();
         String raw = event.getMessage().getContentRaw();
-        if (raw.equals(prefix + "shutdown") && user.getId().equals(config.get("OWNER_ID"))) {
+        if (raw.equals(prefix + "shutdown") && user.getId().equals(CONFIG.OwnerID.get())) {
             LOGGER.info("Shutting down");
             event.getChannel().sendMessage("Shutting down").addFile(new File("src/main/resources/shutdown.gif"))
                     .queue();

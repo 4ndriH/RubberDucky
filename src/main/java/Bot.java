@@ -1,5 +1,5 @@
+import resources.CONFIG;
 import services.Listener;
-import services.config;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -13,7 +13,7 @@ public class Bot {
     }
 
     private Bot() throws LoginException {
-        JDABuilder.createDefault(config.get("TOKEN"),
+        JDABuilder.createDefault(CONFIG.Token.get(),
                 GatewayIntent.GUILD_MESSAGES,
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.GUILD_VOICE_STATES

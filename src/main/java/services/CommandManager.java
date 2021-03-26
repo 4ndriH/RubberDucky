@@ -7,6 +7,7 @@ import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class CommandManager {
 
     public void handle(GuildMessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(config.get("PREFIX")), "").split("\\s+");
+                .replaceFirst("(?i)" + Pattern.quote(CONFIG.Prefix.get()), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);

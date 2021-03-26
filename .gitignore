@@ -1,10 +1,10 @@
 .idea/
 build/
 out/
-META-INF/
 tempFiles/
 permissions/
 CONFIG.java
 DB/
-logback.xaml
+META-INF/
+logback.xml
 shutdown.gif

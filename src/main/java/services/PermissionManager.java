@@ -1,5 +1,6 @@
 package services;
 
+import resources.CONFIG;
 import services.database.dbHandlerPermissions;
 import commandHandling.CommandContext;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class PermissionManager {
     }
 
     public static boolean authOwner (CommandContext ctx) {
-        return ctx.getAuthor().getId().equals(config.get("OWNER_ID"));
+        return ctx.getAuthor().getId().equals(CONFIG.OwnerID.get());
     }
 
     public static boolean botCheck (CommandContext ctx) {

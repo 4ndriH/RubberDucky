@@ -2,6 +2,7 @@ package commandHandling.commands;
 
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
+import resources.CONFIG;
 import services.*;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -27,7 +28,7 @@ public class Help implements CommandInterface {
             builder.append("List of commands\n");
 
             manager.getCommands().stream().map(CommandInterface::getName).forEach(
-                    (it) -> builder.append("`").append(config.get("PREFIX")).append(it).append("`\n")
+                    (it) -> builder.append("`").append(CONFIG.Prefix.get()).append(it).append("`\n")
             );
 
             channel.sendMessage(builder.toString()).queue();
