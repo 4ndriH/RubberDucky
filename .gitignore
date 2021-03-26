@@ -1,8 +1,10 @@
 .idea/
 build/
 out/
-resources/
+META-INF/
 tempFiles/
 permissions/
-.env
+.CONFIG
 DB/
+logback.xaml
+shutdown.gif
