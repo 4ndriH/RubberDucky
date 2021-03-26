@@ -4,7 +4,7 @@ out/
 META-INF/
 tempFiles/
 permissions/
-.CONFIG
+CONFIG.java
 DB/
 logback.xaml
 shutdown.gif
