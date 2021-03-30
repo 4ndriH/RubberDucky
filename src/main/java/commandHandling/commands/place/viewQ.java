@@ -26,8 +26,10 @@ public class viewQ {
                     dbContent += "\n" + rs.getInt("key") + ", " + rs.getString("file")
                     + ", " + rs.getInt("progress");
                 }
+                rs.getStatement().getConnection().close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+                return;
             }
 
             ctx.getChannel().sendMessage(dbContent).queue();

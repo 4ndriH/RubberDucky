@@ -7,17 +7,17 @@ import services.database.dbHandlerQ;
 import java.util.*;
 import java.io.*;
 
-public class draw {
-    public boolean draw = true, stopQ = false, drawing = true;
+public class draw implements Runnable{
+    public boolean stop = false, stopQ = false, drawing = true;
     private final CommandContext ctx;
-    public double progress;
+    public int progress;
 
     public draw(CommandContext ctx) {
         this.ctx = ctx;
-        drawing();
     }
 
-    private void drawing() {
+    @Override
+    public void run() {
         TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
         Random random = new Random();
         String file;
@@ -40,26 +40,26 @@ public class draw {
         }
 
         try {
-            while (file != null && draw && !stopQ) {
-                Scanner scanner = new Scanner(new File("tempFiles/" + file));
+            while (file != null && !stop && !stopQ) {
+                Scanner scanner = new Scanner(new File("tempFiles/place/queue/" + file));
                 ArrayList<String> pixels = new ArrayList<>();
                 int start = dbHandlerQ.getProgress(id);
-                progress = 0.0;
+                progress = 0;
 
                 while (scanner.hasNextLine()) {
                     pixels.add(scanner.nextLine());
                 }
                 scanner.close();
 
-                for (int i = start; i < pixels.size() && draw; i++) {
-                    ethPlaceBots.sendMessage(pixels.get(i)).queue();
-                    if (i % 64 == 0) {
-                        progress = (double)i / pixels.size();
+                for (int i = start; i < pixels.size() && !stop; i++) {
+                    ethPlaceBots.sendMessage(pixels.get(i)).complete();
+                    if (i % 16 == 0) {
+                        progress = (int)(i * 100.0 / pixels.size());
                         dbHandlerQ.updateProgressInQ(i, id);
                     }
                 }
 
-                if (draw) {
+                if (!stop) {
                     dbHandlerQ.deleteElementInQ(id);
                     File myObj = new File("tempFiles/place/queue/" + file);
                     myObj.delete();

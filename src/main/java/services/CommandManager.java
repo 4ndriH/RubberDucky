@@ -63,10 +63,8 @@ public class CommandManager {
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
             LOGGER.info(event.getAuthor() + " running command " + invoke);
+            CommandReaction.success(ctx);
             cmd.handle(ctx);
-
-            if (!invoke.equals("place"))
-                CommandReaction.success(ctx);
         } else {
             CommandReaction.fail(ctx);
         }

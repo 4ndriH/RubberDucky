@@ -6,7 +6,6 @@ import services.BotExceptions;
 import java.util.concurrent.TimeUnit;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.net.URL;
 import java.util.*;
 import java.awt.*;
 import java.io.*;
@@ -24,19 +23,27 @@ public class encode {
 
     private void encoding() {
         String pattern = "", fileName;
-        PrintStream writer;
+        PrintStream writer = null;
         int width, height;
 
         try {
-            img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            fileName = "RDencode - " + ctx.getMessage().getAttachments().get(0).getFileName() + ".txt";
-            writer = new PrintStream("tempFiles/place/encode/" + fileName);
+            fileName = ctx.getMessage().getAttachments().get(0).getFileName();
+            fileName = fileName.substring(0, fileName.length() - 4);
+            ctx.getMessage().getAttachments().get(0).downloadToFile("tempFiles/place/encode/" + fileName + ".png");
+            ctx.getMessage().delete().queue();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+            img = ImageIO.read(new File("tempFiles/place/encode/" + fileName + ".png"));
+            writer = new PrintStream("tempFiles/place/encode/" + fileName + ".txt");
         } catch (IOException e) {
             e.printStackTrace();
+            if (writer != null)
+                writer.close();
             return;
         }
-
-        ctx.getMessage().delete().queue();
 
         try {
             x = Integer.parseInt(ctx.getArguments().get(1));
@@ -83,18 +90,12 @@ public class encode {
         for (String s : list) {
             writer.println(s);
         }
+        writer.close();
 
         ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
-                .addFile(new File("tempFiles/place/encode" + fileName)).queue();
+                .addFile(new File("tempFiles/place/encode/" + fileName + ".txt")).queue();
 
-        try {
-            TimeUnit.MINUTES.sleep(1);
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
-
-        File myObj = new File("tempFiles/place/encode/" + fileName);
-        myObj.delete();
+        delete(fileName);
     }
 
     private void leftToRight() {
@@ -146,34 +147,26 @@ public class encode {
     }
 
     private void spiral() {
-        int n = img.getWidth(), m = img.getHeight();
-        int limit = Math.max(m, n);
+        int n = img.getWidth() - 1, m = img.getHeight() - 1, h = n, v = m;
 
-        for (int i = limit - 1; i >= limit / 2; i--) {
-            //right side
-            for (int j = m - i; j <= i; j++) {
-                writerUtility(new Color(img.getRGB(i, j), true), i, j);
-            }
+        while (h >= n / 2 || v >= m / 2) {
+            for (int y = m - v; y <= v; y++)
+                writerUtility(new Color(img.getRGB(h, y), true), h, y);
 
-            //bottom
-            for (int j = i - 1; j >= n - i; j--) {
-                writerUtility(new Color(img.getRGB(j, i), true), j, i);
-            }
+            for (int x = --h; x >= n - h - 1; x--)
+                writerUtility(new Color(img.getRGB(x, v), true), x, v);
 
-            //left side
-            for (int j = i; j >= m - i; j--) {
-                writerUtility(new Color(img.getRGB(i, j), true), (img.getHeight() - i - 1), j);
-            }
+            for (int y = --v; y >= m - v - 1; y--)
+                writerUtility(new Color(img.getRGB(n - h - 1, y), true), n - h - 1, y);
 
-            for (int j = n - i; j <= i - 1; j++) {
-                writerUtility(new Color(img.getRGB(j, i), true), j, (img.getWidth() - i - 1));
-            }
+            for (int x = n - h; x <= h; x++)
+                writerUtility(new Color(img.getRGB(x, m - v - 1), true), x, m - v - 1);
         }
     }
 
     private void random() {
-        for (int i = 0; i < 64; i++) {
-            for (int j = 0; j < 64; j++) {
+        for (int i = 0; i < img.getWidth(); i++) {
+            for (int j = 0; j < img.getHeight(); j++) {
                 writerUtility(new Color(img.getRGB(i, j), true), i, j);
             }
         }
@@ -214,8 +207,6 @@ public class encode {
 
         String days = "";
         if (hours > 23) {
-//            hours %= 24;
-//            days = (((linesCnt - seconds) / 60 - minutes) / 60 - hours) / 24 + "";
             days = (hours - (hours %= 24)) / 24 + "";
             if (Integer.parseInt(days) == 1) {
                 days += " day, ";
@@ -235,5 +226,12 @@ public class encode {
         g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
         g.dispose();
         return newImage;
+    }
+
+    private void delete(String fileName) {
+        File myTxtObj = new File("tempFiles/place/encode/" + fileName + ".txt");
+        File myPngObj = new File("tempFiles/place/encode/" + fileName + ".png");
+        myPngObj.delete();
+        while(myTxtObj.exists() && !myTxtObj.delete());
     }
 }

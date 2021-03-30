@@ -14,4 +14,8 @@ public class BotExceptions {
     public static void missingAttachmentException(CommandContext ctx) {
         ctx.getMessage().reply("No attachment found!").queue();
     }
+
+    public static void fileDoesNotExistException(CommandContext ctx) {
+        ctx.getMessage().reply("File does not exist!").queue();
+    }
 }

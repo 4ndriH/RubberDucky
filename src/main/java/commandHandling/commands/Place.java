@@ -7,6 +7,7 @@ import services.*;
 
 public class Place implements CommandInterface {
     private static draw drawInstance = null;
+    private static Thread drawThread = null;
 
     public Place(Logger LOGGER) {
         LOGGER.info("Loaded Command Place");
@@ -14,43 +15,45 @@ public class Place implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        String cmd = ctx.getArguments().get(0);
 
-        switch (ctx.getArguments().get(0)) {
-            case "encode": case "e":
-                if (ctx.getArguments().size() < 5) BotExceptions.invalidArgumentsException(ctx);
-                else new encode(ctx);
-                break;
-            case "preview": case "p":
-                new preview(ctx);
-                break;
-            case "draw": case "d":
-                if (drawInstance == null || !drawInstance.drawing) drawInstance = new draw(ctx);
-                else ctx.getMessage().reply("Already Drawing \n Progress: " +
-                            String.format("%,.2f", drawInstance.progress)).queue();
-                break;
-            case "queue": case "q":
-                new queue(ctx);
-                break;
-            case "stop": case "s":
-                if (drawInstance != null) drawInstance.draw = false;
-                else ctx.getChannel().sendMessage("Currently not drawing").queue();
-                break;
-            case "stopQ": case "stopq": case "sq":
-                if (drawInstance != null) drawInstance.stopQ = true;
-                break;
-            case "viewQ": case "vq":
-                new viewQ(ctx);
-                break;
-            case "getfile": case "gf":
-                if (ctx.getArguments().size() < 2) BotExceptions.invalidArgumentsException(ctx);
-                else new getFile(ctx);
-                break;
-            default:
-                BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
-                CommandReaction.fail(ctx);
+        if (cmd.equals("encode") || cmd.equals("e")){
+            if (ctx.getArguments().size() < 5) {
+                BotExceptions.invalidArgumentsException(ctx);
                 return;
+            }
+            new encode(ctx);
+        } else if (cmd.equals("preview") || cmd.equals("p")) {
+            new preview(ctx);
+        } else if (cmd.equals("draw") || cmd.equals("d")) {
+            if (drawInstance == null || !drawInstance.drawing) {
+                drawThread = new Thread(drawInstance = new draw(ctx));
+                drawThread.start();
+            } else {
+                ctx.getChannel().sendMessage("Already drawing \nProgress: **" +
+                        drawInstance.progress + "%**").queue();
+            }
+        } else if (cmd.equals("queue") || cmd.equals("q")) {
+            new queue(ctx);
+        } else if (cmd.equals("stop") || cmd.equals("s")) {
+            if (drawInstance != null && PermissionManager.authOwner(ctx)) {
+                drawInstance.stop = true;
+            }
+        } else if (cmd.equals("stopQ") || cmd.equals("stopq") || cmd.equals("sq")) {
+            if (drawInstance != null && PermissionManager.authOwner(ctx)) {
+                drawInstance.stopQ = true;
+            }
+        } else if (cmd.equals("viewQ") || cmd.equals("vq")) {
+            new viewQ(ctx);
+        } else if (cmd.equals("getFile") || cmd.equals("getfile") || cmd.equals("gf")) {
+            if (ctx.getArguments().size() < 2) {
+                BotExceptions.invalidArgumentsException(ctx);
+            } else {
+                new getFile(ctx);
+            }
+        } else {
+            BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
         }
-        CommandReaction.success(ctx);
     }
 
     @Override

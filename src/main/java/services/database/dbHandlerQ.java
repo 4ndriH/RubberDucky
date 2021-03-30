@@ -14,16 +14,16 @@ public class dbHandlerQ {
         return connection;
     }
 
-    public static void addToQ (int id, String file) {
+    public static void addToQ (int id, String file, String user) {
         try {
             PreparedStatement statement = connectToDB().prepareStatement(
-                    "insert into queue (key, file) values (? , ?)"
+                    "INSERT INTO queue (key, file, user) VALUES (? , ?, ?)"
             );
             statement.setInt(1, id);
-            statement.setString(1, file);
-            statement.setQueryTimeout(30);
-            int addedRow = statement.executeUpdate();
-            System.out.println("Added " + addedRow + " users");
+            statement.setString(2, file);
+            statement.setString(3, user);
+            statement.executeUpdate();
+            statement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -32,12 +32,12 @@ public class dbHandlerQ {
     public static void updateProgressInQ (int progress, int id) {
         try {
             PreparedStatement updateStatement = connectToDB().prepareStatement(
-                    "update queue set progress = ? where key = ?"
+                    "UPDATE queue SET progress = ? WHERE key = ?"
             );
             updateStatement.setInt(1, progress);
             updateStatement.setInt(2, id);
-            int updatedRow = updateStatement.executeUpdate();
-            System.out.println("Updated " + updatedRow + " users");
+            updateStatement.executeUpdate();
+            updateStatement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -47,11 +47,12 @@ public class dbHandlerQ {
         int progress = 0;
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from queue where key = ?"
+                    "SELECT * FROM queue WHERE key = ?"
             );
             getStatement.setInt(1, id);
             ResultSet rs = getStatement.executeQuery();
-            id = rs.getInt("progress");
+            progress = rs.getInt("progress");
+            getStatement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -61,11 +62,11 @@ public class dbHandlerQ {
     public static void deleteElementInQ (int id) {
         try {
             PreparedStatement deleteStatement = connectToDB().prepareStatement(
-                    "delete from queue where key > ?"
+                    "DELETE FROM queue WHERE key = ?"
             );
             deleteStatement.setInt(1, id);
-            int deletedRows = deleteStatement.executeUpdate();
-            System.out.println("Deleted " + deletedRows + " users");
+            deleteStatement.executeUpdate();
+            deleteStatement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -74,9 +75,13 @@ public class dbHandlerQ {
     public static ArrayList<Integer> getIDs () {
         ArrayList<Integer> ids = new ArrayList<>();
         try {
-            ResultSet rs = connectToDB().createStatement().executeQuery("select * from queue");
-            while (rs.next())
+            PreparedStatement getStatement = connectToDB().prepareStatement(
+                    "SELECT * FROM queue"
+            );
+            ResultSet rs = getStatement.executeQuery();
+            while (!rs.isClosed() && rs.next())
                 ids.add(rs.getInt("key"));
+            getStatement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -87,11 +92,13 @@ public class dbHandlerQ {
         String file = "";
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from queue where key = ?"
+                    "SELECT * FROM queue WHERE key = ?"
             );
             getStatement.setInt(1, id);
             ResultSet rs = getStatement.executeQuery();
-            file = rs.getString("file");
+            if (!rs.isClosed())
+                file = rs.getString("file");
+            getStatement.getConnection().close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -101,7 +108,10 @@ public class dbHandlerQ {
     public static ResultSet getAll () {
         ResultSet rs = null;
         try {
-            rs = connectToDB().createStatement().executeQuery("select * from queue");
+            PreparedStatement getStatement = connectToDB().prepareStatement(
+                    "SELECT * FROM queue"
+            );
+            rs = getStatement.executeQuery();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

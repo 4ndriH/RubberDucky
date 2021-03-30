@@ -1,5 +1,6 @@
 package services.database;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -17,12 +18,14 @@ public class dbHandlerPermissions {
     public static boolean blackList (String id) {
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from userblacklist where user = ?"
+                    "SELECT * FROM userblacklist WHERE user = ?"
             );
             getStatement.setString(1, id);
-            ResultSet rs = getStatement.getResultSet();
-            int status = rs.getInt("permission");
-            return status == 1;
+            ResultSet rs = getStatement.executeQuery();
+            if (!rs.isClosed()) {
+                int status = rs.getInt("permission");
+                return status == 1;
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -32,12 +35,14 @@ public class dbHandlerPermissions {
     public static boolean server (String id) {
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from servers where server = ?"
+                    "SELECT * FROM servers WHERE server = ?"
             );
             getStatement.setString(1, id);
-            ResultSet rs = getStatement.getResultSet();
-            int status = rs.getInt("permission");
-            return status == 1;
+            ResultSet rs = getStatement.executeQuery();
+            if (!rs.isClosed()) {
+                int status = rs.getInt("status");
+                return status == 1;
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -49,11 +54,11 @@ public class dbHandlerPermissions {
         ArrayList<String> roles = new ArrayList<>();
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from roles where command = ?"
+                    "SELECT * FROM roles WHERE command = ?"
             );
             getStatement.setString(1, command);
-            ResultSet rs = getStatement.getResultSet();
-            while (rs.next()) {
+            ResultSet rs = getStatement.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
                 roles.add(rs.getString("role"));
             }
         } catch (SQLException throwables) {
@@ -66,11 +71,11 @@ public class dbHandlerPermissions {
         ArrayList<String> roles = new ArrayList<>();
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
-                    "select * from channels where channel = ?"
+                    "SELECT * FROM channels WHERE channel = ?"
             );
             getStatement.setString(1, command);
-            ResultSet rs = getStatement.getResultSet();
-            while (rs.next()) {
+            ResultSet rs = getStatement.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
                 roles.add(rs.getString("role"));
             }
         } catch (SQLException throwables) {

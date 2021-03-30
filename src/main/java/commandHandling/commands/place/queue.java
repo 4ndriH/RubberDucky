@@ -6,6 +6,7 @@ import services.database.dbHandlerQ;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class queue {
     private final CommandContext ctx;
@@ -43,6 +44,10 @@ public class queue {
             }
         }
 
-        dbHandlerQ.addToQ(number, file);
+        ctx.getMessage().reply("Your file got id: " + number).queue(msg ->  {
+            msg.delete().queueAfter(32, TimeUnit.SECONDS);
+        });
+        dbHandlerQ.addToQ(number, file, ctx.getMessage().getAuthor().getId());
+        ctx.getMessage().delete().queueAfter(32, TimeUnit.SECONDS);
     }
 }
