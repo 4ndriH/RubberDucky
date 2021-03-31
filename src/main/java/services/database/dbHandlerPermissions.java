@@ -1,6 +1,5 @@
 package services.database;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
 import java.sql.*;
 import java.util.ArrayList;
 

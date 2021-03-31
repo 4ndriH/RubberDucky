@@ -32,7 +32,7 @@ public class Listener extends ListenerAdapter {
         String raw = event.getMessage().getContentRaw();
         if (raw.equals(prefix + "shutdown") && user.getId().equals(CONFIG.OwnerID.get())) {
             LOGGER.info("Shutting down");
-            event.getChannel().sendMessage("Shutting down").addFile(new File("src/main/resources/shutdown.gif"))
+            event.getChannel().sendMessage("Shutting down").addFile(new File("resources/shutdown.gif"))
                     .queue();
             event.getJDA().shutdown();
             return;

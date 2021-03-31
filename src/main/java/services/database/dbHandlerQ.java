@@ -7,8 +7,9 @@ public class dbHandlerQ {
     private static Connection connectToDB () {
         Connection connection = null;
         try {
+            Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:DB/RubberDucky.db");
-        } catch (SQLException throwables) {
+        } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
         return connection;

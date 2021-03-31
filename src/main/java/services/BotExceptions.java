@@ -18,4 +18,8 @@ public class BotExceptions {
     public static void fileDoesNotExistException(CommandContext ctx) {
         ctx.getMessage().reply("File does not exist!").queue();
     }
+
+    public static void permissionException(CommandContext ctx) {
+        ctx.getMessage().reply("You do not have the required permissions to run this command").queue();
+    }
 }

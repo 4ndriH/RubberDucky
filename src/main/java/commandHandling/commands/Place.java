@@ -36,12 +36,30 @@ public class Place implements CommandInterface {
         } else if (cmd.equals("queue") || cmd.equals("q")) {
             new queue(ctx);
         } else if (cmd.equals("stop") || cmd.equals("s")) {
-            if (drawInstance != null && PermissionManager.authOwner(ctx)) {
-                drawInstance.stop = true;
+            if (drawInstance != null) {
+                if (PermissionManager.authOwner(ctx)) {
+                    drawInstance.stop = true;
+                } else {
+                    BotExceptions.permissionException(ctx);
+                }
             }
         } else if (cmd.equals("stopQ") || cmd.equals("stopq") || cmd.equals("sq")) {
-            if (drawInstance != null && PermissionManager.authOwner(ctx)) {
-                drawInstance.stopQ = true;
+            if (drawInstance != null) {
+                if (PermissionManager.authOwner(ctx)) {
+                    drawInstance.stopQ = true;
+                } else {
+                    BotExceptions.permissionException(ctx);
+                }
+            }
+        } else if (cmd.equals("delete") || cmd.equals("d")) {
+            if (PermissionManager.authOwner(ctx)) {
+                if (ctx.getArguments().size() < 2) {
+                    BotExceptions.invalidArgumentsException(ctx);
+                    return;
+                }
+                new delete(ctx);
+            } else {
+                BotExceptions.permissionException(ctx);
             }
         } else if (cmd.equals("viewQ") || cmd.equals("vq")) {
             new viewQ(ctx);
