@@ -4,12 +4,19 @@ import java.sql.*;
 import java.util.*;
 
 public class dbHandlerQ {
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static Connection connectToDB () {
         Connection connection = null;
         try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:DB/RubberDucky.db");
-        } catch (SQLException | ClassNotFoundException throwables) {
+            connection = DriverManager.getConnection("jdbc:sqlite:DB/place.db");
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return connection;

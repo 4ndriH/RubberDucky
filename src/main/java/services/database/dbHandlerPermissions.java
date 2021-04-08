@@ -4,10 +4,18 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class dbHandlerPermissions {
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static Connection connectToDB () {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:DB/RubberDucky.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:DB/permissions.db");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

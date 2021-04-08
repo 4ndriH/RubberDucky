@@ -1,16 +1,18 @@
 package commandHandling.commands.place;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import commandHandling.CommandContext;
 import services.database.dbHandlerQ;
 
+import java.awt.*;
 import java.util.*;
 import java.io.*;
 
 public class draw implements Runnable{
     public boolean stop = false, stopQ = false, drawing = true;
     private final CommandContext ctx;
-    public int progress;
+    public int progress, total, id;
 
     public draw(CommandContext ctx) {
         this.ctx = ctx;
@@ -21,7 +23,6 @@ public class draw implements Runnable{
         TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
         Random random = new Random();
         String file;
-        int id;
 
         if (ctx.getArguments().size() > 1) {
             file = dbHandlerQ.getByID(id = Integer.parseInt(ctx.getArguments().get(1)));
@@ -44,12 +45,14 @@ public class draw implements Runnable{
                 Scanner scanner = new Scanner(new File("tempFiles/place/queue/" + file));
                 ArrayList<String> pixels = new ArrayList<>();
                 int start = dbHandlerQ.getProgress(id);
-                progress = 0;
 
                 while (scanner.hasNextLine()) {
                     pixels.add(scanner.nextLine());
                 }
                 scanner.close();
+
+                total = pixels.size();
+                progress = 0;
 
                 for (int i = start; i < pixels.size() && !stop; i++) {
                     ethPlaceBots.sendMessage(pixels.get(i)).complete();
@@ -60,6 +63,7 @@ public class draw implements Runnable{
                 }
 
                 if (!stop) {
+                    sendCompletionMessage();
                     dbHandlerQ.deleteElementInQ(id);
                     File myObj = new File("tempFiles/place/queue/" + file);
                     myObj.delete();
@@ -75,5 +79,13 @@ public class draw implements Runnable{
             e.printStackTrace();
         }
         drawing = false;
+    }
+
+    private void sendCompletionMessage () {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Your drawing has been finished");
+        embed.setColor(new Color(0xb074ad));
+        embed.setDescription("Thank you for using RubberDucky to draw");
+        ctx.getMessage().getAuthor().openPrivateChannel().complete().sendMessage(embed.build()).queue();
     }
 }

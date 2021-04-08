@@ -35,12 +35,12 @@ public class Place implements CommandInterface {
             }
         } else if (cmd.equals("queue") || cmd.equals("q")) {
             new queue(ctx);
-        } else if (cmd.equals("stop") || cmd.equals("s")) {
+        } else if (cmd.equals("stop")) {
             if (drawInstance != null) {
                 if (PermissionManager.authOwner(ctx)) {
                     drawInstance.stop = true;
                 } else {
-                    BotExceptions.permissionException(ctx);
+                    BotExceptions.missingPermissionException(ctx);
                 }
             }
         } else if (cmd.equals("stopQ") || cmd.equals("stopq") || cmd.equals("sq")) {
@@ -48,7 +48,7 @@ public class Place implements CommandInterface {
                 if (PermissionManager.authOwner(ctx)) {
                     drawInstance.stopQ = true;
                 } else {
-                    BotExceptions.permissionException(ctx);
+                    BotExceptions.missingPermissionException(ctx);
                 }
             }
         } else if (cmd.equals("delete") || cmd.equals("d")) {
@@ -59,7 +59,7 @@ public class Place implements CommandInterface {
                 }
                 new delete(ctx);
             } else {
-                BotExceptions.permissionException(ctx);
+                BotExceptions.missingPermissionException(ctx);
             }
         } else if (cmd.equals("viewQ") || cmd.equals("vq")) {
             new viewQ(ctx);
@@ -69,6 +69,8 @@ public class Place implements CommandInterface {
             } else {
                 new getFile(ctx);
             }
+        } else if(cmd.equals("status") || cmd.equals("s")) {
+            new status(drawInstance, ctx);
         } else {
             BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
         }

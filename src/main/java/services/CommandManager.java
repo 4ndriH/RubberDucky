@@ -23,6 +23,7 @@ public class CommandManager {
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
+        addCommand(new SemesterSpokesPeople());
     }
 
     private void addCommand(CommandInterface cmd) {
