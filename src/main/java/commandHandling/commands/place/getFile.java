@@ -31,9 +31,9 @@ public class getFile {
             return;
         }
 
-        String file = dbHandlerQ.getByID(id);
+        String file = dbHandlerQ.getFile(id);
 
-        ctx.getChannel().sendMessage(file + ":")
+        ctx.getChannel().sendMessage("")
                 .addFile(new File("tempFiles/place/queue/" + file)).queue();
     }
 }

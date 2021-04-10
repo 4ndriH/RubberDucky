@@ -3,6 +3,8 @@ package commandHandling.commands.place;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import commandHandling.CommandContext;
+import services.BotExceptions;
+import services.PermissionManager;
 import services.database.dbHandlerQ;
 
 import java.awt.*;
@@ -10,12 +12,12 @@ import java.util.*;
 import java.io.*;
 
 public class draw implements Runnable{
-    public boolean stop = false, stopQ = false, drawing = true;
     private final CommandContext ctx;
-    public int progress, total, id;
+    private final placeData placeData;
 
-    public draw(CommandContext ctx) {
+    public draw(CommandContext ctx, placeData placeData) {
         this.ctx = ctx;
+        this.placeData = placeData;
     }
 
     @Override
@@ -24,61 +26,62 @@ public class draw implements Runnable{
         Random random = new Random();
         String file;
 
-        if (ctx.getArguments().size() > 1) {
-            file = dbHandlerQ.getByID(id = Integer.parseInt(ctx.getArguments().get(1)));
+        if (ctx.getArguments().size() > 1 && PermissionManager.authOwner(ctx)) {
+            file = dbHandlerQ.getFile(placeData.setID(Integer.parseInt(ctx.getArguments().get(1))));
             if (file.length() == 0) {
-                ctx.getChannel().sendMessage("Invalid ID").queue();
+                BotExceptions.invalidIdException(ctx);
                 return;
             }
         } else {
             ArrayList<Integer> numbers = dbHandlerQ.getIDs();
             if (numbers.size() > 0) {
-                file = dbHandlerQ.getByID(id = numbers.get(random.nextInt(numbers.size())));
+                file = dbHandlerQ.getFile(placeData.setID(Integer.parseInt(ctx.getArguments().get(1))));
             } else {
-                ctx.getChannel().sendMessage("Queue is empty").queue();
+                BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
 
         try {
-            while (file != null && !stop && !stopQ) {
+            while (file != null && !placeData.stop() && !placeData.stopQ()) {
+                placeData.setDrawing(true);
                 Scanner scanner = new Scanner(new File("tempFiles/place/queue/" + file));
                 ArrayList<String> pixels = new ArrayList<>();
-                int start = dbHandlerQ.getProgress(id);
+                int start = dbHandlerQ.getProgress(placeData.getID());
 
                 while (scanner.hasNextLine()) {
                     pixels.add(scanner.nextLine());
                 }
                 scanner.close();
 
-                total = pixels.size();
-                progress = 0;
+                placeData.setTotalPixels(pixels.size());
 
-                for (int i = start; i < pixels.size() && !stop; i++) {
+                for (int i = start; i < pixels.size() && !placeData.stop(); i++) {
                     ethPlaceBots.sendMessage(pixels.get(i)).complete();
+                    placeData.setDrawnPixels(i);
                     if (i % 16 == 0) {
-                        progress = (int)(i * 100.0 / pixels.size());
-                        dbHandlerQ.updateProgressInQ(i, id);
+                        dbHandlerQ.updateProgressInQ(i, placeData.getID());
                     }
                 }
 
-                if (!stop) {
+                if (!placeData.stop()) {
                     sendCompletionMessage();
-                    dbHandlerQ.deleteElementInQ(id);
+                    dbHandlerQ.deleteElementInQ(placeData.getID());
                     File myObj = new File("tempFiles/place/queue/" + file);
                     myObj.delete();
                     ArrayList<Integer> numbers = dbHandlerQ.getIDs();
                     if (numbers.size() > 0) {
-                        file = dbHandlerQ.getByID(id = numbers.get(random.nextInt(numbers.size())));
+                        file = dbHandlerQ.getFile(placeData.setID(Integer.parseInt(ctx.getArguments().get(1))));
                     } else {
                         break;
                     }
                 }
             }
         } catch (FileNotFoundException e) {
+            placeData.setDrawing(false);
             e.printStackTrace();
         }
-        drawing = false;
+        placeData.setDrawing(false);
     }
 
     private void sendCompletionMessage () {

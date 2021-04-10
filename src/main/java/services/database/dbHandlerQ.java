@@ -96,7 +96,7 @@ public class dbHandlerQ {
         return ids;
     }
 
-    public static String getByID (int id) {
+    public static String getFile (int id) {
         String file = "";
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
@@ -124,5 +124,22 @@ public class dbHandlerQ {
             throwables.printStackTrace();
         }
         return rs;
+    }
+
+    public static String getUser(int id) {
+        String user = "";
+        try {
+            PreparedStatement getStatement = connectToDB().prepareStatement(
+                    "SELECT * FROM queue WHERE key = ?"
+            );
+            getStatement.setInt(1, id);
+            ResultSet rs = getStatement.executeQuery();
+            if (!rs.isClosed())
+                user = rs.getString("user");
+            getStatement.getConnection().close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return user;
     }
 }

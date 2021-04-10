@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import services.database.dbHandlerSpokesPeople;
 
 import java.awt.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SemesterSpokesPeople implements CommandInterface {
     @Override
@@ -20,16 +22,26 @@ public class SemesterSpokesPeople implements CommandInterface {
         embed.addBlankField(true);
         embed.addField("__Second Year__", secondYear, true);
 
-        ctx.getChannel().sendMessage(embed.build()).queue();
+        ctx.getChannel().sendMessage(embed.build()).queue(msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS));
     }
 
     @Override
     public String getName() {
-        return "ssp";
+        return "SemesterSpokesPeople";
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Help - SpokesPeople");
+        embed.setColor(new Color(0xb074ad));
+        embed.setDescription("Returns a list of all subjects and the corresponding spokes people");
+        embed.addField("Aliases", "```drdssp, drdSemesterSpokesPeople```", false);
+        return embed;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("ssp", "spokespeople");
     }
 }

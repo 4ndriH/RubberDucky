@@ -1,5 +1,7 @@
 package commandHandling;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+
 import java.util.List;
 
 public interface CommandInterface {
@@ -7,7 +9,7 @@ public interface CommandInterface {
 
     String getName();
 
-    String getHelp();
+    EmbedBuilder getHelp();
 
     default List<String> getAliases(){
         return List.of();

@@ -1,11 +1,14 @@
 package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
+import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
 import services.database.dbHandlerQ;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class delete {
     private final CommandContext ctx;
@@ -26,14 +29,18 @@ public class delete {
             return;
         }
 
-        if (ids.size() == 0) {
-            ctx.getChannel().sendMessage("Queue is empty").queue();
-        } else if (ids.contains(id)) {
+        if (ids.contains(id)) {
             File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
             dbHandlerQ.deleteElementInQ(id);
             while(myTxtObj.exists() && !myTxtObj.delete());
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("Delete");
+            embed.setColor(new Color(0xb074ad));
+            embed.setDescription("File " + id + " has been deleted");
+            ctx.getChannel().sendMessage(embed.build()).queue(msg ->
+                    msg.delete().queueAfter(32, TimeUnit.SECONDS));
         } else {
-            ctx.getChannel().sendMessage("This file does not exist").queue();
+            BotExceptions.fileDoesNotExistException(ctx);
         }
     }
 }

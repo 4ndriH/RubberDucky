@@ -10,7 +10,7 @@ import java.util.*;
 import java.awt.*;
 import java.io.*;
 
-public class encode {
+public class encode implements Runnable {
     private final ArrayList<String> list = new ArrayList<>();
     private final CommandContext ctx;
     private BufferedImage img = null;
@@ -18,10 +18,11 @@ public class encode {
 
     public encode(CommandContext ctx) {
         this.ctx = ctx;
-        encoding();
     }
 
-    private void encoding() {
+
+    @Override
+    public void run() {
         String pattern = "", fileName;
         PrintStream writer = null;
         int width, height;
@@ -39,6 +40,7 @@ public class encode {
             img = ImageIO.read(new File("tempFiles/place/encode/" + fileName + ".png"));
             writer = new PrintStream("tempFiles/place/encode/" + fileName + ".txt");
         } catch (IOException e) {
+            BotExceptions.missingAttachmentException(ctx);
             e.printStackTrace();
             if (writer != null)
                 writer.close();
@@ -64,9 +66,11 @@ public class encode {
         img = resize(img, width, height);
 
         switch (pattern) {
+            case "leftright":
             case "lr":
                 leftToRight();
                 break;
+            case "topdown":
             case "td":
                 topDown();
                 break;

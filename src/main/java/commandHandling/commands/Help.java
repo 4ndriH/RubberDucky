@@ -1,5 +1,6 @@
 package commandHandling.commands;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import resources.CONFIG;
@@ -7,7 +8,9 @@ import services.*;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 
+import java.awt.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Help implements CommandInterface {
     private final CommandManager manager;
@@ -23,15 +26,16 @@ public class Help implements CommandInterface {
         TextChannel channel = ctx.getChannel();
 
         if (arguments.isEmpty()) {
-            StringBuilder builder = new StringBuilder();
+            EmbedBuilder embed = new EmbedBuilder();
 
-            builder.append("List of commands\n");
+            embed.setTitle("Help");
+            embed.setColor(new Color(0xb074ad));
+            embed.setFooter("rdhelp <command> gives you a more detailed description");
 
-            manager.getCommands().stream().map(CommandInterface::getName).forEach(
-                    (it) -> builder.append("`").append(CONFIG.Prefix.get()).append(it).append("`\n")
-            );
+            embed.addField("__Miscellaneous__", "rdhelp\nrdping\nrdspokesPeople\nrdplace", true);
 
-            channel.sendMessage(builder.toString()).queue();
+            ctx.getChannel().sendMessage(embed.build()).queue(msg ->
+                    msg.delete().queueAfter(64, TimeUnit.SECONDS));
             return;
         }
 
@@ -39,11 +43,12 @@ public class Help implements CommandInterface {
         CommandInterface command = manager.getCommand(search);
 
         if (command == null) {
-            channel.sendMessage("Nothing found for " + search).queue();
+            BotExceptions.commandNotFoundException(ctx, search);
             return;
         }
 
-        channel.sendMessage(command.getHelp()).queue();
+        channel.sendMessage(command.getHelp().build()).queue(msg ->
+                msg.delete().queueAfter(64, TimeUnit.SECONDS));
     }
 
     @Override
@@ -52,9 +57,13 @@ public class Help implements CommandInterface {
     }
 
     @Override
-    public String getHelp() {
-        return "shows a list of commands \n" +
-                "Usage: `rdhelp [command]`";
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Help - Help");
+        embed.setColor(new Color(0xb074ad));
+        embed.setDescription("Returns a list of all available commands");
+        embed.setFooter("I mean what did you expect?");
+        return embed;
     }
 
     @Override
