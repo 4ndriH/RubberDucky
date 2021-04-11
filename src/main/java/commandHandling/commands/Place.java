@@ -1,13 +1,13 @@
 package commandHandling.commands;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import commandHandling.commands.place.*;
 import commandHandling.*;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.*;
 
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
+import java.awt.*;
 
 public class Place implements CommandInterface {
     private static placeData placeData = new placeData();
@@ -19,6 +19,7 @@ public class Place implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         String cmd;
+
         try {
             cmd = ctx.getArguments().get(0);
         } catch (Exception e) {
@@ -26,101 +27,88 @@ public class Place implements CommandInterface {
         }
 
         switch (cmd) {
-            case "encode":
-            case "e":
-            {
-                Thread encodeThread = new Thread(new encode(ctx));
-                encodeThread.start();
+            case "encode": case "e":
+                encode(ctx);
                 break;
-            }
-            case "preview":
-            case "p":
-            {
+            case "preview": case "p":
                 new preview(ctx);
                 break;
-            }
-            case "draw":
-            case "d":
-            {
-                if (!placeData.isDrawing()) {
-                    placeData = new placeData();
-                    Thread drawThread = new Thread(new draw(ctx, placeData));
-                    drawThread.start();
-                } else {
-                    new status(placeData, ctx);
-                }
+            case "draw": case "d":
+                draw(ctx);
                 break;
-            }
-            case "queue":
-            case "q":
-            {
+            case "queue": case "q":
                 new queue(ctx);
                 break;
-            }
             case "stop":
-            {
-                if (PermissionManager.authOwner(ctx)) {
-                    placeData.setStop(true);
-                } else {
-                    BotExceptions.missingPermissionException(ctx);
-                }
+                stop(ctx);
                 break;
-            }
-            case "stopQ":
-            case "stopq":
-            case "sq":
-            {
-                if (PermissionManager.authOwner(ctx)) {
-                    placeData.setStopQ(true);
-                } else {
-                    BotExceptions.missingPermissionException(ctx);
-                }
+            case "stopQ": case "stopq": case "sq":
+                stopQ(ctx);
                 break;
-            }
             case "delete":
-            {
-                if (PermissionManager.authOwner(ctx)) {
-                    if (ctx.getArguments().size() < 2) {
-                        BotExceptions.invalidArgumentsException(ctx);
-                        return;
-                    }
-                    new delete(ctx);
-                } else {
-                    BotExceptions.missingPermissionException(ctx);
-                }
+                delete(ctx);
                 break;
-            }
-            case "viewQ":
-            case "vq":
-            {
+            case "viewQ": case "vq":
                 new viewQ(ctx);
                 break;
-            }
-            case "getFile":
-            case "getfile":
-            case "gf":
-            {
-                if (ctx.getArguments().size() < 2) {
-                    BotExceptions.invalidArgumentsException(ctx);
-                } else {
-                    new getFile(ctx);
-                }
+            case "getFile": case "getfile": case "gf":
+                getFile(ctx);
                 break;
-            }
-            case "status":
-            case "s":
-            {
+            case "status": case "s":
                 new status(placeData, ctx);
                 break;
-            }
             case "help":
-                ctx.getChannel().sendMessage(getHelp().build()).queue(msg ->
-                        msg.delete().queueAfter(64, TimeUnit.SECONDS));
+                ctx.getChannel().sendMessage(getHelp().build()).queue(
+                        msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+                );
                 break;
             default:
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
                 break;
         }
+    }
+
+    private void encode (CommandContext ctx) {
+        Thread encodeThread = new Thread(new encode(ctx));
+        encodeThread.start();
+    }
+
+    private void draw (CommandContext ctx) {
+        if (!placeData.drawing) {
+            placeData.reset();
+            Thread drawThread = new Thread(new draw(ctx, placeData));
+            drawThread.start();
+        } else {
+            new status(placeData, ctx);
+        }
+    }
+
+    private void stop (CommandContext ctx) {
+        if (PermissionManager.authOwner(ctx)) {
+            placeData.stop = true;
+        } else {
+            BotExceptions.missingPermissionException(ctx);
+        }
+    }
+
+    private void stopQ (CommandContext ctx) {
+        if (PermissionManager.authOwner(ctx)) {
+            placeData.stopQ = !placeData.stopQ;
+        } else {
+            BotExceptions.missingPermissionException(ctx);
+        }
+    }
+
+    private void delete (CommandContext ctx) {
+        if (PermissionManager.authOwner(ctx)) {
+            new delete(ctx);
+        } else {
+            BotExceptions.missingPermissionException(ctx);
+        }
+    }
+
+    private void getFile (CommandContext ctx) {
+        new getFile(ctx);
     }
 
     @Override
@@ -142,7 +130,7 @@ public class Place implements CommandInterface {
         embed.addField("__Preview__", "Returns a preview of the attached or referenced txt file\n" +
                         "```rdplace preview```", false);
 
-        embed.addField("__Queue__", "Queues the attached or referenced txt file\n" +
+        embed.addField("__Queue__", "Queues the attached or referenced txt file. Limited to 10.8k lines!\n" +
                 "```rdplace queue```", false);
 
         embed.addField("__Draw__", "Starts the drawing process or returns the status if its already drawing\n" +

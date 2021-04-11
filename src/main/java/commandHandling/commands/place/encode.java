@@ -3,12 +3,14 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import services.BotExceptions;
 
-import java.util.concurrent.TimeUnit;
-import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.util.*;
 import java.awt.*;
-import java.io.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class encode implements Runnable {
     private final ArrayList<String> list = new ArrayList<>();
@@ -20,30 +22,21 @@ public class encode implements Runnable {
         this.ctx = ctx;
     }
 
-
     @Override
     public void run() {
-        String pattern = "", fileName;
-        PrintStream writer = null;
+        String pattern, path = "tempFiles/place/encode/";
+        PrintStream writer;
         int width, height;
 
         try {
-            fileName = ctx.getMessage().getAttachments().get(0).getFileName();
-            fileName = fileName.substring(0, fileName.length() - 4);
-            ctx.getMessage().getAttachments().get(0).downloadToFile("tempFiles/place/encode/" + fileName + ".png");
+            String fileName = ctx.getMessage().getAttachments().get(0).getFileName();
+            path += fileName.substring(0, fileName.length() - 4);
+            ctx.getMessage().getAttachments().get(0).downloadToFile(path  + ".png");
             ctx.getMessage().delete().queue();
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-            img = ImageIO.read(new File("tempFiles/place/encode/" + fileName + ".png"));
-            writer = new PrintStream("tempFiles/place/encode/" + fileName + ".txt");
+            img = ImageIO.read(new File(path + ".png"));
+            writer = new PrintStream(path + ".txt");
         } catch (IOException e) {
             BotExceptions.missingAttachmentException(ctx);
-            e.printStackTrace();
-            if (writer != null)
-                writer.close();
             return;
         }
 
@@ -66,12 +59,10 @@ public class encode implements Runnable {
         img = resize(img, width, height);
 
         switch (pattern) {
-            case "leftright":
-            case "lr":
+            case "leftright": case "lr":
                 leftToRight();
                 break;
-            case "topdown":
-            case "td":
+            case "topdown": case "td":
                 topDown();
                 break;
             case "diagonal":
@@ -97,9 +88,9 @@ public class encode implements Runnable {
         writer.close();
 
         ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
-                .addFile(new File("tempFiles/place/encode/" + fileName + ".txt")).queue();
+                .addFile(new File(path + ".txt")).queue();
 
-        delete(fileName);
+        delete(path);
     }
 
     private void leftToRight() {
@@ -128,8 +119,9 @@ public class encode implements Runnable {
                     writerUtility(new Color(img.getRGB(i, j), true), i, j);
                     k++;
                 }
-                if (i < 0 && j <= n - 1)
+                if (i < 0 && j <= n - 1){
                     i = 0;
+                }
                 if (j == n) {
                     i = i + 2;
                     j--;
@@ -139,8 +131,9 @@ public class encode implements Runnable {
                     writerUtility(new Color(img.getRGB(i, j), true), i, j);
                     k++;
                 }
-                if (j < 0 && i <= m - 1)
+                if (j < 0 && i <= m - 1) {
                     j = 0;
+                }
                 if (i == m) {
                     j = j + 2;
                     i--;
@@ -152,19 +145,36 @@ public class encode implements Runnable {
 
     private void spiral() {
         int n = img.getWidth() - 1, m = img.getHeight() - 1, h = n, v = m;
+        boolean[][] usedPixels = new boolean[n + 1][m + 1];
 
         while (h >= n / 2 || v >= m / 2) {
-            for (int y = m - v; y <= v; y++)
-                writerUtility(new Color(img.getRGB(h, y), true), h, y);
+            for (int y = m - v; y <= v; y++){
+                if (!usedPixels[h][y]) {
+                    writerUtility(new Color(img.getRGB(h, y), true), h, y);
+                    usedPixels[h][y] = true;
+                }
+            }
 
-            for (int x = --h; x >= n - h - 1; x--)
-                writerUtility(new Color(img.getRGB(x, v), true), x, v);
+            for (int x = --h; x >= n - h - 1; x--) {
+                if (!usedPixels[x][v]) {
+                    writerUtility(new Color(img.getRGB(x, v), true), x, v);
+                    usedPixels[x][v] = true;
+                }
+            }
 
-            for (int y = --v; y >= m - v - 1; y--)
-                writerUtility(new Color(img.getRGB(n - h - 1, y), true), n - h - 1, y);
+            for (int y = --v; y >= m - v - 1; y--) {
+                if (!usedPixels[n - h - 1][y]) {
+                    writerUtility(new Color(img.getRGB(n - h - 1, y), true), n - h - 1, y);
+                    usedPixels[n - h - 1][y] = true;
+                }
+            }
 
-            for (int x = n - h; x <= h; x++)
-                writerUtility(new Color(img.getRGB(x, m - v - 1), true), x, m - v - 1);
+            for (int x = n - h; x <= h; x++) {
+                if (!usedPixels[x][m - v - 1]) {
+                    writerUtility(new Color(img.getRGB(x, m - v - 1), true), x, m - v - 1);
+                    usedPixels[x][m - v - 1] = true;
+                }
+            }
         }
     }
 
@@ -183,12 +193,12 @@ public class encode implements Runnable {
 
         for (int i = limit; i >= -10; i--) {
             for (double j = 0; j < 2 * Math.PI; j += 0.0001) {
-                int xC = n / 2 + (int)(Math.sin(j) * i);
-                int yC = m / 2 - (int)(Math.cos(j) * i);
+                int x = n / 2 + (int)(Math.sin(j) * i);
+                int y = m / 2 - (int)(Math.cos(j) * i);
 
-                if (xC < n && xC >= 0 && yC < m && yC >= 0 && !usedPixels[xC][yC]) {
-                    writerUtility(new Color(img.getRGB(xC, yC), true), xC, yC);
-                    usedPixels[xC][yC] = true;
+                if (x < n && x >= 0 && y < m && y >= 0 && !usedPixels[x][y]) {
+                    writerUtility(new Color(img.getRGB(x, y), true), x, y);
+                    usedPixels[x][y] = true;
                 }
             }
         }
@@ -218,13 +228,13 @@ public class encode implements Runnable {
                 days += " days, ";
             }
         }
+
         return String.format(days + "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private BufferedImage resize(BufferedImage img, int newW, int newH) {
-        int w = img.getWidth();
-        int h = img.getHeight();
         BufferedImage newImage = new BufferedImage(newW, newH, img.getType());
+        int w = img.getWidth(), h = img.getHeight();
         Graphics2D g = newImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
@@ -232,10 +242,10 @@ public class encode implements Runnable {
         return newImage;
     }
 
-    private void delete(String fileName) {
-        File myTxtObj = new File("tempFiles/place/encode/" + fileName + ".txt");
-        File myPngObj = new File("tempFiles/place/encode/" + fileName + ".png");
-        myPngObj.delete();
+    private void delete(String path) {
+        File myTxtObj = new File(path + ".txt");
+        File myPngObj = new File(path + ".png");
+        while(myPngObj.exists() && !myPngObj.delete());
         while(myTxtObj.exists() && !myTxtObj.delete());
     }
 }

@@ -1,10 +1,11 @@
 package commandHandling.commands.place;
 
-import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
+import commandHandling.CommandContext;
+import services.PermissionManager;
 import resources.EMOTES;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.concurrent.TimeUnit;
 
 public class status {
@@ -14,25 +15,31 @@ public class status {
     public status(placeData placeData, CommandContext ctx) {
         this.placeData = placeData;
         this.ctx = ctx;
-        statusReporting();
+        main();
     }
 
-    private void statusReporting() {
+    private void main() {
         EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));
 
-        if (placeData.isDrawing()) {
-            embed.setDescription("Drawing project " + placeData.getID());
+        if (placeData.drawing) {
+            embed.setDescription("Drawing project " + placeData.id);
             embed.addField("__Estimated time remaining__",
-                    timeConversion(placeData.getTotalPixels() - placeData.getDrawnPixels()), false);
-            embed.addField("__Progress__", progress() + " " + placeData.getProgress() + "%", false);
+                    timeConversion(placeData.totalPixels - placeData.drawnPixels), false);
+            embed.addField("__Progress__", progress() + " " + placeData.progress + "%", false);
+
+            if (PermissionManager.authOwner(ctx) && ctx.getArguments().size() > 1) {
+                embed.addField("__StopQ__", "" + placeData.stopQ, true);
+            }
         } else {
             embed.setDescription("Currently not drawing");
         }
 
-        ctx.getChannel().sendMessage(embed.build()).queue(msg -> msg.delete().queueAfter(30, TimeUnit.SECONDS));
+        ctx.getChannel().sendMessage(embed.build()).queue(
+                msg -> msg.delete().queueAfter(30, TimeUnit.SECONDS)
+        );
     }
 
     private String timeConversion(int linesCnt) {
@@ -53,7 +60,7 @@ public class status {
     }
 
     private String progress () {
-        int progress = placeData.getProgress();
+        int progress = placeData.progress;
         StringBuilder bar = new StringBuilder();
 
         for (int i = 0; i < 10; i++) {

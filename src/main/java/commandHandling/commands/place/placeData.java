@@ -1,59 +1,30 @@
 package commandHandling.commands.place;
 
+import java.awt.Color;
+import java.util.LinkedList;
+
 public class placeData {
-    private int id, totalPixels, drawnPixels, progress;
-    private boolean drawing, stopQ, stop;
+    public int id, totalPixels, drawnPixels, progress;
+    public boolean drawing, stopQ, stop;
+    private Color[][] img = new Color[1000][1000];
+    public LinkedList<String> fixingQ;
 
-    public boolean isDrawing () {
-        return drawing;
+    public void reset () {
+        id = totalPixels = drawnPixels = progress = 0;
+        drawing = stop = stopQ = false;
+        img = new Color[1000][1000];
+        fixingQ = new LinkedList<>();
     }
 
-    public boolean stopQ () {
-        return stopQ;
+    public void setPixel (String command) {
+        int x = Integer.parseInt(command.substring(16, 19));
+        int y = Integer.parseInt(command.substring(20, 23));
+        Color c = Color.decode(command.substring(24,31));
+        img[x][y] = c;
+        progress = (int)(++drawnPixels * 100.0 / totalPixels);
     }
 
-    public boolean stop () {
-        return stop;
-    }
-
-    public void setDrawing (boolean drawing) {
-        this.drawing = drawing;
-    }
-
-    public void setStopQ (boolean stopQ) {
-        this.stopQ = stopQ;
-    }
-
-    public void setStop (boolean stop) {
-        this.stop = stop;
-    }
-
-    public int getID () {
-        return id;
-    }
-
-    public int getTotalPixels () {
-        return totalPixels;
-    }
-
-    public int getDrawnPixels () {
-        return drawnPixels;
-    }
-
-    public int getProgress () {
-        return progress;
-    }
-
-    public int setID (int id) {
-        return this.id = id;
-    }
-
-    public void setTotalPixels (int totalPixels) {
-        this.totalPixels = totalPixels;
-    }
-
-    public void setDrawnPixels (int drawnPixels) {
-        this.drawnPixels = drawnPixels;
-        progress = (int)(drawnPixels * 100.0 / totalPixels);
+    public Color[][] getImg () {
+        return img;
     }
 }

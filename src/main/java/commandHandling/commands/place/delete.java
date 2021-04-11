@@ -15,32 +15,33 @@ public class delete {
 
     public delete(CommandContext ctx) {
         this.ctx = ctx;
-        deleting();
+        main();
     }
 
-    private void deleting() {
+    private void main() {
         ArrayList<Integer> ids = dbHandlerQ.getIDs();
+        EmbedBuilder embed = new EmbedBuilder();
         int id;
 
         try {
             id = Integer.parseInt(ctx.getArguments().get(1));
+            if (ids.contains(id)) {
+                File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
+                dbHandlerQ.deleteElementInQ(id);
+                while(myTxtObj.exists() && !myTxtObj.delete());
+            } else {
+                BotExceptions.fileDoesNotExistException(ctx);
+            }
         } catch (Exception e) {
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        if (ids.contains(id)) {
-            File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
-            dbHandlerQ.deleteElementInQ(id);
-            while(myTxtObj.exists() && !myTxtObj.delete());
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle("Delete");
-            embed.setColor(new Color(0xb074ad));
-            embed.setDescription("File " + id + " has been deleted");
-            ctx.getChannel().sendMessage(embed.build()).queue(msg ->
-                    msg.delete().queueAfter(32, TimeUnit.SECONDS));
-        } else {
-            BotExceptions.fileDoesNotExistException(ctx);
-        }
+        embed.setTitle("Delete");
+        embed.setColor(new Color(0xb074ad));
+        embed.setDescription("File " + id + " has been deleted");
+        ctx.getChannel().sendMessage(embed.build()).queue(
+                msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+        );
     }
 }

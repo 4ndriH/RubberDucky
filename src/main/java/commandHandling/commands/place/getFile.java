@@ -5,17 +5,17 @@ import services.BotExceptions;
 import services.database.dbHandlerQ;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class getFile {
     private final CommandContext ctx;
 
     public getFile(CommandContext ctx) {
         this.ctx = ctx;
-        gettingFile();
+        main();
     }
 
-    private void gettingFile () {
+    private void main () {
         int id;
 
         try {
@@ -25,15 +25,13 @@ public class getFile {
             return;
         }
 
-        ArrayList<Integer> ids = dbHandlerQ.getIDs();
-        if (!ids.contains(id)) {
+        if (dbHandlerQ.getIDs().contains(id)) {
+            ctx.getChannel().sendMessage("")
+                    .addFile(new File("tempFiles/place/queue/" + dbHandlerQ.getFile(id))).queue(
+                        msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+            );
+        } else {
             BotExceptions.fileDoesNotExistException(ctx);
-            return;
         }
-
-        String file = dbHandlerQ.getFile(id);
-
-        ctx.getChannel().sendMessage("")
-                .addFile(new File("tempFiles/place/queue/" + file)).queue();
     }
 }
