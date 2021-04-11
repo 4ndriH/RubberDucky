@@ -68,7 +68,7 @@ public class BotExceptions {
     }
 
     public static void fileTooBigException (CommandContext ctx) {
-        EmbedBuilder embed = embed("fileTooBigException", "You can not have more than 10k lines!", null);
+        EmbedBuilder embed = embed("fileTooBigException", "You can not have more than 10.8k lines!", null);
         ctx.getMessage().reply(embed.build()).queue(msg -> {
             msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
             msg.delete().queueAfter(32, TimeUnit.SECONDS);
@@ -83,10 +83,10 @@ public class BotExceptions {
         embed.setColor(Color.RED);
 
         if (ctx != null) {
-            String args = "";
+            StringBuilder args = new StringBuilder();
             for (String s : ctx.getArguments())
-                args += s + ", ";
-            embed.addField("Arguments:", args, false);
+                args.append(s).append(", ");
+            embed.addField("Arguments:", args.toString(), false);
         }
 
         return embed;
