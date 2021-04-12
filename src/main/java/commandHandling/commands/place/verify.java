@@ -15,15 +15,16 @@ public class verify {
     }
 
     private void verifier() {
-        Color[][] img = placeData.getImg();
         BufferedImage place = PlaceWebSocket.getImage();
         LinkedList<String> fixingQ = new LinkedList<>();
 
-        for (int y = 0; y < img.length; y++) {
-            for (int x = 0; x < img.length; x++) {
-                if (img[x][y] != null && !compareColors(img[x][y], new Color(place.getRGB(x, y)))) {
-                    fixingQ.add(".place setpixel " + x + " " + y + " " + rgbToHex(img[x][y]));
-                }
+        for (int i = 0; i <= placeData.drawnPixels; i++) {
+            String command = placeData.pixels.get(i);
+            int x = Integer.parseInt(command.substring(16, 19));
+            int y = Integer.parseInt(command.substring(20, 23));
+            Color colour = Color.decode(command.substring(24,31));
+            if (!compareColors(colour, new Color(place.getRGB(x, y)))) {
+                fixingQ.add(command);
             }
         }
 
@@ -34,9 +35,5 @@ public class verify {
         return img.getRed() == place.getRed() &&
                img.getGreen() == place.getGreen() &&
                img.getBlue() == place.getBlue();
-    }
-
-    private String rgbToHex(Color c) {
-        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
     }
 }

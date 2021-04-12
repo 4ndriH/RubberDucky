@@ -58,16 +58,11 @@ public class draw implements Runnable{
                 scanner.close();
 
                 placeData.totalPixels = pixels.size();
-
-                if (placeData.drawnPixels != 0) {
-                    for (int i = 0; i < placeData.drawnPixels; i++) {
-                        placeData.setPixel(pixels.get(i));
-                    }
-                }
+                placeData.pixels = pixels;
 
                 for (int i = placeData.drawnPixels; i < pixels.size() && !placeData.stop; i++) {
                     ethPlaceBots.sendMessage(pixels.get(i)).complete();
-                    placeData.setPixel(pixels.get(i));
+                    placeData.drawnPixels++;
                     if (i % 16 == 0) {
                         dbHandlerQ.updateProgressInQ(i, placeData.id);
                     }
