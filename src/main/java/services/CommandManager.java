@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class CommandManager {
@@ -66,6 +67,8 @@ public class CommandManager {
             LOGGER.info(event.getAuthor() + " running command " + invoke);
             CommandReaction.success(ctx);
             cmd.handle(ctx);
+            if (ctx.getChannel().getHistory().getMessageById(ctx.getMessage().getId()) != null)
+                ctx.getMessage().delete().queueAfter(128, TimeUnit.SECONDS);
         } else {
             CommandReaction.fail(ctx);
         }
