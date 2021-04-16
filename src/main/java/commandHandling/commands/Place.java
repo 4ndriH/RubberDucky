@@ -57,6 +57,9 @@ public class Place implements CommandInterface {
             case "status": case "s":
                 new status(placeData, ctx);
                 break;
+            case "verify": case "v":
+                verify(ctx);
+                break;
             case "help":
                 ctx.getChannel().sendMessage(getHelp().build()).queue(
                         msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
@@ -74,7 +77,7 @@ public class Place implements CommandInterface {
     }
 
     private void draw (CommandContext ctx) {
-        if (!placeData.drawing) {
+        if (!placeData.drawing || placeData.stop) {
             placeData.reset();
             Thread drawThread = new Thread(new draw(ctx, placeData));
             drawThread.start();
@@ -86,6 +89,7 @@ public class Place implements CommandInterface {
     private void stop (CommandContext ctx) {
         if (PermissionManager.authOwner(ctx)) {
             placeData.stop = true;
+            placeData.verify = false;
         } else {
             BotExceptions.missingPermissionException(ctx);
         }
@@ -109,6 +113,10 @@ public class Place implements CommandInterface {
 
     private void getFile (CommandContext ctx) {
         new getFile(ctx);
+    }
+
+    private void verify (CommandContext ctx) {
+        placeData.verify = !placeData.verify;
     }
 
     @Override

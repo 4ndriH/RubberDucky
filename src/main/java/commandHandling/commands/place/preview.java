@@ -44,7 +44,7 @@ public class preview {
             s.close();
         }
 
-        ctx.getChannel().sendMessage("").addFile(convert(img), "preview.png").queue(
+        ctx.getChannel().sendMessage("Preview").addFile(convert(img), "preview.png").queue(
                 msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
         );
     }

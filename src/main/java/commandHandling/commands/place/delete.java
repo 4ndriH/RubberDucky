@@ -31,6 +31,7 @@ public class delete {
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
                 BotExceptions.fileDoesNotExistException(ctx);
+                return;
             }
         } catch (Exception e) {
             BotExceptions.invalidArgumentsException(ctx);

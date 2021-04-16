@@ -2,9 +2,10 @@ package commandHandling.commands.place;
 
 import services.PlaceWebSocket;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class verify {
     private final placeData placeData;
@@ -18,17 +19,34 @@ public class verify {
         BufferedImage place = PlaceWebSocket.getImage();
         LinkedList<String> fixingQ = new LinkedList<>();
 
-        for (int i = 0; i <= placeData.drawnPixels; i++) {
-            String command = placeData.pixels.get(i);
-            int x = Integer.parseInt(command.substring(16, 19));
-            int y = Integer.parseInt(command.substring(20, 23));
-            Color colour = Color.decode(command.substring(24,31));
-            if (!compareColors(colour, new Color(place.getRGB(x, y)))) {
-                fixingQ.add(command);
+        if (!blackWebSocketImage(place)) {
+            for (int i = 0; i < placeData.drawnPixels; i++) {
+                String command = placeData.pixels.get(i);
+                String[] split = command.split(" ");
+                int x = Integer.parseInt(split[2]);
+                int y = Integer.parseInt(split[3]);
+                Color colour = Color.decode(split[4]);
+                if (!compareColors(colour, new Color(place.getRGB(x, y)))) {
+                    fixingQ.add(command);
+                }
+            }
+
+            placeData.fixingQ = fixingQ;
+        }
+    }
+
+    private boolean blackWebSocketImage (BufferedImage img) {
+        Random random = new Random();
+        int blackCount = 0, iterations = 1000;
+
+        for (int i = 0; i < iterations; i++) {
+            Color c = new Color(img.getRGB(random.nextInt(1000), random.nextInt(1000)));
+            if (c.getRed() <= 0 && c.getGreen() <= 0 && c.getBlue() <= 0) {
+                blackCount++;
             }
         }
 
-        placeData.fixingQ = fixingQ;
+        return blackCount == iterations;
     }
 
     private boolean compareColors (Color img, Color place) {

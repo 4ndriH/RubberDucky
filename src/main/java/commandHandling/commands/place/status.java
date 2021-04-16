@@ -32,6 +32,7 @@ public class status {
 
             if (PermissionManager.authOwner(ctx) && ctx.getArguments().size() > 1) {
                 embed.addField("__StopQ__", "" + placeData.stopQ, true);
+                embed.addField("__Verify__", "" + placeData.verify, true);
             }
         } else {
             embed.setDescription("Currently not drawing");

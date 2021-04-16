@@ -9,8 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class encode implements Runnable {
     private final ArrayList<String> list = new ArrayList<>();
@@ -31,9 +33,8 @@ public class encode implements Runnable {
         try {
             String fileName = ctx.getMessage().getAttachments().get(0).getFileName();
             path += fileName.substring(0, fileName.length() - 4);
-            ctx.getMessage().getAttachments().get(0).downloadToFile(path  + ".png");
+            img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             ctx.getMessage().delete().queue();
-            img = ImageIO.read(new File(path + ".png"));
             writer = new PrintStream(path + ".txt");
         } catch (IOException e) {
             BotExceptions.missingAttachmentException(ctx);
@@ -88,7 +89,9 @@ public class encode implements Runnable {
         writer.close();
 
         ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
-                .addFile(new File(path + ".txt")).queue();
+                .addFile(new File(path + ".txt")).queue(
+                        msg -> msg.delete().queueAfter(512, TimeUnit.SECONDS)
+        );
 
         delete(path);
     }
@@ -244,8 +247,6 @@ public class encode implements Runnable {
 
     private void delete(String path) {
         File myTxtObj = new File(path + ".txt");
-        File myPngObj = new File(path + ".png");
-        while(myPngObj.exists() && !myPngObj.delete());
         while(myTxtObj.exists() && !myTxtObj.delete());
     }
 }

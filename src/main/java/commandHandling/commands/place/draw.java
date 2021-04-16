@@ -25,7 +25,8 @@ public class draw implements Runnable{
 
     @Override
     public void run() {
-        TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
+        TextChannel ethPlaceBots = ctx.getJDA().getGuildById(817850050013036605L).getTextChannelById(832688092955148349L);
+//        TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
         Random random = new Random();
         String file;
 
@@ -64,11 +65,12 @@ public class draw implements Runnable{
                     ethPlaceBots.sendMessage(pixels.get(i)).complete();
                     placeData.drawnPixels++;
                     if (i % 16 == 0) {
+                        placeData.updateProgress();
                         dbHandlerQ.updateProgressInQ(i, placeData.id);
                     }
-                    if (i % 1800 == 0 || i == pixels.size() - 1) {
+                    if (placeData.verify && i % 1800 == 0 && i != 0 || i == pixels.size() - 1) {
                         new verify(placeData);
-                        while (!placeData.fixingQ.isEmpty()) {
+                        while (placeData.verify && !placeData.fixingQ.isEmpty()) {
                             ethPlaceBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
                         }
                     }
@@ -79,9 +81,9 @@ public class draw implements Runnable{
                     dbHandlerQ.deleteElementInQ(placeData.id);
                     File myTxtObj = new File("tempFiles/place/queue/" + file);
                     while(myTxtObj.exists() && !myTxtObj.delete());
-                    ArrayList<Integer> numbers = dbHandlerQ.getIDs();
-                    if (numbers.size() > 0) {
-                        file = dbHandlerQ.getFile(placeData.id = Integer.parseInt(ctx.getArguments().get(1)));
+                    ArrayList<Integer> ids = dbHandlerQ.getIDs();
+                    if (ids.size() > 0) {
+                        file = dbHandlerQ.getFile(placeData.id = ids.get(random.nextInt(ids.size())));
                     } else {
                         break;
                     }

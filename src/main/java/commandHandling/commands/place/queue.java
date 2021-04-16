@@ -57,6 +57,7 @@ public class queue {
                 for (String s : commands) {
                     printer.println(s);
                 }
+                printer.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
