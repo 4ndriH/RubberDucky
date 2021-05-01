@@ -1,6 +1,6 @@
 package services;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,40 +11,52 @@ import java.util.concurrent.CountDownLatch;
 
 public class PlaceWebSocket {
     public static BufferedImage getImage () {
-        CountDownLatch latch = new CountDownLatch(1);
-        WebSocketClient wsc = new WebSocketClient(latch);
-        BufferedImage img;
+        ByteBuffer buffer;
+        int maxAttempts = 4;
 
-        WebSocket ws = HttpClient
-                .newHttpClient()
-                .newWebSocketBuilder()
-                .buildAsync(URI.create("ws://52.142.4.222:9000/place"), wsc)
-                .join();
+        do {
+            CountDownLatch latch = new CountDownLatch(1);
+            WebSocketClient wsc = new WebSocketClient(latch);
 
-        ws.sendText(""+(char)1, true);
+            WebSocket ws = HttpClient
+                    .newHttpClient()
+                    .newWebSocketBuilder()
+                    .buildAsync(URI.create("wss://place.battlerush.dev/place:9000"), wsc)
+                    .join();
 
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            WebSocketClient.buffer = ByteBuffer.allocate(0);
+            ws.sendText(""+(char)1, true);
 
-        img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
-        ByteBuffer buffer = WebSocketClient.buffer;
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            buffer = WebSocketClient.buffer;
+        } while (buffer.remaining() <= 3000000 && --maxAttempts > 0);
+
+        BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         int x = 0, y = 0;
 
-        buffer.rewind();
+        buffer.position(0);
         buffer.get();
 
-        while (buffer.hasRemaining() && y < 1000) {
-            Color color = new Color((255&buffer.get()), (255&buffer.get()), (255&buffer.get()));
-            int rgb = (int)(color.getRed() * 0.299);
-            rgb += (color.getGreen() * 0.587) + (color.getBlue() * 0.114);
-            img.setRGB(x++, y, new Color(rgb, rgb, rgb).getRGB());
-            if (x == 1000) {
-                x = 0;
-                y++;
+        if (buffer.remaining() >= 3000000) {
+            while (buffer.hasRemaining() && y < 1000) {
+                Color color = new Color(255&buffer.get(), 255&buffer.get(), 255&buffer.get());
+                img.setRGB(x++, y, color.getRGB());
+                if (x == 1000) {
+                    x = 0;
+                    y++;
+                }
             }
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         return img;
