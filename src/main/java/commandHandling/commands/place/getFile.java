@@ -26,7 +26,7 @@ public class getFile {
         }
 
         if (dbHandlerQ.getIDs().contains(id)) {
-            ctx.getChannel().sendMessage("")
+            ctx.getChannel().sendMessage("File:")
                     .addFile(new File("tempFiles/place/queue/" + dbHandlerQ.getFile(id))).queue(
                         msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
             );

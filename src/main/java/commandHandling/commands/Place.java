@@ -31,7 +31,7 @@ public class Place implements CommandInterface {
                 encode(ctx);
                 break;
             case "preview": case "p":
-                new preview(ctx);
+                new Thread(new preview(ctx)).start();
                 break;
             case "draw": case "d":
                 draw(ctx);
@@ -130,7 +130,7 @@ public class Place implements CommandInterface {
         embed.setTitle("Help - Place");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Place has been created by <@!153929916977643521>\n" +
-                "[Live View & Time Lapse](http://52.142.4.222:81/)");
+                "[Live View & Time Lapse](https://place.battlerush.dev/)");
 
         embed.addField("__Encode__", "Returns a txt file with the draw commands for the attached image\n" +
                 "```rdplace encode <x> <y> <widht> <height> [<mode>] ```\n", false);

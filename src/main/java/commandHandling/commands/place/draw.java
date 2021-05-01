@@ -25,8 +25,7 @@ public class draw implements Runnable{
 
     @Override
     public void run() {
-        TextChannel ethPlaceBots = ctx.getJDA().getGuildById(817850050013036605L).getTextChannelById(832688092955148349L);
-//        TextChannel ethPlaceBots = ctx.getGuild().getTextChannelById(819966095070330950L);
+        TextChannel ethPlaceBots = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
         Random random = new Random();
         String file;
 
@@ -62,17 +61,22 @@ public class draw implements Runnable{
                 placeData.pixels = pixels;
 
                 for (int i = placeData.drawnPixels; i < pixels.size() && !placeData.stop; i++) {
-                    ethPlaceBots.sendMessage(pixels.get(i)).complete();
-                    placeData.drawnPixels++;
-                    if (i % 16 == 0) {
-                        placeData.updateProgress();
-                        dbHandlerQ.updateProgressInQ(i, placeData.id);
-                    }
-                    if (placeData.verify && i % 1800 == 0 && i != 0 || i == pixels.size() - 1) {
-                        new verify(placeData);
-                        while (placeData.verify && !placeData.fixingQ.isEmpty()) {
-                            ethPlaceBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
+                    try {
+                        ethPlaceBots.sendMessage(pixels.get(i)).complete();
+                        placeData.drawnPixels++;
+                        if (i % 16 == 0) {
+                            placeData.updateProgress();
+                            dbHandlerQ.updateProgressInQ(i, placeData.id);
                         }
+                        if (placeData.verify && i % 1800 == 0 && i != 0 || i == pixels.size() - 1) {
+                            new verify(placeData);
+                            while (placeData.verify && !placeData.fixingQ.isEmpty()) {
+                                ethPlaceBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
+                            }
+                        }
+                    } catch (Exception e) {
+                        i--;
+                        Thread.sleep(8000);
                     }
                 }
 
@@ -89,7 +93,7 @@ public class draw implements Runnable{
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
         placeData.drawing = false;

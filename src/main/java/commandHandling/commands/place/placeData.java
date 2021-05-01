@@ -11,8 +11,7 @@ public class placeData {
 
     public void reset () {
         id = totalPixels = drawnPixels = progress = 0;
-        drawing = stop = stopQ = false;
-        verify = true;
+        drawing = stop = stopQ = verify = false;
         pixels = new ArrayList<>();
         fixingQ = new LinkedList<>();
     }

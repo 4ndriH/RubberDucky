@@ -71,6 +71,13 @@ public class queue {
                     msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
             );
 
+            embed.setTitle("A file has been queued");
+            embed.setDescription("<@!" + ctx.getAuthor().getId() + ">");
+
+            ctx.getJDA().openPrivateChannelById(155419933998579713L).queue(
+                    channel -> channel.sendMessage(embed.build()).queue()
+            );
+
             dbHandlerQ.addToQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());
         }
 

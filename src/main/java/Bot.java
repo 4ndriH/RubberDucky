@@ -1,9 +1,9 @@
-import resources.CONFIG;
-import services.Listener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import resources.CONFIG;
+import services.Listener;
 
 import javax.security.auth.login.LoginException;
 
@@ -23,6 +23,7 @@ public class Bot {
                         CacheFlag.EMOTE
                 )
                 .addEventListeners(new Listener())
+//                .addEventListeners(new FerrisListener())
                 .setActivity(Activity.watching("My Development"))
                 .build();
     }

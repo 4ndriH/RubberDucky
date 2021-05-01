@@ -14,15 +14,15 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class preview {
+public class preview implements Runnable{
     private final CommandContext ctx;
 
     public preview(CommandContext ctx) {
         this.ctx = ctx;
-        main();
     }
 
-    private void main() {
+    @Override
+    public void run() {
         BufferedImage img = PlaceWebSocket.getImage();
         Scanner scanner;
 
@@ -35,6 +35,15 @@ public class preview {
             } catch (Exception ee) {
                 BotExceptions.missingAttachmentException(ctx);
                 return;
+            }
+        }
+
+        for (int i = 0; i < img.getHeight(); i++) {
+            for (int j = 0; j < img.getWidth(); j++) {
+                Color color = new Color(img.getRGB(i, j));
+                int rgb = (int)(color.getRed() * 0.299);
+                rgb += (color.getGreen() * 0.587) + (color.getBlue() * 0.114);
+                img.setRGB(i, j, new Color(rgb, rgb, rgb).getRGB());
             }
         }
 
