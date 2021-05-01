@@ -1,9 +1,11 @@
 package services;
 
 import commandHandling.CommandContext;
-
 import commandHandling.CommandInterface;
-import commandHandling.commands.*;
+import commandHandling.commands.Help;
+import commandHandling.commands.Ping;
+import commandHandling.commands.Place;
+import commandHandling.commands.SemesterSpokesPeople;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,12 +65,15 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
+        ctx.getMessage().delete().onErrorFlatMap(
+                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("817850050013036608")
+                        .sendTyping()
+        ).queueAfter(128, TimeUnit.SECONDS);
+
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
             LOGGER.info(event.getAuthor() + " running command " + invoke);
             CommandReaction.success(ctx);
             cmd.handle(ctx);
-            if (ctx.getChannel().getHistory().getMessageById(ctx.getMessage().getId()) != null)
-                ctx.getMessage().delete().queueAfter(128, TimeUnit.SECONDS);
         } else {
             CommandReaction.fail(ctx);
         }
