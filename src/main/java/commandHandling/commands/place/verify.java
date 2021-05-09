@@ -16,7 +16,7 @@ public class verify {
     }
 
     private void verifier() {
-        BufferedImage place = PlaceWebSocket.getImage();
+        BufferedImage place = PlaceWebSocket.getImage(true);
         LinkedList<String> fixingQ = new LinkedList<>();
 
         if (!blackWebSocketImage(place)) {
