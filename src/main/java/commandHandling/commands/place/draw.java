@@ -76,6 +76,8 @@ public class draw implements Runnable{
                         }
                     } catch (Exception e) {
                         i--;
+                        System.out.println("Discord websocket/sending error caught!");
+                        System.out.println(e);
                         Thread.sleep(8000);
                     }
                 }
