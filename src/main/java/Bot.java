@@ -24,7 +24,7 @@ public class Bot {
                 )
                 .addEventListeners(new Listener())
 //                .addEventListeners(new FerrisListener())
-                .setActivity(Activity.watching("My Development"))
+                .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
 }
