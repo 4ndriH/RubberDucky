@@ -16,74 +16,74 @@ public class Galactic implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String message = "";
+        StringBuilder message = new StringBuilder();
         boolean reply = true;
 
         try {
-            message = ctx.getMessage().getReferencedMessage().getContentRaw() + " ";
+            message = new StringBuilder(ctx.getMessage().getReferencedMessage().getContentRaw() + " ");
         } catch (Exception e) {
             for (String s : ctx.getArguments()) {
-                message += s + " ";
+                message.append(s).append(" ");
             }
             ctx.getMessage().delete().queue();
             reply = false;
         }
 
-        if (isEnglish(message)) {
-            message = message.replace("a", "ᔑ");
-            message = message.replace("b", "ʖ");
-            message = message.replace("c", "ᓵ");
-            message = message.replace("d", "↸");
-            message = message.replace("e", "ᒷ");
-            message = message.replace("f", "⎓");
-            message = message.replace("g", "⊣");
-            message = message.replace("h", "⍑");
-            message = message.replace("i", "╎");
-            message = message.replace("j", "⋮");
-            message = message.replace("k", "ꖌ");
-            message = message.replace("l", "ꖎ");
-            message = message.replace("m", "ᒲ");
-            message = message.replace("n", "リ");
-            message = message.replace("o", "\uD835\uDE79");
-            message = message.replace("p", "!¡");
-            message = message.replace("q", "ᑑ");
-            message = message.replace("r", "∷");
-            message = message.replace("s", "ᓭ");
-            message = message.replace("t", "ℸ ̣ ");
-            message = message.replace("u", "⚍");
-            message = message.replace("v", "⍊");
-            message = message.replace("w", "∴");
-            message = message.replace("x", "̇/");
-            message = message.replace("y", "\\||");
-            message = message.replace("z", "⨅");
+        if (isEnglish(message.toString())) {
+            message = new StringBuilder(message.toString().replace("a", "ᔑ"));
+            message = new StringBuilder(message.toString().replace("b", "ʖ"));
+            message = new StringBuilder(message.toString().replace("c", "ᓵ"));
+            message = new StringBuilder(message.toString().replace("d", "↸"));
+            message = new StringBuilder(message.toString().replace("e", "ᒷ"));
+            message = new StringBuilder(message.toString().replace("f", "⎓"));
+            message = new StringBuilder(message.toString().replace("g", "⊣"));
+            message = new StringBuilder(message.toString().replace("h", "⍑"));
+            message = new StringBuilder(message.toString().replace("i", "╎"));
+            message = new StringBuilder(message.toString().replace("j", "⋮"));
+            message = new StringBuilder(message.toString().replace("k", "ꖌ"));
+            message = new StringBuilder(message.toString().replace("l", "ꖎ"));
+            message = new StringBuilder(message.toString().replace("m", "ᒲ"));
+            message = new StringBuilder(message.toString().replace("n", "リ"));
+            message = new StringBuilder(message.toString().replace("o", "\uD835\uDE79"));
+            message = new StringBuilder(message.toString().replace("p", "!¡"));
+            message = new StringBuilder(message.toString().replace("q", "ᑑ"));
+            message = new StringBuilder(message.toString().replace("r", "∷"));
+            message = new StringBuilder(message.toString().replace("s", "ᓭ"));
+            message = new StringBuilder(message.toString().replace("t", "ℸ ̣ "));
+            message = new StringBuilder(message.toString().replace("u", "⚍"));
+            message = new StringBuilder(message.toString().replace("v", "⍊"));
+            message = new StringBuilder(message.toString().replace("w", "∴"));
+            message = new StringBuilder(message.toString().replace("x", "̇/"));
+            message = new StringBuilder(message.toString().replace("y", "\\||"));
+            message = new StringBuilder(message.toString().replace("z", "⨅"));
         } else {
-            message = message.replace("ᔑ", "a");
-            message = message.replace("ʖ", "b");
-            message = message.replace("ᓵ", "c");
-            message = message.replace("↸", "d");
-            message = message.replace("ᒷ", "e");
-            message = message.replace("⎓", "f");
-            message = message.replace("⊣", "g");
-            message = message.replace("⍑", "h");
-            message = message.replace("╎", "i");
-            message = message.replace("⋮", "j");
-            message = message.replace("ꖌ", "k");
-            message = message.replace("ꖎ", "l");
-            message = message.replace("ᒲ", "m");
-            message = message.replace("リ", "n");
-            message = message.replace("\uD835\uDE79", "o");
-            message = message.replace("!¡", "p");
-            message = message.replace("ᑑ", "q");
-            message = message.replace("∷", "r");
-            message = message.replace("ᓭ", "s");
-            message = message.replace("ℸ ̣ ", "t");
-            message = message.replace("⚍", "u");
-            message = message.replace("⍊", "v");
-            message = message.replace("∴", "w");
-            message = message.replace("̇/", "x");
-            message = message.replace("\\||", "y");
-            message = message.replace("||", "y");
-            message = message.replace("⨅", "z");
+            message = new StringBuilder(message.toString().replace("ᔑ", "a"));
+            message = new StringBuilder(message.toString().replace("ʖ", "b"));
+            message = new StringBuilder(message.toString().replace("ᓵ", "c"));
+            message = new StringBuilder(message.toString().replace("↸", "d"));
+            message = new StringBuilder(message.toString().replace("ᒷ", "e"));
+            message = new StringBuilder(message.toString().replace("⎓", "f"));
+            message = new StringBuilder(message.toString().replace("⊣", "g"));
+            message = new StringBuilder(message.toString().replace("⍑", "h"));
+            message = new StringBuilder(message.toString().replace("╎", "i"));
+            message = new StringBuilder(message.toString().replace("⋮", "j"));
+            message = new StringBuilder(message.toString().replace("ꖌ", "k"));
+            message = new StringBuilder(message.toString().replace("ꖎ", "l"));
+            message = new StringBuilder(message.toString().replace("ᒲ", "m"));
+            message = new StringBuilder(message.toString().replace("リ", "n"));
+            message = new StringBuilder(message.toString().replace("\uD835\uDE79", "o"));
+            message = new StringBuilder(message.toString().replace("!¡", "p"));
+            message = new StringBuilder(message.toString().replace("ᑑ", "q"));
+            message = new StringBuilder(message.toString().replace("∷", "r"));
+            message = new StringBuilder(message.toString().replace("ᓭ", "s"));
+            message = new StringBuilder(message.toString().replace("ℸ ̣ ", "t"));
+            message = new StringBuilder(message.toString().replace("⚍", "u"));
+            message = new StringBuilder(message.toString().replace("⍊", "v"));
+            message = new StringBuilder(message.toString().replace("∴", "w"));
+            message = new StringBuilder(message.toString().replace("̇/", "x"));
+            message = new StringBuilder(message.toString().replace("\\||", "y"));
+            message = new StringBuilder(message.toString().replace("||", "y"));
+            message = new StringBuilder(message.toString().replace("⨅", "z"));
         }
 
         if (message.length() > 2000) {
@@ -92,9 +92,9 @@ public class Galactic implements CommandInterface {
         }
 
         if (reply) {
-            ctx.getMessage().getReferencedMessage().reply(message).queue();
+            ctx.getMessage().getReferencedMessage().reply(message.toString()).queue();
         } else {
-            ctx.getChannel().sendMessage(message).queue();
+            ctx.getChannel().sendMessage(message.toString()).queue();
         }
 
     }
