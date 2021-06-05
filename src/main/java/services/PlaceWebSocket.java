@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 public class PlaceWebSocket {
     public static BufferedImage getImage (boolean colored) {
         ByteBuffer buffer;
-        int maxAttempts = 8;
 
         do {
             CountDownLatch latch = new CountDownLatch(1);
@@ -36,7 +35,7 @@ public class PlaceWebSocket {
 
             buffer = WebSocketClient.buffer;
             ws.abort();
-        } while (buffer.remaining() <= 3000000 && --maxAttempts > 0);
+        } while (buffer.remaining() <= 3000000);
 
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         int x = 0, y = 0;
@@ -44,6 +43,7 @@ public class PlaceWebSocket {
         buffer.position(0);
         buffer.get();
 
+        // write the received data to a buffered image, either colored or grey scaled
         if (buffer.remaining() >= 3000000) {
             while (buffer.hasRemaining() && y < 1000) {
                 int r = 255&buffer.get(), g = 255&buffer.get(), b = 255&buffer.get();
@@ -64,8 +64,9 @@ public class PlaceWebSocket {
             }
         }
 
+        // Sleep so the buffered image is not just black before it gets returned
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -83,7 +84,7 @@ public class PlaceWebSocket {
 
         @Override
         public CompletionStage<?> onBinary(WebSocket webSocket, ByteBuffer data, boolean last) {
-            // weird packets arriving
+            // Live Pixels arriving
             if(data.remaining() == 9 && last && buffer.remaining() < 1000) {
                 return WebSocket.Listener.super.onBinary(webSocket, data, last);
             }
@@ -100,13 +101,12 @@ public class PlaceWebSocket {
 
         @Override
         public void onError(WebSocket webSocket, Throwable error) {
-            System.out.println("Websocket Error: " + error);
+            latch.countDown();
             Listener.super.onError(webSocket, error);
         }
 
         @Override
         public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-            System.out.println("Websocket Close: " + statusCode);
             latch.countDown();
             return Listener.super.onClose(webSocket, statusCode, reason);
         }

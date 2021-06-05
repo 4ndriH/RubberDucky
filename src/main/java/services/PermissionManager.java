@@ -11,20 +11,12 @@ public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
 
     public static boolean permissionCheck(CommandContext ctx, String invoke) {
-        return authOwner(ctx) || serverCheck(ctx) && !botCheck(ctx)
-                && roleCheck(ctx, invoke) && channelCheck(ctx, invoke) && !blackListCheck(ctx);
+        return authenticateOwner(ctx) || serverCheck(ctx) && roleCheck(ctx, invoke) && channelCheck(ctx, invoke) &&
+                !blackListCheck(ctx);
     }
 
-    public static boolean authOwner (CommandContext ctx) {
+    public static boolean authenticateOwner(CommandContext ctx) {
         return ctx.getAuthor().getId().equals(CONFIG.OwnerID.get());
-    }
-
-    public static boolean botCheck (CommandContext ctx) {
-        return ctx.getMessage().getAuthor().isBot();
-    }
-
-    public static boolean blackListCheck (CommandContext ctx) {
-        return dbHandlerPermissions.blackList(ctx.getAuthor().getId());
     }
 
     public static boolean serverCheck (CommandContext ctx) {
@@ -47,5 +39,9 @@ public class PermissionManager {
         ArrayList<String> permittedChannels = dbHandlerPermissions.channels(invoke);
 
         return permittedChannels.size() == 0 || permittedChannels.contains(ctx.getChannel().getId());
+    }
+
+    public static boolean blackListCheck (CommandContext ctx) {
+        return dbHandlerPermissions.blackList(ctx.getAuthor().getId());
     }
 }

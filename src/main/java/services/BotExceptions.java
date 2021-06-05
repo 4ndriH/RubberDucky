@@ -9,86 +9,63 @@ import java.util.concurrent.TimeUnit;
 
 public class BotExceptions {
     public static void invalidArgumentsException (CommandContext ctx) {
-        EmbedBuilder embed = embed("invalidArgumentsException", "The give Arguments do not match " +
-                "the required criterias", ctx);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("invalidArgumentsException", "The give Arguments do not match " +
+                "the required criteria", ctx);
     }
 
     public static void commandNotFoundException (CommandContext ctx, String command) {
-        EmbedBuilder embed = embed("commandNotFoundException", "Command \"" + command + "\" not found!",
-                null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("commandNotFoundException", "Command \"" + command + "\" not found!", ctx);
     }
 
     public static void missingAttachmentException (CommandContext ctx) {
-        EmbedBuilder embed = embed("missingAttachmentException", "No attachment found!", null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("missingAttachmentException", "No attachment found!", ctx);
     }
 
     public static void fileDoesNotExistException (CommandContext ctx) {
-        EmbedBuilder embed = embed("fileDoesNotExistException", "File does not exist!", null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("fileDoesNotExistException", "File does not exist!", ctx);
     }
 
     public static void missingPermissionException(CommandContext ctx) {
-        EmbedBuilder embed = embed("missingPermissionException", "You do not have the required permissions " +
-                "to run this command!", null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("missingPermissionException",
+                "You do not have the required permissions to run this command!", ctx);
     }
 
     public static void invalidIdException(CommandContext ctx) {
-        EmbedBuilder embed = embed("invalidIdException", "This ID does not exist!", ctx);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("invalidIdException", "This ID does not exist!", ctx);
     }
 
     public static void emptyQueueException (CommandContext ctx) {
-        EmbedBuilder embed = embed("emptyQueueException", "There are no files in the queue!", null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("emptyQueueException", "There are no files in the queue!", ctx);
     }
 
     public static void fileTooBigException (CommandContext ctx) {
-        EmbedBuilder embed = embed("fileTooBigException", "You can not have more than 10.8k lines!", null);
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        });
+        embed("fileTooBigException", "You can not have more than 10.8k lines!", ctx);
     }
 
-    private static EmbedBuilder embed (String type, String message, CommandContext ctx) {
+    public static void FileExceedsUploadLimitException (CommandContext ctx) {
+        int boost = ctx.getGuild().getBoostCount();
+        embed("FileExceedsUploadLimitException","The file exceeds the possible " +
+                (boost <= 1 ? 8 : boost == 2 ? 50 : 100) + "mb!", ctx);
+    }
+
+    // Builds the embed and sends it as a response to a failed sub command
+    private static void embed (String type, String message, CommandContext ctx) {
         EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle(type);
         embed.setDescription(message);
         embed.setColor(Color.RED);
 
-        if (ctx != null) {
+        if (ctx.getArguments().size() > 1) {
             StringBuilder args = new StringBuilder();
             for (String s : ctx.getArguments())
                 args.append(s).append(", ");
             embed.addField("Arguments:", args.toString(), false);
         }
 
-        return embed;
+        ctx.getMessage().reply(embed.build()).queue(msg -> {
+            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
+            msg.delete().queueAfter(32, TimeUnit.SECONDS);
+        });
     }
 }

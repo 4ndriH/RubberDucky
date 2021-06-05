@@ -2,10 +2,8 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
-import commandHandling.commands.Help;
-import commandHandling.commands.Ping;
-import commandHandling.commands.Place;
-import commandHandling.commands.SemesterSpokesPeople;
+import commandHandling.commands.Shutdown;
+import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +21,13 @@ public class CommandManager {
     private final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
+        addCommand(new Shutdown(LOGGER));
+        addCommand(new Kill(LOGGER));
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
-        addCommand(new SemesterSpokesPeople());
+        addCommand(new SemesterSpokesPeople(LOGGER));
+        addCommand(new Galactic());
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -65,16 +66,24 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
+        // Queue a message delete with an error handler to prevent exceptions if the message is already gone
         ctx.getMessage().delete().onErrorFlatMap(
-                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("817850050013036608")
+                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("847805084784132137")
                         .sendTyping()
         ).queueAfter(128, TimeUnit.SECONDS);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
-            LOGGER.info(event.getAuthor() + " running command " + invoke);
-            CommandReaction.success(ctx);
-            cmd.handle(ctx);
+            if (!invoke.equals("place")) {
+                services.Logger.command(ctx, invoke, true);
+                CommandReaction.success(ctx);
+            }
+            try {
+                cmd.handle(ctx);
+            } catch (Exception e) {
+                services.Logger.exception(ctx, e);
+            }
         } else {
+            services.Logger.command(ctx, invoke, false);
             CommandReaction.fail(ctx);
         }
     }
