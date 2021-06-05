@@ -25,13 +25,18 @@
             <name>jfrog-duncte123</name>
             <url>https://duncte123.jfrog.io/artifactory/maven</url>
         </repository>
+        <repository>
+            <id>dv8tion</id>
+            <name>m2-dv8tion</name>
+            <url>https://m2.dv8tion.net/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_241</version>
+            <version>4.2.1_269</version>
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
