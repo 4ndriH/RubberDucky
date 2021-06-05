@@ -1,12 +1,12 @@
 package commandHandling.commands;
 
+import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
-import resources.CONFIG;
-import services.*;
-import commandHandling.CommandContext;
-import commandHandling.CommandInterface;
+import services.BotExceptions;
+import services.CommandManager;
 
 import java.awt.*;
 import java.util.List;
@@ -32,7 +32,8 @@ public class Help implements CommandInterface {
             embed.setColor(new Color(0xb074ad));
             embed.setFooter("rdhelp <command> gives you a more detailed description");
 
-            embed.addField("__Miscellaneous__", "rdhelp\nrdping\nrdspokesPeople\nrdplace", true);
+            embed.addField("__Miscellaneous__", "rdhelp\nrdping\nrdspokesPeople\nrdplace\nrdgalactic", true);
+            embed.addField("__Owner__", "rdkill\nrdshutdown", true);
 
             ctx.getChannel().sendMessage(embed.build()).queue(msg ->
                     msg.delete().queueAfter(64, TimeUnit.SECONDS));
