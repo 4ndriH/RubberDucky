@@ -48,6 +48,11 @@ public class BotExceptions {
                 (boost <= 1 ? 8 : boost == 2 ? 50 : 100) + "mb!", ctx);
     }
 
+    public static void exceedsCharLimitException (CommandContext ctx) {
+        int boost = ctx.getGuild().getBoostCount();
+        embed("exceedsCharLimitException","The text exceeds the 2000 char limit!", ctx);
+    }
+
     // Builds the embed and sends it as a response to a failed sub command
     private static void embed (String type, String message, CommandContext ctx) {
         EmbedBuilder embed = new EmbedBuilder();
