@@ -17,6 +17,7 @@ public class Shutdown implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         if (ctx.getAuthor().getId().equals(CONFIG.OwnerID.get())) {
+            services.Logger.command(ctx, "shutdown", true);
             services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down", "");
             ctx.getChannel().sendMessage("Shutting down").addFile(new File("resources/shutdown.gif")).queue();
             ctx.getJDA().shutdown();

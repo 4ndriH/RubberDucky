@@ -19,6 +19,7 @@ public class SemesterSpokesPeople implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        services.Logger.command(ctx, "semesterspokespeople", true);
         EmbedBuilder embed = new EmbedBuilder();
         String firstYear = dbHandlerSpokesPeople.getPeople(1);
         String secondYear = dbHandlerSpokesPeople.getPeople(2);

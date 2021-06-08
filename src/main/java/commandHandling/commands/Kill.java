@@ -18,6 +18,7 @@ public class Kill implements CommandInterface {
     public void handle(CommandContext ctx) {
         if (ctx.getAuthor().getId().equals(CONFIG.OwnerID.get())) {
             services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is committing sudoku", "");
+            services.Logger.command(ctx, "kill", true);
             ctx.getChannel().sendMessage("Shutting down").addFile(new File("resources/shutdown.gif")).queue();
             ctx.getJDA().shutdownNow();
         }

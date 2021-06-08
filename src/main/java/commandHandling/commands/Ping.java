@@ -16,6 +16,7 @@ public class Ping implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        services.Logger.command(ctx, "ping", true);
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(

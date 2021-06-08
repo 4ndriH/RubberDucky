@@ -16,6 +16,7 @@ public class Galactic implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        services.Logger.command(ctx, "galactic", true);
         StringBuilder message = new StringBuilder();
         boolean reply = true;
 

@@ -22,6 +22,7 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        services.Logger.command(ctx, "help", true);
         List<String> arguments = ctx.getArguments();
         TextChannel channel = ctx.getChannel();
 
