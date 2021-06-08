@@ -1,18 +1,19 @@
 package commandHandling.commands.place;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import commandHandling.CommandContext;
-import services.PermissionManager;
+import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
+import services.Logger;
+import services.PermissionManager;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-public class status {
+public class PlaceStatus {
     private final placeData placeData;
     private final CommandContext ctx;
 
-    public status(placeData placeData, CommandContext ctx) {
+    public PlaceStatus(placeData placeData, CommandContext ctx) {
         this.placeData = placeData;
         this.ctx = ctx;
         main();
@@ -21,6 +22,8 @@ public class status {
     private void main() {
         EmbedBuilder embed = new EmbedBuilder();
 
+        Logger.command(ctx, "place", true);
+
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));
 
@@ -28,9 +31,11 @@ public class status {
             embed.setDescription("Drawing project " + placeData.id);
             embed.addField("__Estimated time remaining__",
                     timeConversion(placeData.totalPixels - placeData.drawnPixels), false);
+            embed.addField("__Pixels__", pixelAlignment(), false);
             embed.addField("__Progress__", progress() + " " + placeData.progress + "%", false);
 
-            if (PermissionManager.authOwner(ctx) && ctx.getArguments().size() > 1) {
+
+            if (PermissionManager.authenticateOwner(ctx) && ctx.getArguments().size() > 1) {
                 embed.addField("__StopQ__", "" + placeData.stopQ, true);
                 embed.addField("__Verify__", "" + placeData.verify, true);
             }
@@ -39,7 +44,7 @@ public class status {
         }
 
         ctx.getChannel().sendMessage(embed.build()).queue(
-                msg -> msg.delete().queueAfter(30, TimeUnit.SECONDS)
+                msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
         );
     }
 
@@ -58,6 +63,17 @@ public class status {
             }
         }
         return String.format(days + "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    private String pixelAlignment () {
+        String pixelInfo = "";
+        pixelInfo += String.format("%-10s % 9d%n", "Total pixels:", placeData.totalPixels);
+        pixelInfo += String.format("%-10s % 9d%n", "Drawn pixels:", placeData.drawnPixels);
+        pixelInfo += String.format("%-13s % 9d%n", "Pixels left:", placeData.totalPixels - placeData.drawnPixels);
+        if (placeData.fixedPixels != 0) {
+            pixelInfo += String.format("%-10s % 9d%n", "Fixed pixels:", placeData.fixedPixels);
+        }
+        return pixelInfo;
     }
 
     private String progress () {

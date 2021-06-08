@@ -2,25 +2,25 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
+import services.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-public class encode implements Runnable {
+public class PlaceEncode implements Runnable {
     private final ArrayList<String> list = new ArrayList<>();
     private final CommandContext ctx;
     private BufferedImage img = null;
     private int x, y;
 
-    public encode(CommandContext ctx) {
+    public PlaceEncode(CommandContext ctx) {
         this.ctx = ctx;
     }
 
@@ -34,9 +34,9 @@ public class encode implements Runnable {
             String fileName = ctx.getMessage().getAttachments().get(0).getFileName();
             path += fileName.substring(0, fileName.length() - 4);
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            ctx.getMessage().delete().queue();
             writer = new PrintStream(path + ".txt");
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Logger.commandAndException(ctx, "place", e, false);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -47,9 +47,12 @@ public class encode implements Runnable {
             width = Integer.parseInt(ctx.getArguments().get(3));
             height = Integer.parseInt(ctx.getArguments().get(4));
         } catch (Exception e) {
+            Logger.commandAndException(ctx, "place", e, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
+
+        Logger.command(ctx, "place", true);
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
@@ -78,9 +81,6 @@ public class encode implements Runnable {
             case "circle":
                 circle();
                 break;
-            default:
-                BotExceptions.invalidArgumentsException(ctx);
-                return;
         }
 
         for (String s : list) {
@@ -88,10 +88,15 @@ public class encode implements Runnable {
         }
         writer.close();
 
-        ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
-                .addFile(new File(path + ".txt")).queue(
-                        msg -> msg.delete().queueAfter(512, TimeUnit.SECONDS)
-        );
+        try {
+            ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
+                    .addFile(new File(path + ".txt")).queue(
+                            msg -> msg.delete().queueAfter(512, TimeUnit.SECONDS)
+            );
+        } catch (IllegalArgumentException e) {
+            Logger.exception(ctx, e);
+            BotExceptions.FileExceedsUploadLimitException(ctx);
+        }
 
         delete(path);
     }

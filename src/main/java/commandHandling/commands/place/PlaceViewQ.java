@@ -2,6 +2,7 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
+import services.Logger;
 import services.database.dbHandlerQ;
 
 import java.awt.Color;
@@ -9,9 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
-public class viewQ {
+public class PlaceViewQ {
     private final CommandContext ctx;
-    public viewQ(CommandContext ctx) {
+    public PlaceViewQ(CommandContext ctx) {
         this.ctx = ctx;
         main();
     }
@@ -30,10 +31,12 @@ public class viewQ {
                 users.append("<@!").append(rs.getString("user")).append(">\n");
             }
             rs.getStatement().getConnection().close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            Logger.exception(ctx, e);
             return;
         }
+
+        Logger.command(ctx, "place", true);
 
         embed.setTitle("Queue");
         embed.setColor(new Color(0xb074ad));

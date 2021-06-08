@@ -4,6 +4,7 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import services.BotExceptions;
+import services.Logger;
 import services.PermissionManager;
 import services.database.dbHandlerQ;
 
@@ -14,24 +15,25 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class draw implements Runnable{
+public class PlaceDraw implements Runnable{
     private final CommandContext ctx;
     private final placeData placeData;
 
-    public draw(CommandContext ctx, placeData placeData) {
+    public PlaceDraw(CommandContext ctx, placeData placeData) {
         this.ctx = ctx;
         this.placeData = placeData;
     }
 
     @Override
     public void run() {
-        TextChannel ethPlaceBots = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
+        TextChannel placeBots = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
         Random random = new Random();
         String file;
 
-        if (ctx.getArguments().size() > 1 && PermissionManager.authOwner(ctx)) {
+        if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             file = dbHandlerQ.getFile(placeData.id = Integer.parseInt(ctx.getArguments().get(1)));
             if (file.length() == 0) {
+                Logger.command(ctx, "place", false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -40,10 +42,13 @@ public class draw implements Runnable{
             if (numbers.size() > 0) {
                 file = dbHandlerQ.getFile(placeData.id = numbers.get(random.nextInt(numbers.size())));
             } else {
+                Logger.command(ctx, "place", false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
+
+        Logger.command(ctx, "place", true);
 
         try {
             while (file != null && !placeData.stop && !placeData.stopQ) {
@@ -62,23 +67,35 @@ public class draw implements Runnable{
 
                 for (int i = placeData.drawnPixels; i < pixels.size() && !placeData.stop; i++) {
                     try {
-                        ethPlaceBots.sendMessage(pixels.get(i)).complete();
+                        placeBots.sendMessage(pixels.get(i)).complete();
                         placeData.drawnPixels++;
                         if (i % 16 == 0) {
                             placeData.updateProgress();
                             dbHandlerQ.updateProgressInQ(i, placeData.id);
                         }
-                        if (placeData.verify && i % 1800 == 0 && i != 0 || i == pixels.size() - 1) {
-                            new verify(placeData);
+                        if (placeData.verify && (i % 2048 == 0 && i != 0 || i == pixels.size() - 1)) {
+                            // debugging
+                            if (i == pixels.size() - 1) {
+                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Image complete, final inspection");
+                            new PlaceVerify(placeData);
+                            }
+                            // debugging
+                            if (i == pixels.size() - 1) {
+                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Final Inspection complete, commencing fixing " + placeData.fixingQ.size() + " pixels");
+                            }
                             while (placeData.verify && !placeData.fixingQ.isEmpty()) {
-                                ethPlaceBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
+                                placeBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
+                                placeData.fixedPixels++;
+                            }
+                            // debugging
+                            if (i == pixels.size() - 1) {
+                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Fixing completed");
                             }
                         }
                     } catch (Exception e) {
                         i--;
-                        System.out.println("Discord websocket/sending error caught!");
-                        System.out.println(e);
-                        Thread.sleep(8000);
+                        Logger.exception(ctx, e);
+                        Thread.sleep(16000);
                     }
                 }
 
@@ -91,12 +108,12 @@ public class draw implements Runnable{
                     if (ids.size() > 0) {
                         file = dbHandlerQ.getFile(placeData.id = ids.get(random.nextInt(ids.size())));
                     } else {
-                        break;
+                        return;
                     }
                 }
             }
         } catch (FileNotFoundException | InterruptedException e) {
-            e.printStackTrace();
+            Logger.exception(ctx, e);
         }
         placeData.drawing = false;
     }
@@ -106,6 +123,7 @@ public class draw implements Runnable{
         embed.setTitle("Your drawing has been finished");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Thank you for using RubberDucky to draw");
+        embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
         ctx.getJDA().openPrivateChannelById(userID).complete().sendMessage(embed.build()).queue();
     }
 }

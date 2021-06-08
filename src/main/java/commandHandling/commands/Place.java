@@ -1,13 +1,15 @@
 package commandHandling.commands;
 
-import net.dv8tion.jda.api.EmbedBuilder;
+import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
 import commandHandling.commands.place.*;
-import commandHandling.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
-import services.*;
+import services.BotExceptions;
+import services.PermissionManager;
 
-import java.util.concurrent.TimeUnit;
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class Place implements CommandInterface {
     private static placeData placeData = new placeData();
@@ -21,7 +23,7 @@ public class Place implements CommandInterface {
         String cmd;
 
         try {
-            cmd = ctx.getArguments().get(0);
+            cmd = ctx.getArguments().get(0).toLowerCase();
         } catch (Exception e) {
             cmd = "help";
         }
@@ -31,31 +33,31 @@ public class Place implements CommandInterface {
                 encode(ctx);
                 break;
             case "preview": case "p":
-                new Thread(new preview(ctx)).start();
+                new Thread(new PlacePreview(ctx)).start();
                 break;
             case "draw": case "d":
                 draw(ctx);
                 break;
             case "queue": case "q":
-                new queue(ctx);
+                new PlaceQueue(ctx);
                 break;
             case "stop":
                 stop(ctx);
                 break;
-            case "stopQ": case "stopq": case "sq":
+            case "stopq": case "sq":
                 stopQ(ctx);
                 break;
             case "delete":
                 delete(ctx);
                 break;
             case "viewQ": case "vq":
-                new viewQ(ctx);
+                new PlaceViewQ(ctx);
                 break;
-            case "getFile": case "getfile": case "gf":
+            case "getfile": case "gf":
                 getFile(ctx);
                 break;
             case "status": case "s":
-                new status(placeData, ctx);
+                new PlaceStatus(placeData, ctx);
                 break;
             case "verify": case "v":
                 verify(ctx);
@@ -66,57 +68,68 @@ public class Place implements CommandInterface {
                 );
                 break;
             default:
-                BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
+                services.Logger.command(ctx, "place", false);
                 break;
         }
     }
 
     private void encode (CommandContext ctx) {
-        Thread encodeThread = new Thread(new encode(ctx));
+        Thread encodeThread = new Thread(new PlaceEncode(ctx));
         encodeThread.start();
     }
 
     private void draw (CommandContext ctx) {
         if (!placeData.drawing || placeData.stop) {
             placeData.reset();
-            Thread drawThread = new Thread(new draw(ctx, placeData));
+            Thread drawThread = new Thread(new PlaceDraw(ctx, placeData));
             drawThread.start();
         } else {
-            new status(placeData, ctx);
+            new PlaceStatus(placeData, ctx);
         }
     }
 
     private void stop (CommandContext ctx) {
-        if (PermissionManager.authOwner(ctx)) {
+        if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stop = true;
-            placeData.verify = false;
+            services.Logger.command(ctx, "place", true);
         } else {
+            services.Logger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
     private void stopQ (CommandContext ctx) {
-        if (PermissionManager.authOwner(ctx)) {
+        if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stopQ = !placeData.stopQ;
+            services.Logger.command(ctx, "place", true);
         } else {
+            services.Logger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
     private void delete (CommandContext ctx) {
-        if (PermissionManager.authOwner(ctx)) {
-            new delete(ctx);
+        if (PermissionManager.authenticateOwner(ctx)) {
+            new PlaceDelete(ctx);
         } else {
+            services.Logger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
     private void getFile (CommandContext ctx) {
-        new getFile(ctx);
+        new PlaceGetFile(ctx);
     }
 
     private void verify (CommandContext ctx) {
-        placeData.verify = !placeData.verify;
+        if (PermissionManager.authenticateOwner(ctx)) {
+            placeData.verify = !placeData.verify;
+            services.Logger.command(ctx, "place", true);
+        } else {
+            services.Logger.command(ctx, "place", false);
+            BotExceptions.missingPermissionException(ctx);
+        }
+
     }
 
     @Override
@@ -133,12 +146,12 @@ public class Place implements CommandInterface {
                 "[Live View & Time Lapse](https://place.battlerush.dev/)");
 
         embed.addField("__Encode__", "Returns a txt file with the draw commands for the attached image\n" +
-                "```rdplace encode <x> <y> <widht> <height> [<mode>] ```\n", false);
+                "```rdplace encode <x> <y> <width> <height> [<mode>] ```\n", false);
 
         embed.addField("__Preview__", "Returns a preview of the attached or referenced txt file\n" +
                         "```rdplace preview```", false);
 
-        embed.addField("__Queue__", "Queues the attached or referenced txt file. Limited to 10.8k lines!\n" +
+        embed.addField("__Queue__", "Queues the attached or referenced txt file\n" +
                 "```rdplace queue```", false);
 
         embed.addField("__Draw__", "Starts the drawing process or returns the status if its already drawing\n" +
