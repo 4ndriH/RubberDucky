@@ -27,7 +27,7 @@ public class CommandManager {
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
         addCommand(new SemesterSpokesPeople(LOGGER));
-        addCommand(new Galactic());
+        addCommand(new Galactic(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -49,7 +49,7 @@ public class CommandManager {
         String searchLowerCase = search.toLowerCase();
 
         for (CommandInterface cmd : commands) {
-            if (cmd.getName().equals(searchLowerCase) || cmd.getAliases().contains(searchLowerCase)) {
+            if (cmd.getName().equalsIgnoreCase(searchLowerCase) || cmd.getAliases().contains(searchLowerCase)) {
                 return cmd;
             }
         }
@@ -73,10 +73,6 @@ public class CommandManager {
         ).queueAfter(128, TimeUnit.SECONDS);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
-            if (!invoke.equals("place")) {
-                services.Logger.command(ctx, invoke, true);
-                CommandReaction.success(ctx);
-            }
             try {
                 cmd.handle(ctx);
             } catch (Exception e) {
@@ -84,7 +80,6 @@ public class CommandManager {
             }
         } else {
             services.Logger.command(ctx, invoke, false);
-            CommandReaction.fail(ctx);
         }
     }
 }
