@@ -66,7 +66,7 @@ public class PlaceWebSocket {
 
         // Sleep so the buffered image is not just black before it gets returned
         try {
-            Thread.sleep(250);
+            Thread.sleep(128);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
