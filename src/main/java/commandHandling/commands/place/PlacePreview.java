@@ -59,6 +59,7 @@ public class PlacePreview implements Runnable{
                 img.setRGB(Integer.parseInt(pixel[2]), Integer.parseInt(pixel[3]), Color.decode(pixel[4]).getRGB());
                 if (i % pixelsPerFrame == 0) {
                     writer.writeToSequence(img);
+                    img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
                 }
             }
 
