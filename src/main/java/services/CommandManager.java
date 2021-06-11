@@ -2,6 +2,7 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
+import commandHandling.commands.Delete;
 import commandHandling.commands.Shutdown;
 import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -28,6 +29,8 @@ public class CommandManager {
         addCommand(new Place(LOGGER));
         addCommand(new SemesterSpokesPeople(LOGGER));
         addCommand(new Galactic(LOGGER));
+        addCommand(new Delete(LOGGER));
+        addCommand(new Purge(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
