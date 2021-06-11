@@ -18,8 +18,15 @@ public class Shutdown implements CommandInterface {
     public void handle(CommandContext ctx) {
         if (ctx.getAuthor().getId().equals(CONFIG.OwnerID.get())) {
             services.Logger.command(ctx, "shutdown", true);
-            services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down", "");
-            ctx.getChannel().sendMessage("Shutting down").addFile(new File("resources/shutdown.gif")).queue();
+            services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down",
+                    "Waiting for buckets to finish");
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("Shutting down");
+            embed.setColor(new Color(0xb074ad));
+            embed.setImage("attachment://shutdown.gif");
+
+            ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/shutdown.gif")).queue();
             ctx.getJDA().shutdown();
         }
     }
