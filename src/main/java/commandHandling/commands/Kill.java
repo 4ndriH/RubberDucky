@@ -17,9 +17,15 @@ public class Kill implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         if (ctx.getAuthor().getId().equals(CONFIG.OwnerID.get())) {
-            services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is committing sudoku", "");
             services.Logger.command(ctx, "kill", true);
-            ctx.getChannel().sendMessage("Shutting down").addFile(new File("resources/shutdown.gif")).queue();
+            services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is committing sudoku", "");
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("Committing Sudoku");
+            embed.setColor(new Color(0xb074ad));
+            embed.setImage("attachment://sudoku.jpg");
+
+            ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/sudoku.jpg")).complete();
             ctx.getJDA().shutdownNow();
         }
     }
