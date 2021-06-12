@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class Place implements CommandInterface {
-    private static placeData placeData = new placeData();
+    private static PlaceData placeData = new PlaceData();
 
     public Place(Logger LOGGER) {
         LOGGER.info("Loaded Command Place");

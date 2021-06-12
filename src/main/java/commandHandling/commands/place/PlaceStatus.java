@@ -10,10 +10,10 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class PlaceStatus {
-    private final placeData placeData;
+    private final PlaceData placeData;
     private final CommandContext ctx;
 
-    public PlaceStatus(placeData placeData, CommandContext ctx) {
+    public PlaceStatus(PlaceData placeData, CommandContext ctx) {
         this.placeData = placeData;
         this.ctx = ctx;
         main();

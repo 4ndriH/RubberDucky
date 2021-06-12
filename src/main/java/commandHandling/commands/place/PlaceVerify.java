@@ -7,9 +7,9 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 public class PlaceVerify {
-    private final placeData placeData;
+    private final PlaceData placeData;
 
-    public PlaceVerify(placeData placeData) {
+    public PlaceVerify(PlaceData placeData) {
         this.placeData = placeData;
         main();
     }

@@ -17,9 +17,9 @@ import java.util.Scanner;
 
 public class PlaceDraw implements Runnable{
     private final CommandContext ctx;
-    private final placeData placeData;
+    private final PlaceData placeData;
 
-    public PlaceDraw(CommandContext ctx, placeData placeData) {
+    public PlaceDraw(CommandContext ctx, PlaceData placeData) {
         this.ctx = ctx;
         this.placeData = placeData;
     }

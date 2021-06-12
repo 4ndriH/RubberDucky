@@ -3,7 +3,7 @@ package commandHandling.commands.place;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class placeData {
+public class PlaceData {
     public int id, totalPixels, drawnPixels, fixedPixels, progress;
     public boolean drawing, stopQ, stop, verify;
     public ArrayList<String> pixels;
