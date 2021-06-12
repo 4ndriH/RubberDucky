@@ -43,7 +43,7 @@ public class Delete implements CommandInterface {
         embed.setTitle("Help - Delete");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Deletes the refferenced message or the message corresponding to the provided id");
-        embed.addField("Aliases", "```drdd```", false);
+        embed.addField("Aliases", "```rdd```", false);
         return embed;
     }
 
