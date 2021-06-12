@@ -67,6 +67,9 @@ public class Place implements CommandInterface {
                         msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
                 );
                 break;
+            case "view":
+                (new Thread(new PlaceView(ctx))).start();
+                break;
             default:
                 services.Logger.command(ctx, "place", false);
                 break;
