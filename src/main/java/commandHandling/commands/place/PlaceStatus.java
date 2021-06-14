@@ -82,9 +82,9 @@ public class PlaceStatus {
 
         for (int i = 0; i < 10; i++) {
             if (progress - 10 >= 0)
-                bar.append("<").append(elementSelection(i, 10)).append(">");
+                bar.append(elementSelection(i, 10));
             else
-                bar.append("<").append(elementSelection(i, progress)).append(">");
+                bar.append(elementSelection(i, progress));
             progress = Math.max(0, progress - 10);
         }
 
@@ -96,109 +96,109 @@ public class PlaceStatus {
         if (segment == 0) {
             switch (percentage) {
                 case 0:
-                    ret = EMOTES.L0.getAsReaction();
+                    ret = EMOTES.L0.getAsEmote();
                     break;
                 case 1:
-                    ret = EMOTES.L1.getAsReaction();
+                    ret = EMOTES.L1.getAsEmote();
                     break;
                 case 2:
-                    ret = EMOTES.L2.getAsReaction();
+                    ret = EMOTES.L2.getAsEmote();
                     break;
                 case 3:
-                    ret = EMOTES.L3.getAsReaction();
+                    ret = EMOTES.L3.getAsEmote();
                     break;
                 case 4:
-                    ret = EMOTES.L4.getAsReaction();
+                    ret = EMOTES.L4.getAsEmote();
                     break;
                 case 5:
-                    ret = EMOTES.L5.getAsReaction();
+                    ret = EMOTES.L5.getAsEmote();
                     break;
                 case 6:
-                    ret = EMOTES.L6.getAsReaction();
+                    ret = EMOTES.L6.getAsEmote();
                     break;
                 case 7:
-                    ret = EMOTES.L7.getAsReaction();
+                    ret = EMOTES.L7.getAsEmote();
                     break;
                 case 8:
-                    ret = EMOTES.L8.getAsReaction();
+                    ret = EMOTES.L8.getAsEmote();
                     break;
                 case 9:
-                    ret = EMOTES.L9.getAsReaction();
+                    ret = EMOTES.L9.getAsEmote();
                     break;
                 case 10:
-                    ret = EMOTES.L10.getAsReaction();
+                    ret = EMOTES.L10.getAsEmote();
                     break;
             }
         } else if (segment == 9) {
             switch (percentage) {
                 case 0:
-                    ret = EMOTES.R0.getAsReaction();
+                    ret = EMOTES.R0.getAsEmote();
                     break;
                 case 1:
-                    ret = EMOTES.R1.getAsReaction();
+                    ret = EMOTES.R1.getAsEmote();
                     break;
                 case 2:
-                    ret = EMOTES.R2.getAsReaction();
+                    ret = EMOTES.R2.getAsEmote();
                     break;
                 case 3:
-                    ret = EMOTES.R3.getAsReaction();
+                    ret = EMOTES.R3.getAsEmote();
                     break;
                 case 4:
-                    ret = EMOTES.R4.getAsReaction();
+                    ret = EMOTES.R4.getAsEmote();
                     break;
                 case 5:
-                    ret = EMOTES.R5.getAsReaction();
+                    ret = EMOTES.R5.getAsEmote();
                     break;
                 case 6:
-                    ret = EMOTES.R6.getAsReaction();
+                    ret = EMOTES.R6.getAsEmote();
                     break;
                 case 7:
-                    ret = EMOTES.R7.getAsReaction();
+                    ret = EMOTES.R7.getAsEmote();
                     break;
                 case 8:
-                    ret = EMOTES.R8.getAsReaction();
+                    ret = EMOTES.R8.getAsEmote();
                     break;
                 case 9:
-                    ret = EMOTES.R9.getAsReaction();
+                    ret = EMOTES.R9.getAsEmote();
                     break;
                 case 10:
-                    ret = EMOTES.R10.getAsReaction();
+                    ret = EMOTES.R10.getAsEmote();
                     break;
             }
         } else {
             switch (percentage) {
                 case 0:
-                    ret = EMOTES.M0.getAsReaction();
+                    ret = EMOTES.M0.getAsEmote();
                     break;
                 case 1:
-                    ret = EMOTES.M1.getAsReaction();
+                    ret = EMOTES.M1.getAsEmote();
                     break;
                 case 2:
-                    ret = EMOTES.M2.getAsReaction();
+                    ret = EMOTES.M2.getAsEmote();
                     break;
                 case 3:
-                    ret = EMOTES.M3.getAsReaction();
+                    ret = EMOTES.M3.getAsEmote();
                     break;
                 case 4:
-                    ret = EMOTES.M4.getAsReaction();
+                    ret = EMOTES.M4.getAsEmote();
                     break;
                 case 5:
-                    ret = EMOTES.M5.getAsReaction();
+                    ret = EMOTES.M5.getAsEmote();
                     break;
                 case 6:
-                    ret = EMOTES.M6.getAsReaction();
+                    ret = EMOTES.M6.getAsEmote();
                     break;
                 case 7:
-                    ret = EMOTES.M7.getAsReaction();
+                    ret = EMOTES.M7.getAsEmote();
                     break;
                 case 8:
-                    ret = EMOTES.M8.getAsReaction();
+                    ret = EMOTES.M8.getAsEmote();
                     break;
                 case 9:
-                    ret = EMOTES.M9.getAsReaction();
+                    ret = EMOTES.M9.getAsEmote();
                     break;
                 case 10:
-                    ret = EMOTES.M10.getAsReaction();
+                    ret = EMOTES.M10.getAsEmote();
                     break;
             }
         }
