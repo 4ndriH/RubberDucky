@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
+import resources.CONFIG;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,20 +20,27 @@ public class BlackList implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         services.Logger.command(ctx, "blacklist", true);
+
         try {
-            services.database.dbHandlerPermissions.blacklist(ctx.getArguments().get(0));
+            if (CONFIG.getBlackList().contains(ctx.getArguments().get(0))) {
+                services.database.dbHandlerPermissions.removeFromBlackList(ctx.getArguments().get(0));
+            } else {
+                services.database.dbHandlerPermissions.addToBlackList(ctx.getArguments().get(0));
+            }
+            CONFIG.reload();
         } catch (Exception e) {
+            ArrayList<String> ids = CONFIG.getBlackList();
             EmbedBuilder embed = new EmbedBuilder();
+
             embed.setTitle("Blacklisted people");
             embed.setColor(new Color(0xb074ad));
-            ArrayList<String> ids = services.database.dbHandlerPermissions.getBlacklist();
 
             if (ids.size() == 0) {
                 embed.setDescription("-");
             } else {
                 StringBuilder sb = new StringBuilder();
-                for (String s : ids) {
-                    sb.append("<@!").append(s).append(">\n");
+                for (String id : ids) {
+                    sb.append("<@!").append(id).append(">\n");
                 }
                 Message msg = ctx.getChannel().sendMessage("beep boop").complete();
                 msg.editMessage(sb.toString()).complete();
@@ -64,5 +72,10 @@ public class BlackList implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("bl");
+    }
+
+    @Override
+    public boolean isOwnerOnly() {
+        return true;
     }
 }

@@ -14,4 +14,8 @@ public interface CommandInterface {
     default List<String> getAliases(){
         return List.of();
     }
+
+    default boolean isOwnerOnly() {
+        return false;
+    }
 }

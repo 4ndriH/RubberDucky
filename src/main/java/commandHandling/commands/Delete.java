@@ -15,11 +15,6 @@ public class Delete implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (!services.PermissionManager.authenticateOwner(ctx)) {
-            services.Logger.command(ctx, "delete", false);
-            return;
-        }
-
         String id = ctx.getArguments().size() == 1 ? ctx.getArguments().get(0) :
                 ctx.getMessage().getReferencedMessage().getId();
 
@@ -50,5 +45,10 @@ public class Delete implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("d");
+    }
+
+    @Override
+    public boolean isOwnerOnly() {
+        return true;
     }
 }

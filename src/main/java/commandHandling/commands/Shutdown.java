@@ -4,7 +4,6 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
-import resources.CONFIG;
 
 import java.awt.*;
 import java.io.File;
@@ -16,19 +15,17 @@ public class Shutdown implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (ctx.getAuthor().getId().equals(CONFIG.OwnerID.get())) {
-            services.Logger.command(ctx, "shutdown", true);
-            services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down",
-                    "Waiting for buckets to finish");
+        services.Logger.command(ctx, "shutdown", true);
+        services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down",
+                "Waiting for buckets to finish");
 
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle("Shutting down");
-            embed.setColor(new Color(0xb074ad));
-            embed.setImage("attachment://shutdown.gif");
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Shutting down");
+        embed.setColor(new Color(0xb074ad));
+        embed.setImage("attachment://shutdown.gif");
 
-            ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/shutdown.gif")).queue();
-            ctx.getJDA().shutdown();
-        }
+        ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/shutdown.gif")).queue();
+        ctx.getJDA().shutdown();
     }
 
     @Override
@@ -43,5 +40,10 @@ public class Shutdown implements CommandInterface {
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Shuts down the JDA instance but lets pending rest actions execute");
         return embed;
+    }
+
+    @Override
+    public boolean isOwnerOnly() {
+        return true;
     }
 }

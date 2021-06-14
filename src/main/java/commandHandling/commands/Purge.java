@@ -24,11 +24,6 @@ public class Purge implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (!services.PermissionManager.authenticateOwner(ctx)) {
-            services.Logger.command(ctx, "delete", false);
-            return;
-        }
-
         if (isRunning) {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop = true;
@@ -83,5 +78,10 @@ public class Purge implements CommandInterface {
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Deletes all messages in the current channel");
         return embed;
+    }
+
+    @Override
+    public boolean isOwnerOnly() {
+        return true;
     }
 }
