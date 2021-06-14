@@ -22,7 +22,7 @@ public class dbHandlerQ {
         return connection;
     }
 
-    public static void addToQ (int id, String file, String user) {
+    public static void addToQ(int id, String file, String user) {
         try {
             PreparedStatement statement = connectToDB().prepareStatement(
                     "INSERT INTO queue (key, file, user) VALUES (? , ?, ?)"
@@ -37,7 +37,7 @@ public class dbHandlerQ {
         }
     }
 
-    public static void updateProgressInQ (int progress, int id) {
+    public static void updateProgressInQ(int progress, int id) {
         try {
             PreparedStatement updateStatement = connectToDB().prepareStatement(
                     "UPDATE queue SET progress = ? WHERE key = ?"
@@ -51,7 +51,7 @@ public class dbHandlerQ {
         }
     }
 
-    public static int getProgress (int id) {
+    public static int getProgress(int id) {
         int progress = 0;
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
@@ -67,7 +67,7 @@ public class dbHandlerQ {
         return progress;
     }
 
-    public static void deleteElementInQ (int id) {
+    public static void deleteElementInQ(int id) {
         try {
             PreparedStatement deleteStatement = connectToDB().prepareStatement(
                     "DELETE FROM queue WHERE key = ?"
@@ -80,7 +80,7 @@ public class dbHandlerQ {
         }
     }
 
-    public static ArrayList<Integer> getIDs () {
+    public static ArrayList<Integer> getIDs() {
         ArrayList<Integer> ids = new ArrayList<>();
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
@@ -96,7 +96,7 @@ public class dbHandlerQ {
         return ids;
     }
 
-    public static String getFile (int id) {
+    public static String getFile(int id) {
         String file = "";
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
@@ -113,7 +113,7 @@ public class dbHandlerQ {
         return file;
     }
 
-    public static ResultSet getAll () {
+    public static ResultSet getAll() {
         ResultSet rs = null;
         try {
             PreparedStatement getStatement = connectToDB().prepareStatement(
