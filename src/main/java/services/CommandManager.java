@@ -31,6 +31,9 @@ public class CommandManager {
         addCommand(new Galactic(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Purge(LOGGER));
+        addCommand(new BlackList(LOGGER));
+        addCommand(new Servers(LOGGER));
+        addCommand(new Channel(LOGGER, this));
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -75,7 +78,7 @@ public class CommandManager {
                         .sendTyping()
         ).queueAfter(128, TimeUnit.SECONDS);
 
-        if (cmd != null && PermissionManager.permissionCheck(ctx, invoke)) {
+        if (cmd != null && PermissionManager.permissionCheck(ctx, invoke, this)) {
             try {
                 cmd.handle(ctx);
             } catch (Exception e) {
