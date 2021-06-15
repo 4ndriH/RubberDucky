@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BotExceptions {
     public static void invalidArgumentsException (CommandContext ctx) {
-        embed("invalidArgumentsException", "The give Arguments do not match " +
+        embed("invalidArgumentsException", "The given Arguments do not match " +
                 "the required criteria", ctx);
     }
 
