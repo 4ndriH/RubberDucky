@@ -34,6 +34,8 @@ public class CommandManager {
         addCommand(new BlackList(LOGGER));
         addCommand(new Servers(LOGGER));
         addCommand(new Channel(LOGGER, this));
+        addCommand(new LockDown(LOGGER));
+        addCommand(new Prefix(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
