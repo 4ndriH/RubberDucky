@@ -36,7 +36,7 @@ public class Help implements CommandInterface {
             embed.addField("__Miscellaneous__", "rdhelp\nrdping\nrdspokesPeople\nrdplace\nrdgalactic", true);
             embed.addField("__Owner__", "rdkill\nrdshutdown\nrddelete\nrdpurge\nrdblacklist\nrdservers\nrdchannel\nrdlockdown\nrdprefix", true);
 
-            ctx.getChannel().sendMessage(embed.build()).queue(msg ->
+            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(msg ->
                     msg.delete().queueAfter(64, TimeUnit.SECONDS));
             return;
         }
@@ -49,7 +49,7 @@ public class Help implements CommandInterface {
             return;
         }
 
-        channel.sendMessage(command.getHelp().build()).queue(msg ->
+        channel.sendMessageEmbeds(command.getHelp().build()).queue(msg ->
                 msg.delete().queueAfter(64, TimeUnit.SECONDS));
     }
 

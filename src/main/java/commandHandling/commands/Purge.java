@@ -28,7 +28,7 @@ public class Purge implements CommandInterface {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
-                ctx.getChannel().sendMessage(busyPurging.build())
+                ctx.getChannel().sendMessageEmbeds(busyPurging.build())
                         .addFile(new File("resources/busyPurging.png")).queue(
                                 message -> message.delete().queueAfter(32, TimeUnit.SECONDS)
                 );
@@ -42,7 +42,7 @@ public class Purge implements CommandInterface {
         services.Logger.command(ctx, "purge", true);
 
         (new Thread(() -> {
-            ctx.getChannel().sendMessage(purgeCommenced.build())
+            ctx.getChannel().sendMessageEmbeds(purgeCommenced.build())
                     .addFile(new File("resources/purgeCommenced.jpg")).queueAfter(1, TimeUnit.SECONDS);
             List<Message> messages;
             do {

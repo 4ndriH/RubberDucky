@@ -23,7 +23,7 @@ public class Kill implements CommandInterface {
         embed.setColor(new Color(0xb074ad));
         embed.setImage("attachment://sudoku.jpg");
 
-        ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/sudoku.jpg")).complete();
+        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/sudoku.jpg")).complete();
         ctx.getJDA().shutdownNow();
     }
 

@@ -82,7 +82,7 @@ public class Logger {
     // Sends the embed to the bot-log channel
     private static void send(EmbedBuilder embed, JDA jda) {
         jda.getGuildById("817850050013036605").getTextChannelById("841393155478650920")
-                .sendMessage(embed.build()).queue();
+                .sendMessageEmbeds(embed.build()).queue();
     }
 
     // Returns current date and time

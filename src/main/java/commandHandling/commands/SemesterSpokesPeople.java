@@ -35,7 +35,7 @@ public class SemesterSpokesPeople implements CommandInterface {
         discordCacheRefresh.editMessage(firstYear + "\n" + secondYear).complete();
         discordCacheRefresh.delete().queue();
 
-        ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/vis.png"))
+        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/vis.png"))
                 .queue(msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS));
     }
 

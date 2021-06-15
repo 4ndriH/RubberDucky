@@ -46,7 +46,7 @@ public class PlaceDelete {
         embed.setTitle("Delete");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("File " + id + " has been deleted");
-        ctx.getChannel().sendMessage(embed.build()).queue(
+        ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                 msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
         );
     }

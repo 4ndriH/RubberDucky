@@ -47,7 +47,7 @@ public class FerrisListener  extends ListenerAdapter {
                 } else {
                     ft.updateQueue(raw.split("\n"));
                 }
-                event.getChannel().sendMessage(embed.build()).queue();
+                event.getChannel().sendMessageEmbeds(embed.build()).queue();
             }
         }
     }

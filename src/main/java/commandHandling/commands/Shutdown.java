@@ -24,7 +24,7 @@ public class Shutdown implements CommandInterface {
         embed.setColor(new Color(0xb074ad));
         embed.setImage("attachment://shutdown.gif");
 
-        ctx.getChannel().sendMessage(embed.build()).addFile(new File("resources/shutdown.gif")).queue();
+        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/shutdown.gif")).queue();
         ctx.getJDA().shutdown();
     }
 

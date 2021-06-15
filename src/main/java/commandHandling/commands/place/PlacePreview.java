@@ -80,7 +80,7 @@ public class PlacePreview implements Runnable{
             embed.setTitle("Preview");
             embed.setColor(new Color(0xb074ad));
             embed.setImage("attachment://preview.gif");
-            ctx.getChannel().sendMessage(embed.build()).addFile(gif).complete();
+            ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).complete();
         } catch (IllegalArgumentException e) {
             Logger.exception(ctx, e);
             BotExceptions.FileExceedsUploadLimitException(ctx);

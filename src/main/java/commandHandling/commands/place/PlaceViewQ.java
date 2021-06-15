@@ -49,7 +49,7 @@ public class PlaceViewQ {
             embed.addField("__Queued by__", users.toString(), true);
         }
 
-        ctx.getChannel().sendMessage(embed.build()).queue(
+        ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                 msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
         );
     }

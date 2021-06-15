@@ -68,7 +68,7 @@ public class BotExceptions {
             embed.addField("Arguments:", args.toString(), false);
         }
 
-        ctx.getMessage().reply(embed.build()).queue(msg -> {
+        ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
             msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
             msg.delete().queueAfter(32, TimeUnit.SECONDS);
         });

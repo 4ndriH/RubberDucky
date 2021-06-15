@@ -26,7 +26,7 @@ public class PlaceView implements Runnable{
         embed.setTitle("Place");
         embed.setColor(new Color(0xb074ad));
         embed.setImage("attachment://place.png");
-        ctx.getChannel().sendMessage(embed.build())
+        ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue(
                 msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
         );

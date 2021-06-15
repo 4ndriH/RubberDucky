@@ -63,7 +63,7 @@ public class Place implements CommandInterface {
                 verify(ctx);
                 break;
             case "help":
-                ctx.getChannel().sendMessage(getHelp().build()).queue(
+                ctx.getChannel().sendMessageEmbeds(getHelp().build()).queue(
                         msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
                 );
                 break;

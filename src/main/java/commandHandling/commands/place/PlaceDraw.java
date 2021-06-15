@@ -124,6 +124,6 @@ public class PlaceDraw implements Runnable{
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
-        ctx.getJDA().openPrivateChannelById(userID).complete().sendMessage(embed.build()).queue();
+        ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build()).queue();
     }
 }
