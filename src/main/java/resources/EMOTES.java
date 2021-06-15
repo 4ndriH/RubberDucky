@@ -41,7 +41,7 @@ public enum EMOTES {
     R9(":right09:854039183755968552"),
     R10(":right10:854039167956287488");
 
-    private String id;
+    private final String id;
 
     private EMOTES(String id) {
         this.id = id;
