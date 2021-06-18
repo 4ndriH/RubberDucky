@@ -64,6 +64,7 @@ public class Purge implements CommandInterface {
     }
 
     private void embedSetUp() {
+        purgeCommenced.setTitle("Happy purging");
         purgeCommenced.setColor(new Color(0xb074ad));
         purgeCommenced.setImage("attachment://purgeCommenced.jpg");
         busyPurging.setTitle("Already busy purging");
