@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import services.BotExceptions;
 
-import java.awt.*;
-
 public class Status implements CommandInterface {
     public Status(Logger LOGGER) {
         LOGGER.info("Loaded Command Status");
@@ -61,9 +59,7 @@ public class Status implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Status");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Change the bots status");
+        embed.setDescription("Changes the bots status");
         embed.addField("__Activities__", "competing\nlistening\nplaying\nwatching", false);
         return embed;
     }

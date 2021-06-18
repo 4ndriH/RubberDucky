@@ -64,9 +64,7 @@ public class Servers implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Servers");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Add or remove servers from the whitelist");
+        embed.setDescription("Adds or removes a server from the whitelist");
         return embed;
     }
 

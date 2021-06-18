@@ -29,14 +29,12 @@ public class Kill implements CommandInterface {
 
     @Override
     public String getName() {
-        return "kill";
+        return "Kill";
     }
 
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Kill");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Shuts down the JDA instance and cancels all pending rest actions");
         return embed;
     }

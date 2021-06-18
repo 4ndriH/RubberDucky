@@ -27,7 +27,7 @@ public class CommandManager {
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
-        addCommand(new SemesterSpokesPeople(LOGGER));
+        addCommand(new SpokesPeople(LOGGER));
         addCommand(new Galactic(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Purge(LOGGER));

@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.BotExceptions;
 
-import java.awt.*;
 import java.util.List;
 
 public class Galactic implements CommandInterface {
@@ -117,12 +116,8 @@ public class Galactic implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Galactic");
         embed.setDescription("Translates from and to the villager enchanting table language by either" +
                 "replying to a message or adding the text after `rdgalactic <text>`");
-        embed.addField("Aliases", "```rdg```", false);
-        embed.setColor(new Color(0xb074ad));
-
         return embed;
     }
 

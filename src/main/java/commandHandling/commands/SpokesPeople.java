@@ -12,14 +12,14 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SemesterSpokesPeople implements CommandInterface {
-    public SemesterSpokesPeople(Logger LOGGER) {
-        LOGGER.info("Loaded Command SemesterSpokesPeople");
+public class SpokesPeople implements CommandInterface {
+    public SpokesPeople(Logger LOGGER) {
+        LOGGER.info("Loaded Command SpokesPeople");
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "semesterspokespeople", true);
+        services.Logger.command(ctx, "spokespeople", true);
         EmbedBuilder embed = new EmbedBuilder();
         String firstYear = dbHandlerSpokesPeople.getPeople(1);
         String secondYear = dbHandlerSpokesPeople.getPeople(2);
@@ -41,16 +41,13 @@ public class SemesterSpokesPeople implements CommandInterface {
 
     @Override
     public String getName() {
-        return "SemesterSpokesPeople";
+        return "SpokesPeople";
     }
 
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - SpokesPeople");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Returns a list of all subjects and the corresponding spokes people");
-        embed.addField("Aliases", "```drdssp, drdSemesterSpokesPeople```", false);
         return embed;
     }
 

@@ -62,10 +62,7 @@ public class BlackList implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Blacklist");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Allows me to blacklist your annoying ass");
-        embed.addField("Aliases", "```rdbl```", false);
         return embed;
     }
 

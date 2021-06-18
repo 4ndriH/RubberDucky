@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import services.BotExceptions;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,10 +51,7 @@ public class ProfilePicture implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Profilepicture");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Change the bots profile picture");
-        embed.addField("Aliases", "```rdpicture, rdpp```", false);
+        embed.setDescription("Changes the bots profile picture");
         return embed;
     }
 

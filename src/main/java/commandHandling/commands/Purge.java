@@ -82,8 +82,6 @@ public class Purge implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Purge");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Deletes all messages in the current channel");
         return embed;
     }

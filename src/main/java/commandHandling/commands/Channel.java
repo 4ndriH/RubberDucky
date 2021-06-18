@@ -78,8 +78,6 @@ public class Channel implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Channel");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Permit or deny the use of a command in this channel");
         return embed;
     }

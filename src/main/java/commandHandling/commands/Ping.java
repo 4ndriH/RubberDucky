@@ -40,8 +40,6 @@ public class Ping implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Ping");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Returns the current ping");
         return embed;
     }

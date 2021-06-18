@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import resources.CONFIG;
 import services.BotExceptions;
 
-import java.awt.*;
-
 public class Prefix implements CommandInterface {
     public Prefix(Logger LOGGER) {
         LOGGER.info("Loaded Command Prefix");
@@ -34,9 +32,7 @@ public class Prefix implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Prefix");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Change the prefix");
+        embed.setDescription("Changes the prefix");
         return embed;
     }
 

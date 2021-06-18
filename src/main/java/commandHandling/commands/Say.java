@@ -6,8 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.BotExceptions;
 
-import java.awt.*;
-
 public class Say implements CommandInterface {
     private volatile boolean isRunning, stop;
 
@@ -55,8 +53,6 @@ public class Say implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Say");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Repeats a message a defined amount of times");
         return embed;
     }

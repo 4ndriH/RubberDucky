@@ -5,7 +5,6 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 
-import java.awt.*;
 import java.util.List;
 
 public class NickName implements CommandInterface {
@@ -33,10 +32,7 @@ public class NickName implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Nickname");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Change the bots nickname");
-        embed.addField("Aliases", "```rdnn```", false);
+        embed.setDescription("Changes the bots nickname");
         return embed;
     }
 

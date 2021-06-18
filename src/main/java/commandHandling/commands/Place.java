@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import commandHandling.commands.place.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import resources.CONFIG;
 import services.BotExceptions;
 import services.PermissionManager;
 
@@ -63,7 +64,8 @@ public class Place implements CommandInterface {
                 verify(ctx);
                 break;
             case "help":
-                ctx.getChannel().sendMessageEmbeds(getHelp().build()).queue(
+                ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
+                        .setColor(new Color(0xb074ad)).build()).queue(
                         msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
                 );
                 break;
@@ -131,7 +133,6 @@ public class Place implements CommandInterface {
             services.Logger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
-
     }
 
     @Override
@@ -142,44 +143,43 @@ public class Place implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Place");
-        embed.setColor(new Color(0xb074ad));
+        String prefix = CONFIG.Prefix.get();
+
         embed.setDescription("Place has been created by <@!153929916977643521>\n" +
                 "[Live View & Time Lapse](https://place.battlerush.dev/)");
 
         embed.addField("__Encode__", "Returns a txt file with the draw commands for the attached image\n" +
-                "```rdplace encode <x> <y> <width> <height> [<mode>] ```\n", false);
+                "```" + prefix +"place encode <x> <y> <width> <height> [<mode>] ```\n", false);
 
         embed.addField("__Preview__", "Returns a preview of the attached or referenced txt file\n" +
-                        "```rdplace preview```", false);
+                        "```" + prefix + "place preview```", false);
 
         embed.addField("__Queue__", "Queues the attached or referenced txt file\n" +
-                "```rdplace queue```", false);
+                "```" + prefix + "rdplace queue```", false);
 
-        embed.addField("__Draw__", "Starts the drawing process or returns the status if its already drawing\n" +
-                "```rdplace draw```", false);
+        embed.addField("__Draw__", "Starts the drawing process or returns the status if its already " +
+                "drawing\n```" + prefix + "place draw```", false);
 
         embed.addField("__Status__", "Returns the progress of the current drawing\n" +
-                "```rdplace status```", false);
+                "```" + prefix + "place status```", false);
 
         embed.addField("__ViewQueue__", "Returns a list of all the queued files\n" +
-                "```rdplace viewQ```", false);
+                "```" + prefix + "place viewQ```", false);
 
         embed.addField("__GetFile__", "Returns the requested txt file from the queue\n" +
-                "```rdplace getFile <file id>```", false);
+                "```" + prefix + "place getFile <file id>```", false);
 
         embed.addField("", "**OWNER ONLY**", false);
 
         embed.addField("__Stop__", "Stop drawing\n" +
-                "```rdplace stop```", true);
+                "```" + prefix + "place stop```", true);
 
         embed.addField("__StopQ__", "Stop queueing\n" +
-                "```rdplace stopQ```", true);
+                "```" + prefix + "place stopQ```", true);
 
         embed.addField("__Delete__", "Delete a file from the Queue\n" +
-                "```rdplace delete <file id>```", true);
+                "```" + prefix + "place delete <file id>```", true);
 
-        embed.setFooter("");
         return embed;
     }
 }

@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import resources.CONFIG;
 
-import java.awt.*;
 import java.util.List;
 
 public class LockDown implements CommandInterface {
@@ -33,10 +32,7 @@ public class LockDown implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Lockdown");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Prevent anyone from using this bot. Except me of course");
-        embed.addField("Aliases", "```rdld```", false);
+        embed.setDescription("Prevents anyone from using this bot. Except me of course");
         return embed;
     }
 

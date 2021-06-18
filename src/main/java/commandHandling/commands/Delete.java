@@ -5,7 +5,6 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 
-import java.awt.*;
 import java.util.List;
 
 public class Delete implements CommandInterface {
@@ -35,10 +34,7 @@ public class Delete implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Delete");
-        embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Deletes the refferenced message or the message corresponding to the provided id");
-        embed.addField("Aliases", "```rdd```", false);
+        embed.setDescription("Deletes the referenced message or the message corresponding to the provided id");
         return embed;
     }
 

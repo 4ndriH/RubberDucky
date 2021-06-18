@@ -36,8 +36,6 @@ public class Shutdown implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Help - Shutdown");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("Shuts down the JDA instance but lets pending rest actions execute");
         return embed;
     }
