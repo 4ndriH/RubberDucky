@@ -82,7 +82,10 @@ public class PlacePreview implements Runnable{
             embed.setColor(new Color(0xb074ad));
             embed.setImage("attachment://preview.gif");
             ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> msg.delete().queueAfter(1024, TimeUnit.SECONDS)
+                    msg -> msg.delete().onErrorFlatMap(
+                            error -> ctx.getJDA().getGuildById("817850050013036605")
+                                    .getTextChannelById("847805084784132137").sendTyping()
+                    ).queueAfter(1024, TimeUnit.SECONDS)
             );
         } catch (IllegalArgumentException e) {
             Logger.exception(ctx, e);
