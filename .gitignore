@@ -2,9 +2,5 @@
 build/
 out/
 tempFiles/
-permissions/
 DB/
 META-INF/
-logback.xml
-shutdown.gif
-/src/main/java/resources/CONFIG.java
