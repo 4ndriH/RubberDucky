@@ -36,6 +36,7 @@ public class CommandManager {
         addCommand(new Channel(LOGGER, this));
         addCommand(new LockDown(LOGGER));
         addCommand(new Prefix(LOGGER));
+        addCommand(new NickName(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {

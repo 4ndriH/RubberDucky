@@ -34,7 +34,8 @@ public class Help implements CommandInterface {
             embed.setFooter("rdhelp <command> gives you a more detailed description");
 
             embed.addField("__Miscellaneous__", "rdhelp\nrdping\nrdspokesPeople\nrdplace\nrdgalactic", true);
-            embed.addField("__Owner__", "rdkill\nrdshutdown\nrddelete\nrdpurge\nrdblacklist\nrdservers\nrdchannel\nrdlockdown\nrdprefix", true);
+            embed.addField("__Owner__", "rdkill\nrdshutdown\nrddelete\nrdpurge\nrdblacklist\nrdservers\nrdchannel\nrdlockdown\nrdprefix" +
+                    "\nrdnickname", true);
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(msg ->
                     msg.delete().queueAfter(64, TimeUnit.SECONDS));
