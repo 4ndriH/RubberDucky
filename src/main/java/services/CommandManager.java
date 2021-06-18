@@ -37,6 +37,7 @@ public class CommandManager {
         addCommand(new LockDown(LOGGER));
         addCommand(new Prefix(LOGGER));
         addCommand(new NickName(LOGGER));
+        addCommand(new ProfilePicture(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {

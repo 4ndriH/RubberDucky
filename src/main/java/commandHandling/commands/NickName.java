@@ -35,7 +35,7 @@ public class NickName implements CommandInterface {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Help - Nickname");
         embed.setColor(new Color(0xb074ad));
-        embed.setDescription("Change bots nickname");
+        embed.setDescription("Change the bots nickname");
         embed.addField("Aliases", "```rdnn```", false);
         return embed;
     }
