@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class PlacePreview implements Runnable{
     private final CommandContext ctx;
@@ -80,7 +81,9 @@ public class PlacePreview implements Runnable{
             embed.setTitle("Preview");
             embed.setColor(new Color(0xb074ad));
             embed.setImage("attachment://preview.gif");
-            ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).complete();
+            ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
+                    msg -> msg.delete().queueAfter(1024, TimeUnit.SECONDS)
+            );
         } catch (IllegalArgumentException e) {
             Logger.exception(ctx, e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
