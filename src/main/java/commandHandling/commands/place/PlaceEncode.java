@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class PlaceEncode implements Runnable {
-    private final ArrayList<String> list = new ArrayList<>();
+    private final ArrayList<String> pixels = new ArrayList<>();
     private final CommandContext ctx;
     private BufferedImage img = null;
     private int x, y;
@@ -29,6 +29,7 @@ public class PlaceEncode implements Runnable {
         String pattern, path = "tempFiles/place/encode/";
         PrintStream writer;
         int width, height;
+        boolean reverse = false;
 
         try {
             String fileName = ctx.getMessage().getAttachments().get(0).getFileName();
@@ -56,6 +57,10 @@ public class PlaceEncode implements Runnable {
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
+            if (pattern.endsWith("/r")) {
+                pattern = pattern.replace("/r", "");
+                reverse = true;
+            }
         } else {
             pattern = "lr";
         }
@@ -83,13 +88,17 @@ public class PlaceEncode implements Runnable {
                 break;
         }
 
-        for (String s : list) {
+        if (reverse) {
+            Collections.reverse(pixels);
+        }
+
+        for (String s : pixels) {
             writer.println(s);
         }
         writer.close();
 
         try {
-            ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(list.size()) + "**")
+            ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(pixels.size()) + "**")
                     .addFile(new File(path + ".txt")).queue(
                             msg -> msg.delete().queueAfter(512, TimeUnit.SECONDS)
             );
@@ -192,7 +201,7 @@ public class PlaceEncode implements Runnable {
                 writerUtility(new Color(img.getRGB(i, j), true), i, j);
             }
         }
-        Collections.shuffle(list);
+        Collections.shuffle(pixels);
     }
 
     private void circle() {
@@ -214,7 +223,7 @@ public class PlaceEncode implements Runnable {
 
     private void writerUtility (Color color, int i, int j) {
         if (color.getAlpha() > 230 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
-            list.add(".place setpixel " + (x + i) + " " + (y + j) + " " + rgbToHex(color));
+            pixels.add(".place setpixel " + (x + i) + " " + (y + j) + " " + rgbToHex(color));
         }
     }
 
