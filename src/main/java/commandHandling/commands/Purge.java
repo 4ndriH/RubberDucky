@@ -16,6 +16,7 @@ public class Purge implements CommandInterface {
     private volatile boolean stop;
     private final EmbedBuilder purgeCommenced = new EmbedBuilder();
     private final EmbedBuilder busyPurging = new EmbedBuilder();
+    private final EmbedBuilder purgeEnded = new EmbedBuilder();
 
     public Purge(Logger LOGGER) {
         LOGGER.info("Loaded Command Purge");
@@ -55,6 +56,10 @@ public class Purge implements CommandInterface {
                 }
             } while (messages.size() != 0 && !stop);
             isRunning = stop = false;
+            ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
+                    .addFile(new File("resources/purgeEnded.jpg")).queue(
+                    msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+            );
         })).start();
     }
 
@@ -64,6 +69,9 @@ public class Purge implements CommandInterface {
         busyPurging.setTitle("Already busy purging");
         busyPurging.setColor(new Color(0xb074ad));
         busyPurging.setImage("attachment://busyPurging.png");
+        purgeEnded.setTitle("Thank you for participating in the purge <3");
+        purgeEnded.setColor(new Color(0xb074ad));
+        purgeEnded.setImage("attachment://purgeEnded.jpg");
     }
 
     @Override
