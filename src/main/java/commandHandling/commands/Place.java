@@ -72,7 +72,6 @@ public class Place implements CommandInterface {
                 break;
             default:
                 services.Logger.command(ctx, "place", false);
-                break;
         }
     }
 
