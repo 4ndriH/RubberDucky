@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Purge implements CommandInterface {
-    private volatile boolean isRunning;
-    private volatile boolean stop;
+    private volatile boolean isRunning, stop;
     private final EmbedBuilder purgeCommenced = new EmbedBuilder();
     private final EmbedBuilder busyPurging = new EmbedBuilder();
     private final EmbedBuilder purgeEnded = new EmbedBuilder();
