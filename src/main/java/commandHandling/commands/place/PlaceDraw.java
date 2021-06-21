@@ -77,8 +77,8 @@ public class PlaceDraw implements Runnable{
                             // debugging
                             if (i == pixels.size() - 1) {
                                 Logger.botStatus(ctx.getJDA(), "Place Verify", "Image complete, final inspection");
-                            new PlaceVerify(placeData);
                             }
+                            new PlaceVerify(placeData);
                             // debugging
                             if (i == pixels.size() - 1) {
                                 Logger.botStatus(ctx.getJDA(), "Place Verify", "Final Inspection complete, commencing fixing " + placeData.fixingQ.size() + " pixels");

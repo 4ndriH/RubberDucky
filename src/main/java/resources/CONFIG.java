@@ -29,7 +29,6 @@ public enum CONFIG {
         HashMap<String, String> config = services.database.dbHandlerConfig.getConfig();
         Token.id = config.get("token");
         Prefix.id = config.get("prefix");
-        System.out.println(Prefix.id);
         OwnerID.id = config.get("ownerid");
     }
 
