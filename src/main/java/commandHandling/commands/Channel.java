@@ -8,9 +8,11 @@ import resources.CONFIG;
 import resources.EMOTES;
 import services.BotExceptions;
 import services.CommandManager;
+import services.DiscordLogger;
+import services.Miscellaneous;
+import services.database.dbHandlerPermissions;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 public class Channel implements CommandInterface {
     private final CommandManager cm;
@@ -23,21 +25,21 @@ public class Channel implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         String cmd, channel = ctx.getChannel().getId();
-        services.Logger.command(ctx, "channel", true);
+        DiscordLogger.command(ctx, "channel", true);
 
         try {
             if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {
                 if (cm.getCommand(cmd).isOwnerOnly()) {
                     return;
                 } else if (CONFIG.commandChannelCheck(cmd, channel)) {
-                    services.database.dbHandlerPermissions.removeFromChannels(cmd, channel);
+                    dbHandlerPermissions.removeFromChannels(cmd, channel);
                 } else {
-                    services.database.dbHandlerPermissions.addToChannels(cmd, channel);
+                    dbHandlerPermissions.addToChannels(cmd, channel);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (!ci.isOwnerOnly() && !CONFIG.commandChannelCheck(ci.getName().toLowerCase(), channel)) {
-                        services.database.dbHandlerPermissions.addToChannels(ci.getName().toLowerCase(), channel);
+                        dbHandlerPermissions.addToChannels(ci.getName().toLowerCase(), channel);
                     }
                 }
             } else {
@@ -65,7 +67,7 @@ public class Channel implements CommandInterface {
             embed.setDescription(sb.toString());
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
             );
         }
     }

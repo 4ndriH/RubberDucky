@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import services.BotExceptions;
+import services.DiscordLogger;
 
 public class Status implements CommandInterface {
     public Status(Logger LOGGER) {
@@ -23,7 +24,7 @@ public class Status implements CommandInterface {
                 sb.append(ctx.getArguments().get(i)).append(" ");
             }
             if (sb.toString().length() > 128 || sb.toString().toCharArray().length == 0) {
-                services.Logger.command(ctx, "status", false);
+                DiscordLogger.command(ctx, "status", false);
                 BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
@@ -31,7 +32,7 @@ public class Status implements CommandInterface {
             activity = "";
         }
 
-        services.Logger.command(ctx, "Status", true);
+        DiscordLogger.command(ctx, "Status", true);
 
         switch (activity) {
             case "competing":

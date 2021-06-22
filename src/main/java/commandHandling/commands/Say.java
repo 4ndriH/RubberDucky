@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.BotExceptions;
+import services.DiscordLogger;
 
 public class Say implements CommandInterface {
     private volatile boolean isRunning, stop;
@@ -19,7 +20,7 @@ public class Say implements CommandInterface {
         StringBuilder sb = new StringBuilder();
 
         if (isRunning) {
-            services.Logger.command(ctx, "say", true);
+            DiscordLogger.command(ctx, "say", true);
             stop = true;
             return;
         }
@@ -29,9 +30,9 @@ public class Say implements CommandInterface {
             for (int i = 1; i < ctx.getArguments().size(); i++) {
                 sb.append(ctx.getArguments().get(i)).append(" ");
             }
-            services.Logger.command(ctx, "say", true);
+            DiscordLogger.command(ctx, "say", true);
         } catch (Exception e) {
-            services.Logger.command(ctx, "say", false);
+            DiscordLogger.command(ctx, "say", false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }

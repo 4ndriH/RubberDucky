@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Logger {
+public class DiscordLogger {
     public static void commandAndException(CommandContext ctx, String command, Throwable t, boolean pass) {
         command(ctx, command, pass);
         exception(ctx, t);

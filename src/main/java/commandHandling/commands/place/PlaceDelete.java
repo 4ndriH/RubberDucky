@@ -3,13 +3,13 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
-import services.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 import services.database.dbHandlerQ;
 
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class PlaceDelete {
     private final CommandContext ctx;
@@ -31,23 +31,23 @@ public class PlaceDelete {
                 dbHandlerQ.deleteElementInQ(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
-                Logger.command(ctx, "place", false);
+                DiscordLogger.command(ctx, "place", false);
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
             }
         } catch (Exception e) {
-            Logger.commandAndException(ctx, "place", e, false);
+            DiscordLogger.commandAndException(ctx, "place", e, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         embed.setTitle("Delete");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("File " + id + " has been deleted");
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+                msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
         );
     }
 }

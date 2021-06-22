@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class PlacePreview implements Runnable{
     private final CommandContext ctx;
@@ -34,13 +33,13 @@ public class PlacePreview implements Runnable{
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                services.Logger.command(ctx, "place", false);
+                DiscordLogger.command(ctx, "place", false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        services.Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));
@@ -71,7 +70,7 @@ public class PlacePreview implements Runnable{
             writer.close();
             output.close();
         } catch (IOException e) {
-            Logger.exception(ctx, e);
+            DiscordLogger.exception(ctx, e);
         }
 
         File gif = new File("tempFiles/place/preview.gif");
@@ -82,13 +81,10 @@ public class PlacePreview implements Runnable{
             embed.setColor(new Color(0xb074ad));
             embed.setImage("attachment://preview.gif");
             ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> msg.delete().onErrorFlatMap(
-                            error -> ctx.getJDA().getGuildById("817850050013036605")
-                                    .getTextChannelById("847805084784132137").sendTyping()
-                    ).queueAfter(1024, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 1024)
             );
         } catch (IllegalArgumentException e) {
-            Logger.exception(ctx, e);
+            DiscordLogger.exception(ctx, e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
 

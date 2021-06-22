@@ -88,10 +88,10 @@ public class CommandManager {
             try {
                 cmd.handle(ctx);
             } catch (Exception e) {
-                services.Logger.exception(ctx, e);
+                DiscordLogger.exception(ctx, e);
             }
         } else {
-            services.Logger.command(ctx, invoke, false);
+            DiscordLogger.command(ctx, invoke, false);
         }
     }
 }

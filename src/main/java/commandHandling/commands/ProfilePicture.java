@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Icon;
 import org.slf4j.Logger;
 import services.BotExceptions;
+import services.DiscordLogger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,9 +27,9 @@ public class ProfilePicture implements CommandInterface {
         try {
             Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
-            services.Logger.command(ctx, "profilepicture", true);
+            DiscordLogger.command(ctx, "profilepicture", true);
         } catch (Exception e) {
-            services.Logger.commandAndException(ctx, "profilepicture", e, false);
+            DiscordLogger.commandAndException(ctx, "profilepicture", e, false);
             BotExceptions.missingAttachmentException(ctx);
         }
     }

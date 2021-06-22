@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import resources.CONFIG;
+import services.DiscordLogger;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class LockDown implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "lockdown", true);
+        DiscordLogger.command(ctx, "lockdown", true);
 
         if (CONFIG.getChannels().size() == 0) {
             CONFIG.reload();

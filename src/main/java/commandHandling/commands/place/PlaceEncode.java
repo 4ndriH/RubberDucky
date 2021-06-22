@@ -2,7 +2,8 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
-import services.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,7 +13,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 public class PlaceEncode implements Runnable {
     private final ArrayList<String> pixels = new ArrayList<>();
@@ -36,8 +36,9 @@ public class PlaceEncode implements Runnable {
             path += fileName.substring(0, fileName.length() - 4);
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             writer = new PrintStream(path + ".txt");
+            ctx.getMessage().delete().queue();
         } catch (Exception e) {
-            Logger.commandAndException(ctx, "place", e, false);
+            DiscordLogger.commandAndException(ctx, "place", e, false);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -48,12 +49,12 @@ public class PlaceEncode implements Runnable {
             width = Integer.parseInt(ctx.getArguments().get(3));
             height = Integer.parseInt(ctx.getArguments().get(4));
         } catch (Exception e) {
-            Logger.commandAndException(ctx, "place", e, false);
+            DiscordLogger.commandAndException(ctx, "place", e, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
@@ -85,6 +86,8 @@ public class PlaceEncode implements Runnable {
                 break;
             case "circle":
                 circle();
+            case "wavey":
+                wavey();
                 break;
         }
 
@@ -98,12 +101,12 @@ public class PlaceEncode implements Runnable {
         writer.close();
 
         try {
-            ctx.getChannel().sendMessage("Estimated drawing time: \n**" + timeConversion(pixels.size()) + "**")
-                    .addFile(new File(path + ".txt")).queue(
-                            msg -> msg.delete().queueAfter(512, TimeUnit.SECONDS)
+            ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
+                    Miscellaneous.timeFormat(pixels.size()) + "**").addFile(new File(path + ".txt")).queue(
+                            msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
             );
         } catch (IllegalArgumentException e) {
-            Logger.exception(ctx, e);
+            DiscordLogger.exception(ctx, e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
 
@@ -221,6 +224,19 @@ public class PlaceEncode implements Runnable {
         }
     }
 
+    private void wavey() {
+//        leftToRight();
+//        ArrayList<String> temp = new ArrayList<>(pixels);
+//        pixels.clear();
+//        int idx = 0;
+//
+//        while (temp.size() != 0) {
+//            idx = (idx + 10) % temp.size();
+//            pixels.add(temp.get(idx));
+//            temp.remove(idx);
+//        }
+    }
+
     private void writerUtility (Color color, int i, int j) {
         if (color.getAlpha() > 230 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
             pixels.add(".place setpixel " + (x + i) + " " + (y + j) + " " + rgbToHex(color));
@@ -229,24 +245,6 @@ public class PlaceEncode implements Runnable {
 
     private String rgbToHex(Color c) {
         return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-    }
-
-    private String timeConversion(int linesCnt) {
-        int seconds = linesCnt % 60;
-        int minutes = (linesCnt - seconds) / 60 % 60;
-        int hours = ((linesCnt - seconds) / 60 - minutes) / 60;
-
-        String days = "";
-        if (hours > 23) {
-            days = (hours - (hours %= 24)) / 24 + "";
-            if (Integer.parseInt(days) == 1) {
-                days += " day, ";
-            } else {
-                days += " days, ";
-            }
-        }
-
-        return String.format(days + "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private BufferedImage resize(BufferedImage img, int newW, int newH) {

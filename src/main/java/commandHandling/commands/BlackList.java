@@ -6,11 +6,12 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import resources.CONFIG;
+import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class BlackList implements CommandInterface {
     public BlackList(Logger LOGGER) {
@@ -19,7 +20,7 @@ public class BlackList implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "blacklist", true);
+        DiscordLogger.command(ctx, "blacklist", true);
 
         try {
             if (CONFIG.getBlackList().contains(ctx.getArguments().get(0))) {
@@ -48,8 +49,9 @@ public class BlackList implements CommandInterface {
                 embed.setDescription(sb.toString());
             }
 
+
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
             );
         }
     }

@@ -4,7 +4,7 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import services.BotExceptions;
-import services.Logger;
+import services.DiscordLogger;
 import services.PermissionManager;
 import services.database.dbHandlerQ;
 
@@ -33,7 +33,7 @@ public class PlaceDraw implements Runnable{
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             file = dbHandlerQ.getFile(placeData.id = Integer.parseInt(ctx.getArguments().get(1)));
             if (file.length() == 0) {
-                Logger.command(ctx, "place", false);
+                DiscordLogger.command(ctx, "place", false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -42,13 +42,13 @@ public class PlaceDraw implements Runnable{
             if (numbers.size() > 0) {
                 file = dbHandlerQ.getFile(placeData.id = numbers.get(random.nextInt(numbers.size())));
             } else {
-                Logger.command(ctx, "place", false);
+                DiscordLogger.command(ctx, "place", false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
 
-        Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         try {
             while (file != null && !placeData.stop && !placeData.stopQ) {
@@ -76,12 +76,12 @@ public class PlaceDraw implements Runnable{
                         if (placeData.verify && (i % 2048 == 0 && i != 0 || i == pixels.size() - 1)) {
                             // debugging
                             if (i == pixels.size() - 1) {
-                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Image complete, final inspection");
+                                DiscordLogger.botStatus(ctx.getJDA(), "Place Verify", "Image complete, final inspection");
                             }
                             new PlaceVerify(placeData);
                             // debugging
                             if (i == pixels.size() - 1) {
-                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Final Inspection complete, commencing fixing " + placeData.fixingQ.size() + " pixels");
+                                DiscordLogger.botStatus(ctx.getJDA(), "Place Verify", "Final Inspection complete, commencing fixing " + placeData.fixingQ.size() + " pixels");
                             }
                             while (placeData.verify && !placeData.fixingQ.isEmpty()) {
                                 placeBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
@@ -89,12 +89,12 @@ public class PlaceDraw implements Runnable{
                             }
                             // debugging
                             if (i == pixels.size() - 1) {
-                                Logger.botStatus(ctx.getJDA(), "Place Verify", "Fixing completed");
+                                DiscordLogger.botStatus(ctx.getJDA(), "Place Verify", "Fixing completed");
                             }
                         }
                     } catch (Exception e) {
                         i--;
-                        Logger.exception(ctx, e);
+                        DiscordLogger.exception(ctx, e);
                         Thread.sleep(16000);
                     }
                 }
@@ -113,7 +113,7 @@ public class PlaceDraw implements Runnable{
                 }
             }
         } catch (FileNotFoundException | InterruptedException e) {
-            Logger.exception(ctx, e);
+            DiscordLogger.exception(ctx, e);
         }
         placeData.drawing = false;
     }

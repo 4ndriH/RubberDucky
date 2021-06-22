@@ -4,6 +4,7 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import services.DiscordLogger;
 
 import java.awt.*;
 import java.io.File;
@@ -15,8 +16,8 @@ public class Shutdown implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "shutdown", true);
-        services.Logger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down",
+        DiscordLogger.command(ctx, "shutdown", true);
+        DiscordLogger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is shutting down",
                 "Waiting for buckets to finish");
 
         EmbedBuilder embed = new EmbedBuilder();

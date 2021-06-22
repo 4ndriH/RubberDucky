@@ -5,6 +5,8 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.awt.*;
 import java.io.File;
@@ -30,16 +32,16 @@ public class Purge implements CommandInterface {
             } else {
                 ctx.getChannel().sendMessageEmbeds(busyPurging.build())
                         .addFile(new File("resources/busyPurging.png")).queue(
-                                message -> message.delete().queueAfter(32, TimeUnit.SECONDS)
+                                msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
                 );
             }
-            services.Logger.command(ctx, "purge", true);
+            DiscordLogger.command(ctx, "purge", true);
             return;
         } else {
             isRunning = true;
         }
 
-        services.Logger.command(ctx, "purge", true);
+        DiscordLogger.command(ctx, "purge", true);
 
         (new Thread(() -> {
             ctx.getChannel().sendMessageEmbeds(purgeCommenced.build())
@@ -57,7 +59,7 @@ public class Purge implements CommandInterface {
             isRunning = stop = false;
             ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
                     .addFile(new File("resources/purgeEnded.jpg")).queue(
-                    msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
             );
         })).start();
     }

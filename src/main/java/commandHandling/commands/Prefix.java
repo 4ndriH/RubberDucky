@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import resources.CONFIG;
 import services.BotExceptions;
+import services.DiscordLogger;
 
 public class Prefix implements CommandInterface {
     public Prefix(Logger LOGGER) {
@@ -16,10 +17,10 @@ public class Prefix implements CommandInterface {
     public void handle(CommandContext ctx) {
         try {
             services.database.dbHandlerConfig.updateConfig("prefix", ctx.getArguments().get(0));
-            services.Logger.command(ctx, "prefix", true);
+            DiscordLogger.command(ctx, "prefix", true);
             CONFIG.reload();
         } catch (Exception e) {
-            services.Logger.command(ctx, "prefix", false);
+            DiscordLogger.command(ctx, "prefix", false);
             BotExceptions.invalidArgumentsException(ctx);
         }
     }

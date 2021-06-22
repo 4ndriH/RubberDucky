@@ -14,7 +14,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        services.Logger.botStatus(event.getJDA(), event.getJDA().getSelfUser().getName() + " is ready", "");
+        DiscordLogger.botStatus(event.getJDA(), event.getJDA().getSelfUser().getName() + " is ready", "");
         LOGGER.info("{} is ready", event.getJDA().getSelfUser().getName());
     }
 

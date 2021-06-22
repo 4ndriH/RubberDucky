@@ -7,10 +7,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import resources.CONFIG;
 import resources.EMOTES;
+import services.DiscordLogger;
+import services.Miscellaneous;
+import services.database.dbHandlerPermissions;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Servers implements CommandInterface {
     public Servers(Logger LOGGER) {
@@ -19,13 +21,13 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "servers", true);
+        DiscordLogger.command(ctx, "servers", true);
 
         try {
             if (ctx.getArguments().get(0).equals("this") && CONFIG.getServers().contains(ctx.getGuild().getId())) {
-                services.database.dbHandlerPermissions.removeFromServers(ctx.getGuild().getId());
+                dbHandlerPermissions.removeFromServers(ctx.getGuild().getId());
             } else {
-                services.database.dbHandlerPermissions.addToServers(ctx.getGuild().getId());
+                dbHandlerPermissions.addToServers(ctx.getGuild().getId());
             }
             CONFIG.reload();
         } catch (Exception e) {
@@ -51,7 +53,7 @@ public class Servers implements CommandInterface {
             }
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
             );
         }
     }

@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.BotExceptions;
+import services.DiscordLogger;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class Galactic implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "galactic", true);
+        DiscordLogger.command(ctx, "galactic", true);
         StringBuilder message = new StringBuilder();
         boolean reply = true;
 

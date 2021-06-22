@@ -5,12 +5,13 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 import services.database.dbHandlerSpokesPeople;
 
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SpokesPeople implements CommandInterface {
     public SpokesPeople(Logger LOGGER) {
@@ -19,7 +20,7 @@ public class SpokesPeople implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "spokespeople", true);
+        DiscordLogger.command(ctx, "spokespeople", true);
         EmbedBuilder embed = new EmbedBuilder();
         String firstYear = dbHandlerSpokesPeople.getPeople(1);
         String secondYear = dbHandlerSpokesPeople.getPeople(2);
@@ -35,8 +36,9 @@ public class SpokesPeople implements CommandInterface {
         discordCacheRefresh.editMessage(firstYear + "\n" + secondYear).complete();
         discordCacheRefresh.delete().queue();
 
-        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/vis.png"))
-                .queue(msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS));
+        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/vis.png")).queue(
+                        msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+        );
     }
 
     @Override

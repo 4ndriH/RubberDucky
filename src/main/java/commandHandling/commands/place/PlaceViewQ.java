@@ -2,13 +2,13 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import services.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 import services.database.dbHandlerQ;
 
-import java.awt.Color;
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 
 public class PlaceViewQ {
     private final CommandContext ctx;
@@ -32,11 +32,11 @@ public class PlaceViewQ {
             }
             rs.getStatement().getConnection().close();
         } catch (SQLException e) {
-            Logger.exception(ctx, e);
+            DiscordLogger.exception(ctx, e);
             return;
         }
 
-        Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         embed.setTitle("Queue");
         embed.setColor(new Color(0xb074ad));
@@ -50,7 +50,7 @@ public class PlaceViewQ {
         }
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+                msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
         );
     }
 }

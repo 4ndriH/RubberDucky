@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 public class BotExceptions {
     public static void invalidArgumentsException (CommandContext ctx) {
@@ -70,7 +69,7 @@ public class BotExceptions {
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
             msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
+            Miscellaneous.deleteMsg(ctx, msg, 32);
         });
     }
 }

@@ -7,10 +7,11 @@ import org.slf4j.Logger;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
+import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.awt.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Help implements CommandInterface {
     private final CommandManager manager;
@@ -22,7 +23,7 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        services.Logger.command(ctx, "help", true);
+        DiscordLogger.command(ctx, "help", true);
         String prefix = CONFIG.Prefix.get();
 
         if (ctx.getArguments().isEmpty()) {
@@ -44,8 +45,9 @@ public class Help implements CommandInterface {
             embed.addField("__Owner__", "```" + ownerCMDs.toString() + "```", true);
             embed.setFooter("rdhelp <command> gives you a more detailed description");
 
-            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(msg ->
-                    msg.delete().queueAfter(64, TimeUnit.SECONDS));
+            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
+                    msg ->Miscellaneous.deleteMsg(ctx, msg, 64)
+            );
         } else {
             CommandInterface command = manager.getCommand(ctx.getArguments().get(0));
 
@@ -67,11 +69,11 @@ public class Help implements CommandInterface {
             embed.setTitle("Help - " + command.getName());
             embed.setColor(new Color(0xb074ad));
             if (aliases.length() != 0) {
-                embed.addField("__Aliases__", "```" + aliases.toString() + "```", false);
+                embed.addField("__Aliases__", "```" + aliases + "```", false);
             }
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+                    msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
             );
         }
     }

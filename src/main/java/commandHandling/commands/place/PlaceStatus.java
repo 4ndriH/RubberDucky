@@ -3,11 +3,11 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
-import services.Logger;
+import services.DiscordLogger;
+import services.Miscellaneous;
 import services.PermissionManager;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 public class PlaceStatus {
     private final PlaceData placeData;
@@ -22,7 +22,7 @@ public class PlaceStatus {
     private void main() {
         EmbedBuilder embed = new EmbedBuilder();
 
-        Logger.command(ctx, "place", true);
+        DiscordLogger.command(ctx, "place", true);
 
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));
@@ -30,7 +30,7 @@ public class PlaceStatus {
         if (placeData.drawing) {
             embed.setDescription("Drawing project " + placeData.id);
             embed.addField("__Estimated time remaining__",
-                    timeConversion(placeData.totalPixels - placeData.drawnPixels), false);
+                    Miscellaneous.timeFormat(placeData.totalPixels - placeData.drawnPixels), false);
             embed.addField("__Pixels__", pixelAlignment(), false);
             embed.addField("__Progress__", progress() + " " + placeData.progress + "%", false);
 
@@ -44,27 +44,11 @@ public class PlaceStatus {
         }
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+                msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
         );
     }
 
-    private String timeConversion(int linesCnt) {
-        int seconds = linesCnt % 60;
-        int minutes = (linesCnt - seconds) / 60 % 60;
-        int hours = ((linesCnt - seconds) / 60 - minutes) / 60;
-
-        String days = "";
-        if (hours > 23) {
-            days = (hours - (hours %= 24)) / 24 + "";
-            if (Integer.parseInt(days) == 1) {
-                days += " day, ";
-            } else {
-                days += " days, ";
-            }
-        }
-        return String.format(days + "%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
+    // does not work with embeds so need to figure something out
     private String pixelAlignment () {
         String pixelInfo = "";
         pixelInfo += String.format("%-10s % 9d%n", "Total pixels:", placeData.totalPixels);

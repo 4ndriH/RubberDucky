@@ -7,10 +7,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import resources.CONFIG;
 import services.BotExceptions;
+import services.DiscordLogger;
+import services.Miscellaneous;
 import services.PermissionManager;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 public class Place implements CommandInterface {
     private static PlaceData placeData = new PlaceData();
@@ -66,14 +67,14 @@ public class Place implements CommandInterface {
             case "help":
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
-                        msg -> msg.delete().queueAfter(64, TimeUnit.SECONDS)
+                        msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
                 );
                 break;
             case "view":
                 (new Thread(new PlaceView(ctx))).start();
                 break;
             default:
-                services.Logger.command(ctx, "place", false);
+                DiscordLogger.command(ctx, "place", false);
         }
     }
 
@@ -95,9 +96,9 @@ public class Place implements CommandInterface {
     private void stop (CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stop = true;
-            services.Logger.command(ctx, "place", true);
+            DiscordLogger.command(ctx, "place", true);
         } else {
-            services.Logger.command(ctx, "place", false);
+            DiscordLogger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -105,9 +106,9 @@ public class Place implements CommandInterface {
     private void stopQ (CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stopQ = !placeData.stopQ;
-            services.Logger.command(ctx, "place", true);
+            DiscordLogger.command(ctx, "place", true);
         } else {
-            services.Logger.command(ctx, "place", false);
+            DiscordLogger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -116,7 +117,7 @@ public class Place implements CommandInterface {
         if (PermissionManager.authenticateOwner(ctx)) {
             new PlaceDelete(ctx);
         } else {
-            services.Logger.command(ctx, "place", false);
+            DiscordLogger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -128,9 +129,9 @@ public class Place implements CommandInterface {
     private void verify (CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.verify = !placeData.verify;
-            services.Logger.command(ctx, "place", true);
+            DiscordLogger.command(ctx, "place", true);
         } else {
-            services.Logger.command(ctx, "place", false);
+            DiscordLogger.command(ctx, "place", false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
