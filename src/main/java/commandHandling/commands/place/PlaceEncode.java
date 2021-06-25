@@ -86,8 +86,6 @@ public class PlaceEncode implements Runnable {
                 break;
             case "circle":
                 circle();
-            case "wavey":
-                wavey();
                 break;
         }
 
@@ -222,19 +220,6 @@ public class PlaceEncode implements Runnable {
                 }
             }
         }
-    }
-
-    private void wavey() {
-//        leftToRight();
-//        ArrayList<String> temp = new ArrayList<>(pixels);
-//        pixels.clear();
-//        int idx = 0;
-//
-//        while (temp.size() != 0) {
-//            idx = (idx + 10) % temp.size();
-//            pixels.add(temp.get(idx));
-//            temp.remove(idx);
-//        }
     }
 
     private void writerUtility (Color color, int i, int j) {
