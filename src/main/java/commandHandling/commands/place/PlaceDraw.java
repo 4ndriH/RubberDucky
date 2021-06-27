@@ -8,9 +8,10 @@ import services.DiscordLogger;
 import services.PermissionManager;
 import services.database.dbHandlerQ;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -123,7 +124,18 @@ public class PlaceDraw implements Runnable{
         embed.setTitle("Your drawing has been finished");
         embed.setColor(new Color(0xb074ad));
         embed.setDescription("Thank you for using RubberDucky to draw");
-        embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
-        ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build()).queue();
+        embed.setThumbnail("attachment://place.png");
+        ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build())
+                .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue();
+    }
+
+    private InputStream convert (BufferedImage img) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(img, "png", os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(os.toByteArray());
     }
 }

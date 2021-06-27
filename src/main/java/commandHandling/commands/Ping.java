@@ -36,7 +36,7 @@ public class Ping implements CommandInterface {
 
     @Override
     public String getName() {
-        return "ping";
+        return "Ping";
     }
 
     @Override

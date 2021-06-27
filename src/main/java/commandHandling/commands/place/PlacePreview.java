@@ -51,7 +51,7 @@ public class PlacePreview implements Runnable{
             }
             scanner.close();
 
-            int pixelsPerFrame = (int)(pixels.size() * 0.012);
+            int pixelsPerFrame = Math.max(1, (int)(pixels.size() * 0.012));
             writer.writeToSequence(place);
 
             for (int i = 0; i < pixels.size(); i++) {

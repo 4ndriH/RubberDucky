@@ -65,6 +65,7 @@ public class Place implements CommandInterface {
                 verify(ctx);
                 break;
             case "help":
+                DiscordLogger.command(ctx, "place", true);
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
                         msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
@@ -150,13 +151,13 @@ public class Place implements CommandInterface {
                 "[Live View & Time Lapse](https://place.battlerush.dev/)");
 
         embed.addField("__Encode__", "Returns a txt file with the draw commands for the attached image\n" +
-                "```" + prefix +"place encode <x> <y> <width> <height> [<mode>] ```\n", false);
+                "```" + prefix + "place encode <x> <y> <width> <height> [<mode>] ```\n", false);
 
         embed.addField("__Preview__", "Returns a preview of the attached or referenced txt file\n" +
                         "```" + prefix + "place preview```", false);
 
         embed.addField("__Queue__", "Queues the attached or referenced txt file\n" +
-                "```" + prefix + "rdplace queue```", false);
+                "```" + prefix + "place queue```", false);
 
         embed.addField("__Draw__", "Starts the drawing process or returns the status if its already " +
                 "drawing\n```" + prefix + "place draw```", false);
