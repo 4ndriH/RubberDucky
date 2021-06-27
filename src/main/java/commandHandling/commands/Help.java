@@ -31,6 +31,7 @@ public class Help implements CommandInterface {
             StringBuilder publicCMDs = new StringBuilder();
             StringBuilder ownerCMDs = new StringBuilder();
 
+
             for (CommandInterface cmd : manager.getCommands()) {
                 if (cmd.isOwnerOnly()) {
                     ownerCMDs.append(prefix).append(cmd.getName().toLowerCase()).append("\n");
@@ -41,8 +42,8 @@ public class Help implements CommandInterface {
 
             embed.setTitle("Help");
             embed.setColor(new Color(0xb074ad));
-            embed.addField("__Miscellaneous__", "```" + publicCMDs.toString() + "```", true);
-            embed.addField("__Owner__", "```" + ownerCMDs.toString() + "```", true);
+            embed.addField("__Miscellaneous__", "```\n" + publicCMDs + "```", true);
+            embed.addField("__Owner__", "```\n" + ownerCMDs + "```", true);
             embed.setFooter("rdhelp <command> gives you a more detailed description");
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
