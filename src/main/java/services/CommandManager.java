@@ -80,7 +80,7 @@ public class CommandManager {
 
         // Queue a message delete with an error handler to prevent exceptions if the message is already gone
         ctx.getMessage().delete().onErrorFlatMap(
-                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("847805084784132137")
+                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("841393155478650920")
                         .sendTyping()
         ).queueAfter(128, TimeUnit.SECONDS);
 
