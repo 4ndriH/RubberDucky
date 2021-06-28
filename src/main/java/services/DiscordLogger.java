@@ -3,6 +3,8 @@ package services;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import resources.EMOTES;
 
 import java.awt.*;
@@ -24,10 +26,14 @@ public class DiscordLogger {
         StringBuilder sb = new StringBuilder();
 
         if (pass) {
-            ctx.getMessage().addReaction(EMOTES.RDG.getAsReaction()).queue();
+            ctx.getMessage().addReaction(EMOTES.RDG.getAsReaction()).queue(
+                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+            );
             embed.setColor(new Color(0x00d919));
         } else {
-            ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue();
+            ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue(
+                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+            );
             embed.setColor(new Color(0xff6a00));
         }
 
@@ -49,7 +55,10 @@ public class DiscordLogger {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(new Color(0xFF0000));
 
-        ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue();
+        ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue(
+                null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+        );
+
         String s = throwableToString(t), exceptionType = s.split("\n")[0];
         embed.setTitle(exceptionType);
 
