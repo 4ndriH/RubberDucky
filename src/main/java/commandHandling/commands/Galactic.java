@@ -16,7 +16,6 @@ public class Galactic implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "galactic", true);
         StringBuilder message = new StringBuilder();
         boolean reply = true;
 
@@ -29,6 +28,14 @@ public class Galactic implements CommandInterface {
             ctx.getMessage().delete().queue();
             reply = false;
         }
+
+        if (!inputNotEmpty(message.toString())) {
+            BotExceptions.invalidArgumentsException(ctx);
+            DiscordLogger.command(ctx, "galactic", false);
+            return;
+        }
+
+        DiscordLogger.command(ctx, "galactic", true);
 
         if (isEnglish(message.toString())) {
             message = new StringBuilder(message.toString().replace("a", "ᔑ"));
@@ -97,7 +104,6 @@ public class Galactic implements CommandInterface {
         } else {
             ctx.getChannel().sendMessage(message.toString()).queue();
         }
-
     }
 
     private boolean isEnglish(String s) {
@@ -107,6 +113,10 @@ public class Galactic implements CommandInterface {
                 s.contains("p") || s.contains("q") || s.contains("r") || s.contains("s") || s.contains("t") ||
                 s.contains("u") || s.contains("v") || s.contains("w") || s.contains("x") || s.contains("y") ||
                 s.contains("z");
+    }
+
+    private boolean inputNotEmpty(String s) {
+        return s.replace(" ", "").length() > 0;
     }
 
     @Override

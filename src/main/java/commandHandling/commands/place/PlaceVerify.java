@@ -18,7 +18,7 @@ public class PlaceVerify {
         BufferedImage place = PlaceWebSocket.getImage(true);
         LinkedList<String> fixingQ = new LinkedList<>();
 
-        for (int i = 0; i < placeData.drawnPixels; i++) {
+        for (int i = 0; i < placeData.drawnPixels && i < placeData.pixels.size(); i++) {
             String command = placeData.pixels.get(i);
             String[] split = command.split(" ");
             int x = Integer.parseInt(split[2]);
