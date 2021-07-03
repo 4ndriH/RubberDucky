@@ -10,11 +10,11 @@ import services.PermissionManager;
 import java.awt.*;
 
 public class PlaceStatus {
-    private final PlaceData placeData;
+    private final PlaceData pD;
     private final CommandContext ctx;
 
-    public PlaceStatus(PlaceData placeData, CommandContext ctx) {
-        this.placeData = placeData;
+    public PlaceStatus(PlaceData pD, CommandContext ctx) {
+        this.pD = pD;
         this.ctx = ctx;
         main();
     }
@@ -27,17 +27,24 @@ public class PlaceStatus {
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));
 
-        if (placeData.drawing) {
-            embed.setDescription("Drawing project " + placeData.id);
+        if (pD.drawing) {
+            embed.setDescription("Drawing project " + pD.id);
             embed.addField("__Estimated time remaining__",
-                    Miscellaneous.timeFormat(placeData.totalPixels - placeData.drawnPixels), false);
-            embed.addField("__Pixels__", pixelAlignment(), false);
-            embed.addField("__Progress__", progress() + " " + placeData.progress + "%", false);
+                    Miscellaneous.timeFormat(pD.totalPixels - pD.drawnPixels), false);
 
+            embed.addField("__Total Pixels:__", "" + pD.totalPixels, true);
+            embed.addField("__Drawn Pixels:__", "" + pD.drawnPixels, true);
+            embed.addField("__Pixels Left:__", "" + (pD.totalPixels - pD.drawnPixels), true);
+
+            if (pD.fixedPixels > 0) {
+                embed.addField("__Fixed Pixels:__", "" + pD.fixedPixels, true);
+            }
+
+            embed.addField("__Progress__", progress() + " " + pD.progress + "%", false);
 
             if (PermissionManager.authenticateOwner(ctx) && ctx.getArguments().size() > 1) {
-                embed.addField("__StopQ__", "" + placeData.stopQ, true);
-                embed.addField("__Verify__", "" + placeData.verify, true);
+                embed.addField("__StopQ__", "" + pD.stopQ, true);
+                embed.addField("__Verify__", "" + pD.verify, true);
             }
         } else {
             embed.setDescription("Currently not drawing");
@@ -48,20 +55,8 @@ public class PlaceStatus {
         );
     }
 
-    // does not work with embeds so need to figure something out
-    private String pixelAlignment () {
-        String pixelInfo = "";
-        pixelInfo += String.format("%-10s % 9d%n", "Total pixels:", placeData.totalPixels);
-        pixelInfo += String.format("%-10s % 9d%n", "Drawn pixels:", placeData.drawnPixels);
-        pixelInfo += String.format("%-13s % 9d%n", "Pixels left:", placeData.totalPixels - placeData.drawnPixels);
-        if (placeData.fixedPixels != 0) {
-            pixelInfo += String.format("%-10s % 9d%n", "Fixed pixels:", placeData.fixedPixels);
-        }
-        return pixelInfo;
-    }
-
     private String progress () {
-        int progress = placeData.progress;
+        int progress = pD.progress;
         StringBuilder bar = new StringBuilder();
 
         for (int i = 0; i < 10; i++) {

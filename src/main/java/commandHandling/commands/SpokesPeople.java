@@ -37,7 +37,7 @@ public class SpokesPeople implements CommandInterface {
         discordCacheRefresh.delete().queue();
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/vis.png")).queue(
-                        msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                        msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
         );
     }
 

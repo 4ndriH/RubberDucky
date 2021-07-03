@@ -2,7 +2,6 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
-import commandHandling.commands.Delete;
 import commandHandling.commands.Shutdown;
 import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -14,7 +13,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class CommandManager {
@@ -78,11 +76,7 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
-        // Queue a message delete with an error handler to prevent exceptions if the message is already gone
-        ctx.getMessage().delete().onErrorFlatMap(
-                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("841393155478650920")
-                        .sendTyping()
-        ).queueAfter(128, TimeUnit.SECONDS);
+        Miscellaneous.deleteMsg(ctx, ctx.getMessage(), 128);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke, this)) {
             try {
@@ -95,4 +89,3 @@ public class CommandManager {
         }
     }
 }
-

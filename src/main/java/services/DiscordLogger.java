@@ -74,6 +74,16 @@ public class DiscordLogger {
                         "Channel: " + ctx.getChannel().getName() + " [" + ctx.getChannel().getId() + "]\n" + time());
 
         send(embed, ctx.getJDA());
+        notifyOnException(ctx);
+    }
+
+    private static void notifyOnException(CommandContext ctx) {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("EXCEPTION");
+        embed.setColor(new Color(0xFF0000));
+        ctx.getJDA().openPrivateChannelById("155419933998579713").queue(
+                channel -> channel.sendMessageEmbeds(embed.build()).queue()
+        );
     }
 
     // Creates the embeds for bot status updates (idk yet what exactly this will be used for tbh)
