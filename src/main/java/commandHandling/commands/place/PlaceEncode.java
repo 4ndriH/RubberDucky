@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class PlaceEncode implements Runnable {
     private final ArrayList<String> pixels = new ArrayList<>();
@@ -87,6 +88,12 @@ public class PlaceEncode implements Runnable {
             case "circle":
                 circle();
                 break;
+            case "spread":
+                spread();
+                break;
+            default:
+                BotExceptions.invalidArgumentsException(ctx);
+                return;
         }
 
         if (reverse) {
@@ -220,6 +227,66 @@ public class PlaceEncode implements Runnable {
                 }
             }
         }
+    }
+
+    private void spread() {
+        boolean[][] pM = new boolean[img.getWidth()][img.getHeight()];
+        ArrayList<int[]> list = new ArrayList<>();
+        Random random = new Random();
+
+        int startX = random.nextInt(img.getWidth());
+        int startY = random.nextInt(img.getHeight());
+
+        list.add(new int[]{startX, startY});
+        pM[startX][startY] = true;
+        int idx;
+
+        while(!list.isEmpty() && pixels.size() <= 1_000_000) {
+            idx = random.nextInt(list.size());
+            int pixelX = list.get(idx)[0];
+            int pixelY = list.get(idx)[1];
+            list.remove(idx);
+
+            writerUtility(new Color(img.getRGB(pixelX, pixelY), true), x + pixelX, y + pixelY);
+
+            while(spreadPixelCheckComplete(pM, pixelX, pixelY)) {
+                switch (random.nextInt(4)) {
+                    case 0:
+                        if (spreadPixelCheck(pM, pixelX - 1, pixelY)) {
+                            pM[pixelX - 1][pixelY] = true;
+                            list.add(new int[]{pixelX - 1, pixelY});
+                        }
+                        break;
+                    case 1:
+                        if (spreadPixelCheck(pM, pixelX + 1, pixelY)) {
+                            pM[pixelX + 1][pixelY] = true;
+                            list.add(new int[]{pixelX + 1, pixelY});
+                        }
+                        break;
+                    case 2:
+                        if (spreadPixelCheck(pM, pixelX, pixelY - 1)) {
+                            pM[pixelX][pixelY - 1] = true;
+                            list.add(new int[]{pixelX, pixelY - 1});
+                        }
+                        break;
+                    case 3:
+                        if (spreadPixelCheck(pM, pixelX, pixelY + 1)) {
+                            pM[pixelX][pixelY + 1] = true;
+                            list.add(new int[]{pixelX, pixelY + 1});
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private boolean spreadPixelCheckComplete(boolean[][] pM, int x, int y) {
+        return spreadPixelCheck(pM, x - 1, y) || spreadPixelCheck(pM, x + 1, y) ||
+                spreadPixelCheck(pM, x, y - 1) || spreadPixelCheck(pM, x, y + 1);
+    }
+
+    private boolean spreadPixelCheck(boolean[][] pM, int x, int y) {
+        return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y];
     }
 
     private void writerUtility (Color color, int i, int j) {
