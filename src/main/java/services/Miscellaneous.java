@@ -7,10 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Miscellaneous {
     public static void deleteMsg(CommandContext ctx, Message msg, int seconds) {
-        msg.delete().onErrorFlatMap(
-                error -> ctx.getJDA().getGuildById("817850050013036605").getTextChannelById("847805084784132137")
-                        .sendTyping()
-        ).queueAfter(seconds, TimeUnit.SECONDS);
+        msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, throwable -> {});
     }
 
     public static String timeFormat(int linesCnt) {
