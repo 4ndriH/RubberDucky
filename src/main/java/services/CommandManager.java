@@ -71,7 +71,7 @@ public class CommandManager {
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(CONFIG.Prefix.get()), "").split("\\s+");
 
-        String invoke = split[0].toLowerCase();
+        String invoke = split[0].length() == 0 ? "help" : split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
