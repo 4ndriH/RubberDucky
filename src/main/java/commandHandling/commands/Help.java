@@ -94,6 +94,6 @@ public class Help implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("commands", "cmds", "commandlist");
+        return List.of("commands", "cmds", "commandlist", "");
     }
 }
