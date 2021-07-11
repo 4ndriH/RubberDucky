@@ -7,20 +7,20 @@ import resources.EMOTES;
 import java.awt.*;
 
 public class BotExceptions {
-    public static void invalidArgumentsException (CommandContext ctx) {
+    public static void invalidArgumentsException(CommandContext ctx) {
         sendMessage("invalidArgumentsException", "The given Arguments do not match " +
                 "the required criteria", ctx);
     }
 
-    public static void commandNotFoundException (CommandContext ctx, String command) {
+    public static void commandNotFoundException(CommandContext ctx, String command) {
         sendMessage("commandNotFoundException", "Command \"" + command + "\" not found!", ctx);
     }
 
-    public static void missingAttachmentException (CommandContext ctx) {
+    public static void missingAttachmentException(CommandContext ctx) {
         sendMessage("missingAttachmentException", "No attachment found!", ctx);
     }
 
-    public static void fileDoesNotExistException (CommandContext ctx) {
+    public static void fileDoesNotExistException(CommandContext ctx) {
         sendMessage("fileDoesNotExistException", "File does not exist!", ctx);
     }
 
@@ -33,23 +33,26 @@ public class BotExceptions {
         sendMessage("invalidIdException", "This ID does not exist!", ctx);
     }
 
-    public static void emptyQueueException (CommandContext ctx) {
+    public static void emptyQueueException(CommandContext ctx) {
         sendMessage("emptyQueueException", "There are no files in the queue!", ctx);
     }
 
-    public static void fileTooBigException (CommandContext ctx) {
-        sendMessage("fileTooBigException", "You can not have more than 10.8k lines!", ctx);
-    }
-
-    public static void FileExceedsUploadLimitException (CommandContext ctx) {
+    public static void FileExceedsUploadLimitException(CommandContext ctx) {
         int boost = ctx.getGuild().getBoostCount();
         sendMessage("FileExceedsUploadLimitException","The file exceeds the possible " +
                 (boost <= 1 ? 8 : boost == 2 ? 50 : 100) + "mb!", ctx);
     }
 
-    public static void exceedsCharLimitException (CommandContext ctx) {
-        int boost = ctx.getGuild().getBoostCount();
+    public static void exceedsCharLimitException(CommandContext ctx) {
         sendMessage("exceedsCharLimitException","The text exceeds the 2000 char limit!", ctx);
+    }
+
+    public static void unknownPatternException(CommandContext ctx) {
+        sendMessage("unknownPatternException","This is not a valid pattern!", ctx);
+    }
+
+    public static void faultyPixelFormatException(CommandContext ctx, String s) {
+        sendMessage("faultyPixelFormatException", "\"" + s + "\" is not a valid setpixel command!", ctx);
     }
 
     // Builds the embed and sends it as a response to a failed sub command

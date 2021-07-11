@@ -24,6 +24,7 @@ public class PlacePreview implements Runnable{
     public void run() {
         BufferedImage place = PlaceWebSocket.getImage(false);
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+        boolean exception = false;
         Scanner scanner;
 
         try {
@@ -56,10 +57,17 @@ public class PlacePreview implements Runnable{
 
             for (int i = 0; i < pixels.size(); i++) {
                 String[] pixel = pixels.get(i).split(" ");
-                img.setRGB(Integer.parseInt(pixel[2]), Integer.parseInt(pixel[3]), Color.decode(pixel[4]).getRGB());
-                if (i % pixelsPerFrame == 0) {
-                    writer.writeToSequence(img);
-                    img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+                try {
+                    img.setRGB(Integer.parseInt(pixel[2]), Integer.parseInt(pixel[3]), Color.decode(pixel[4]).getRGB());
+                    if (i % pixelsPerFrame == 0) {
+                        writer.writeToSequence(img);
+                        img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+                    }
+                } catch (Exception e) {
+                    if (!exception) {
+                        exception = true;
+                        BotExceptions.faultyPixelFormatException(ctx, pixels.get(i));
+                    }
                 }
             }
 
@@ -69,7 +77,7 @@ public class PlacePreview implements Runnable{
 
             writer.close();
             output.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             DiscordLogger.exception(ctx, e);
         }
 

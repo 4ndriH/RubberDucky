@@ -92,7 +92,7 @@ public class PlaceEncode implements Runnable {
                 spread();
                 break;
             default:
-                BotExceptions.invalidArgumentsException(ctx);
+                BotExceptions.unknownPatternException(ctx);
                 return;
         }
 
