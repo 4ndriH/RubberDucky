@@ -67,7 +67,7 @@ public class BotExceptions {
             StringBuilder args = new StringBuilder();
             for (String s : ctx.getArguments())
                 args.append(s).append(", ");
-            embed.addField("Arguments:", args.toString(), false);
+            embed.addField("Arguments:", args.substring(0, args.length() - 1), false);
         }
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
