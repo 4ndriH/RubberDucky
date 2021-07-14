@@ -47,7 +47,7 @@ public class Help implements CommandInterface {
             embed.setFooter("rdhelp <command> gives you a more detailed description");
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg ->Miscellaneous.deleteMsg(ctx, msg, 64)
+                    msg ->Miscellaneous.deleteMsg(msg, 64)
             );
         } else {
             CommandInterface command = manager.getCommand(ctx.getArguments().get(0));
@@ -74,7 +74,7 @@ public class Help implements CommandInterface {
             }
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
+                    msg -> Miscellaneous.deleteMsg(msg, 64)
             );
         }
     }

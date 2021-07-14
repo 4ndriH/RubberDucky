@@ -28,7 +28,7 @@ public class Ping implements CommandInterface {
                     embed.addField("__Discord Server Ping:__", ping + "ms", false);
                     embed.addField("__Discord Websocket Ping:__", jda.getGatewayPing() + "ms", false);
                     ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                            msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                            msg -> Miscellaneous.deleteMsg(msg, 32)
                     );
                 }
         );

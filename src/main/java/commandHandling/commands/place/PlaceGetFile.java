@@ -30,7 +30,7 @@ public class PlaceGetFile {
         if (dbHandlerQ.getIDs().contains(id)) {
             try {
                 ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + dbHandlerQ.getFile(id))).queue(
-                            msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
+                            msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
                 DiscordLogger.command(ctx, "place", true);
             } catch (IllegalArgumentException e) {

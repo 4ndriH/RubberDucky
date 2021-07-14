@@ -69,7 +69,7 @@ public class PlaceQueue {
         embed.setDescription("Your file got ID " + number);
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(
-                msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                msg -> Miscellaneous.deleteMsg(msg, 32)
         );
 
         dbHandlerQ.addToQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());

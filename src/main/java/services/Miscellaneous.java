@@ -1,12 +1,11 @@
 package services;
 
-import commandHandling.CommandContext;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.concurrent.TimeUnit;
 
 public class Miscellaneous {
-    public static void deleteMsg(CommandContext ctx, Message msg, int seconds) {
+    public static void deleteMsg(Message msg, int seconds) {
         msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, throwable -> {});
     }
 

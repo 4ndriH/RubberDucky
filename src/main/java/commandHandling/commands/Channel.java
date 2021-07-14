@@ -67,7 +67,7 @@ public class Channel implements CommandInterface {
             embed.setDescription(sb.toString());
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                    msg -> Miscellaneous.deleteMsg(msg, 32)
             );
         }
     }

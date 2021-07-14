@@ -51,7 +51,7 @@ public class BlackList implements CommandInterface {
 
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                    msg -> Miscellaneous.deleteMsg(msg, 32)
             );
         }
     }

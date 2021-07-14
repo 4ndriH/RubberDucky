@@ -108,7 +108,7 @@ public class PlaceEncode implements Runnable {
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
                     Miscellaneous.timeFormat(pixels.size()) + "**").addFile(new File(path + ".txt")).queue(
-                            msg -> Miscellaneous.deleteMsg(ctx, msg, 128)
+                            msg -> Miscellaneous.deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
             DiscordLogger.exception(ctx, e);

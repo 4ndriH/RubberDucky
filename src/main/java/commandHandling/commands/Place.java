@@ -68,7 +68,7 @@ public class Place implements CommandInterface {
                 DiscordLogger.command(ctx, "place", true);
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
-                        msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
+                        msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
                 break;
             case "view":

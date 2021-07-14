@@ -50,7 +50,7 @@ public class PlaceViewQ {
         }
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
+                msg -> Miscellaneous.deleteMsg(msg, 64)
         );
     }
 }

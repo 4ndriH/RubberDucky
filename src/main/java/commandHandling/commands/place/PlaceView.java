@@ -29,7 +29,7 @@ public class PlaceView implements Runnable{
         embed.setImage("attachment://place.png");
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue(
-                msg -> Miscellaneous.deleteMsg(ctx, msg, 64)
+                msg -> Miscellaneous.deleteMsg(msg, 64)
         );
     }
 

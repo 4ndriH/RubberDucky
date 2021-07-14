@@ -9,7 +9,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -89,7 +88,7 @@ public class PlacePreview implements Runnable{
             embed.setColor(new Color(0xb074ad));
             embed.setImage("attachment://preview.gif");
             ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> Miscellaneous.deleteMsg(ctx, msg, 1024)
+                    msg -> Miscellaneous.deleteMsg(msg, 1024)
             );
         } catch (IllegalArgumentException e) {
             DiscordLogger.exception(ctx, e);

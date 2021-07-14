@@ -72,7 +72,7 @@ public class BotExceptions {
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
             msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            Miscellaneous.deleteMsg(ctx, msg, 32);
+            Miscellaneous.deleteMsg(msg, 32);
         });
     }
 }

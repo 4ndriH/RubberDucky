@@ -38,6 +38,7 @@ public class CommandManager {
         addCommand(new ProfilePicture(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new Say(LOGGER));
+        addCommand(new Temp());
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -76,7 +77,7 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
-        Miscellaneous.deleteMsg(ctx, ctx.getMessage(), 128);
+        Miscellaneous.deleteMsg(ctx.getMessage(), 128);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, invoke, this)) {
             try {

@@ -32,7 +32,7 @@ public class Purge implements CommandInterface {
             } else {
                 ctx.getChannel().sendMessageEmbeds(busyPurging.build())
                         .addFile(new File("resources/busyPurging.png")).queue(
-                                msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                                msg -> Miscellaneous.deleteMsg(msg, 32)
                 );
             }
             DiscordLogger.command(ctx, "purge", true);
@@ -59,7 +59,7 @@ public class Purge implements CommandInterface {
             isRunning = stop = false;
             ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
                     .addFile(new File("resources/purgeEnded.jpg")).queue(
-                    msg -> Miscellaneous.deleteMsg(ctx, msg, 32)
+                    msg -> Miscellaneous.deleteMsg(msg, 32)
             );
         })).start();
     }
