@@ -4,11 +4,14 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import resources.CONFIG;
 import services.BotExceptions;
 import services.DiscordLogger;
 
+import java.util.HashMap;
+
 public class Say implements CommandInterface {
-    private volatile boolean isRunning, stop;
+    private volatile HashMap<String, Boolean> runningChannels = new HashMap<>();
 
     public Say(Logger LOGGER) {
         LOGGER.info("Loaded Command Say");
@@ -16,12 +19,13 @@ public class Say implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        int repeats;
         StringBuilder sb = new StringBuilder();
+        String channel = ctx.getChannel().getId();
+        int repeats;
 
-        if (isRunning) {
+        if (runningChannels.containsKey(ctx.getChannel().getId())) {
             DiscordLogger.command(ctx, "say", true);
-            stop = true;
+            runningChannels.put(channel, false);
             return;
         }
 
@@ -38,11 +42,11 @@ public class Say implements CommandInterface {
         }
 
         (new Thread(() -> {
-            isRunning = true;
-            for (int i = 0; i < repeats && !stop; i++) {
+            runningChannels.put(channel, true);
+            for (int i = 0; i < repeats && runningChannels.get(channel); i++) {
                 ctx.getChannel().sendMessage(sb.toString()).complete();
             }
-            isRunning = stop = false;
+            runningChannels.remove(channel);
         })).start();
     }
 
@@ -54,7 +58,9 @@ public class Say implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Repeats a message a defined amount of times");
+        embed.setDescription("Repeats a message a certain amount of times");
+        embed.addField("__How To:__", "```" + CONFIG.Prefix.get() +
+                "say <amount> <message>```", false);
         return embed;
     }
 
