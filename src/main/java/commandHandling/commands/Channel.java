@@ -31,14 +31,14 @@ public class Channel implements CommandInterface {
             if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {
                 if (cm.getCommand(cmd).isOwnerOnly()) {
                     return;
-                } else if (CONFIG.commandChannelCheck(cmd, channel)) {
+                } else if (CONFIG.channelCheck(cmd, channel)) {
                     dbHandlerPermissions.removeFromChannels(cmd, channel);
                 } else {
                     dbHandlerPermissions.addToChannels(cmd, channel);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
-                    if (!ci.isOwnerOnly() && !CONFIG.commandChannelCheck(ci.getName().toLowerCase(), channel)) {
+                    if (!ci.isOwnerOnly() && !CONFIG.channelCheck(ci.getName().toLowerCase(), channel)) {
                         dbHandlerPermissions.addToChannels(ci.getName().toLowerCase(), channel);
                     }
                 }
@@ -57,7 +57,7 @@ public class Channel implements CommandInterface {
             for (CommandInterface ci : cm.getCommands()) {
                 if (ci.isOwnerOnly()) {
                     continue;
-                } else if (CONFIG.commandChannelCheck(ci.getName().toLowerCase(), channel)) {
+                } else if (CONFIG.channelCheck(ci.getName().toLowerCase(), channel)) {
                     sb.append(EMOTES.RDG.getAsEmote());
                 } else {
                     sb.append(EMOTES.RDR.getAsEmote());
