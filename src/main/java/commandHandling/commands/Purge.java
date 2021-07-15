@@ -29,6 +29,7 @@ public class Purge implements CommandInterface {
         if (isRunning) {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop = true;
+                isRunning = false;
             } else {
                 ctx.getChannel().sendMessageEmbeds(busyPurging.build())
                         .addFile(new File("resources/busyPurging.png")).queue(
