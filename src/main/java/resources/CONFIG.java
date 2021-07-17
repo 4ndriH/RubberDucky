@@ -35,12 +35,12 @@ public enum CONFIG {
         OwnerID.id = config.get("ownerid");
     }
 
-    public static HashMap<String, ArrayList<String>> getChannels() {
-        return new HashMap<>(channels);
+    public static boolean channelCheck(String command, String channel) {
+        return channels.get(command) != null && channels.get(command).contains(channel);
     }
 
-    public static boolean commandChannelCheck(String command, String channel) {
-        return channels.get(command) != null && channels.get(command).contains(channel);
+    public static HashMap<String, ArrayList<String>> getChannels() {
+        return new HashMap<>(channels);
     }
 
     public static ArrayList<String> getBlackList() {
