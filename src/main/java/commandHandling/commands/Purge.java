@@ -32,7 +32,7 @@ public class Purge implements CommandInterface {
                 isRunning = false;
             } else {
                 ctx.getChannel().sendMessageEmbeds(busyPurging.build())
-                        .addFile(new File("resources/busyPurging.png")).queue(
+                        .addFile(new File("resources/purge/busyPurging.png")).queue(
                                 msg -> Miscellaneous.deleteMsg(msg, 32)
                 );
             }
@@ -46,7 +46,7 @@ public class Purge implements CommandInterface {
 
         (new Thread(() -> {
             ctx.getChannel().sendMessageEmbeds(purgeCommenced.build())
-                    .addFile(new File("resources/purgeCommenced.jpg")).queueAfter(1, TimeUnit.SECONDS);
+                    .addFile(new File("resources/purge/purgeCommenced.jpg")).queueAfter(1, TimeUnit.SECONDS);
             List<Message> messages;
             do {
                 messages = ctx.getChannel().getHistory().retrievePast(64).complete();
@@ -59,7 +59,7 @@ public class Purge implements CommandInterface {
             } while (messages.size() != 0 && !stop);
             isRunning = stop = false;
             ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
-                    .addFile(new File("resources/purgeEnded.jpg")).queue(
+                    .addFile(new File("resources/purge/purgeEnded.jpg")).queue(
                     msg -> Miscellaneous.deleteMsg(msg, 32)
             );
         })).start();

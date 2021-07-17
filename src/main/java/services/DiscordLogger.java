@@ -8,13 +8,17 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import resources.EMOTES;
 
 import java.awt.*;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class DiscordLogger {
+    static Random random = new Random();
+
     public static void commandAndException(CommandContext ctx, String command, Throwable t, boolean pass) {
         command(ctx, command, pass);
         exception(ctx, t);
@@ -79,10 +83,13 @@ public class DiscordLogger {
 
     private static void notifyOnException(CommandContext ctx) {
         EmbedBuilder embed = new EmbedBuilder();
+        int nr = random.nextInt(7);
         embed.setTitle("EXCEPTION");
         embed.setColor(new Color(0xFF0000));
+        embed.setImage("attachment://exception" + nr + ".gif");
         ctx.getJDA().openPrivateChannelById("155419933998579713").queue(
-                channel -> channel.sendMessageEmbeds(embed.build()).queue()
+                channel -> channel.sendMessageEmbeds(embed.build())
+                        .addFile(new File("resources/exception/exception" + nr + ".gif")).queue()
         );
     }
 
