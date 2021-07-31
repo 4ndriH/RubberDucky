@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class Delete implements CommandInterface {
     public void handle(CommandContext ctx) {
         String id = ctx.getArguments().size() == 1 ? ctx.getArguments().get(0) :
                 ctx.getMessage().getReferencedMessage().getId();
+
+        Miscellaneous.deleteMsg(ctx.getMessage(), 0);
 
         ctx.getChannel().retrieveMessageById(id).queue(
                 message ->  {
