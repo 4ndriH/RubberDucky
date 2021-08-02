@@ -6,9 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
-import services.PermissionManager;
 
 import java.awt.*;
 import java.io.File;
@@ -23,24 +21,6 @@ public class SpokesPeople implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "spokespeople", true);
-        if (ctx.getArguments().size() > 0 && PermissionManager.authenticateOwner(ctx)) {
-            if (ctx.getArguments().get(0).equalsIgnoreCase("delete")) {
-                ArrayList<String> temp = new ArrayList<>();
-                for (int i = 1; i < ctx.getArguments().size(); i++) {
-                    temp.add(ctx.getArguments().get(i));
-                }
-                DatabaseHandler.removeSpokesPeople(temp);
-            } else {
-                ArrayList<String> temp = new ArrayList<>();
-                for (int i = 0; i < ctx.getArguments().size() - 2; i++) {
-                    temp.add(ctx.getArguments().get(i) + "_" + ctx.getArguments().get(i + 1) + "_"
-                            + ctx.getArguments().get(i + 2) + "_");
-                }
-                DatabaseHandler.insertSpokesPeople(temp);
-            }
-            return;
-        }
         EmbedBuilder embed = new EmbedBuilder();
         ArrayList<HashMap<String, String>> spokesPeople = DatabaseHandler.getSpokesPeople();
         StringBuilder yearOne = new StringBuilder();
