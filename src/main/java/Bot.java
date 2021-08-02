@@ -4,15 +4,14 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import resources.CONFIG;
 import services.CatchListener;
-import services.CoolDownManager;
 import services.Listener;
+import services.OnStartUp;
 
 import javax.security.auth.login.LoginException;
 
 public class Bot {
     public static void main(String[] args) throws LoginException {
-        CONFIG.reload();
-        new CoolDownManager();
+        new OnStartUp();
         new Bot();
     }
 
