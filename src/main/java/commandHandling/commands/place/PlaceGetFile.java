@@ -2,9 +2,9 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
+import services.DatabaseHandler;
 import services.DiscordLogger;
 import services.Miscellaneous;
-import services.database.dbHandlerQ;
 
 import java.io.File;
 
@@ -27,9 +27,10 @@ public class PlaceGetFile {
             return;
         }
 
-        if (dbHandlerQ.getIDs().contains(id)) {
+        if (DatabaseHandler.getPlaceQIDs().contains(id)) {
             try {
-                ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + dbHandlerQ.getFile(id))).queue(
+                String[] strs = DatabaseHandler.getPlaceQProject(id).split("|");
+                ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[1])).queue(
                             msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
                 DiscordLogger.command(ctx, "place", true);

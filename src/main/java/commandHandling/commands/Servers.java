@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import resources.CONFIG;
 import resources.EMOTES;
+import services.DatabaseHandler;
 import services.DiscordLogger;
 import services.Miscellaneous;
-import services.database.dbHandlerPermissions;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ public class Servers implements CommandInterface {
 
         try {
             if (ctx.getArguments().get(0).equals("this") && CONFIG.getServers().contains(ctx.getGuild().getId())) {
-                dbHandlerPermissions.removeFromServers(ctx.getGuild().getId());
+                DatabaseHandler.removeServer(ctx.getGuild().getId());
             } else {
-                dbHandlerPermissions.addToServers(ctx.getGuild().getId());
+                DatabaseHandler.insertServer(ctx.getGuild().getId());
             }
             CONFIG.reload();
         } catch (Exception e) {

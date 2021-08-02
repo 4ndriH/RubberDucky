@@ -6,11 +6,14 @@ import java.util.LinkedList;
 public class PlaceData {
     public int id, totalPixels, drawnPixels, fixedPixels, progress;
     public boolean drawing, stop, stopQ = false, verify = true;
+    String user, file;
     public ArrayList<String> pixels;
     public LinkedList<String> fixingQ;
 
     public void reset () {
-        id = totalPixels = drawnPixels = fixedPixels = progress = 0;
+        id = totalPixels = drawnPixels = fixedPixels = progress = -1;
+        user = "";
+        file = "";
         drawing = stop = false;
         pixels = new ArrayList<>();
         fixingQ = new LinkedList<>();

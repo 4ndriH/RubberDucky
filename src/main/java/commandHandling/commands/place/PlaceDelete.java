@@ -3,9 +3,9 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
+import services.DatabaseHandler;
 import services.DiscordLogger;
 import services.Miscellaneous;
-import services.database.dbHandlerQ;
 
 import java.awt.*;
 import java.io.File;
@@ -20,7 +20,7 @@ public class PlaceDelete {
     }
 
     private void main() {
-        ArrayList<Integer> ids = dbHandlerQ.getIDs();
+        ArrayList<Integer> ids = DatabaseHandler.getPlaceQIDs();
         EmbedBuilder embed = new EmbedBuilder();
         int id;
 
@@ -28,7 +28,7 @@ public class PlaceDelete {
             id = Integer.parseInt(ctx.getArguments().get(1));
             if (ids.contains(id)) {
                 File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
-                dbHandlerQ.deleteElementInQ(id);
+                DatabaseHandler.removePlaceQ(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
                 DiscordLogger.command(ctx, "place", false);

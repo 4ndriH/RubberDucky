@@ -6,11 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import resources.CONFIG;
 import resources.EMOTES;
-import services.BotExceptions;
-import services.CommandManager;
-import services.DiscordLogger;
-import services.Miscellaneous;
-import services.database.dbHandlerPermissions;
+import services.*;
 
 import java.awt.*;
 
@@ -32,14 +28,14 @@ public class Channel implements CommandInterface {
                 if (cm.getCommand(cmd).isOwnerOnly()) {
                     return;
                 } else if (CONFIG.channelCheck(cmd, channel)) {
-                    dbHandlerPermissions.removeFromChannels(cmd, channel);
+                    DatabaseHandler.removeChannel(cmd, channel);
                 } else {
-                    dbHandlerPermissions.addToChannels(cmd, channel);
+                    DatabaseHandler.insertChannel(cmd, channel);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (!ci.isOwnerOnly() && !CONFIG.channelCheck(ci.getName().toLowerCase(), channel)) {
-                        dbHandlerPermissions.addToChannels(ci.getName().toLowerCase(), channel);
+                        DatabaseHandler.insertChannel(ci.getName().toLowerCase(), channel);
                     }
                 }
             } else {

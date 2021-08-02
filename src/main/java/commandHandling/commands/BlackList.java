@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import resources.CONFIG;
+import services.DatabaseHandler;
 import services.DiscordLogger;
 import services.Miscellaneous;
 
@@ -23,10 +24,11 @@ public class BlackList implements CommandInterface {
         DiscordLogger.command(ctx, "blacklist", true);
 
         try {
-            if (CONFIG.getBlackList().contains(ctx.getArguments().get(0))) {
-                services.database.dbHandlerPermissions.removeFromBlackList(ctx.getArguments().get(0));
+            String id = ctx.getArguments().get(0).replace("<@!", "").replace(">", "");
+            if (CONFIG.getBlackList().contains(id)) {
+                DatabaseHandler.removeBlacklist(id);
             } else {
-                services.database.dbHandlerPermissions.addToBlackList(ctx.getArguments().get(0));
+                DatabaseHandler.insertBlacklist(id);
             }
             CONFIG.reload();
         } catch (Exception e) {

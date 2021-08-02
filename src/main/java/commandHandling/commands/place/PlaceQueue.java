@@ -3,9 +3,9 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
+import services.DatabaseHandler;
 import services.DiscordLogger;
 import services.Miscellaneous;
-import services.database.dbHandlerQ;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -23,7 +23,7 @@ public class PlaceQueue {
     }
 
     private void main () {
-        ArrayList<Integer> numbers = dbHandlerQ.getIDs();
+        ArrayList<Integer> numbers = DatabaseHandler.getPlaceQIDs();
         ArrayList<String> commands = new ArrayList<>();
         Random random = new Random();
         Scanner scanner;
@@ -72,6 +72,6 @@ public class PlaceQueue {
                 msg -> Miscellaneous.deleteMsg(msg, 32)
         );
 
-        dbHandlerQ.addToQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());
+        DatabaseHandler.insertPlaceQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());
     }
 }

@@ -1,7 +1,6 @@
 package resources;
 
-import services.database.dbHandlerConfig;
-import services.database.dbHandlerPermissions;
+import services.DatabaseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +24,11 @@ public enum CONFIG {
     }
 
     public static void reload() {
-        blackList = dbHandlerPermissions.getBlacklist();
-        servers = dbHandlerPermissions.getServers();
-        channels = dbHandlerPermissions.getChannels();
+        blackList = DatabaseHandler.getBlacklist();
+        servers = DatabaseHandler.getServers();
+        channels = DatabaseHandler.getChannels();
 
-        HashMap<String, String> config = dbHandlerConfig.getConfig();
+        HashMap<String, String> config = DatabaseHandler.getConfig();
         Token.id = config.get("token");
         Prefix.id = config.get("prefix");
         OwnerID.id = config.get("ownerid");
