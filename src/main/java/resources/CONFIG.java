@@ -8,7 +8,8 @@ import java.util.HashMap;
 public enum CONFIG {
     Token("nosy"),
     Prefix("much"),
-    OwnerID("?");
+    OwnerID("?"),
+    LogChannel("");
 
     private String id;
     private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
@@ -32,6 +33,7 @@ public enum CONFIG {
         Token.id = config.get("token");
         Prefix.id = config.get("prefix");
         OwnerID.id = config.get("ownerid");
+        LogChannel.id = config.get("logchannel");
     }
 
     public static boolean channelCheck(String command, String channel) {

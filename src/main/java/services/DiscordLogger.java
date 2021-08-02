@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
+import resources.CONFIG;
 import resources.EMOTES;
 
 import java.awt.*;
@@ -107,7 +108,7 @@ public class DiscordLogger {
 
     // Sends the embed to the bot-log channel
     private static void send(EmbedBuilder embed, JDA jda) {
-        jda.getGuildById("817850050013036605").getTextChannelById("841393155478650920")
+        jda.getGuildById("817850050013036605").getTextChannelById(CONFIG.LogChannel.get())
                 .sendMessageEmbeds(embed.build()).queue();
     }
 
