@@ -24,7 +24,8 @@ public class PlaceVerify {
             int x = Integer.parseInt(split[2]);
             int y = Integer.parseInt(split[3]);
             Color colour = Color.decode(split[4]);
-            if (!compareColors(colour, new Color(place.getRGB(x, y)))) {
+            Color placeC = new Color(place.getRGB(x, y));
+            if (placeC.getAlpha() != 0 && !compareColors(colour, placeC)) {
                 fixingQ.add(command);
             }
         }

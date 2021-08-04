@@ -7,6 +7,7 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.nio.ByteBuffer;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
 
@@ -17,12 +18,18 @@ public class PlaceWebSocket {
         do {
             CountDownLatch latch = new CountDownLatch(1);
             WebSocketClient wsc = new WebSocketClient(latch);
+            WebSocket ws;
 
-            WebSocket ws = HttpClient
+            try {
+                ws = HttpClient
                     .newHttpClient()
                     .newWebSocketBuilder()
                     .buildAsync(URI.create("wss://place.battlerush.dev:9000/place"), wsc)
                     .join();
+            } catch (CompletionException e) {
+                return new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+            }
+
 
             WebSocketClient.buffer = ByteBuffer.allocate(0);
             ws.sendText(""+(char)1, true);
