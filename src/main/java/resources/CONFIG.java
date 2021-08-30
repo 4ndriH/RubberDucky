@@ -54,5 +54,6 @@ public enum CONFIG {
 
     public static void initiateLockdown() {
         channels = new HashMap<>();
+        servers = new ArrayList<>();
     }
 }

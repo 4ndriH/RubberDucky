@@ -48,7 +48,8 @@ public class DiscordLogger {
             }
         }
 
-        embed.setDescription("<@!" + ctx.getAuthor().getId() + "> ran command *rd" + command + sb + "*");
+        embed.setDescription("<@!" + ctx.getAuthor().getId() + "> ran command *" + CONFIG.Prefix.get() +
+                command + sb + "*");
         embed.setFooter("Server: " + ctx.getGuild().getName() + " [" + ctx.getGuild().getId() + "]\n" +
                         "Channel: " + ctx.getChannel().getName() + " [" + ctx.getChannel().getId() + "]\n" + time());
 

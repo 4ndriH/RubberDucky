@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import services.BotExceptions;
 import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.util.HashMap;
 
@@ -50,6 +51,8 @@ public class Say implements CommandInterface {
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);
         }
+
+        Miscellaneous.deleteMsg(ctx.getMessage(), 0);
 
         (new Thread(() -> {
             for (int i = 0; i < repeats && sayChannels.get(channel); i++) {

@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -31,7 +32,7 @@ public class PlaceDraw implements Runnable{
         Random random = new Random();
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
-            if (!DatabaseHandler.getPlaceQIDs().contains(Integer.parseInt(ctx.getArguments().get(1)))) {
+            if (!DatabaseHandler.getPlaceQIDs().contains(placeData.id = Integer.parseInt(ctx.getArguments().get(1)))) {
                 DiscordLogger.command(ctx, "place", false);
                 BotExceptions.invalidIdException(ctx);
                 return;
@@ -51,11 +52,12 @@ public class PlaceDraw implements Runnable{
 
         try {
             while (!placeData.stop && !placeData.stopQ) {
-                String[] temp = DatabaseHandler.getPlaceQProject(placeData.id).split("|");
-                placeData.file = temp[1];
-                placeData.drawnPixels = Integer.parseInt(temp[2]);
-                placeData.user = temp[3];
+                String[] temp = DatabaseHandler.getPlaceQProject(placeData.id);
+                placeData.file = temp[0];
+                placeData.drawnPixels = Integer.parseInt(temp[1]);
+                placeData.user = temp[2];
                 placeData.drawing = true;
+                System.out.println(Arrays.toString(temp));
                 Scanner scanner = new Scanner(new File("tempFiles/place/queue/" + placeData.file));
                 ArrayList<String> pixels = new ArrayList<>();
 

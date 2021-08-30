@@ -79,7 +79,7 @@ public class CommandManager {
 
         Miscellaneous.deleteMsg(ctx.getMessage(), 128);
 
-        if (cmd != null && PermissionManager.permissionCheck(ctx, invoke, this)) {
+        if (cmd != null && PermissionManager.permissionCheck(ctx, cmd.getName(), this)) {
             try {
                 cmd.handle(ctx);
             } catch (Exception e) {

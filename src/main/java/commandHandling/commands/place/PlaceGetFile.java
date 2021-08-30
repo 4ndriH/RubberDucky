@@ -29,8 +29,8 @@ public class PlaceGetFile {
 
         if (DatabaseHandler.getPlaceQIDs().contains(id)) {
             try {
-                String[] strs = DatabaseHandler.getPlaceQProject(id).split("|");
-                ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[1])).queue(
+                String[] strs = DatabaseHandler.getPlaceQProject(id);
+                ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[0])).queue(
                             msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
                 DiscordLogger.command(ctx, "place", true);

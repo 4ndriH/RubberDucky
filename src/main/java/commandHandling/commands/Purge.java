@@ -29,7 +29,6 @@ public class Purge implements CommandInterface {
         if (isRunning) {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop = true;
-                isRunning = false;
             } else {
                 ctx.getChannel().sendMessageEmbeds(busyPurging.build())
                         .addFile(new File("resources/purge/busyPurging.png")).queue(
@@ -57,11 +56,11 @@ public class Purge implements CommandInterface {
                     } catch (Exception ignored) {}
                 }
             } while (messages.size() != 0 && !stop);
-            isRunning = stop = false;
             ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
                     .addFile(new File("resources/purge/purgeEnded.jpg")).queue(
                     msg -> Miscellaneous.deleteMsg(msg, 32)
             );
+            isRunning = stop = false;
         })).start();
     }
 

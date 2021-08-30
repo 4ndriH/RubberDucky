@@ -18,7 +18,7 @@ public class PermissionManager {
     }
 
     public static boolean channelCheck(CommandContext ctx, String invoke) {
-        return CONFIG.channelCheck(invoke, ctx.getChannel().getId());
+        return CONFIG.channelCheck(invoke.toLowerCase(), ctx.getChannel().getId());
     }
 
     public static boolean serverCheck(CommandContext ctx) {

@@ -231,16 +231,19 @@ public class DatabaseHandler {
         }
     }
 
-    public static String getPlaceQProject(int key) {
-        String project = "";
+    public static String[] getPlaceQProject(int key) {
+        String[] project = new String[3];
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM place_queue WHERE key = ?"
             );
             ps.setInt(1, key);
             ResultSet rs = ps.executeQuery();
-            project = key + "|" + rs.getString("file") + "_" + rs.getInt("progress")
-                    + "|" + rs.getString("user");
+            while (!rs.isClosed() && rs.next()) {
+                project[0] = rs.getString("file");
+                project[1] = rs.getString("progress");
+                project[2] = rs.getString("user");
+            }
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
@@ -258,7 +261,7 @@ public class DatabaseHandler {
             while (!rs.isClosed() && rs.next()) {
                 strs[0] += rs.getInt("key") + "\n";
                 strs[1] += rs.getInt("progress") + "\n";
-                strs[2] += rs.getString("user") + "\n";
+                strs[2] += "<@!" + rs.getString("user") + ">\n";
             }
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
