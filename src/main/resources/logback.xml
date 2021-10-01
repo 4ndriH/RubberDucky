@@ -1,25 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression>return logger.equals("Command Logger");</expression>
+            </evaluator>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%-34.-34thread) %red(%10.10X{jda.shard}) %boldGreen(%-15.-15logger{0}) %highlight(%-6level) %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%-34.-34thread) %red(%10.10X{jda.shard}) %boldGreen(%-15.-15logger{0}) %highlight(%-6.-6level) %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_CMD" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression>return logger.equals("Command Logger");</expression>
+            </evaluator>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%-34.-34thread) %red(%10.10X{jda.shard}) %boldGreen(%-15.-15logger{0}) %blue(%-6(CMD)) %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>resources/log/logFile - %d{dd.MM.yyyy}.log</fileNamePattern>
+            <fileNamePattern>resources/logs/logFile - %d{dd.MM.yyyy}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-34thread %-15logger{0} %-6level %msg%n</pattern>
+
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="services.logging.CustomFileAppenderLayout"/>
         </encoder>
     </appender>
 
+<!--    <appender name="DISCORD" class="services.DiscordAppender">
+        </appender>-->
+
     <root level="INFO">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT_CMD" />
         <appender-ref ref="FILE" />
+<!--        <appender-ref ref="DISCORD" />-->
     </root>
 </configuration>

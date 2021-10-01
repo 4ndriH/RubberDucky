@@ -4,7 +4,6 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
@@ -31,17 +30,17 @@ public class PlaceDelete {
                 DatabaseHandler.removePlaceQ(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
-                DiscordLogger.command(ctx, "place", false);
+                Miscellaneous.CommandLog("PlaceDelete", ctx, false);
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
             }
         } catch (Exception e) {
-            DiscordLogger.commandAndException(ctx, "place", e, false);
+            Miscellaneous.CommandLog("PlaceDelete", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceDelete", ctx, true);
 
         embed.setTitle("Delete");
         embed.setColor(new Color(0xb074ad));

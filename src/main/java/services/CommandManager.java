@@ -31,14 +31,14 @@ public class CommandManager {
         addCommand(new Purge(LOGGER));
         addCommand(new BlackList(LOGGER));
         addCommand(new Servers(LOGGER));
-        addCommand(new Channel(LOGGER, this));
+        addCommand(new Channel(this, LOGGER));
         addCommand(new LockDown(LOGGER));
         addCommand(new Prefix(LOGGER));
         addCommand(new NickName(LOGGER));
         addCommand(new ProfilePicture(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new Say(LOGGER));
-        addCommand(new Temp());
+//        addCommand(new Temp());
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -80,13 +80,9 @@ public class CommandManager {
         Miscellaneous.deleteMsg(ctx.getMessage(), 128);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, cmd.getName(), this)) {
-            try {
                 cmd.handle(ctx);
-            } catch (Exception e) {
-                DiscordLogger.exception(ctx, e);
-            }
         } else {
-            DiscordLogger.command(ctx, invoke, false);
+            Miscellaneous.CommandLog(invoke, ctx, false);
         }
     }
 }

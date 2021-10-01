@@ -5,8 +5,9 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Icon;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.DiscordLogger;
+import services.Miscellaneous;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,8 +19,10 @@ import java.net.URL;
 import java.util.List;
 
 public class ProfilePicture implements CommandInterface {
-    public ProfilePicture(Logger LOGGER) {
-        LOGGER.info("Loaded Command ProfilePicture");
+    private final Logger LOGGER = LoggerFactory.getLogger(ProfilePicture.class);
+
+    public ProfilePicture(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
@@ -27,9 +30,9 @@ public class ProfilePicture implements CommandInterface {
         try {
             Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
-            DiscordLogger.command(ctx, "profilepicture", true);
+            Miscellaneous.CommandLog(getName(), ctx, true);
         } catch (Exception e) {
-            DiscordLogger.commandAndException(ctx, "profilepicture", e, false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.missingAttachmentException(ctx);
         }
     }

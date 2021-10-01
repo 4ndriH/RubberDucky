@@ -5,23 +5,25 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Servers implements CommandInterface {
-    public Servers(Logger LOGGER) {
-        LOGGER.info("Loaded Command Servers");
+    private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
+
+    public Servers(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "servers", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
 
         try {
             if (ctx.getArguments().get(0).equals("this") && CONFIG.getServers().contains(ctx.getGuild().getId())) {

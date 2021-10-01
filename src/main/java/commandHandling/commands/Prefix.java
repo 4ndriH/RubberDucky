@@ -4,24 +4,27 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.DatabaseHandler;
-import services.DiscordLogger;
+import services.Miscellaneous;
 
 public class Prefix implements CommandInterface {
-    public Prefix(Logger LOGGER) {
-        LOGGER.info("Loaded Command Prefix");
+    private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);
+
+    public Prefix(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
         try {
             DatabaseHandler.updateConfig("prefix", ctx.getArguments().get(0));
-            DiscordLogger.command(ctx, "prefix", true);
+            Miscellaneous.CommandLog(getName(), ctx, true);
             CONFIG.reload();
         } catch (Exception e) {
-            DiscordLogger.command(ctx, "prefix", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
         }
     }

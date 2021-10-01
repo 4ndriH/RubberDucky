@@ -5,9 +5,9 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
@@ -15,23 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlackList implements CommandInterface {
-    public BlackList(Logger LOGGER) {
-        LOGGER.info("Loaded Command BlackList");
+    private final Logger LOGGER = LoggerFactory.getLogger(BlackList.class);
+
+    public BlackList(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "blacklist", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
 
-        try {
-            String id = ctx.getArguments().get(0).replace("<@!", "").replace(">", "");
+        if (ctx.getArguments().size() > 0) {
+            String id = ctx.getArguments().get(0);
             if (CONFIG.getBlackList().contains(id)) {
                 DatabaseHandler.removeBlacklist(id);
             } else {
                 DatabaseHandler.insertBlacklist(id);
             }
             CONFIG.reload();
-        } catch (Exception e) {
+        } else {
             ArrayList<String> ids = CONFIG.getBlackList();
             EmbedBuilder embed = new EmbedBuilder();
 
@@ -50,7 +52,6 @@ public class BlackList implements CommandInterface {
                 msg.delete().queue();
                 embed.setDescription(sb.toString());
             }
-
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                     msg -> Miscellaneous.deleteMsg(msg, 32)

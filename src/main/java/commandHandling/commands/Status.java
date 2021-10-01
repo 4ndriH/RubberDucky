@@ -5,12 +5,15 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.DiscordLogger;
+import services.Miscellaneous;
 
 public class Status implements CommandInterface {
-    public Status(Logger LOGGER) {
-        LOGGER.info("Loaded Command Status");
+    private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
+
+    public Status(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
@@ -24,7 +27,7 @@ public class Status implements CommandInterface {
                 sb.append(ctx.getArguments().get(i)).append(" ");
             }
             if (sb.toString().length() > 128 || sb.toString().toCharArray().length == 0) {
-                DiscordLogger.command(ctx, "status", false);
+                Miscellaneous.CommandLog(getName(), ctx, false);
                 BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
@@ -32,7 +35,7 @@ public class Status implements CommandInterface {
             activity = "";
         }
 
-        DiscordLogger.command(ctx, "Status", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
 
         switch (activity) {
             case "competing":

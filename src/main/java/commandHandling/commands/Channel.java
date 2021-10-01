@@ -4,6 +4,7 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
 import services.*;
@@ -11,17 +12,19 @@ import services.*;
 import java.awt.*;
 
 public class Channel implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
     private final CommandManager cm;
 
-    public Channel(Logger LOGGER, CommandManager cm) {
-        LOGGER.info("Loaded Command Channel");
+    public Channel(CommandManager cm, Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
         this.cm = cm;
     }
 
     @Override
     public void handle(CommandContext ctx) {
+        Miscellaneous.CommandLog(getName(), ctx, true);
+
         String cmd, channel = ctx.getChannel().getId();
-        DiscordLogger.command(ctx, "channel", true);
 
         try {
             if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {

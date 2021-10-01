@@ -3,17 +3,13 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import services.BotExceptions;
-import services.DatabaseHandler;
-import services.DiscordLogger;
-import services.PermissionManager;
+import services.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -33,7 +29,7 @@ public class PlaceDraw implements Runnable{
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             if (!DatabaseHandler.getPlaceQIDs().contains(placeData.id = Integer.parseInt(ctx.getArguments().get(1)))) {
-                DiscordLogger.command(ctx, "place", false);
+                Miscellaneous.CommandLog("PlaceDraw", ctx, false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -42,13 +38,13 @@ public class PlaceDraw implements Runnable{
             if (numbers.size() > 0) {
                 placeData.id = numbers.get(random.nextInt(numbers.size()));
             } else {
-                DiscordLogger.command(ctx, "place", false);
+                Miscellaneous.CommandLog("PlaceDraw", ctx, false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceDraw", ctx, true);
 
         try {
             while (!placeData.stop && !placeData.stopQ) {
@@ -57,7 +53,6 @@ public class PlaceDraw implements Runnable{
                 placeData.drawnPixels = Integer.parseInt(temp[1]);
                 placeData.user = temp[2];
                 placeData.drawing = true;
-                System.out.println(Arrays.toString(temp));
                 Scanner scanner = new Scanner(new File("tempFiles/place/queue/" + placeData.file));
                 ArrayList<String> pixels = new ArrayList<>();
 
@@ -85,7 +80,7 @@ public class PlaceDraw implements Runnable{
                         }
                     } catch (Exception e) {
                         i--;
-                        DiscordLogger.exception(ctx, e);
+                        placeData.LOGGER.error("PlaceDraw Error", e);
                         Thread.sleep(16000);
                     }
                 }
@@ -104,7 +99,7 @@ public class PlaceDraw implements Runnable{
                 }
             }
         } catch (FileNotFoundException | InterruptedException e) {
-            DiscordLogger.exception(ctx, e);
+            placeData.LOGGER.error("PlaceDraw Error", e);
         }
         placeData.drawing = false;
     }

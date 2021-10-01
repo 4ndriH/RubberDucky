@@ -2,7 +2,6 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import javax.imageio.ImageIO;
@@ -22,11 +21,12 @@ public class PlaceView implements Runnable{
 
     @Override
     public void run() {
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceView", ctx, false);
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Place");
         embed.setColor(new Color(0xb074ad));
         embed.setImage("attachment://place.png");
+
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue(
                 msg -> Miscellaneous.deleteMsg(msg, 64)

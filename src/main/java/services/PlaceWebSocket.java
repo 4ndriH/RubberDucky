@@ -1,5 +1,8 @@
 package services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URI;
@@ -7,11 +10,12 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.nio.ByteBuffer;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
 
 public class PlaceWebSocket {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceWebSocket.class);
+
     public static BufferedImage getImage (boolean colored) {
         ByteBuffer buffer;
 
@@ -26,10 +30,10 @@ public class PlaceWebSocket {
                     .newWebSocketBuilder()
                     .buildAsync(URI.create("wss://place.battlerush.dev:9000/place"), wsc)
                     .join();
-            } catch (CompletionException e) {
+            } catch (Exception e) {
+                LOGGER.error("Websocket Problem", e);
                 return new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
             }
-
 
             WebSocketClient.buffer = ByteBuffer.allocate(0);
             ws.sendText(""+(char)1, true);

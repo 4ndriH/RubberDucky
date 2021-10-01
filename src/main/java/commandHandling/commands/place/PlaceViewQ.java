@@ -3,7 +3,6 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
@@ -19,7 +18,7 @@ public class PlaceViewQ {
         EmbedBuilder embed = new EmbedBuilder();
         String[] strs = DatabaseHandler.getCompletePlaceQ();
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceViewQ", ctx, true);
 
         embed.setTitle("Queue");
         embed.setColor(new Color(0xb074ad));

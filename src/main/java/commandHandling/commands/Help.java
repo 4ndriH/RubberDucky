@@ -4,26 +4,27 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
 import java.util.List;
 
 public class Help implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(Help.class);
     private final CommandManager manager;
 
-    public Help(CommandManager manager, Logger LOGGER) {
+    public Help(CommandManager manager, Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
         this.manager = manager;
-        LOGGER.info("Loaded Command Help");
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "help", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
         String prefix = CONFIG.Prefix.get();
 
         if (ctx.getArguments().isEmpty()) {

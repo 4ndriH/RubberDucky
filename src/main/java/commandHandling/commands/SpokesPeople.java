@@ -5,8 +5,8 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
@@ -16,17 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SpokesPeople implements CommandInterface {
-    public SpokesPeople(Logger LOGGER) {
-        LOGGER.info("Loaded Command SpokesPeople");
+    private final Logger LOGGER = LoggerFactory.getLogger(SpokesPeople.class);
+
+    public SpokesPeople(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
+        Miscellaneous.CommandLog(getName(), ctx, true);
         ArrayList<HashMap<String, String>> spokesPeople = DatabaseHandler.getSpokesPeople();
         StringBuilder yearOne = new StringBuilder();
         StringBuilder yearTwo = new StringBuilder();
         EmbedBuilder embed = new EmbedBuilder();
-        DiscordLogger.command(ctx, "spokespeople", true);
 
         for (HashMap<String, String> sp : spokesPeople) {
             HashMap<String, String> temp = new HashMap<>();

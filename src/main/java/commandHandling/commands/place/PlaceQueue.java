@@ -4,7 +4,6 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.awt.*;
@@ -16,9 +15,11 @@ import java.util.Scanner;
 
 public class PlaceQueue {
     private final CommandContext ctx;
+    private final PlaceData placeData;
 
-    public PlaceQueue(CommandContext ctx) {
+    public PlaceQueue(CommandContext ctx, PlaceData placeData) {
         this.ctx = ctx;
+        this.placeData = placeData;
         main();
     }
 
@@ -40,13 +41,13 @@ public class PlaceQueue {
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                DiscordLogger.command(ctx, "place", false);
+                Miscellaneous.CommandLog("PlaceQueue", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceQueue", ctx, true);
 
         while (scanner.hasNextLine()) {
             commands.add(scanner.nextLine());
@@ -60,7 +61,7 @@ public class PlaceQueue {
             }
             printer.close();
         } catch (FileNotFoundException e) {
-            DiscordLogger.exception(ctx, e);
+            placeData.LOGGER.error("PlaceQueue Error", e);
         }
 
         EmbedBuilder embed = new EmbedBuilder();

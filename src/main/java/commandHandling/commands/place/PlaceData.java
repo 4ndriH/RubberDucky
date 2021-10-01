@@ -1,5 +1,7 @@
 package commandHandling.commands.place;
 
+import org.slf4j.Logger;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -9,6 +11,7 @@ public class PlaceData {
     String user, file;
     public ArrayList<String> pixels;
     public LinkedList<String> fixingQ;
+    public Logger LOGGER;
 
     public void reset () {
         id = totalPixels = drawnPixels = fixedPixels = progress = -1;

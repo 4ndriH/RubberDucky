@@ -2,7 +2,6 @@ package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import javax.imageio.ImageIO;
@@ -17,11 +16,13 @@ import java.util.Random;
 
 public class PlaceEncode implements Runnable {
     private final ArrayList<String> pixels = new ArrayList<>();
+    private final PlaceData placeData;
     private final CommandContext ctx;
     private BufferedImage img = null;
     private int x, y;
 
-    public PlaceEncode(CommandContext ctx) {
+    public PlaceEncode(PlaceData placeData, CommandContext ctx) {
+        this.placeData = placeData;
         this.ctx = ctx;
     }
 
@@ -39,7 +40,7 @@ public class PlaceEncode implements Runnable {
             writer = new PrintStream(path + ".txt");
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
-            DiscordLogger.commandAndException(ctx, "place", e, false);
+            Miscellaneous.CommandLog("PlaceEncode", ctx, false);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -50,12 +51,12 @@ public class PlaceEncode implements Runnable {
             width = Integer.parseInt(ctx.getArguments().get(3));
             height = Integer.parseInt(ctx.getArguments().get(4));
         } catch (Exception e) {
-            DiscordLogger.commandAndException(ctx, "place", e, false);
+            Miscellaneous.CommandLog("PlaceEncode", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceEncode", ctx, true);
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
@@ -111,7 +112,7 @@ public class PlaceEncode implements Runnable {
                             msg -> Miscellaneous.deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
-            DiscordLogger.exception(ctx, e);
+            placeData.LOGGER.error("PlaceEncode Error", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
 

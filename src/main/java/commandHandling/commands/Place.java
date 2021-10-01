@@ -5,9 +5,9 @@ import commandHandling.CommandInterface;
 import commandHandling.commands.place.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.DiscordLogger;
 import services.Miscellaneous;
 import services.PermissionManager;
 
@@ -16,8 +16,9 @@ import java.awt.*;
 public class Place implements CommandInterface {
     private static PlaceData placeData = new PlaceData();
 
-    public Place(Logger LOGGER) {
-        LOGGER.info("Loaded Command Place");
+    public Place(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
+        placeData.LOGGER = LoggerFactory.getLogger(Place.class);
     }
 
     @Override
@@ -30,18 +31,20 @@ public class Place implements CommandInterface {
             cmd = "help";
         }
 
+        //make help default case
+
         switch (cmd) {
             case "encode": case "e":
                 encode(ctx);
                 break;
             case "preview": case "p":
-                new Thread(new PlacePreview(ctx)).start();
+                preview(ctx);
                 break;
             case "draw": case "d":
                 draw(ctx);
                 break;
             case "queue": case "q":
-                new PlaceQueue(ctx);
+                new PlaceQueue(ctx, placeData);
                 break;
             case "stop":
                 stop(ctx);
@@ -64,75 +67,80 @@ public class Place implements CommandInterface {
             case "verify": case "v":
                 verify(ctx);
                 break;
-            case "help":
-                DiscordLogger.command(ctx, "place", true);
+            case "view":
+                Thread t = new Thread(new PlaceView(ctx));
+                t.start();
+                break;
+            default:
+                Miscellaneous.CommandLog(getName(), ctx, true);
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
                         msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
-                break;
-            case "view":
-                (new Thread(new PlaceView(ctx))).start();
-                break;
-            default:
-                DiscordLogger.command(ctx, "place", false);
         }
     }
 
-    private void encode (CommandContext ctx) {
-        Thread encodeThread = new Thread(new PlaceEncode(ctx));
+    private void encode(CommandContext ctx) {
+        Thread encodeThread = new Thread(new PlaceEncode(placeData, ctx));
         encodeThread.start();
     }
 
-    private void draw (CommandContext ctx) {
+    private void preview(CommandContext ctx) {
+        Thread previewThread = new Thread(new PlacePreview(ctx, placeData));
+        previewThread.setName("Place - Preview");
+        previewThread.start();
+    }
+
+    private void draw(CommandContext ctx) {
         if (!placeData.drawing || placeData.stop) {
             placeData.reset();
             Thread drawThread = new Thread(new PlaceDraw(ctx, placeData));
+            drawThread.setName("Place - Draw");
             drawThread.start();
         } else {
             new PlaceStatus(placeData, ctx);
         }
     }
 
-    private void stop (CommandContext ctx) {
+    private void stop(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stop = true;
-            DiscordLogger.command(ctx, "place", true);
+            Miscellaneous.CommandLog(getName(), ctx, true);
         } else {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
-    private void stopQ (CommandContext ctx) {
+    private void stopQ(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stopQ = !placeData.stopQ;
-            DiscordLogger.command(ctx, "place", true);
+            Miscellaneous.CommandLog(getName(), ctx, true);
         } else {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
-    private void delete (CommandContext ctx) {
+    private void delete(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             new PlaceDelete(ctx);
         } else {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
 
-    private void getFile (CommandContext ctx) {
+    private void getFile(CommandContext ctx) {
         new PlaceGetFile(ctx);
     }
 
-    private void verify (CommandContext ctx) {
+    private void verify(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.verify = !placeData.verify;
-            DiscordLogger.command(ctx, "place", true);
+            Miscellaneous.CommandLog(getName(), ctx, true);
         } else {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }

@@ -3,7 +3,6 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
-import services.DiscordLogger;
 import services.Miscellaneous;
 import services.PermissionManager;
 
@@ -22,7 +21,7 @@ public class PlaceStatus {
     private void main() {
         EmbedBuilder embed = new EmbedBuilder();
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlaceStatus", ctx, true);
 
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));

@@ -4,20 +4,23 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
-import services.DiscordLogger;
+import org.slf4j.LoggerFactory;
+import services.Miscellaneous;
 
 import java.awt.*;
 import java.io.File;
 
 public class Kill implements CommandInterface {
-    public Kill(Logger LOGGER) {
-        LOGGER.info("Loaded Command Kill");
+    private final Logger LOGGER = LoggerFactory.getLogger(Kill.class);
+
+    public Kill(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "kill", true);
-        DiscordLogger.botStatus(ctx.getJDA(), ctx.getSelfUser().getName() + " is committing sudoku", "");
+        Miscellaneous.CommandLog(getName(), ctx, true);
+        LOGGER.info(ctx.getSelfUser().getName() + " is committing sudoku");
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Committing Sudoku");

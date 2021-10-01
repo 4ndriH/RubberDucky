@@ -14,9 +14,11 @@ import java.util.Scanner;
 
 public class PlacePreview implements Runnable{
     private final CommandContext ctx;
+    private final PlaceData placeData;
 
-    public PlacePreview(CommandContext ctx) {
+    public PlacePreview(CommandContext ctx, PlaceData placeData) {
         this.ctx = ctx;
+        this.placeData = placeData;
     }
 
     @Override
@@ -33,13 +35,13 @@ public class PlacePreview implements Runnable{
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                DiscordLogger.command(ctx, "place", false);
+                Miscellaneous.CommandLog("PlacePreview", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        DiscordLogger.command(ctx, "place", true);
+        Miscellaneous.CommandLog("PlacePreview", ctx, true);
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));
@@ -77,7 +79,7 @@ public class PlacePreview implements Runnable{
             writer.close();
             output.close();
         } catch (Exception e) {
-            DiscordLogger.exception(ctx, e);
+            placeData.LOGGER.error("PlacePreview Error", e);
         }
 
         File gif = new File("tempFiles/place/preview.gif");
@@ -91,7 +93,7 @@ public class PlacePreview implements Runnable{
                     msg -> Miscellaneous.deleteMsg(msg, 1024)
             );
         } catch (IllegalArgumentException e) {
-            DiscordLogger.exception(ctx, e);
+            placeData.LOGGER.error("PlacePreview Error", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
 

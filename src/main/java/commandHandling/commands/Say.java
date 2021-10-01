@@ -4,17 +4,18 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.util.HashMap;
 
 public class Say implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
     private volatile HashMap<String, Boolean> sayChannels = new HashMap<>();
 
-    public Say(Logger LOGGER) {
-        LOGGER.info("Loaded Command Say");
+    public Say(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
@@ -23,36 +24,35 @@ public class Say implements CommandInterface {
         String channel = ctx.getChannel().getId();
         int repeats;
 
+        try {
+            repeats = Integer.parseInt(ctx.getArguments().get(0));
+        } catch (Exception e) {
+            Miscellaneous.CommandLog(getName(), ctx, false);
+            BotExceptions.invalidArgumentsException(ctx);
+            return;
+        }
+
+        Miscellaneous.CommandLog(getName(), ctx, true);
+
         if (ctx.getArguments().size() == 0) {
             sayChannels.replace(channel, false);
-            DiscordLogger.command(ctx, "say", true);
             return;
         } else if (ctx.getArguments().get(0).equalsIgnoreCase("stopAll")) {
             for (String key : sayChannels.keySet()) {
                 sayChannels.replace(key, false);
             }
-            DiscordLogger.command(ctx, "say", true);
             return;
         }
 
-        try {
-            repeats = Integer.parseInt(ctx.getArguments().get(0));
-            for (int i = 1; i < ctx.getArguments().size(); i++) {
-                sb.append(ctx.getArguments().get(i)).append(" ");
-            }
-
-            DiscordLogger.command(ctx, "say", true);
-        } catch (Exception e) {
-            DiscordLogger.command(ctx, "say", false);
-            BotExceptions.invalidArgumentsException(ctx);
-            return;
+        for (int i = 1; i < ctx.getArguments().size(); i++) {
+            sb.append(ctx.getArguments().get(i)).append(" ");
         }
+
+        Miscellaneous.deleteMsg(ctx.getMessage(), 0);
 
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);
         }
-
-        Miscellaneous.deleteMsg(ctx.getMessage(), 0);
 
         (new Thread(() -> {
             for (int i = 0; i < repeats && sayChannels.get(channel); i++) {

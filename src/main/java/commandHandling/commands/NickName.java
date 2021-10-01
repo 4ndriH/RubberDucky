@@ -4,13 +4,16 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
-import services.DiscordLogger;
+import org.slf4j.LoggerFactory;
+import services.Miscellaneous;
 
 import java.util.List;
 
 public class NickName implements CommandInterface {
-    public NickName(Logger LOGGER) {
-        LOGGER.info("Loaded Command Nickname");
+    private final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
+
+    public NickName(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
@@ -22,7 +25,7 @@ public class NickName implements CommandInterface {
         }
 
         ctx.getSelfMember().modifyNickname(sb.toString()).queue();
-        DiscordLogger.command(ctx, "nickname", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
     }
 
     @Override

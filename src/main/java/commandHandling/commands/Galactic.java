@@ -4,18 +4,22 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.DiscordLogger;
+import services.Miscellaneous;
 
 import java.util.List;
 
 public class Galactic implements CommandInterface {
-    public Galactic(Logger LOGGER) {
-        LOGGER.info("Loaded Command Galactic");
+    private final Logger LOGGER = LoggerFactory.getLogger(Galactic.class);
+
+    public Galactic(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
+        Miscellaneous.CommandLog(getName(), ctx, true);
         StringBuilder message = new StringBuilder();
         boolean reply = true;
 
@@ -31,11 +35,11 @@ public class Galactic implements CommandInterface {
 
         if (!inputNotEmpty(message.toString())) {
             BotExceptions.invalidArgumentsException(ctx);
-            DiscordLogger.command(ctx, "galactic", false);
+            Miscellaneous.CommandLog(getName(), ctx, false);
             return;
         }
 
-        DiscordLogger.command(ctx, "galactic", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
 
         if (isEnglish(message.toString())) {
             message = new StringBuilder(message.toString().replace("a", "ᔑ"));

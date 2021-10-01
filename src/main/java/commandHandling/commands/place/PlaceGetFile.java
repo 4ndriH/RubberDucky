@@ -3,7 +3,6 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import services.BotExceptions;
 import services.DatabaseHandler;
-import services.DiscordLogger;
 import services.Miscellaneous;
 
 import java.io.File;
@@ -22,7 +21,7 @@ public class PlaceGetFile {
         try {
             id = Integer.parseInt(ctx.getArguments().get(1));
         } catch (Exception e) {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
@@ -33,13 +32,13 @@ public class PlaceGetFile {
                 ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[0])).queue(
                             msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
-                DiscordLogger.command(ctx, "place", true);
+                Miscellaneous.CommandLog("PlaceGetFile", ctx, true);
             } catch (IllegalArgumentException e) {
-                DiscordLogger.commandAndException(ctx, "place", e, false);
+                Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
                 BotExceptions.FileExceedsUploadLimitException(ctx);
             }
         } else {
-            DiscordLogger.command(ctx, "place", false);
+            Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
             BotExceptions.fileDoesNotExistException(ctx);
         }
     }

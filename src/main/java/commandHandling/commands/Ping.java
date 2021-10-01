@@ -5,19 +5,21 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
-import services.DiscordLogger;
+import org.slf4j.LoggerFactory;
 import services.Miscellaneous;
 
 import java.awt.*;
 
 public class Ping implements CommandInterface {
-    public Ping(Logger LOGGER) {
-        LOGGER.info("Loaded Command Ping");
+    private final Logger LOGGER = LoggerFactory.getLogger(Ping.class);
+
+    public Ping(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        DiscordLogger.command(ctx, "ping", true);
+        Miscellaneous.CommandLog(getName(), ctx, true);
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(

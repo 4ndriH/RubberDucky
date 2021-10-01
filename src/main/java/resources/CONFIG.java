@@ -1,5 +1,7 @@
 package resources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.DatabaseHandler;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ public enum CONFIG {
     OwnerID("?"),
     LogChannel("");
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("Config");
     private String id;
     private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
     private static ArrayList<String> blackList = new ArrayList<>();
@@ -34,6 +37,7 @@ public enum CONFIG {
         Prefix.id = config.get("prefix");
         OwnerID.id = config.get("ownerid");
         LogChannel.id = config.get("logchannel");
+        LOGGER.info("Config reloaded");
     }
 
     public static boolean channelCheck(String command, String channel) {
