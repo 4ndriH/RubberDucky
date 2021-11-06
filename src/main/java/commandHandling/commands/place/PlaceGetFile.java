@@ -21,7 +21,7 @@ public class PlaceGetFile {
         try {
             id = Integer.parseInt(ctx.getArguments().get(1));
         } catch (Exception e) {
-            Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
+            Miscellaneous.CommandLog("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
@@ -32,13 +32,13 @@ public class PlaceGetFile {
                 ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[0])).queue(
                             msg -> Miscellaneous.deleteMsg(msg, 64)
                 );
-                Miscellaneous.CommandLog("PlaceGetFile", ctx, true);
+                Miscellaneous.CommandLog("Place", ctx, true);
             } catch (IllegalArgumentException e) {
-                Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.FileExceedsUploadLimitException(ctx);
             }
         } else {
-            Miscellaneous.CommandLog("PlaceGetFile", ctx, false);
+            Miscellaneous.CommandLog("Place", ctx, false);
             BotExceptions.fileDoesNotExistException(ctx);
         }
     }

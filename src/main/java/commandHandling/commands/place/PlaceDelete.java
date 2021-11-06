@@ -30,17 +30,17 @@ public class PlaceDelete {
                 DatabaseHandler.removePlaceQ(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
-                Miscellaneous.CommandLog("PlaceDelete", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
             }
         } catch (Exception e) {
-            Miscellaneous.CommandLog("PlaceDelete", ctx, false);
+            Miscellaneous.CommandLog("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        Miscellaneous.CommandLog("PlaceDelete", ctx, true);
+        Miscellaneous.CommandLog("Place", ctx, true);
 
         embed.setTitle("Delete");
         embed.setColor(new Color(0xb074ad));

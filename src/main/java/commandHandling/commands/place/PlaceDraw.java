@@ -29,7 +29,7 @@ public class PlaceDraw implements Runnable{
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             if (!DatabaseHandler.getPlaceQIDs().contains(placeData.id = Integer.parseInt(ctx.getArguments().get(1)))) {
-                Miscellaneous.CommandLog("PlaceDraw", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -38,7 +38,7 @@ public class PlaceDraw implements Runnable{
             if (numbers.size() > 0) {
                 placeData.id = numbers.get(random.nextInt(numbers.size()));
             } else {
-                Miscellaneous.CommandLog("PlaceDraw", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
@@ -73,6 +73,7 @@ public class PlaceDraw implements Runnable{
                             DatabaseHandler.updatePlaceQ(placeData.id, i);
                         }
                         if (placeData.verify && (i % 2048 == 0 && i != 0 || i == pixels.size() - 1)) {
+                            new PlaceVerify(placeData);
                             while (placeData.verify && !placeData.fixingQ.isEmpty()) {
                                 placeBots.sendMessage(placeData.fixingQ.pollFirst()).complete();
                                 placeData.fixedPixels++;

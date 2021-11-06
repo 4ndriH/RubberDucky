@@ -18,7 +18,7 @@ public class PlaceViewQ {
         EmbedBuilder embed = new EmbedBuilder();
         String[] strs = DatabaseHandler.getCompletePlaceQ();
 
-        Miscellaneous.CommandLog("PlaceViewQ", ctx, true);
+        Miscellaneous.CommandLog("Place", ctx, true);
 
         embed.setTitle("Queue");
         embed.setColor(new Color(0xb074ad));

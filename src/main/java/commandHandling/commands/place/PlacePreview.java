@@ -35,13 +35,13 @@ public class PlacePreview implements Runnable{
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                Miscellaneous.CommandLog("PlacePreview", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        Miscellaneous.CommandLog("PlacePreview", ctx, true);
+        Miscellaneous.CommandLog("Place", ctx, true);
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));

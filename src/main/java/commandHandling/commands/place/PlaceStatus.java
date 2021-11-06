@@ -21,7 +21,7 @@ public class PlaceStatus {
     private void main() {
         EmbedBuilder embed = new EmbedBuilder();
 
-        Miscellaneous.CommandLog("PlaceStatus", ctx, true);
+        Miscellaneous.CommandLog("Place", ctx, true);
 
         embed.setTitle("Status");
         embed.setColor(new Color(0xb074ad));

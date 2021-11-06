@@ -41,13 +41,13 @@ public class PlaceQueue {
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                Miscellaneous.CommandLog("PlaceQueue", ctx, false);
+                Miscellaneous.CommandLog("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        Miscellaneous.CommandLog("PlaceQueue", ctx, true);
+        Miscellaneous.CommandLog("Place", ctx, true);
 
         while (scanner.hasNextLine()) {
             commands.add(scanner.nextLine());
