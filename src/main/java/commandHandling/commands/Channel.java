@@ -30,14 +30,14 @@ public class Channel implements CommandInterface {
             if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {
                 if (cm.getCommand(cmd).isOwnerOnly()) {
                     return;
-                } else if (CONFIG.channelCheck(cmd, channel)) {
+                } else if (channelCheck(cmd, channel)) {
                     DatabaseHandler.removeChannel(cmd, channel);
                 } else {
                     DatabaseHandler.insertChannel(cmd, channel);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
-                    if (!ci.isOwnerOnly() && !CONFIG.channelCheck(ci.getName().toLowerCase(), channel)) {
+                    if (!ci.isOwnerOnly() && channelCheck(ci.getName().toLowerCase(), channel)) {
                         DatabaseHandler.insertChannel(ci.getName().toLowerCase(), channel);
                     }
                 }
@@ -56,7 +56,7 @@ public class Channel implements CommandInterface {
             for (CommandInterface ci : cm.getCommands()) {
                 if (ci.isOwnerOnly()) {
                     continue;
-                } else if (CONFIG.channelCheck(ci.getName().toLowerCase(), channel)) {
+                } else if (channelCheck(ci.getName().toLowerCase(), channel)) {
                     sb.append(EMOTES.RDG.getAsEmote());
                 } else {
                     sb.append(EMOTES.RDR.getAsEmote());
@@ -69,6 +69,10 @@ public class Channel implements CommandInterface {
                     msg -> Miscellaneous.deleteMsg(msg, 32)
             );
         }
+    }
+
+    private boolean channelCheck(String cmd, String channel) {
+        return CONFIG.channels.get(cmd) != null && CONFIG.channels.get(cmd).contains(channel);
     }
 
     @Override
