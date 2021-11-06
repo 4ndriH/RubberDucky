@@ -40,13 +40,16 @@
         </encoder>
     </appender>
 
-<!--    <appender name="DISCORD" class="services.DiscordAppender">
-        </appender>-->
+    <appender name="DISCORD" class="services.logging.DiscordAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="STDOUT_CMD" />
         <appender-ref ref="FILE" />
-<!--        <appender-ref ref="DISCORD" />-->
+        <appender-ref ref="DISCORD" />
     </root>
 </configuration>

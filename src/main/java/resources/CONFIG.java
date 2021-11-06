@@ -1,5 +1,6 @@
 package resources;
 
+import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.DatabaseHandler;
@@ -18,6 +19,7 @@ public enum CONFIG {
     private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
     private static ArrayList<String> blackList = new ArrayList<>();
     private static ArrayList<String> servers = new ArrayList<>();
+    public static JDA instance;
 
     CONFIG(String id) {
         this.id = id;
