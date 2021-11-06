@@ -26,14 +26,14 @@ public class Servers implements CommandInterface {
         Miscellaneous.CommandLog(getName(), ctx, true);
 
         try {
-            if (ctx.getArguments().get(0).equals("this") && CONFIG.getServers().contains(ctx.getGuild().getId())) {
+            if (ctx.getArguments().get(0).equals("this") && CONFIG.servers.contains(ctx.getGuild().getId())) {
                 DatabaseHandler.removeServer(ctx.getGuild().getId());
             } else {
                 DatabaseHandler.insertServer(ctx.getGuild().getId());
             }
             CONFIG.reload();
         } catch (Exception e) {
-            ArrayList<String> ids = CONFIG.getServers();
+            ArrayList<String> ids = CONFIG.servers;
             EmbedBuilder embed = new EmbedBuilder();
 
             embed.setTitle("Whitelisted servers");

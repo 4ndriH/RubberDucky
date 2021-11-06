@@ -21,7 +21,7 @@ public class LockDown implements CommandInterface {
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
 
-        if (CONFIG.getChannels().size() == 0) {
+        if (CONFIG.channels.size() == 0) {
             CONFIG.reload();
         } else {
             LOGGER.info("Initiating Lockdown!");
