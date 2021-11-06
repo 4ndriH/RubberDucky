@@ -27,14 +27,14 @@ public class BlackList implements CommandInterface {
 
         if (ctx.getArguments().size() > 0) {
             String id = ctx.getArguments().get(0);
-            if (CONFIG.getBlackList().contains(id)) {
+            if (CONFIG.blackList.contains(id)) {
                 DatabaseHandler.removeBlacklist(id);
             } else {
                 DatabaseHandler.insertBlacklist(id);
             }
             CONFIG.reload();
         } else {
-            ArrayList<String> ids = CONFIG.getBlackList();
+            ArrayList<String> ids = CONFIG.blackList;
             EmbedBuilder embed = new EmbedBuilder();
 
             embed.setTitle("Blacklisted people");
