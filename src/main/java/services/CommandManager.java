@@ -38,6 +38,7 @@ public class CommandManager {
         addCommand(new ProfilePicture(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new Say(LOGGER));
+        addCommand(new About(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
