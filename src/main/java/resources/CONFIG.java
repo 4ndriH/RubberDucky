@@ -16,9 +16,10 @@ public enum CONFIG {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
     private String id;
-    private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
-    private static ArrayList<String> blackList = new ArrayList<>();
-    private static ArrayList<String> servers = new ArrayList<>();
+    
+    public static HashMap<String, ArrayList<String>> channels = new HashMap<>();
+    public static ArrayList<String> blackList = new ArrayList<>();
+    public static ArrayList<String> servers = new ArrayList<>();
     public static JDA instance;
 
     CONFIG(String id) {
@@ -39,23 +40,8 @@ public enum CONFIG {
         Prefix.id = config.get("prefix");
         OwnerID.id = config.get("ownerid");
         LogChannel.id = config.get("logchannel");
+
         LOGGER.info("Config reloaded");
-    }
-
-    public static boolean channelCheck(String command, String channel) {
-        return channels.get(command) != null && channels.get(command).contains(channel);
-    }
-
-    public static HashMap<String, ArrayList<String>> getChannels() {
-        return new HashMap<>(channels);
-    }
-
-    public static ArrayList<String> getBlackList() {
-        return new ArrayList<>(blackList);
-    }
-
-    public static ArrayList<String> getServers() {
-        return new ArrayList<>(servers);
     }
 
     public static void initiateLockdown() {

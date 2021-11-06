@@ -14,15 +14,15 @@ public class PermissionManager {
     }
 
     public static boolean blackListCheck(CommandContext ctx) {
-        return CONFIG.getBlackList().contains(ctx.getAuthor().getId());
+        return CONFIG.blackList.contains(ctx.getAuthor().getId());
     }
 
     public static boolean channelCheck(CommandContext ctx, String invoke) {
-        return CONFIG.channelCheck(invoke.toLowerCase(), ctx.getChannel().getId());
+        return CONFIG.channels.get(invoke) != null && CONFIG.channels.get(invoke).contains(ctx.getChannel().getId());
     }
 
     public static boolean serverCheck(CommandContext ctx) {
-        return CONFIG.getServers().contains(ctx.getGuild().getId());
+        return CONFIG.servers.contains(ctx.getGuild().getId());
     }
 
     public static boolean coolDownCheck(CommandContext ctx, String command) {
