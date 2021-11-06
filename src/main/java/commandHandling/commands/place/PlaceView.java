@@ -21,7 +21,7 @@ public class PlaceView implements Runnable{
 
     @Override
     public void run() {
-        Miscellaneous.CommandLog("PlaceView", ctx, false);
+        Miscellaneous.CommandLog("PlaceView", ctx, true);
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Place");
         embed.setColor(new Color(0xb074ad));
