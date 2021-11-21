@@ -1,5 +1,7 @@
 package services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.database.ConnectionPool;
 
 import java.sql.Connection;
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DatabaseHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHandler.class);
+
     ////////////////////////////////////////
     // Config
     ////////////////////////////////////////
@@ -23,7 +27,7 @@ public class DatabaseHandler {
             ps.setString(2, value);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -36,7 +40,7 @@ public class DatabaseHandler {
             ps.setString(2, key);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -51,7 +55,7 @@ public class DatabaseHandler {
                 config.put(rs.getString("key"), rs.getString("value"));
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return config;
     }
@@ -68,7 +72,7 @@ public class DatabaseHandler {
             ps.setString(2, channel);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -81,7 +85,7 @@ public class DatabaseHandler {
             ps.setString(2, channel);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -101,7 +105,7 @@ public class DatabaseHandler {
                 }
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return channels;
     }
@@ -117,7 +121,7 @@ public class DatabaseHandler {
             ps.setString(1, server);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -129,7 +133,7 @@ public class DatabaseHandler {
             ps.setString(1, server);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -144,7 +148,7 @@ public class DatabaseHandler {
                 servers.add(rs.getString("server"));
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return servers;
     }
@@ -160,7 +164,7 @@ public class DatabaseHandler {
             ps.setString(1, user);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -172,7 +176,7 @@ public class DatabaseHandler {
             ps.setString(1, user);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -187,7 +191,7 @@ public class DatabaseHandler {
                 users.add(rs.getString("user"));
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return users;
     }
@@ -205,7 +209,7 @@ public class DatabaseHandler {
             ps.setString(3, user);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -218,7 +222,7 @@ public class DatabaseHandler {
             ps.setInt(2, key);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -230,7 +234,7 @@ public class DatabaseHandler {
             ps.setInt(1, key);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -248,7 +252,7 @@ public class DatabaseHandler {
                 project[2] = rs.getString("user");
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return project;
     }
@@ -267,7 +271,7 @@ public class DatabaseHandler {
                 strs[2] += "<@!" + rs.getString("user") + ">\n";
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return strs;
     }
@@ -283,7 +287,7 @@ public class DatabaseHandler {
                 ids.add(rs.getInt("key"));
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return ids;
     }
@@ -305,7 +309,7 @@ public class DatabaseHandler {
             }
             ps.executeBatch();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -320,7 +324,7 @@ public class DatabaseHandler {
             }
             ps.executeBatch();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -341,7 +345,7 @@ public class DatabaseHandler {
                 }
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return spokesPeople;
     }
@@ -360,7 +364,7 @@ public class DatabaseHandler {
             ps.setLong(4, time);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 
@@ -379,12 +383,12 @@ public class DatabaseHandler {
                     msgs.get(0).add(rs.getString("server"));
                     msgs.get(1).add(rs.getString("channel"));
                     msgs.get(2).add(rs.getString("id"));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception sqlE) {
+                    LOGGER.error("SQL Exception", sqlE);
                 }
             }
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
         return msgs;
     }
@@ -398,7 +402,7 @@ public class DatabaseHandler {
             ps.setLong(1, currentTime);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("SQL Exception", sqlE);
         }
     }
 }
