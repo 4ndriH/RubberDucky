@@ -60,6 +60,25 @@ public class DatabaseHandler {
         return config;
     }
 
+    public static void incrementStartUpCounter() {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT value FROM config WHERE key='systemStartUps'"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                ps = connection.prepareStatement(
+                        "UPDATE config SET value=? WHERE key='systemStartUps'"
+                );
+                instanceNr = Integer.parseInt(rs.getString("value")) + 1;
+                ps.setString(1,  "" + instanceNr);
+                ps.executeUpdate();
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+    }
+
     ////////////////////////////////////////
     // Channels
     ////////////////////////////////////////
@@ -353,15 +372,18 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // Message Delete
     ////////////////////////////////////////
+    private static int instanceNr;
+
     public static void insertDeleteMessage(String server, String channel, String id, long time) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO deleteMsgs (server, channel, id, deleteTime) VALUES (?, ?, ?, ?)"
+                    "INSERT INTO deleteMsgs (server, channel, id, deleteTime, instanceNr) VALUES (?, ?, ?, ?, ?)"
             );
             ps.setString(1, server);
             ps.setString(2, channel);
             ps.setString(3, id);
             ps.setLong(4, time);
+            ps.setInt(5, instanceNr);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
@@ -379,12 +401,10 @@ public class DatabaseHandler {
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                try {
+                if (rs.getInt("instanceNr") < instanceNr) {
                     msgs.get(0).add(rs.getString("server"));
                     msgs.get(1).add(rs.getString("channel"));
                     msgs.get(2).add(rs.getString("id"));
-                } catch (Exception sqlE) {
-                    LOGGER.error("SQL Exception", sqlE);
                 }
             }
         } catch (SQLException sqlE) {

@@ -13,6 +13,7 @@ public class OnStartUp {
     private final Logger LOGGER = LoggerFactory.getLogger(OnStartUp.class);
 
     public OnStartUp() {
+        DatabaseHandler.incrementStartUpCounter();
         DirectoryVerification();
         CONFIG.reload();
         MessageCleanUp();
