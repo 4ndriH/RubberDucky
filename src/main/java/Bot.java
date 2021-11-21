@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import resources.CONFIG;
+import services.ButtonListener;
 import services.CatchListener;
 import services.Listener;
 import services.OnStartUp;
@@ -29,6 +30,7 @@ public class Bot {
                 )
                 .addEventListeners(new Listener())
                 .addEventListeners(new CatchListener())
+                .addEventListeners(new ButtonListener())
 //                .addEventListeners(new FerrisListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
