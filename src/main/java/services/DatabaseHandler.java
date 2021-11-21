@@ -2,7 +2,10 @@ package services;
 
 import services.database.ConnectionPool;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -341,5 +344,61 @@ public class DatabaseHandler {
             sqlE.printStackTrace();
         }
         return spokesPeople;
+    }
+
+    ////////////////////////////////////////
+    // Message Delete
+    ////////////////////////////////////////
+    public static void insertDeleteMessage(String server, String channel, String id, long time) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO deleteMsgs (server, channel, id, deleteTime) VALUES (?, ?, ?, ?)"
+            );
+            ps.setString(1, server);
+            ps.setString(2, channel);
+            ps.setString(3, id);
+            ps.setLong(4, time);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            sqlE.printStackTrace();
+        }
+    }
+
+    public static ArrayList<ArrayList<String>> getDeleteMessages() {
+        ArrayList<ArrayList<String>> msgs = new ArrayList<>();
+        msgs.add(new ArrayList<>());
+        msgs.add(new ArrayList<>());
+        msgs.add(new ArrayList<>());
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM deleteMsgs"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                try {
+                    msgs.get(0).add(rs.getString("server"));
+                    msgs.get(1).add(rs.getString("channel"));
+                    msgs.get(2).add(rs.getString("id"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException sqlE) {
+            sqlE.printStackTrace();
+        }
+        return msgs;
+    }
+
+    public static void pruneTableDeleteMsgs() {
+        long currentTime = System.currentTimeMillis();
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM deleteMsgs WHERE deleteTime<?"
+            );
+            ps.setLong(1, currentTime);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            sqlE.printStackTrace();
+        }
     }
 }

@@ -16,6 +16,10 @@ public class Miscellaneous {
 
     public static void deleteMsg(Message msg, int seconds) {
         msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, throwable -> {});
+        if (seconds > 0) {
+            DatabaseHandler.insertDeleteMessage(msg.getGuild().getId(), msg.getChannel().getId(), msg.getId(),
+                    System.currentTimeMillis() + seconds * 1000L);
+        }
     }
 
     public static String timeFormat(int linesCnt) {
