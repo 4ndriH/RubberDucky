@@ -2,7 +2,6 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
-import commandHandling.commands.Shutdown;
 import commandHandling.commands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ public class CommandManager {
     private final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
-        addCommand(new Shutdown(LOGGER));
         addCommand(new Kill(LOGGER));
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
