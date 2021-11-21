@@ -48,7 +48,7 @@ public class Say implements CommandInterface {
             sb.append(ctx.getArguments().get(i)).append(" ");
         }
 
-        Miscellaneous.deleteMsg(ctx.getMessage(), 0);
+        Miscellaneous.deleteMsg(ctx.getMessage(), -1);
 
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);
