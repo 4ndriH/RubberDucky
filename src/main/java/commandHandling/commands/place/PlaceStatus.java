@@ -7,6 +7,7 @@ import services.Miscellaneous;
 import services.PermissionManager;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class PlaceStatus {
     private final PlaceData pD;
@@ -31,12 +32,12 @@ public class PlaceStatus {
             embed.addField("__Estimated time remaining__",
                     Miscellaneous.timeFormat(pD.totalPixels - pD.drawnPixels), false);
 
-            embed.addField("__Total Pixels:__", "" + pD.totalPixels, true);
-            embed.addField("__Drawn Pixels:__", "" + pD.drawnPixels, true);
-            embed.addField("__Pixels Left:__", "" + (pD.totalPixels - pD.drawnPixels), true);
+            embed.addField("__Total Pixels:__", "" + formatNr(pD.totalPixels), true);
+            embed.addField("__Drawn Pixels:__", "" + formatNr(pD.drawnPixels), true);
+            embed.addField("__Pixels Left:__", "" + formatNr(pD.totalPixels - pD.drawnPixels), true);
 
             if (pD.fixedPixels > 0) {
-                embed.addField("__Fixed Pixels:__", "" + pD.fixedPixels, true);
+                embed.addField("__Fixed Pixels:__", "" + formatNr(pD.fixedPixels), true);
             }
 
             embed.addField("__Progress__", progress() + " " + pD.progress + "%", false);
@@ -52,6 +53,10 @@ public class PlaceStatus {
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                 msg -> Miscellaneous.deleteMsg(msg, 32)
         );
+    }
+
+    private String formatNr(int n) {
+        return new DecimalFormat("###,###,###").format(n);
     }
 
     private String progress () {
