@@ -37,6 +37,7 @@ public class CommandManager {
         addCommand(new Status(LOGGER));
         addCommand(new Say(LOGGER));
         addCommand(new About(LOGGER));
+        addCommand(new Ducky(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
