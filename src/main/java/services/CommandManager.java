@@ -23,7 +23,7 @@ public class CommandManager {
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
-        addCommand(new SpokesPeople(LOGGER));
+//        addCommand(new SpokesPeople(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Purge(LOGGER));
         addCommand(new BlackList(LOGGER));
@@ -37,6 +37,8 @@ public class CommandManager {
         addCommand(new Say(LOGGER));
         addCommand(new About(LOGGER));
         addCommand(new Ducky(LOGGER));
+        addCommand(new ExportDatabase(LOGGER));
+        addCommand(new PurgeDMs(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
