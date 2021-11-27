@@ -11,10 +11,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class OnStartUp {
     private final Logger LOGGER = LoggerFactory.getLogger(OnStartUp.class);
@@ -23,6 +20,8 @@ public class OnStartUp {
         DirectoryVerification();
         FileVerification();
         DataBaseVerification();
+        importValuesToDB();
+        updateToken();
         DatabaseHandler.incrementStartUpCounter();
         CONFIG.reload();
         MessageCleanUp();
@@ -70,7 +69,6 @@ public class OnStartUp {
         }
     }
 
-
     private void FileVerification () {
         HashMap<String, ArrayList<String>> files = new HashMap<>();
         files.put("DB/", new ArrayList<>(List.of("RubberDucky.db")));
@@ -85,7 +83,7 @@ public class OnStartUp {
             url = scanner.nextLine();
             scanner.close();
         } catch (Exception e) {
-            LOGGER.warn("No url source was provided!");
+            LOGGER.warn("There does not exist a file with the name:  url.txt");
             return;
         }
 
@@ -136,5 +134,58 @@ public class OnStartUp {
                 LOGGER.info("Table " + table + " has been added to the database");
             }
         }
+    }
+
+    private void importValuesToDB() {
+        Scanner scanner;
+        try {
+            scanner = new Scanner(new File("dbImport.txt"));
+        } catch (Exception e) {
+            return;
+        }
+
+        String table = null;
+        List<String> columns = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.startsWith("===")) {
+                table = line.replace("===", "");
+                columns = new ArrayList<>();
+            } else if (columns.size() == 0) {
+                columns = Arrays.asList(line.split("\t"));
+            } else if (!line.equals("---------------------------------") && table != null) {
+                String[] split = line.split("\t");
+                switch (table) {
+                    case "config":
+                        DatabaseHandler.insertConfig(split[0], split[1]);
+                        break;
+                    case "channels":
+                        DatabaseHandler.insertChannel(split[1], split[2]);
+                        break;
+                    case "servers":
+                        DatabaseHandler.insertServer(split[0]);
+                        break;
+                    case "userBlacklist":
+                        DatabaseHandler.insertBlacklist(split[0]);
+                        break;
+                }
+            }
+        }
+
+        LOGGER.info("Database import has been completed!");
+        scanner.close();
+    }
+
+    private void updateToken() {
+        Scanner scanner;
+        try {
+            scanner = new Scanner(new File("token.txt"));
+        } catch (Exception e) {
+            return;
+        }
+
+        DatabaseHandler.updateConfig("token", scanner.next());
+        LOGGER.warn("The token has been updated!");
+        scanner.close();
     }
 }
