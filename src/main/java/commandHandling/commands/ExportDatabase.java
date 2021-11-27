@@ -47,7 +47,7 @@ public class ExportDatabase implements CommandInterface {
             for (String str : DatabaseHandler.getValuesOfTable(table, columns)) {
                 printer.print(str + "\n");
             }
-            printer.println("\n---------------------------------");
+            printer.println("---------------------------------");
         }
 
         ctx.getJDA().openPrivateChannelById(CONFIG.OwnerID.get()).queue(
