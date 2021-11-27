@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.ConnectionPool;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -424,5 +421,68 @@ public class DatabaseHandler {
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
+    }
+    ////////////////////////////////////////
+    // ExportDatabase
+    ////////////////////////////////////////
+    public static ArrayList<String> getTables() {
+        ArrayList<String> tables = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            DatabaseMetaData dbmd = connection.getMetaData();
+            ResultSet rs = dbmd.getTables(null, null, null, null);
+            while(!rs.isClosed() && rs.next()) {
+                tables.add(rs.getString("TABLE_NAME"));
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return tables;
+    }
+
+    public static ArrayList<String> getColumns(String tableName) {
+        ArrayList<String> tables = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            DatabaseMetaData dbmd = connection.getMetaData();
+            ResultSet rs = dbmd.getColumns(null, null, tableName, null);
+            while (!rs.isClosed() && rs.next()) {
+                tables.add(rs.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return tables;
+    }
+
+    public static ArrayList<String> getValuesOfTable(String tableName, ArrayList<String> columns) {
+        ArrayList<String> data = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            String query = "SELECT * FROM " + tableName;
+
+            ResultSet rs = connection.createStatement().executeQuery(query);
+            while (!rs.isClosed() && rs.next()) {
+                StringBuilder sb = new StringBuilder();
+                for (String column : columns) {
+                    sb.append(rs.getString(column)).append("\t");
+                }
+                data.add(sb.toString());
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return data;
+    }
+
+    ////////////////////////////////////////
+    // Database integrity
+    ////////////////////////////////////////
+    public static boolean createTableIfNotExists(String tableName, String arguments) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + "(\n" +
+                    arguments + ");");
+            return ps.execute();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return false;
     }
 }
