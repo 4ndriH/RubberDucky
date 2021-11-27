@@ -5,3 +5,5 @@ tempFiles/
 DB/
 META-INF/
 target/
+resources/
+url.txt
