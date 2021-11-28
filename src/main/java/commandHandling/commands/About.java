@@ -51,6 +51,6 @@ public class About implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("info");
+        return List.of("info", "source");
     }
 }
