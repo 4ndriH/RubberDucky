@@ -39,6 +39,7 @@ public class CommandManager {
         addCommand(new Ducky(LOGGER));
         addCommand(new ExportDatabase(LOGGER));
         addCommand(new PurgeDMs(LOGGER));
+        addCommand(new Nuke(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
