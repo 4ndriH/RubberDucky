@@ -72,7 +72,7 @@ public class OnStartUp {
     private void FileVerification () {
         HashMap<String, ArrayList<String>> files = new HashMap<>();
         files.put("DB/", new ArrayList<>(List.of("RubberDucky.db")));
-        files.put("resources/", new ArrayList<>(List.of("shutdown.gif", "sudoku.jpg")));
+        files.put("resources/", new ArrayList<>(List.of("shutdown.gif", "sudoku.jpg", "nuke.gif")));
         files.put("resources/duckies/", new ArrayList<>(List.of("ducky0.png", "ducky1.png", "ducky2.png",
                 "ducky3.png", "ducky4.png", "ducky5.png", "ducky6.png", "ducky7.png")));
         files.put("resources/purge/", new ArrayList<>(List.of("busyPurging.png", "purgeCommenced.jpg",
