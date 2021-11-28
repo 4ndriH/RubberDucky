@@ -7,7 +7,7 @@ import resources.CONFIG;
 import services.ButtonListener;
 import services.CatchListener;
 import services.Listener;
-import services.OnStartUp;
+import services.onStartup.OnStartUp;
 
 import javax.security.auth.login.LoginException;
 
