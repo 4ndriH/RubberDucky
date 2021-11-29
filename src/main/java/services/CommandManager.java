@@ -2,7 +2,8 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
-import commandHandling.commands.*;
+import commandHandling.commands.publicCommands.*;
+import commandHandling.commands.ownerCommands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

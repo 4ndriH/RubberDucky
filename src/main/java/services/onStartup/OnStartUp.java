@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import services.DatabaseHandler;
+import services.database.DatabaseHandler;
 
 import java.io.File;
 import java.util.*;

@@ -1,7 +1,7 @@
 package services.onStartup;
 
 import org.slf4j.Logger;
-import services.DatabaseHandler;
+import services.database.DatabaseHandler;
 
 import java.io.File;
 import java.util.*;

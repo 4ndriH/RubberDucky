@@ -4,9 +4,9 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import resources.CONFIG;
-import services.ButtonListener;
-import services.CatchListener;
-import services.Listener;
+import services.listener.ButtonListener;
+import services.listener.CatchListener;
+import services.listener.Listener;
 import services.onStartup.OnStartUp;
 
 import javax.security.auth.login.LoginException;

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
+import services.database.DatabaseHandler;
 
 import java.util.concurrent.TimeUnit;
 
