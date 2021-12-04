@@ -484,4 +484,16 @@ public class DatabaseHandler {
         }
         return false;
     }
+
+    ////////////////////////////////////////
+    // SQL
+    ////////////////////////////////////////
+    public static int sqlExecuteUpdate(String command) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            return connection.createStatement().executeUpdate(command);
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return -1;
+    }
 }

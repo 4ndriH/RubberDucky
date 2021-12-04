@@ -41,6 +41,7 @@ public class CommandManager {
         addCommand(new ExportDatabase(LOGGER));
         addCommand(new PurgeDMs(LOGGER));
         addCommand(new Nuke(LOGGER));
+        addCommand(new SQL(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
