@@ -8,11 +8,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class CoolDownManager {
-    private static HashMap<String, HashMap<String, Long>> coolDown;
-
-    public CoolDownManager() {
-        coolDown = new HashMap<>();
-    }
+    private static HashMap<String, HashMap<String, Long>> coolDown = new HashMap<>();
 
     public static boolean coolDownCheck(CommandContext ctx, String command) {
         String user = ctx.getAuthor().getId();
