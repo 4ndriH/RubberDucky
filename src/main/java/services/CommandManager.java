@@ -42,6 +42,7 @@ public class CommandManager {
         addCommand(new PurgeDMs(LOGGER));
         addCommand(new Nuke(LOGGER));
         addCommand(new SQL(LOGGER));
+        addCommand(new Avatar(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
