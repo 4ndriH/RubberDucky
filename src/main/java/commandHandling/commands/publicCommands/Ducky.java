@@ -29,7 +29,7 @@ public class Ducky implements CommandInterface {
         embed.setImage("attachment://ducky.png");
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
-                .addFile(new File("resources/duckies/ducky#" + nr + ".png"), "ducky.png").queue(
+                .addFile(new File("resources/duckies/ducky" + nr + ".png"), "ducky.png").queue(
                         msg -> Miscellaneous.deleteMsg(msg, 1024)
                 );
     }
