@@ -38,7 +38,7 @@ public class Channel implements CommandInterface {
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
-                    if (!ci.isOwnerOnly() && channelCheck(ci.getName().toLowerCase(), channel)) {
+                    if (!ci.isOwnerOnly() && !channelCheck(ci.getName().toLowerCase(), channel)) {
                         DatabaseHandler.insertChannel(ci.getName().toLowerCase(), channel);
                     }
                 }
