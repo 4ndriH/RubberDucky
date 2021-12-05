@@ -310,38 +310,38 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // SpokesPeople
     ////////////////////////////////////////
-    public static void insertSpokesPeople(ArrayList<String> spokesPeople) {
-        try (Connection connection = ConnectionPool.getConnection()){
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO spokesPeople (user, subject, year) VALUES (?, ?, ?)"
-            );
-            for (String s : spokesPeople) {
-                String[] temp = s.split("_");
-                ps.setString(1, temp[0]);
-                ps.setString(2, temp[1]);
-                ps.setString(3, temp[2]);
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        } catch (SQLException sqlE) {
-            LOGGER.error("SQL Exception", sqlE);
-        }
-    }
-
-    public static void removeSpokesPeople(ArrayList<String> spokesPeople) {
-        try (Connection connection = ConnectionPool.getConnection()){
-            PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM spokesPeople WHERE user = ?"
-            );
-            for (String user : spokesPeople) {
-                ps.setString(1, user);
-                ps.addBatch();
-            }
-            ps.executeBatch();
-        } catch (SQLException sqlE) {
-            LOGGER.error("SQL Exception", sqlE);
-        }
-    }
+//    public static void insertSpokesPeople(ArrayList<String> spokesPeople) {
+//        try (Connection connection = ConnectionPool.getConnection()){
+//            PreparedStatement ps = connection.prepareStatement(
+//                    "INSERT INTO spokesPeople (user, subject, year) VALUES (?, ?, ?)"
+//            );
+//            for (String s : spokesPeople) {
+//                String[] temp = s.split("_");
+//                ps.setString(1, temp[0]);
+//                ps.setString(2, temp[1]);
+//                ps.setString(3, temp[2]);
+//                ps.addBatch();
+//            }
+//            ps.executeBatch();
+//        } catch (SQLException sqlE) {
+//            LOGGER.error("SQL Exception", sqlE);
+//        }
+//    }
+//
+//    public static void removeSpokesPeople(ArrayList<String> spokesPeople) {
+//        try (Connection connection = ConnectionPool.getConnection()){
+//            PreparedStatement ps = connection.prepareStatement(
+//                    "DELETE FROM spokesPeople WHERE user = ?"
+//            );
+//            for (String user : spokesPeople) {
+//                ps.setString(1, user);
+//                ps.addBatch();
+//            }
+//            ps.executeBatch();
+//        } catch (SQLException sqlE) {
+//            LOGGER.error("SQL Exception", sqlE);
+//        }
+//    }
 
     public static ArrayList<HashMap<String, String>> getSpokesPeople() {
         ArrayList<HashMap<String, String>> spokesPeople = new ArrayList<>();
@@ -354,9 +354,9 @@ public class DatabaseHandler {
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
                 if (rs.getInt("year") == 1) {
-                    spokesPeople.get(1).put(rs.getString("user"), rs.getString("subject"));
+                    spokesPeople.get(0).put(rs.getString("user"), rs.getString("subject"));
                 } else {
-                    spokesPeople.get(2).put(rs.getString("user"), rs.getString("subject"));
+                    spokesPeople.get(1).put(rs.getString("user"), rs.getString("subject"));
                 }
             }
         } catch (SQLException sqlE) {
