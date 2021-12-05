@@ -19,6 +19,7 @@ public class About implements CommandInterface {
     public About(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
     }
+
     @Override
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
