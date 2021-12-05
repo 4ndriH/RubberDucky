@@ -24,7 +24,7 @@ public class CommandManager {
         addCommand(new Ping(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Place(LOGGER));
-//        addCommand(new SpokesPeople(LOGGER));
+        addCommand(new SpokesPeople(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Purge(LOGGER));
         addCommand(new BlackList(LOGGER));
@@ -82,7 +82,7 @@ public class CommandManager {
 
         Miscellaneous.deleteMsg(ctx.getMessage(), 128);
 
-        if (cmd != null && PermissionManager.permissionCheck(ctx, cmd.getName(), this)) {
+        if (cmd != null && PermissionManager.permissionCheck(ctx, cmd.getName().toLowerCase(), this)) {
                 cmd.handle(ctx);
         } else {
             Miscellaneous.CommandLog(invoke, ctx, false);
