@@ -13,11 +13,9 @@ import java.io.File;
 
 public class Nuke implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
-    private final EmbedBuilder nukeIncoming = new EmbedBuilder();
 
     public Nuke(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
-        embedSetUp();
     }
 
     @Override
@@ -25,7 +23,7 @@ public class Nuke implements CommandInterface {
         Miscellaneous.CommandLog(getName(), ctx, true);
 
         new Thread(() -> {
-            long nr = 1;
+            long nr = 0;
 
             if (ctx.getMessage().getReferencedMessage() != null) {
                 String id = ctx.getMessage().getReferencedMessage().getId();
@@ -40,21 +38,23 @@ public class Nuke implements CommandInterface {
             }
 
             ctx.getMessage().delete().queue();
-            ctx.getChannel().sendMessageEmbeds(nukeIncoming.build())
-                    .addFile(new File("resources/nuke.gif")).complete();
 
-            try {
-                Thread.sleep(2048);
-            } catch (Exception ignored) {}
+            if (ctx.getMessage().getContentRaw().contains("-g")) {
+                nr++;
+
+                EmbedBuilder nukeIncoming = new EmbedBuilder();
+                nukeIncoming.setTitle("**TACTICAL NUKE INCOMING**").setColor(new Color(0xb074ad));
+                nukeIncoming.setImage("attachment://nuke.gif");
+
+                ctx.getChannel().sendMessageEmbeds(nukeIncoming.build())
+                        .addFile(new File("resources/nuke.gif")).complete();
+                try {
+                    Thread.sleep(2048);
+                } catch (Exception ignored) {}
+            }
 
             ctx.getChannel().getIterableHistory().takeAsync((int)nr).thenAccept(ctx.getChannel()::purgeMessages);
         }).start();
-    }
-
-    private void embedSetUp() {
-        nukeIncoming.setTitle("**TACTICAL NUKE INCOMING**");
-        nukeIncoming.setColor(new Color(0xb074ad));
-        nukeIncoming.setImage("attachment://nuke.gif");
     }
 
     @Override
