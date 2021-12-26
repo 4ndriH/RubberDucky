@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public enum CONFIG {
-    Token("nosy"),
-    Prefix("much"),
-    OwnerID("?"),
-    LogChannel("");
+    Token("lorem"),
+    Prefix("ipsum"),
+    OwnerID("dolor"),
+    LogChannel("sit"),
+    embedColor("amet");
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
     private String id;
@@ -40,6 +41,7 @@ public enum CONFIG {
         Prefix.id = config.get("prefix");
         OwnerID.id = config.get("ownerid");
         LogChannel.id = config.get("logchannel");
+        embedColor.id = config.get("embedColor");
 
         LOGGER.info("Config reloaded");
     }
