@@ -1,6 +1,7 @@
 package services;
 
 import commandHandling.CommandContext;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -10,6 +11,7 @@ import resources.CONFIG;
 import resources.EMOTES;
 import services.database.DatabaseHandler;
 
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class Miscellaneous {
@@ -54,5 +56,13 @@ public class Miscellaneous {
         cmdLogger.info(ctx.getAuthor().getName() + " ran command " + CONFIG.Prefix.get() + name.toLowerCase() +
                 (ctx.getArguments().size() != 0 ? " " + ctx.getArguments().toString() : "") +
                 (success ? " successfully" : " unsuccessfully"));
+    }
+
+    public static EmbedBuilder embedBuilder(String titel) {
+        return embedBuilder().setImage(titel);
+    }
+
+    public static EmbedBuilder embedBuilder() {
+        return (new EmbedBuilder()).setColor(new Color(Integer.parseInt(CONFIG.embedColor.get())));
     }
 }
