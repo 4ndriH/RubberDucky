@@ -13,6 +13,8 @@ import services.Miscellaneous;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
@@ -42,14 +44,24 @@ public class Servers implements CommandInterface {
             if (ids.size() == 0) {
                 embed.setDescription("-");
             } else {
+                HashMap<String, String> servers = new HashMap<>();
+                ArrayList<String> names = new ArrayList<>();
                 StringBuilder sb = new StringBuilder();
+                String name;
+
                 for (Guild guild : ctx.getJDA().getGuilds()) {
+                    names.add(name = guild.getName());
+
                     if (ids.contains(guild.getId())) {
-                        sb.append(EMOTES.RDG.getAsEmote());
+                        servers.put(name, EMOTES.RDG.getAsEmote() + " " + name);
                     } else {
-                        sb.append(EMOTES.RDR.getAsEmote());
+                        servers.put(name, EMOTES.RDR.getAsEmote() + " " + name);
                     }
-                    sb.append(guild.getName()).append("\n");
+                }
+
+                Collections.sort(names);
+                for (String s : names) {
+                    sb.append(servers.get(s)).append("\n");
                 }
                 embed.setDescription(sb.toString());
             }
