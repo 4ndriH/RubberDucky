@@ -59,10 +59,10 @@ public class Miscellaneous {
     }
 
     public static EmbedBuilder embedBuilder(String titel) {
-        return embedBuilder().setImage(titel);
+        return embedBuilder().setTitle(titel);
     }
 
     public static EmbedBuilder embedBuilder() {
-        return (new EmbedBuilder()).setColor(new Color(Integer.parseInt(CONFIG.embedColor.get())));
+        return (new EmbedBuilder()).setColor(new Color(Integer.decode(CONFIG.embedColor.get())));
     }
 }
