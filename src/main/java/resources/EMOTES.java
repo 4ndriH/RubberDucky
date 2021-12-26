@@ -3,7 +3,7 @@ package resources;
 public enum EMOTES {
     RDG(":rubberDuckyGreen:854040000902201384"),
     RDR(":rubberDuckyRed:854040013284180028"),
-    NLD(":NotLikeDis:854040049691131924"),
+    NLD(":NotLikeDis:919314084552376410"),
     // Progressbar left
     L0(":left00:854039658374496256"),
     L1(":left01:854039645796433951"),
