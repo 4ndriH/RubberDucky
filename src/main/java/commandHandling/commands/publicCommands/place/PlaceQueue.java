@@ -3,10 +3,9 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -64,9 +63,7 @@ public class PlaceQueue {
             placeData.LOGGER.error("PlaceQueue Error", e);
         }
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Queue");
-        embed.setColor(new Color(0xb074ad));
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Queue");
         embed.setDescription("Your file got ID " + number);
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(

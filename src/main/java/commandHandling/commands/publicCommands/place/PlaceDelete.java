@@ -3,10 +3,9 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -20,7 +19,7 @@ public class PlaceDelete {
 
     private void main() {
         ArrayList<Integer> ids = DatabaseHandler.getPlaceQIDs();
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Delete");
         int id;
 
         try {
@@ -42,8 +41,6 @@ public class PlaceDelete {
 
         Miscellaneous.CommandLog("Place", ctx, true);
 
-        embed.setTitle("Delete");
-        embed.setColor(new Color(0xb074ad));
         embed.setDescription("File " + id + " has been deleted");
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                 msg -> Miscellaneous.deleteMsg(msg, 32)

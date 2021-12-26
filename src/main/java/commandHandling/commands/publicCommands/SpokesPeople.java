@@ -6,10 +6,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +25,9 @@ public class SpokesPeople implements CommandInterface {
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
         ArrayList<HashMap<String, String>> spokesPeople = DatabaseHandler.getSpokesPeople();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Semester Spokes People");
         StringBuilder yearOne = new StringBuilder();
         StringBuilder yearTwo = new StringBuilder();
-        EmbedBuilder embed = new EmbedBuilder();
 
         for (HashMap<String, String> sp : spokesPeople) {
             HashMap<String, String> temp = new HashMap<>();
@@ -58,8 +57,6 @@ public class SpokesPeople implements CommandInterface {
             }
         }
 
-        embed.setTitle("Semester Spokes People");
-        embed.setColor(new Color(0xb074ad));
         embed.setThumbnail("attachment://vis.png");
         embed.addField("__First Year__", yearOne.toString(), true);
         embed.addBlankField(true);

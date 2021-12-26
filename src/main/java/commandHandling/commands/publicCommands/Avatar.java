@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 import services.Miscellaneous;
 
-import java.awt.*;
-
 public class Avatar implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Avatar.class);
 
@@ -21,7 +19,7 @@ public class Avatar implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder();
         User user = null;
         Member member = null;
 
@@ -38,8 +36,6 @@ public class Avatar implements CommandInterface {
         } else {
             user = ctx.getAuthor();
         }
-
-        embed.setColor(new Color(0xb074ad));
 
         if (member != null) {
             embed.setTitle((member.getNickname() != null ? member.getNickname() : user.getName()) + "s avatar");

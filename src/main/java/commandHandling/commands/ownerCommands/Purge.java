@@ -8,22 +8,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous;
 
-import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Purge implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Purge.class);
-    private final EmbedBuilder purgeCommenced = new EmbedBuilder();
-    private final EmbedBuilder busyPurging = new EmbedBuilder();
-    private final EmbedBuilder purgeEnded = new EmbedBuilder();
+    private final EmbedBuilder purgeCommenced = Miscellaneous.embedBuilder("Happy purging");
+    private final EmbedBuilder busyPurging = Miscellaneous.embedBuilder("Already busy purging");
+    private final EmbedBuilder purgeEnded = Miscellaneous.embedBuilder();
     private volatile boolean isRunning, stop;
 
     public Purge(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
         embedSetUp();
     }
+
 
     @Override
     public void handle(CommandContext ctx) {
@@ -65,14 +65,9 @@ public class Purge implements CommandInterface {
     }
 
     private void embedSetUp() {
-        purgeCommenced.setTitle("Happy purging");
-        purgeCommenced.setColor(new Color(0xb074ad));
         purgeCommenced.setImage("attachment://purgeCommenced.jpg");
-        busyPurging.setTitle("Already busy purging");
-        busyPurging.setColor(new Color(0xb074ad));
         busyPurging.setImage("attachment://busyPurging.png");
         purgeEnded.setTitle("Thank you for participating in the purge <3");
-        purgeEnded.setColor(new Color(0xb074ad));
         purgeEnded.setImage("attachment://purgeEnded.jpg");
     }
 

@@ -18,8 +18,8 @@ public class Status implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String activity;
         StringBuilder sb = new StringBuilder();
+        String activity;
 
         try {
             activity = ctx.getArguments().get(0);

@@ -6,7 +6,6 @@ import resources.EMOTES;
 import services.Miscellaneous;
 import services.PermissionManager;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 
 public class PlaceStatus {
@@ -20,12 +19,9 @@ public class PlaceStatus {
     }
 
     private void main() {
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Status");
 
         Miscellaneous.CommandLog("Place", ctx, true);
-
-        embed.setTitle("Status");
-        embed.setColor(new Color(0xb074ad));
 
         if (pD.drawing) {
             embed.setDescription("Drawing project " + pD.id);

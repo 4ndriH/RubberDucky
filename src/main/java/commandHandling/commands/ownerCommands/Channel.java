@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
-import services.*;
+import services.BotExceptions;
+import services.CommandManager;
+import services.Miscellaneous;
 import services.database.DatabaseHandler;
-
-import java.awt.*;
 
 public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
@@ -48,11 +48,8 @@ public class Channel implements CommandInterface {
             }
             CONFIG.reload();
         } catch (Exception e) {
-            EmbedBuilder embed = new EmbedBuilder();
+            EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted commands for this channel");
             StringBuilder sb = new StringBuilder();
-
-            embed.setTitle("Whitelisted commands for this channel");
-            embed.setColor(new Color(0xb074ad));
 
             for (CommandInterface ci : cm.getCommands()) {
                 if (ci.isOwnerOnly()) {

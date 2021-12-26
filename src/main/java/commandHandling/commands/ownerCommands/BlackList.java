@@ -7,10 +7,9 @@ import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +34,7 @@ public class BlackList implements CommandInterface {
             CONFIG.reload();
         } else {
             ArrayList<String> ids = CONFIG.blackList;
-            EmbedBuilder embed = new EmbedBuilder();
-
-            embed.setTitle("Blacklisted people");
-            embed.setColor(new Color(0xb074ad));
+            EmbedBuilder embed = Miscellaneous.embedBuilder("Blacklisted people");
 
             if (ids.size() == 0) {
                 embed.setDescription("-");

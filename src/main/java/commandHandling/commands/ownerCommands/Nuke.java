@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 import services.Miscellaneous;
 
-import java.awt.*;
 import java.io.File;
 
 public class Nuke implements CommandInterface {
@@ -42,11 +41,10 @@ public class Nuke implements CommandInterface {
             if (ctx.getMessage().getContentRaw().contains("-g")) {
                 nr++;
 
-                EmbedBuilder nukeIncoming = new EmbedBuilder();
-                nukeIncoming.setTitle("**TACTICAL NUKE INCOMING**").setColor(new Color(0xb074ad));
-                nukeIncoming.setImage("attachment://nuke.gif");
+                EmbedBuilder embed = Miscellaneous.embedBuilder("**TACTICAL NUKE INCOMING**");
+                embed.setImage("attachment://nuke.gif");
 
-                ctx.getChannel().sendMessageEmbeds(nukeIncoming.build())
+                ctx.getChannel().sendMessageEmbeds(embed.build())
                         .addFile(new File("resources/nuke.gif")).complete();
                 try {
                     Thread.sleep(2048);

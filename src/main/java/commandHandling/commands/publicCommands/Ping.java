@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous;
 
-import java.awt.*;
-
 public class Ping implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Ping.class);
 
@@ -24,9 +22,7 @@ public class Ping implements CommandInterface {
 
         jda.getRestPing().queue(
                 ping -> {
-                    EmbedBuilder embed = new EmbedBuilder();
-                    embed.setTitle("Ping");
-                    embed.setColor(new Color(0xb074ad));
+                    EmbedBuilder embed = Miscellaneous.embedBuilder("Ping");
                     embed.addField("__Discord Server Ping:__", ping + "ms", false);
                     embed.addField("__Discord Websocket Ping:__", jda.getGatewayPing() + "ms", false);
                     ctx.getChannel().sendMessageEmbeds(embed.build()).queue(

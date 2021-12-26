@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous;
 
-import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
@@ -24,13 +23,12 @@ public class About implements CommandInterface {
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
         RuntimeMXBean rmb = ManagementFactory.getRuntimeMXBean();
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("About RubberDucky");
 
-        embed.setTitle("About RubberDucky");
-        embed.setColor(new Color(0xb074ad));
         embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
         embed.setDescription("[GitHub](https://github.com/4ndriH/RubberDucky)");
-        embed.addField("**JDA version:**", JDAInfo.VERSION_MAJOR + "." + JDAInfo.VERSION_MINOR + "." + JDAInfo.VERSION_REVISION, true);
+        embed.addField("**JDA version:**", JDAInfo.VERSION_MAJOR + "."
+                + JDAInfo.VERSION_MINOR + "." + JDAInfo.VERSION_REVISION, true);
         embed.addField("**Uptime:**", Miscellaneous.timeFormat((int)(rmb.getUptime() / 1000)), true);
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).queue(

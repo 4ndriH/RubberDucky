@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous;
 
-import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.Random;
@@ -22,11 +21,8 @@ public class Ducky implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog("Ducky", ctx, true);
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("A RubberDucky").setImage("attachment://ducky.png");
         int nr = new Random().nextInt(new File("resources/duckies/").list().length);
-        embed.setTitle("A RubberDucky");
-        embed.setColor(new Color(0xb074ad));
-        embed.setImage("attachment://ducky.png");
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(new File("resources/duckies/ducky" + nr + ".png"), "ducky.png").queue(

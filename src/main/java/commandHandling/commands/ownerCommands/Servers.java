@@ -8,10 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,10 +35,7 @@ public class Servers implements CommandInterface {
             CONFIG.reload();
         } catch (Exception e) {
             ArrayList<String> ids = CONFIG.servers;
-            EmbedBuilder embed = new EmbedBuilder();
-
-            embed.setTitle("Whitelisted servers");
-            embed.setColor(new Color(0xb074ad));
+            EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted servers");
 
             if (ids.size() == 0) {
                 embed.setDescription("-");

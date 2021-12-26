@@ -28,7 +28,7 @@ public class Help implements CommandInterface {
         String prefix = CONFIG.Prefix.get();
 
         if (ctx.getArguments().isEmpty()) {
-            EmbedBuilder embed = new EmbedBuilder();
+            EmbedBuilder embed = Miscellaneous.embedBuilder("Help");
             StringBuilder publicCMDs = new StringBuilder();
             StringBuilder ownerCMDs = new StringBuilder();
 
@@ -41,8 +41,6 @@ public class Help implements CommandInterface {
                 }
             }
 
-            embed.setTitle("Help");
-            embed.setColor(new Color(0xb074ad));
             embed.addField("__Miscellaneous__", "```\n" + publicCMDs + "```", true);
             embed.addField("__Owner__", "```\n" + ownerCMDs + "```", true);
             embed.setFooter("rdhelp <command> gives you a more detailed description");

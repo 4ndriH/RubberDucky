@@ -85,9 +85,7 @@ public class PlacePreview implements Runnable{
         File gif = new File("tempFiles/place/preview.gif");
 
         try {
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle("Preview");
-            embed.setColor(new Color(0xb074ad));
+            EmbedBuilder embed = Miscellaneous.embedBuilder("Preview");
             embed.setImage("attachment://preview.gif");
             ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
                     msg -> Miscellaneous.deleteMsg(msg, 1024)

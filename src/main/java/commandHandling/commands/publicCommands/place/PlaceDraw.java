@@ -3,11 +3,12 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import services.*;
+import services.BotExceptions;
+import services.Miscellaneous;
+import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
@@ -107,9 +108,7 @@ public class PlaceDraw implements Runnable{
     }
 
     private void sendCompletionMessage (long userID) {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Your drawing has been finished");
-        embed.setColor(new Color(0xb074ad));
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Your drawing has been finished");
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
         ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build())

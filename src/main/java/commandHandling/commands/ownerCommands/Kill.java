@@ -7,10 +7,9 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
 import services.Miscellaneous;
+import services.database.DatabaseHandler;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,13 +26,11 @@ public class Kill implements CommandInterface{
     @Override
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Are you Sure you want to kill this instance?");
         Kill.ctx = ctx;
 
         embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
-        embed.setTitle("Are you Sure you want to kill this instance?");
         embed.setDescription(ctx.getSelfUser().getName());
-        embed.setColor(new Color(0xb074ad));
 
         ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
                 Button.danger("$KillAbort", "Abort"),
@@ -47,12 +44,8 @@ public class Kill implements CommandInterface{
         ArrayList<String> attachments = new ArrayList<>(Arrays.asList("sudoku.jpg", "shutdown.gif"));
         String file = attachments.get(new Random().nextInt(attachments.size()));
         LOGGER.info(ctx.getSelfUser().getName() + " is committing sudoku");
-        EmbedBuilder embed = new EmbedBuilder();
+        EmbedBuilder embed = Miscellaneous.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
         DatabaseHandler.pruneTableDeleteMsgs();
-
-        embed.setTitle("Committing Sudoku");
-        embed.setColor(new Color(0xb074ad));
-        embed.setImage("attachment://" + file);
 
         Message msg = ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(new File("resources/" + file)).complete();
