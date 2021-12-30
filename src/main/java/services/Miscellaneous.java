@@ -18,7 +18,10 @@ public class Miscellaneous {
     private static final Logger cmdLogger = LoggerFactory.getLogger("Command Logger");
 
     public static void deleteMsg(Message msg, int seconds) {
-        msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, throwable -> {});
+        try {
+            msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, failure -> {});
+        } catch (Exception ignored) {}
+
         if (seconds > 0) {
             DatabaseHandler.insertDeleteMessage(msg.getGuild().getId(), msg.getChannel().getId(), msg.getId(),
                     System.currentTimeMillis() + seconds * 1000L);
