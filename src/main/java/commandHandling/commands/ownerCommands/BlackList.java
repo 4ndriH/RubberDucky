@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
 import services.Miscellaneous;
+import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ public class BlackList implements CommandInterface {
 
         if (ctx.getArguments().size() > 0) {
             String id = ctx.getArguments().get(0);
-            if (CONFIG.blackList.contains(id)) {
+            if (PermissionManager.blackList.contains(id)) {
                 DatabaseHandler.removeBlacklist(id);
             } else {
                 DatabaseHandler.insertBlacklist(id);
             }
-            CONFIG.reload();
+            PermissionManager.reload();
         } else {
-            ArrayList<String> ids = CONFIG.blackList;
+            ArrayList<String> ids = PermissionManager.blackList;
             EmbedBuilder embed = Miscellaneous.embedBuilder("Blacklisted people");
 
             if (ids.size() == 0) {
@@ -73,7 +73,7 @@ public class BlackList implements CommandInterface {
     }
 
     @Override
-    public boolean isOwnerOnly() {
-        return true;
+    public int getRestrictionLevel() {
+        return 2;
     }
 }

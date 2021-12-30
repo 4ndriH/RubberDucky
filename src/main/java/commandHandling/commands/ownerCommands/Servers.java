@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
 import resources.EMOTES;
 import services.Miscellaneous;
+import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 import java.util.ArrayList;
@@ -27,14 +27,14 @@ public class Servers implements CommandInterface {
         Miscellaneous.CommandLog(getName(), ctx, true);
 
         try {
-            if (ctx.getArguments().get(0).equals("this") && CONFIG.servers.contains(ctx.getGuild().getId())) {
+            if (ctx.getArguments().get(0).equals("this") && PermissionManager.servers.contains(ctx.getGuild().getId())) {
                 DatabaseHandler.removeServer(ctx.getGuild().getId());
             } else {
                 DatabaseHandler.insertServer(ctx.getGuild().getId());
             }
-            CONFIG.reload();
+            PermissionManager.reload();
         } catch (Exception e) {
-            ArrayList<String> ids = CONFIG.servers;
+            ArrayList<String> ids = PermissionManager.servers;
             EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted servers");
 
             if (ids.size() == 0) {
@@ -81,7 +81,7 @@ public class Servers implements CommandInterface {
     }
 
     @Override
-    public boolean isOwnerOnly() {
-        return true;
+    public int getRestrictionLevel() {
+        return 0;
     }
 }

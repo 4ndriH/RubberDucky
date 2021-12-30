@@ -5,8 +5,8 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
 import services.Miscellaneous;
+import services.PermissionManager;
 
 import java.util.List;
 
@@ -21,11 +21,11 @@ public class LockDown implements CommandInterface {
     public void handle(CommandContext ctx) {
         Miscellaneous.CommandLog(getName(), ctx, true);
 
-        if (CONFIG.channels.size() == 0) {
-            CONFIG.reload();
+        if (PermissionManager.channels.size() == 0) {
+            PermissionManager.reload();
         } else {
             LOGGER.info("Initiating Lockdown!");
-            CONFIG.initiateLockdown();
+            PermissionManager.initiateLockdown();
         }
     }
 
@@ -47,7 +47,7 @@ public class LockDown implements CommandInterface {
     }
 
     @Override
-    public boolean isOwnerOnly() {
-        return true;
+    public int getRestrictionLevel() {
+        return 1;
     }
 }

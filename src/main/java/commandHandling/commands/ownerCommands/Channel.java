@@ -5,11 +5,11 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
 import resources.EMOTES;
 import services.BotExceptions;
 import services.CommandManager;
 import services.Miscellaneous;
+import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 public class Channel implements CommandInterface {
@@ -29,7 +29,7 @@ public class Channel implements CommandInterface {
 
         try {
             if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {
-                if (cm.getCommand(cmd).isOwnerOnly()) {
+                if (cm.getCommand(cmd).getRestrictionLevel() < 3) {
                     return;
                 } else if (channelCheck(cmd, channel)) {
                     DatabaseHandler.removeChannel(cmd, channel);
@@ -38,7 +38,7 @@ public class Channel implements CommandInterface {
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
-                    if (!ci.isOwnerOnly() && !channelCheck(ci.getName().toLowerCase(), channel)) {
+                    if (ci.getRestrictionLevel() == 3 && !channelCheck(ci.getName().toLowerCase(), channel)) {
                         DatabaseHandler.insertChannel(ci.getName().toLowerCase(), channel);
                     }
                 }
@@ -46,13 +46,13 @@ public class Channel implements CommandInterface {
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
                 return;
             }
-            CONFIG.reload();
+            PermissionManager.reload();
         } catch (Exception e) {
             EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted commands for this channel");
             StringBuilder sb = new StringBuilder();
 
             for (CommandInterface ci : cm.getCommands()) {
-                if (ci.isOwnerOnly()) {
+                if (ci.getRestrictionLevel() < 3) {
                     continue;
                 } else if (channelCheck(ci.getName().toLowerCase(), channel)) {
                     sb.append(EMOTES.RDG.getAsEmote());
@@ -70,7 +70,7 @@ public class Channel implements CommandInterface {
     }
 
     private boolean channelCheck(String cmd, String channel) {
-        return CONFIG.channels.get(cmd) != null && CONFIG.channels.get(cmd).contains(channel);
+        return PermissionManager.channels.get(cmd) != null && PermissionManager.channels.get(cmd).contains(channel);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class Channel implements CommandInterface {
     }
 
     @Override
-    public boolean isOwnerOnly() {
-        return true;
+    public int getRestrictionLevel() {
+        return 2;
     }
 }

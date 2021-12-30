@@ -75,7 +75,7 @@ public class Say implements CommandInterface {
     }
 
     @Override
-    public boolean isOwnerOnly() {
-        return true;
+    public int getRestrictionLevel() {
+        return 0;
     }
 }

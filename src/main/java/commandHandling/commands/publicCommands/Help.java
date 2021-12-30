@@ -34,7 +34,7 @@ public class Help implements CommandInterface {
 
 
             for (CommandInterface cmd : manager.getCommands()) {
-                if (cmd.isOwnerOnly()) {
+                if (cmd.getRestrictionLevel() == 0) {
                     ownerCMDs.append(prefix).append(cmd.getName().toLowerCase()).append("\n");
                 } else {
                     publicCMDs.append(prefix).append(cmd.getName().toLowerCase()).append("\n");
