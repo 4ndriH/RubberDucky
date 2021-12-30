@@ -1,31 +1,75 @@
 package services;
 
 import commandHandling.CommandContext;
-import resources.CONFIG;
+import commandHandling.CommandInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import services.database.DatabaseHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PermissionManager {
-    public static boolean permissionCheck(CommandContext ctx, String invoke, CommandManager cm) {
-        return authenticateOwner(ctx) || !cm.getCommand(invoke).isOwnerOnly() && serverCheck(ctx)
-                && !blackListCheck(ctx) && channelCheck(ctx, invoke) && !coolDownCheck(ctx, invoke);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
+
+    public static HashMap<String, ArrayList<String>> channels = new HashMap<>();
+    public static ArrayList<String> blackList = new ArrayList<>();
+    public static ArrayList<String> servers = new ArrayList<>();
+
+    public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
+        System.out.println(ctx.getAuthor().getName() + ": " + ctx.getSecurityClearance());
+        System.out.println(ctx.getMember().getRoles().toString());
+        System.out.println(ctx.getMember().getPermissions().toString());
+        System.out.println(ctx.getMember().getPermissions().contains("KICK_MEMBERS"));
+
+
+        return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
+                (administratorCheck(ctx, cmd) || moderatorCheck(ctx, cmd) || userCheck(ctx, cmd));
     }
 
     public static boolean authenticateOwner(CommandContext ctx) {
-        return ctx.getAuthor().getId().equals(CONFIG.OwnerID.get());
+        return ctx.getSecurityClearance() == 0;
     }
 
-    public static boolean blackListCheck(CommandContext ctx) {
-        return CONFIG.blackList.contains(ctx.getAuthor().getId());
+    public static boolean administratorCheck(CommandContext ctx, CommandInterface cmd) {
+        return ctx.getSecurityClearance() == 1 && cmd.getRestrictionLevel() > 0;
     }
 
-    public static boolean channelCheck(CommandContext ctx, String invoke) {
-        return CONFIG.channels.get(invoke) != null && CONFIG.channels.get(invoke).contains(ctx.getChannel().getId());
+    public static boolean moderatorCheck(CommandContext ctx, CommandInterface cmd) {
+        return ctx.getSecurityClearance() == 2 && cmd.getRestrictionLevel() > 1;
+    }
+
+    public static boolean userCheck(CommandContext ctx, CommandInterface cmd) {
+        return ctx.getSecurityClearance() == 3 && cmd.getRestrictionLevel() > 2
+                && channelCheck(ctx, cmd.getName().toLowerCase());
     }
 
     public static boolean serverCheck(CommandContext ctx) {
-        return CONFIG.servers.contains(ctx.getGuild().getId());
+        return servers.contains(ctx.getGuild().getId());
+    }
+
+    public static boolean blackListCheck(CommandContext ctx) {
+        return blackList.contains(ctx.getAuthor().getId());
+    }
+
+    public static boolean channelCheck(CommandContext ctx, String invoke) {
+        return channels.get(invoke) != null && channels.get(invoke).contains(ctx.getChannel().getId());
     }
 
     public static boolean coolDownCheck(CommandContext ctx, String command) {
         return CoolDownManager.coolDownCheck(ctx, command);
+    }
+
+    public static void reload() {
+        blackList = DatabaseHandler.getBlacklist();
+        servers = DatabaseHandler.getServers();
+        channels = DatabaseHandler.getChannels();
+
+        LOGGER.info("Permissions loaded");
+    }
+
+    public static void initiateLockdown() {
+        channels = new HashMap<>();
+        servers = new ArrayList<>();
     }
 }
