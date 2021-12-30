@@ -15,7 +15,7 @@ public interface CommandInterface {
         return List.of();
     }
 
-    default boolean isOwnerOnly() {
-        return false;
+    default int getRestrictionLevel() {
+        return 3;
     }
 }

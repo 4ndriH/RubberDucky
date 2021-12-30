@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
+import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 import java.io.File;
@@ -21,6 +22,7 @@ public class OnStartUp {
         DatabaseHandler.incrementStartUpCounter();
         updateToken();
         CONFIG.reload();
+        PermissionManager.reload();
         MessageCleanUp();
     }
 
@@ -38,7 +40,8 @@ public class OnStartUp {
                     CONFIG.instance.getGuildById(msgs.get(0).get(i))
                             .getTextChannelById(msgs.get(1).get(i))
                             .deleteMessageById(msgs.get(2).get(i)).queue(
-                                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+                                    null, new ErrorHandler()
+                                            .ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.MISSING_PERMISSIONS)
                             );
                     Thread.sleep(1024);
                 } catch (Exception ignored) {}

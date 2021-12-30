@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DatabaseHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public enum CONFIG {
@@ -17,10 +16,7 @@ public enum CONFIG {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
     private String id;
-    
-    public static HashMap<String, ArrayList<String>> channels = new HashMap<>();
-    public static ArrayList<String> blackList = new ArrayList<>();
-    public static ArrayList<String> servers = new ArrayList<>();
+
     public static JDA instance;
 
     CONFIG(String id) {
@@ -32,10 +28,6 @@ public enum CONFIG {
     }
 
     public static void reload() {
-        blackList = DatabaseHandler.getBlacklist();
-        servers = DatabaseHandler.getServers();
-        channels = DatabaseHandler.getChannels();
-
         HashMap<String, String> config = DatabaseHandler.getConfig();
         Token.id = config.get("token");
         Prefix.id = config.get("prefix");
@@ -43,11 +35,6 @@ public enum CONFIG {
         LogChannel.id = config.get("logchannel");
         embedColor.id = config.get("embedColor");
 
-        LOGGER.info("Config reloaded");
-    }
-
-    public static void initiateLockdown() {
-        channels = new HashMap<>();
-        servers = new ArrayList<>();
+        LOGGER.info("Config loaded");
     }
 }

@@ -2,8 +2,8 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
-import commandHandling.commands.publicCommands.*;
 import commandHandling.commands.ownerCommands.*;
+import commandHandling.commands.publicCommands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class CommandManager {
 
         Miscellaneous.deleteMsg(ctx.getMessage(), 128);
 
-        if (cmd != null && PermissionManager.permissionCheck(ctx, cmd.getName().toLowerCase(), this)) {
+        if (cmd != null && PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
                 cmd.handle(ctx);
         } else {
             Miscellaneous.CommandLog(invoke, ctx, false);
