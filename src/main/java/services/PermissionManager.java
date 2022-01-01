@@ -17,12 +17,6 @@ public class PermissionManager {
     public static ArrayList<String> servers = new ArrayList<>();
 
     public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
-        System.out.println(ctx.getAuthor().getName() + ": " + ctx.getSecurityClearance());
-        System.out.println(ctx.getMember().getRoles().toString());
-        System.out.println(ctx.getMember().getPermissions().toString());
-        System.out.println(ctx.getMember().getPermissions().contains("KICK_MEMBERS"));
-
-
         return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
                 (administratorCheck(ctx, cmd) || moderatorCheck(ctx, cmd) || userCheck(ctx, cmd));
     }
