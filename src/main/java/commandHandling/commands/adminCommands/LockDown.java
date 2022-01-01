@@ -1,4 +1,4 @@
-package commandHandling.commands.ownerCommands;
+package commandHandling.commands.adminCommands;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;

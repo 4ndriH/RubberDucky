@@ -2,6 +2,10 @@ package services;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
+import commandHandling.commands.adminCommands.LockDown;
+import commandHandling.commands.adminCommands.Nuke;
+import commandHandling.commands.modCommands.BlackList;
+import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
 import commandHandling.commands.publicCommands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -20,29 +24,29 @@ public class CommandManager {
     private final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
-        addCommand(new Kill(LOGGER));
-        addCommand(new Ping(LOGGER));
-        addCommand(new Help(this, LOGGER));
-        addCommand(new Place(LOGGER));
-        addCommand(new SpokesPeople(LOGGER));
-        addCommand(new Delete(LOGGER));
-        addCommand(new Purge(LOGGER));
-        addCommand(new BlackList(LOGGER));
-        addCommand(new Servers(LOGGER));
-        addCommand(new Channel(this, LOGGER));
-        addCommand(new LockDown(LOGGER));
-        addCommand(new Prefix(LOGGER));
-        addCommand(new NickName(LOGGER));
-        addCommand(new ProfilePicture(LOGGER));
-        addCommand(new Status(LOGGER));
-        addCommand(new Say(LOGGER));
         addCommand(new About(LOGGER));
+        addCommand(new Avatar(LOGGER));
+        addCommand(new BlackList(LOGGER));
+        addCommand(new Channel(this, LOGGER));
+        addCommand(new Delete(LOGGER));
         addCommand(new Ducky(LOGGER));
         addCommand(new ExportDatabase(LOGGER));
-        addCommand(new PurgeDMs(LOGGER));
+        addCommand(new Help(this, LOGGER));
+        addCommand(new Kill(LOGGER));
+        addCommand(new LockDown(LOGGER));
+        addCommand(new NickName(LOGGER));
         addCommand(new Nuke(LOGGER));
+        addCommand(new Ping(LOGGER));
+        addCommand(new Place(LOGGER));
+        addCommand(new Prefix(LOGGER));
+        addCommand(new ProfilePicture(LOGGER));
+        addCommand(new Purge(LOGGER));
+        addCommand(new PurgeDMs(LOGGER));
+        addCommand(new Say(LOGGER));
+        addCommand(new Servers(LOGGER));
+        addCommand(new SpokesPeople(LOGGER));
         addCommand(new SQL(LOGGER));
-        addCommand(new Avatar(LOGGER));
+        addCommand(new Status(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {

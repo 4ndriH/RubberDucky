@@ -1,4 +1,4 @@
-package commandHandling.commands.ownerCommands;
+package commandHandling.commands.adminCommands;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -69,6 +69,6 @@ public class Nuke implements CommandInterface {
 
     @Override
     public int getRestrictionLevel() {
-        return 0;
+        return 1;
     }
 }
