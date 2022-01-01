@@ -11,6 +11,7 @@ import services.CommandManager;
 import services.Miscellaneous;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 
 public class Help implements CommandInterface {
@@ -29,21 +30,30 @@ public class Help implements CommandInterface {
 
         if (ctx.getArguments().isEmpty()) {
             EmbedBuilder embed = Miscellaneous.embedBuilder("Help");
-            StringBuilder publicCMDs = new StringBuilder();
-            StringBuilder ownerCMDs = new StringBuilder();
 
+            HashMap<String, StringBuilder> commandGroups = new HashMap<>();
 
             for (CommandInterface cmd : manager.getCommands()) {
-                if (cmd.getRestrictionLevel() == 0) {
-                    ownerCMDs.append(prefix).append(cmd.getName().toLowerCase()).append("\n");
-                } else {
-                    publicCMDs.append(prefix).append(cmd.getName().toLowerCase()).append("\n");
+                String[] hierarchySplit = cmd.getClass().getName().split("\\.");
+                String groupName = hierarchySplit[hierarchySplit.length - 2];
+
+                if (ctx.getSecurityClearance() <= cmd.getRestrictionLevel()) {
+                    if (!commandGroups.containsKey(groupName)) {
+                        commandGroups.put(groupName, new StringBuilder());
+                    }
+                    commandGroups.get(groupName).append(cmd.getName()).append("\n");
                 }
             }
 
-            embed.addField("__Miscellaneous__", "```\n" + publicCMDs + "```", true);
-            embed.addField("__Owner__", "```\n" + ownerCMDs + "```", true);
-            embed.setFooter("rdhelp <command> gives you a more detailed description");
+            for (String key : commandGroups.keySet()) {
+                embed.addField("__" + key + "__", "```\n" + commandGroups.get(key) + "```", true);
+            }
+
+            for (int i = commandGroups.size() % 3; i < 3 && i != 0; i++) {
+                embed.addBlankField(true);
+            }
+
+            embed.setFooter(CONFIG.Prefix.get() + "help <command> gives you a more detailed description");
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
                     msg ->Miscellaneous.deleteMsg(msg, 64)
