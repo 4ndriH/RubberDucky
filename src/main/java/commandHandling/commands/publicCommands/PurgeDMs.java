@@ -7,7 +7,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.io.File;
 import java.util.List;
@@ -15,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public class PurgeDMs implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PurgeDMs.class);
-    private final EmbedBuilder purgeCommenced = Miscellaneous.embedBuilder("Happy purging");
-    private final EmbedBuilder purgeEnded = Miscellaneous.embedBuilder();
+    private final EmbedBuilder purgeCommenced = EmbedHelper.embedBuilder("Happy purging");
+    private final EmbedBuilder purgeEnded = EmbedHelper.embedBuilder();
 
     public PurgeDMs(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -25,7 +26,7 @@ public class PurgeDMs implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
 
         (new Thread(() -> {
             final String[] id = new String[1];

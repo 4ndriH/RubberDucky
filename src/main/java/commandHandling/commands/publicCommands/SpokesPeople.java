@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +23,9 @@ public class SpokesPeople implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
         ArrayList<HashMap<String, String>> spokesPeople = DatabaseHandler.getSpokesPeople();
-        EmbedBuilder embed = Miscellaneous.embedBuilder("Semester Spokes People");
+        EmbedBuilder embed = EmbedHelper.embedBuilder("Semester Spokes People");
         StringBuilder yearOne = new StringBuilder();
         StringBuilder yearTwo = new StringBuilder();
 
@@ -64,9 +64,7 @@ public class SpokesPeople implements CommandInterface {
         Message discordCacheRefresh = ctx.getChannel().sendMessage("beep boop").complete();
         discordCacheRefresh.editMessage(yearOne + "\n" + yearTwo).complete();
         discordCacheRefresh.delete().queue();
-        ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File("resources/vis.png")).queue(
-                        msg -> Miscellaneous.deleteMsg(msg, 64)
-        );
+        EmbedHelper.sendEmbedWithFile(ctx, embed, 64, "resources/vis.png", "VIS.png");
     }
 
     @Override

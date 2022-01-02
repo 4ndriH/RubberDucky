@@ -6,17 +6,16 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
-import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Purge implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Purge.class);
-    private final EmbedBuilder purgeCommenced = Miscellaneous.embedBuilder("Happy purging");
-    private final EmbedBuilder busyPurging = Miscellaneous.embedBuilder("Already busy purging");
-    private final EmbedBuilder purgeEnded = Miscellaneous.embedBuilder();
+    private final EmbedBuilder purgeCommenced = EmbedHelper.embedBuilder("Happy purging");
+    private final EmbedBuilder busyPurging = EmbedHelper.embedBuilder("Already busy purging");
+    private final EmbedBuilder purgeEnded = EmbedHelper.embedBuilder();
     private volatile boolean isRunning, stop;
 
     public Purge(Logger cmdManagerLogger) {
@@ -27,16 +26,13 @@ public class Purge implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
 
         if (isRunning) {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
-                ctx.getChannel().sendMessageEmbeds(busyPurging.build())
-                        .addFile(new File("resources/purge/busyPurging.png")).queue(
-                                msg -> Miscellaneous.deleteMsg(msg, 32)
-                );
+                EmbedHelper.sendEmbedWithFile(ctx, busyPurging, 32, "resources/purge/busyPurging.png", "busyPurging.png");
             }
             return;
         }
@@ -44,8 +40,7 @@ public class Purge implements CommandInterface {
         isRunning = true;
 
         (new Thread(() -> {
-            ctx.getChannel().sendMessageEmbeds(purgeCommenced.build())
-                    .addFile(new File("resources/purge/purgeCommenced.jpg")).queueAfter(1, TimeUnit.SECONDS);
+            EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "resources/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
             List<Message> messages;
             do {
                 messages = ctx.getChannel().getHistory().retrievePast(64).complete();
@@ -56,10 +51,7 @@ public class Purge implements CommandInterface {
                     } catch (Exception ignored) {}
                 }
             } while (messages.size() != 0 && !stop);
-            ctx.getChannel().sendMessageEmbeds(purgeEnded.build())
-                    .addFile(new File("resources/purge/purgeEnded.jpg")).queue(
-                    msg -> Miscellaneous.deleteMsg(msg, 32)
-            );
+            EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "resources/purge/purgeEnded.jpg", "purgeEnded.jpg");
             isRunning = stop = false;
         })).start();
     }

@@ -6,7 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 public class Ping implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Ping.class);
@@ -17,17 +18,15 @@ public class Ping implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(
                 ping -> {
-                    EmbedBuilder embed = Miscellaneous.embedBuilder("Ping");
+                    EmbedBuilder embed = EmbedHelper.embedBuilder("Ping");
                     embed.addField("__Discord Server Ping:__", ping + "ms", false);
                     embed.addField("__Discord Websocket Ping:__", jda.getGatewayPing() + "ms", false);
-                    ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                            msg -> Miscellaneous.deleteMsg(msg, 32)
-                    );
+                    EmbedHelper.sendEmbed(ctx, embed, 32);
                 }
         );
     }

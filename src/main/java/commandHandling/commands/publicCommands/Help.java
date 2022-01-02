@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -25,11 +26,11 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
         String prefix = CONFIG.Prefix.get();
 
         if (ctx.getArguments().isEmpty()) {
-            EmbedBuilder embed = Miscellaneous.embedBuilder("Help");
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Help");
 
             HashMap<String, StringBuilder> commandGroups = new HashMap<>();
 
@@ -55,9 +56,7 @@ public class Help implements CommandInterface {
 
             embed.setFooter(CONFIG.Prefix.get() + "help <command> gives you a more detailed description");
 
-            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg ->Miscellaneous.deleteMsg(msg, 64)
-            );
+            EmbedHelper.sendEmbed(ctx, embed, 64);
         } else {
             CommandInterface command = manager.getCommand(ctx.getArguments().get(0));
 
@@ -82,9 +81,7 @@ public class Help implements CommandInterface {
                 embed.addField("__Aliases__", "```" + aliases + "```", false);
             }
 
-            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(msg, 64)
-            );
+            EmbedHelper.sendEmbed(ctx, embed, 64);
         }
     }
 

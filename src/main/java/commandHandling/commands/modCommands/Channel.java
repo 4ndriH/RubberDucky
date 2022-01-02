@@ -8,9 +8,10 @@ import org.slf4j.LoggerFactory;
 import resources.EMOTES;
 import services.BotExceptions;
 import services.CommandManager;
-import services.Miscellaneous;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
@@ -23,7 +24,7 @@ public class Channel implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
 
         String cmd, channel = ctx.getChannel().getId();
 
@@ -48,7 +49,7 @@ public class Channel implements CommandInterface {
             }
             PermissionManager.reload();
         } catch (Exception e) {
-            EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted commands for this channel");
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted commands for this channel");
             StringBuilder sb = new StringBuilder();
 
             for (CommandInterface ci : cm.getCommands()) {
@@ -63,9 +64,7 @@ public class Channel implements CommandInterface {
             }
             embed.setDescription(sb.toString());
 
-            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(msg, 32)
-            );
+            EmbedHelper.sendEmbed(ctx, embed, 32);
         }
     }
 

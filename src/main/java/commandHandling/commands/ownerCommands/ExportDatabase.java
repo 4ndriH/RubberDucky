@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.database.DatabaseHandler;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,7 +24,7 @@ public class ExportDatabase implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
         File txt = new File("resources/dbExport.txt");
         PrintStream printer;
 

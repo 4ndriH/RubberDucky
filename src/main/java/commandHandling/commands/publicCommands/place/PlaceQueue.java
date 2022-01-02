@@ -3,8 +3,9 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
-import services.Miscellaneous;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -40,13 +41,13 @@ public class PlaceQueue {
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                Miscellaneous.CommandLog("Place", ctx, false);
+                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        Miscellaneous.CommandLog("Place", ctx, true);
+        CommandLogger.CommandLog("Place", ctx, true);
 
         while (scanner.hasNextLine()) {
             commands.add(scanner.nextLine());
@@ -63,12 +64,10 @@ public class PlaceQueue {
             placeData.LOGGER.error("PlaceQueue Error", e);
         }
 
-        EmbedBuilder embed = Miscellaneous.embedBuilder("Queue");
+        EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         embed.setDescription("Your file got ID " + number);
 
-        ctx.getMessage().replyEmbeds(embed.build()).queue(
-                msg -> Miscellaneous.deleteMsg(msg, 32)
-        );
+        EmbedHelper.sendEmbed(ctx, embed, 32);
 
         DatabaseHandler.insertPlaceQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());
     }

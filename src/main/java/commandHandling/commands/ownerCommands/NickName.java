@@ -5,7 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class NickName implements CommandInterface {
         }
 
         ctx.getSelfMember().modifyNickname(sb.toString()).queue();
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
     }
 
     @Override

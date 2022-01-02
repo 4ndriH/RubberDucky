@@ -3,6 +3,8 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.*;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
@@ -35,13 +37,13 @@ public class PlacePreview implements Runnable{
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                Miscellaneous.CommandLog("Place", ctx, false);
+                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        Miscellaneous.CommandLog("Place", ctx, true);
+        CommandLogger.CommandLog("Place", ctx, true);
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));
@@ -85,10 +87,10 @@ public class PlacePreview implements Runnable{
         File gif = new File("tempFiles/place/preview.gif");
 
         try {
-            EmbedBuilder embed = Miscellaneous.embedBuilder("Preview");
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Preview");
             embed.setImage("attachment://preview.gif");
             ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> Miscellaneous.deleteMsg(msg, 1024)
+                    msg -> EmbedHelper.deleteMsg(msg, 1024)
             );
         } catch (IllegalArgumentException e) {
             placeData.LOGGER.error("PlacePreview Error", e);

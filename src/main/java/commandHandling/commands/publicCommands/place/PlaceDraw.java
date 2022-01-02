@@ -4,9 +4,10 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import services.BotExceptions;
-import services.Miscellaneous;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -31,7 +32,7 @@ public class PlaceDraw implements Runnable{
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             if (!DatabaseHandler.getPlaceQIDs().contains(placeData.id = Integer.parseInt(ctx.getArguments().get(1)))) {
-                Miscellaneous.CommandLog("Place", ctx, false);
+                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -40,13 +41,13 @@ public class PlaceDraw implements Runnable{
             if (numbers.size() > 0) {
                 placeData.id = numbers.get(random.nextInt(numbers.size()));
             } else {
-                Miscellaneous.CommandLog("Place", ctx, false);
+                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
 
-        Miscellaneous.CommandLog("PlaceDraw", ctx, true);
+        CommandLogger.CommandLog("PlaceDraw", ctx, true);
 
         try {
             while (!placeData.stop && !placeData.stopQ) {
@@ -108,7 +109,7 @@ public class PlaceDraw implements Runnable{
     }
 
     private void sendCompletionMessage (long userID) {
-        EmbedBuilder embed = Miscellaneous.embedBuilder("Your drawing has been finished");
+        EmbedBuilder embed = EmbedHelper.embedBuilder("Your drawing has been finished");
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
         ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build())

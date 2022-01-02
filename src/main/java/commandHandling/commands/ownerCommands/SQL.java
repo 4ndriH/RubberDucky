@@ -5,8 +5,9 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.awt.*;
 
@@ -32,10 +33,10 @@ public class SQL implements CommandInterface {
         embed.setDescription("rdsql " + sb);
 
         if (ret > 0) {
-            Miscellaneous.CommandLog(getName(), ctx, true);
+            CommandLogger.CommandLog(getName(), ctx, true);
             embed.setColor(new Color(0x009608));
         } else {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             if (ret == 0) {
                 embed.setColor(new Color(0xe3d800));
             } else {
@@ -43,9 +44,7 @@ public class SQL implements CommandInterface {
             }
         }
 
-        ctx.getMessage().replyEmbeds(embed.build()).queue(
-                msg -> Miscellaneous.deleteMsg(msg, 32)
-        );
+        EmbedHelper.sendEmbed(ctx, embed, 32);
     }
 
     @Override

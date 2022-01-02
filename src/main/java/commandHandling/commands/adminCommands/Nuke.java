@@ -6,7 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.io.File;
 
@@ -19,7 +20,7 @@ public class Nuke implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
 
         new Thread(() -> {
             long nr = 0;
@@ -41,7 +42,7 @@ public class Nuke implements CommandInterface {
             if (ctx.getMessage().getContentRaw().contains("-g")) {
                 nr++;
 
-                EmbedBuilder embed = Miscellaneous.embedBuilder("**TACTICAL NUKE INCOMING**");
+                EmbedBuilder embed = EmbedHelper.embedBuilder("**TACTICAL NUKE INCOMING**");
                 embed.setImage("attachment://nuke.gif");
 
                 ctx.getChannel().sendMessageEmbeds(embed.build())

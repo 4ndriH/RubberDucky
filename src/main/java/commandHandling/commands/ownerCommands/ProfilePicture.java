@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Icon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,9 +30,9 @@ public class ProfilePicture implements CommandInterface {
         try {
             Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
-            Miscellaneous.CommandLog(getName(), ctx, true);
+            CommandLogger.CommandLog(getName(), ctx, true);
         } catch (Exception e) {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingAttachmentException(ctx);
         }
     }

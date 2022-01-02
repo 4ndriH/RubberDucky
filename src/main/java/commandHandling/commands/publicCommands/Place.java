@@ -8,8 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.Miscellaneous;
 import services.PermissionManager;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.awt.*;
 
@@ -72,10 +73,10 @@ public class Place implements CommandInterface {
                 t.start();
                 break;
             default:
-                Miscellaneous.CommandLog(getName(), ctx, true);
+                CommandLogger.CommandLog(getName(), ctx, true);
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
-                        msg -> Miscellaneous.deleteMsg(msg, 64)
+                        msg -> EmbedHelper.deleteMsg(msg, 64)
                 );
         }
     }
@@ -105,9 +106,9 @@ public class Place implements CommandInterface {
     private void stop(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stop = true;
-            Miscellaneous.CommandLog(getName(), ctx, true);
+            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -115,9 +116,9 @@ public class Place implements CommandInterface {
     private void stopQ(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stopQ = !placeData.stopQ;
-            Miscellaneous.CommandLog(getName(), ctx, true);
+            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -126,7 +127,7 @@ public class Place implements CommandInterface {
         if (PermissionManager.authenticateOwner(ctx)) {
             new PlaceDelete(ctx);
         } else {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -138,9 +139,9 @@ public class Place implements CommandInterface {
     private void verify(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.verify = !placeData.verify;
-            Miscellaneous.CommandLog(getName(), ctx, true);
+            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            Miscellaneous.CommandLog(getName(), ctx, false);
+            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }

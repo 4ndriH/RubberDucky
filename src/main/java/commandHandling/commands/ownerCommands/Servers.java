@@ -7,9 +7,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.EMOTES;
-import services.Miscellaneous;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
 
         try {
             if (ctx.getArguments().get(0).equals("this") && PermissionManager.servers.contains(ctx.getGuild().getId())) {
@@ -35,7 +36,7 @@ public class Servers implements CommandInterface {
             PermissionManager.reload();
         } catch (Exception e) {
             ArrayList<String> ids = PermissionManager.servers;
-            EmbedBuilder embed = Miscellaneous.embedBuilder("Whitelisted servers");
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
 
             if (ids.size() == 0) {
                 embed.setDescription("-");
@@ -62,9 +63,7 @@ public class Servers implements CommandInterface {
                 embed.setDescription(sb.toString());
             }
 
-            ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                    msg -> Miscellaneous.deleteMsg(msg, 32)
-            );
+            EmbedHelper.sendEmbed(ctx, embed, 32);
         }
     }
 

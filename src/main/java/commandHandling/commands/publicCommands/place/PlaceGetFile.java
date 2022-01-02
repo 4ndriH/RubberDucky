@@ -3,7 +3,8 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import services.BotExceptions;
 import services.database.DatabaseHandler;
-import services.Miscellaneous;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.io.File;
 
@@ -21,7 +22,7 @@ public class PlaceGetFile {
         try {
             id = Integer.parseInt(ctx.getArguments().get(1));
         } catch (Exception e) {
-            Miscellaneous.CommandLog("Place", ctx, false);
+            CommandLogger.CommandLog("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
@@ -30,15 +31,15 @@ public class PlaceGetFile {
             try {
                 String[] strs = DatabaseHandler.getPlaceQProject(id);
                 ctx.getChannel().sendFile(new File("tempFiles/place/queue/" + strs[0])).queue(
-                            msg -> Miscellaneous.deleteMsg(msg, 64)
+                            msg -> EmbedHelper.deleteMsg(msg, 64)
                 );
-                Miscellaneous.CommandLog("Place", ctx, true);
+                CommandLogger.CommandLog("Place", ctx, true);
             } catch (IllegalArgumentException e) {
-                Miscellaneous.CommandLog("Place", ctx, false);
+                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.FileExceedsUploadLimitException(ctx);
             }
         } else {
-            Miscellaneous.CommandLog("Place", ctx, false);
+            CommandLogger.CommandLog("Place", ctx, false);
             BotExceptions.fileDoesNotExistException(ctx);
         }
     }

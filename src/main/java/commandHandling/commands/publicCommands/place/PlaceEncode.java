@@ -2,7 +2,9 @@ package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
-import services.Miscellaneous;
+import services.Miscellaneous.TimeFormat;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -40,7 +42,7 @@ public class PlaceEncode implements Runnable {
             writer = new PrintStream(path + ".txt");
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
-            Miscellaneous.CommandLog("Place", ctx, false);
+            CommandLogger.CommandLog("Place", ctx, false);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -51,12 +53,12 @@ public class PlaceEncode implements Runnable {
             width = Integer.parseInt(ctx.getArguments().get(3));
             height = Integer.parseInt(ctx.getArguments().get(4));
         } catch (Exception e) {
-            Miscellaneous.CommandLog("Place", ctx, false);
+            CommandLogger.CommandLog("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        Miscellaneous.CommandLog("Place", ctx, true);
+        CommandLogger.CommandLog("Place", ctx, true);
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);
@@ -108,8 +110,8 @@ public class PlaceEncode implements Runnable {
 
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    Miscellaneous.timeFormat(pixels.size()) + "**").addFile(new File(path + ".txt")).queue(
-                            msg -> Miscellaneous.deleteMsg(msg, 128)
+                    TimeFormat.timeFormat(pixels.size()) + "**").addFile(new File(path + ".txt")).queue(
+                            msg -> EmbedHelper.deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
             placeData.LOGGER.error("PlaceEncode Error", e);

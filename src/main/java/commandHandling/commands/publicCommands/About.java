@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous;
+import services.Miscellaneous.TimeFormat;
+import services.logging.CommandLogger;
+import services.logging.EmbedHelper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -21,19 +23,17 @@ public class About implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        Miscellaneous.CommandLog(getName(), ctx, true);
+        CommandLogger.CommandLog(getName(), ctx, true);
         RuntimeMXBean rmb = ManagementFactory.getRuntimeMXBean();
-        EmbedBuilder embed = Miscellaneous.embedBuilder("About RubberDucky");
+        EmbedBuilder embed = EmbedHelper.embedBuilder("About RubberDucky");
 
         embed.setThumbnail(ctx.getSelfUser().getAvatarUrl());
         embed.setDescription("[GitHub](https://github.com/4ndriH/RubberDucky)");
         embed.addField("**JDA version:**", JDAInfo.VERSION_MAJOR + "."
                 + JDAInfo.VERSION_MINOR + "." + JDAInfo.VERSION_REVISION, true);
-        embed.addField("**Uptime:**", Miscellaneous.timeFormat((int)(rmb.getUptime() / 1000)), true);
+        embed.addField("**Uptime:**", TimeFormat.timeFormat((int)(rmb.getUptime() / 1000)), true);
 
-        ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> Miscellaneous.deleteMsg(msg, 64)
-        );
+        EmbedHelper.sendEmbed(ctx, embed, 32);
     }
 
     @Override
