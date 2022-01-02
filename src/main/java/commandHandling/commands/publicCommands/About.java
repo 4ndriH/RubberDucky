@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.JDAInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous.TimeFormat;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.lang.management.ManagementFactory;
@@ -23,7 +22,6 @@ public class About implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
         RuntimeMXBean rmb = ManagementFactory.getRuntimeMXBean();
         EmbedBuilder embed = EmbedHelper.embedBuilder("About RubberDucky");
 

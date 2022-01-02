@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -23,8 +22,6 @@ public class BlackList implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
-
         if (ctx.getArguments().size() > 0) {
             String id = ctx.getArguments().get(0);
             if (PermissionManager.blackList.contains(id)) {

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.logging.CommandLogger;
+import services.CommandManager;
 
 public class Status implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
@@ -27,7 +27,7 @@ public class Status implements CommandInterface {
                 sb.append(ctx.getArguments().get(i)).append(" ");
             }
             if (sb.toString().length() > 128 || sb.toString().toCharArray().length == 0) {
-                CommandLogger.CommandLog(getName(), ctx, false);
+                CommandManager.commandLogger(getName(), ctx, false);
                 BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
@@ -35,7 +35,7 @@ public class Status implements CommandInterface {
             activity = "";
         }
 
-        CommandLogger.CommandLog(getName(), ctx, true);
+        CommandManager.commandLogger(getName(), ctx, true);
 
         switch (activity) {
             case "competing":

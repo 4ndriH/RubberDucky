@@ -10,7 +10,6 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 public class Channel implements CommandInterface {
@@ -24,8 +23,6 @@ public class Channel implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
-
         String cmd, channel = ctx.getChannel().getId();
 
         try {

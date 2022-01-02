@@ -5,7 +5,6 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.util.List;
@@ -25,11 +24,7 @@ public class Delete implements CommandInterface {
         EmbedHelper.deleteMsg(ctx.getMessage(), 0);
 
         ctx.getChannel().retrieveMessageById(id).queue(
-                message ->  {
-                    message.delete().queue();
-                    CommandLogger.CommandLog(getName(), ctx, true);
-                },
-                failure -> CommandLogger.CommandLog(getName(), ctx, false)
+                message -> message.delete().queue()
         );
     }
 

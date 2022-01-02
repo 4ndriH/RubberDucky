@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -26,7 +25,6 @@ public class Kill implements CommandInterface{
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
         EmbedBuilder embed = EmbedHelper.embedBuilder("Are you Sure you want to kill this instance?");
         Kill.ctx = ctx;
 

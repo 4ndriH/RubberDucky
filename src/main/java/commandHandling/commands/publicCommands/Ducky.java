@@ -5,7 +5,6 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -21,7 +20,6 @@ public class Ducky implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog("Ducky", ctx, true);
         EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky.png");
         int nr = new Random().nextInt(new File("resources/duckies/").list().length);
         EmbedHelper.sendEmbedWithFile(ctx, embed, 32, "resources/duckies/ducky" + nr + ".png", "ducky.png");

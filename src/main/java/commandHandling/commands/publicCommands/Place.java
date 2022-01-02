@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.PermissionManager;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.awt.*;
@@ -73,7 +72,6 @@ public class Place implements CommandInterface {
                 t.start();
                 break;
             default:
-                CommandLogger.CommandLog(getName(), ctx, true);
                 ctx.getChannel().sendMessageEmbeds(getHelp().setTitle("Help - Place")
                         .setColor(new Color(0xb074ad)).build()).queue(
                         msg -> EmbedHelper.deleteMsg(msg, 64)
@@ -106,9 +104,7 @@ public class Place implements CommandInterface {
     private void stop(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stop = true;
-            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -116,9 +112,7 @@ public class Place implements CommandInterface {
     private void stopQ(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.stopQ = !placeData.stopQ;
-            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -127,7 +121,6 @@ public class Place implements CommandInterface {
         if (PermissionManager.authenticateOwner(ctx)) {
             new PlaceDelete(ctx);
         } else {
-            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }
@@ -139,9 +132,7 @@ public class Place implements CommandInterface {
     private void verify(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
             placeData.verify = !placeData.verify;
-            CommandLogger.CommandLog(getName(), ctx, true);
         } else {
-            CommandLogger.CommandLog(getName(), ctx, false);
             BotExceptions.missingPermissionException(ctx);
         }
     }

@@ -9,10 +9,12 @@ import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
 import commandHandling.commands.publicCommands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import services.logging.CommandLogger;
+import resources.EMOTES;
 import services.logging.EmbedHelper;
 
 import javax.annotation.Nullable;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CommandManager {
+    private static final Logger cmdLogger = LoggerFactory.getLogger("Command Logger");
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private final List<CommandInterface> commands = new ArrayList<>();
 
@@ -90,9 +93,29 @@ public class CommandManager {
         EmbedHelper.deleteMsg(ctx.getMessage(), 128);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
-                cmd.handle(ctx);
+            if (!cmd.requiresFurtherChecks()) {
+                commandLogger(cmd.getName(), ctx, true);
+            }
+
+            cmd.handle(ctx);
         } else {
-            CommandLogger.CommandLog(invoke, ctx, false);
+            commandLogger(invoke, ctx, false);
         }
+    }
+
+    public static void commandLogger(String name, CommandContext ctx, boolean success) {
+        if (success) {
+            ctx.getMessage().addReaction(EMOTES.RDG.getAsReaction()).queue(
+                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+            );
+        } else {
+            ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue(
+                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
+            );
+        }
+
+        cmdLogger.info(ctx.getAuthor().getName() + " ran command " + CONFIG.Prefix.get() + name.toLowerCase() +
+                (ctx.getArguments().size() != 0 ? " " + ctx.getArguments().toString() : "") +
+                (success ? " successfully" : " unsuccessfully"));
     }
 }

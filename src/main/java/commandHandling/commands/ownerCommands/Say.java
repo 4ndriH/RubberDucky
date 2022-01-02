@@ -5,8 +5,6 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.BotExceptions;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.util.HashMap;
@@ -28,12 +26,8 @@ public class Say implements CommandInterface {
         try {
             repeats = Integer.parseInt(ctx.getArguments().get(0));
         } catch (Exception e) {
-            CommandLogger.CommandLog(getName(), ctx, false);
-            BotExceptions.invalidArgumentsException(ctx);
-            return;
+            repeats = 1;
         }
-
-        CommandLogger.CommandLog(getName(), ctx, true);
 
         if (ctx.getArguments().size() == 0) {
             sayChannels.replace(channel, false);
@@ -55,8 +49,9 @@ public class Say implements CommandInterface {
             sayChannels.put(channel, true);
         }
 
+        int finalRepeats = repeats;
         (new Thread(() -> {
-            for (int i = 0; i < repeats && sayChannels.get(channel); i++) {
+            for (int i = 0; i < finalRepeats && sayChannels.get(channel); i++) {
                 ctx.getChannel().sendMessage(sb.toString()).complete();
             }
             sayChannels.remove(channel);

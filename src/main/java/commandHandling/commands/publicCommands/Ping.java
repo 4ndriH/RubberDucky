@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 public class Ping implements CommandInterface {
@@ -18,7 +17,6 @@ public class Ping implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(

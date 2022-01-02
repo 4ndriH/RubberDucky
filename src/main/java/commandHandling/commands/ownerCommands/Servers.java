@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import resources.EMOTES;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
-
         try {
             if (ctx.getArguments().get(0).equals("this") && PermissionManager.servers.contains(ctx.getGuild().getId())) {
                 DatabaseHandler.removeServer(ctx.getGuild().getId());

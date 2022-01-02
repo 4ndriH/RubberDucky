@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Icon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.logging.CommandLogger;
+import services.CommandManager;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,9 +30,9 @@ public class ProfilePicture implements CommandInterface {
         try {
             Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
-            CommandLogger.CommandLog(getName(), ctx, true);
+            CommandManager.commandLogger(getName(), ctx, true);
         } catch (Exception e) {
-            CommandLogger.CommandLog(getName(), ctx, false);
+            CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.missingAttachmentException(ctx);
         }
     }
@@ -67,5 +67,10 @@ public class ProfilePicture implements CommandInterface {
     @Override
     public int getRestrictionLevel() {
         return 0;
+    }
+
+    @Override
+    public boolean requiresFurtherChecks() {
+        return true;
     }
 }

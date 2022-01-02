@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.awt.*;
@@ -26,7 +25,6 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
         String prefix = CONFIG.Prefix.get();
 
         if (ctx.getArguments().isEmpty()) {

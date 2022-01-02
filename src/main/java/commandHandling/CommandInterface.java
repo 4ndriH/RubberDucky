@@ -18,4 +18,8 @@ public interface CommandInterface {
     default int getRestrictionLevel() {
         return 3;
     }
+
+    default boolean requiresFurtherChecks() {
+        return false;
+    }
 }

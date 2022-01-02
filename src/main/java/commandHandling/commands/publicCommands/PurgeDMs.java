@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -26,8 +25,6 @@ public class PurgeDMs implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        CommandLogger.CommandLog(getName(), ctx, true);
-
         (new Thread(() -> {
             final String[] id = new String[1];
             ctx.getAuthor().openPrivateChannel().queue(

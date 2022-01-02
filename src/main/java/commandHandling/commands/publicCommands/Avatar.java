@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.logging.CommandLogger;
+import services.CommandManager;
 import services.logging.EmbedHelper;
 
 public class Avatar implements CommandInterface {
@@ -45,12 +45,12 @@ public class Avatar implements CommandInterface {
             embed.setTitle(user.getName() + "s avatar");
             embed.setImage(user.getEffectiveAvatarUrl() + "?size=512");
         } else {
-            CommandLogger.CommandLog(getName(), ctx, false);
+            CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        CommandLogger.CommandLog(getName(), ctx, true);
+        CommandManager.commandLogger(getName(), ctx, true);
         EmbedHelper.sendEmbed(ctx, embed, 32);
     }
 
