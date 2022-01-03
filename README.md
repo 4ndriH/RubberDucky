@@ -1,3 +1,3 @@
 # RubberDucky
-Discord Bot written in Java
+Discord Bot written in Java  
 //TODO
