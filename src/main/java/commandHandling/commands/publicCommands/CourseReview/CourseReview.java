@@ -67,6 +67,7 @@ public class CourseReview implements CommandInterface {
     public static void processProceed(String userId) {
         String feedback = inputs.get(userId).stream().skip(1).map(Object::toString).collect(Collectors.joining(" "));
         DatabaseHandler.insertCourseReview(userId, feedback, inputs.get(userId).get(0));
+        LOGGER.warn("A course review has been added");
         inputs.remove(userId);
     }
 
