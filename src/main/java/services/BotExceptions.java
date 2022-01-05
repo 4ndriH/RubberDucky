@@ -44,10 +44,6 @@ public class BotExceptions {
                 (boost <= 1 ? 8 : boost == 2 ? 50 : 100) + "mb!", ctx);
     }
 
-    public static void exceedsCharLimitException(CommandContext ctx) {
-        sendMessage("exceedsCharLimitException","The text exceeds the 2000 char limit!", ctx);
-    }
-
     public static void unknownPatternException(CommandContext ctx) {
         sendMessage("unknownPatternException","This is not a valid pattern!", ctx);
     }
