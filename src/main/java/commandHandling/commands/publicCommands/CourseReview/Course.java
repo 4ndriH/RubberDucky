@@ -27,7 +27,7 @@ public class Course implements CommandInterface {
             ArrayList<String> courses = DatabaseHandler.getAllCourses();
 
             embed.setTitle("Looks like there are no (verified) reviews for course: " + (ctx.getArguments().size() > 0 ? ctx.getArguments().get(0) : "-"));
-            embed.addField("Courses with reviews", courses.stream().skip(1).map(Object::toString).collect(Collectors.joining("\n")), false);
+            embed.addField("Courses with reviews", courses.stream().map(Object::toString).collect(Collectors.joining("\n")), false);
         } else {
             String title = DatabaseHandler.getCourse(ctx.getArguments().get(0));
             StringBuilder sb = new StringBuilder();
