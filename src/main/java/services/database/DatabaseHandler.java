@@ -496,4 +496,116 @@ public class DatabaseHandler {
         }
         return -1;
     }
+
+    ////////////////////////////////////////
+    // Course
+    ////////////////////////////////////////
+    public static String getCourse(String courseNumber) {
+        String name = "";
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM courses WHERE courseNumber=?"
+            );
+            ps.setString(1, courseNumber);
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                name = rs.getString("courseNumber") + " - " + rs.getString("courseName");
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return name;
+    }
+
+    public static ArrayList<String> getCourseReview(String courseNumber) {
+        ArrayList<String> reviews = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM courseReviews WHERE courseNumber=? AND verified=1"
+            );
+            ps.setString(1, courseNumber);
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                reviews.add(rs.getString("review"));
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return reviews;
+    }
+
+    ////////////////////////////////////////
+    // CourseReview
+    ////////////////////////////////////////
+    public static void insertCourseReview(String id, String review, String courseNumber) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO courseReviews (userId, review, courseNumber, date) VALUES (?, ?, ?, ?)"
+            );
+            ps.setString(1, id);
+            ps.setString(2, review);
+            ps.setString(3, courseNumber);
+            ps.setLong(4, System.currentTimeMillis());
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+    }
+
+    public static int containsCourseNumber(String courseNumber) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT EXISTS(SELECT 1 FROM courses WHERE courseNumber=?) AS containsCheck"
+            );
+            ps.setString(1, courseNumber);
+            return ps.executeQuery().getInt("containsCheck");
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return -1;
+    }
+
+    public static void insertCourse(String courseNumber) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO courses (courseNumber, courseName) VALUES (?, ?)"
+            );
+            ps.setString(1, courseNumber);
+            ps.setString(2, "???");
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+    }
+
+    ////////////////////////////////////////
+    // CourseReviewVerify
+    ////////////////////////////////////////
+    public static HashMap<Integer, String[]> getUnverifiedReviews() {
+        HashMap<Integer, String[]> reviews = new HashMap<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM courseReviews WHERE verified=0"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                reviews.put(rs.getInt("key"), new String[]{rs.getString("review"), rs.getString("userId")});
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return reviews;
+    }
+
+    public static void updateVerifiedStatus(int key, int value) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE courseReviews SET verified = ? WHERE key = ?"
+            );
+            ps.setInt(1, value);
+            ps.setInt(2, key);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+    }
 }

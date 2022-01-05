@@ -30,6 +30,16 @@ public class DatabaseVerification {
                 "\tPRIMARY KEY(key)");
         database.put("servers", "server\tTEXT NOT NULL UNIQUE");
         database.put("userBlacklist", "user\tTEXT NOT NULL UNIQUE");
+        database.put("courseReviews", "key\tINTEGER NOT NULL,\n" +
+                "\tuserId\tTEXT NOT NULL,\n" +
+                "\treview\tTEXT NOT NULL,\n" +
+                "\tcourseNumber\tTEXT NOT NULL,\n" +
+                "\tverified\tINTEGER NOT NULL DEFAULT 0,\n" +
+                "\tdate\tINTEGER NOT NULL,\n" +
+                "\tPRIMARY KEY(key AUTOINCREMENT)");
+        database.put("courses", "\tcourseNumber\tTEXT NOT NULL,\n" +
+                "\tcourseName\tTEXT NOT NULL,\n" +
+                "\tPRIMARY KEY(courseNumber)");
 
         for (String table : database.keySet()) {
             if (DatabaseHandler.createTableIfNotExists(table, database.get(table))) {
