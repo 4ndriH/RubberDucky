@@ -517,6 +517,22 @@ public class DatabaseHandler {
         return name;
     }
 
+    public static ArrayList<String> getAllCourses() {
+        ArrayList<String> courses = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM courses"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                courses.add(rs.getString("courseNumber") + " - " + rs.getString("courseName"));
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return courses;
+    }
+
     public static ArrayList<String> getCourseReview(String courseNumber) {
         ArrayList<String> reviews = new ArrayList<>();
         try (Connection connection = ConnectionPool.getConnection()){
@@ -572,6 +588,7 @@ public class DatabaseHandler {
             );
             ps.setString(1, courseNumber);
             ps.setString(2, "???");
+            ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
