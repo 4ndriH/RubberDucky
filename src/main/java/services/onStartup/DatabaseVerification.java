@@ -39,12 +39,12 @@ public class DatabaseVerification {
                 "\tPRIMARY KEY(key AUTOINCREMENT)");
         database.put("courses", "\tcourseNumber\tTEXT NOT NULL,\n" +
                 "\tcourseName\tTEXT NOT NULL,\n" +
+                "\tdepartment\tTEXT," +
                 "\tPRIMARY KEY(courseNumber)");
 
         for (String table : database.keySet()) {
-            if (DatabaseHandler.createTableIfNotExists(table, database.get(table))) {
-                LOGGER.info("Table " + table + " has been added to the database");
-            }
+            DatabaseHandler.createTableIfNotExists(table, database.get(table));
+            LOGGER.info("Table " + table + " has been verified");
         }
     }
 
