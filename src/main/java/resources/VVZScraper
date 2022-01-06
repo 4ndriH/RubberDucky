@@ -18,9 +18,6 @@ public class VVZScraper {
    final static String REGEX = "<a href=\\\"/Vorlesungsverzeichnis/lerneinheit.view\\?lerneinheitId=(.*?)\\\">(.*?)</a>";
    final static String NAME = "<a href=\"/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=";
 
-   public static void main(String[] args) throws IOException {
-      System.out.println(getCourseName("701-0234-00L"));
-   }
 
    public static String getCourseName(String id) throws IOException {
       int year = Calendar.getInstance().get(Calendar.YEAR);
