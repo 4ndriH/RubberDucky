@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class DatabaseHandler {
@@ -474,15 +475,14 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // Database integrity
     ////////////////////////////////////////
-    public static boolean createTableIfNotExists(String tableName, String arguments) {
+    public static void createTableIfNotExists(String tableName, String arguments) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + "(\n" +
                     arguments + ");");
-            return ps.execute();
+            ps.execute();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return false;
     }
 
     ////////////////////////////////////////
@@ -517,20 +517,20 @@ public class DatabaseHandler {
         return name;
     }
 
-    public static ArrayList<String> getAllCourses() {
-        ArrayList<String> courses = new ArrayList<>();
+    public static HashSet<String> getAllCourses() {
+        HashSet<String> reviews = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM courses"
+                    "SELECT * FROM courseReviews WHERE verified=1"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                courses.add(rs.getString("courseNumber") + " - " + rs.getString("courseName"));
+                reviews.add(rs.getString("courseNumber"));
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return courses;
+        return reviews;
     }
 
     public static ArrayList<String> getCourseReview(String courseNumber) {
@@ -568,17 +568,17 @@ public class DatabaseHandler {
         }
     }
 
-    public static int containsCourseNumber(String courseNumber) {
+    public static boolean containsCourseNumber(String courseNumber) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT EXISTS(SELECT 1 FROM courses WHERE courseNumber=?) AS containsCheck"
             );
             ps.setString(1, courseNumber);
-            return ps.executeQuery().getInt("containsCheck");
+            return ps.executeQuery().getInt("containsCheck") > 0;
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return -1;
+        return false;
     }
 
     public static void insertCourse(String courseNumber) {

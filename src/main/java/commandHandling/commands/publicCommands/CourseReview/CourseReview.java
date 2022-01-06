@@ -15,11 +15,13 @@ import services.logging.EmbedHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CourseReview implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReview.class);
     private static HashMap<String, ArrayList<String>> inputs = new HashMap<>();
+    Pattern pattern = Pattern.compile("^\\w{3}-\\w{4}-\\w{2}(l|L)$");
 
     public CourseReview(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -27,11 +29,16 @@ public class CourseReview implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (ctx.getArguments().size() == 0 || ctx.getArguments().get(0).split("-").length != 3 || !ctx.getArguments().get(0).endsWith("L")) {
+        if (ctx.getArguments().size() == 0) {
             CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
-        } else if (inputs.containsKey(ctx.getAuthor().getId())) {
+        } else if (!pattern.matcher(ctx.getArguments().get(0)).find()) {
+            CommandManager.commandLogger(getName(), ctx, false);
+            BotExceptions.invalidCourseNumber(ctx, "");
+            return;
+        }else if (inputs.containsKey(ctx.getAuthor().getId())) {
+            CommandManager.commandLogger(getName(), ctx, false);
             EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("You have an unfinished course feedback"), 64);
             return;
         }
@@ -41,15 +48,14 @@ public class CourseReview implements CommandInterface {
 
         String feedback = ctx.getArguments().stream().skip(1).map(Object::toString).collect(Collectors.joining(" "));
         inputs.put(ctx.getAuthor().getId(), new ArrayList<>(ctx.getArguments()));
-        String id = ctx.getAuthor().getId();
+        embed.setDescription(feedback);
 
-        embed.addField(ctx.getArguments().get(0), feedback, false);
         ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
-                Button.danger("cfAbort - " + id, "Abort"),
-                Button.success("cfProceed - " + id, "Proceed")
+                Button.danger("cfAbort - " + ctx.getAuthor().getId(), "Abort"),
+                Button.success("cfProceed - " + ctx.getAuthor().getId(), "Proceed")
         ).queue();
 
-        if (DatabaseHandler.containsCourseNumber(ctx.getArguments().get(0)) <= 0) {
+        if (!DatabaseHandler.containsCourseNumber(ctx.getArguments().get(0))) {
             DatabaseHandler.insertCourse(ctx.getArguments().get(0));
             LOGGER.warn("A new course has been added: " + ctx.getArguments().get(0) + "\n" +
                     "<http://www.vorlesungsverzeichnis.ethz.ch/Vorlesungsverzeichnis/sucheLehrangebot.view?lang=de&" +
