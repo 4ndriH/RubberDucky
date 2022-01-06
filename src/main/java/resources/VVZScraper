@@ -1,0 +1,63 @@
+package resources;
+
+import java.util.Calendar;
+
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class VVZScraper {
+   final static String [] URL = {"http://www.vvz.ethz.ch/Vorlesungsverzeichnis/sucheLehrangebot.view?lang=de&search=on&semkez=", 
+                              "&studiengangTyp=&deptId=&studiengangAbschnittId=&lerneinheitstitel=&lerneinheitscode=",
+                              "&famname=&rufname=&wahlinfo=&lehrsprache=&periodizitaet=&katalogdaten=&strukturAus=true&_strukturAus=on&search=Suchen"};
+   final static String REGEX = "<a href=\\\"/Vorlesungsverzeichnis/lerneinheit.view\\?lerneinheitId=(.*?)\\\">(.*?)</a>";
+   final static String NAME = "<a href=\"/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=";
+
+   public static void main(String[] args) throws IOException {
+      System.out.println(getCourseName("701-0234-00L"));
+   }
+
+   public static String getCourseName(String id) throws IOException {
+      int year = Calendar.getInstance().get(Calendar.YEAR);
+
+      boolean flipflop = false;
+      //Checking the last 10 Semester for the ID
+      for (int i = 0; i < 10; i++) {
+         final ExampleScraper scraper = new ExampleScraper();
+         String semester = year + (flipflop ? "W" : "S");
+         final String url = URL[0] + semester + URL[1] + id + URL[2]; 
+         final String htmlContent = scraper.getContent(url);
+         System.out.println(semester);
+         if (htmlContent.contains(NAME)) {
+            final String extractedTitle = scraper.extractTitle(htmlContent);
+            return extractedTitle;
+         }
+         //Course wasnt found that Semester will check next.
+         if (flipflop) {
+            year -= 1;
+         }
+         flipflop = !flipflop;
+      }
+      return "";
+   }
+
+   private String getContent(String url) throws IOException {
+        final OkHttpClient client = new OkHttpClient.Builder().build();
+        final String urlToScrape = url;
+        final Request request = new Request.Builder().url(urlToScrape).build();
+        final Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
+   private String extractTitle(String content) {
+      final Pattern titleRegExp = Pattern.compile(REGEX, Pattern.DOTALL);
+      final Matcher matcher = titleRegExp.matcher(content);
+      matcher.find();
+      return matcher.group(2);
+   }
+}
