@@ -581,13 +581,13 @@ public class DatabaseHandler {
         return false;
     }
 
-    public static void insertCourse(String courseNumber) {
+    public static void insertCourse(String courseNumber, String name) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO courses (courseNumber, courseName) VALUES (?, ?)"
             );
             ps.setString(1, courseNumber);
-            ps.setString(2, "???");
+            ps.setString(2, name);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);

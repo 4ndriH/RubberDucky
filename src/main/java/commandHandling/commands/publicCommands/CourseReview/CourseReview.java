@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
+import services.VVZScraper;
 import services.database.DatabaseHandler;
 import services.logging.EmbedHelper;
 
@@ -56,13 +57,8 @@ public class CourseReview implements CommandInterface {
         ).queue();
 
         if (!DatabaseHandler.containsCourseNumber(ctx.getArguments().get(0))) {
-            DatabaseHandler.insertCourse(ctx.getArguments().get(0));
-            LOGGER.warn("A new course has been added: " + ctx.getArguments().get(0) + "\n" +
-                    "<http://www.vorlesungsverzeichnis.ethz.ch/Vorlesungsverzeichnis/sucheLehrangebot.view?lang=de&" +
-                    "search=on&semkez=2022S&studiengangTyp=&deptId=&studiengangAbschnittId=&lerneinheitstitel=&" +
-                    "lerneinheitscode=" + ctx.getArguments().get(0) + "&famname=&rufname=&wahlinfo=&" +
-                    "lehrsprache=&periodizitaet=&katalogdaten=&_strukturAus=on&search=Suchen>\n\n" +
-                    "rdsql update courses set courseName='' where courseNumber='" + ctx.getArguments().get(0) + "'");
+            String courseNumber = ctx.getArguments().get(0);
+            DatabaseHandler.insertCourse(courseNumber, VVZScraper.getCourseName(courseNumber));
         }
     }
 
@@ -73,7 +69,6 @@ public class CourseReview implements CommandInterface {
     public static void processProceed(String userId) {
         String feedback = inputs.get(userId).stream().skip(1).map(Object::toString).collect(Collectors.joining(" "));
         DatabaseHandler.insertCourseReview(userId, feedback, inputs.get(userId).get(0));
-        LOGGER.warn("A course review has been added");
         inputs.remove(userId);
     }
 
