@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
+import services.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -32,7 +32,6 @@ public class PlaceDraw implements Runnable{
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
             if (!DatabaseHandler.getPlaceQIDs().contains(placeData.id = Integer.parseInt(ctx.getArguments().get(1)))) {
-                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.invalidIdException(ctx);
                 return;
             }
@@ -41,13 +40,10 @@ public class PlaceDraw implements Runnable{
             if (numbers.size() > 0) {
                 placeData.id = numbers.get(random.nextInt(numbers.size()));
             } else {
-                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.emptyQueueException(ctx);
                 return;
             }
         }
-
-        CommandLogger.CommandLog("PlaceDraw", ctx, true);
 
         try {
             while (!placeData.stop && !placeData.stopQ) {
@@ -113,7 +109,7 @@ public class PlaceDraw implements Runnable{
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
         ctx.getJDA().openPrivateChannelById(userID).complete().sendMessageEmbeds(embed.build())
-                .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue();
+                .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue();
     }
 
     private InputStream convert (BufferedImage img) {

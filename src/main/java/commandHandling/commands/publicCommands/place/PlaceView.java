@@ -2,8 +2,8 @@ package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
+import services.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,11 +21,10 @@ public class PlaceView implements Runnable{
 
     @Override
     public void run() {
-        CommandLogger.CommandLog("Place", ctx, true);
         EmbedBuilder embed = EmbedHelper.embedBuilder("Place").setImage("attachment://place.png");
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
-                .addFile(convert(services.PlaceWebSocket.getImage(true)), "place.png").queue(
+                .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue(
                 msg -> EmbedHelper.deleteMsg(msg, 64)
         );
     }

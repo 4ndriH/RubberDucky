@@ -3,8 +3,8 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
+import services.CommandManager;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.io.FileNotFoundException;
@@ -41,13 +41,13 @@ public class PlaceQueue {
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                CommandLogger.CommandLog("Place", ctx, false);
+                CommandManager.commandLogger("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
 
-        CommandLogger.CommandLog("Place", ctx, true);
+        CommandManager.commandLogger("Place", ctx, true);
 
         while (scanner.hasNextLine()) {
             commands.add(scanner.nextLine());

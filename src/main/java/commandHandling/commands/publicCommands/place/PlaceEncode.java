@@ -2,8 +2,8 @@ package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
 import services.BotExceptions;
+import services.CommandManager;
 import services.Miscellaneous.TimeFormat;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import javax.imageio.ImageIO;
@@ -42,7 +42,7 @@ public class PlaceEncode implements Runnable {
             writer = new PrintStream(path + ".txt");
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
-            CommandLogger.CommandLog("Place", ctx, false);
+            CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -53,12 +53,12 @@ public class PlaceEncode implements Runnable {
             width = Integer.parseInt(ctx.getArguments().get(3));
             height = Integer.parseInt(ctx.getArguments().get(4));
         } catch (Exception e) {
-            CommandLogger.CommandLog("Place", ctx, false);
+            CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
 
-        CommandLogger.CommandLog("Place", ctx, true);
+        CommandManager.commandLogger("Place", ctx, true);
 
         if (ctx.getArguments().size() == 6) {
             pattern = ctx.getArguments().get(5);

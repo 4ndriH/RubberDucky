@@ -4,7 +4,6 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.BotExceptions;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -30,17 +29,13 @@ public class PlaceDelete {
                 DatabaseHandler.removePlaceQ(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
             } else {
-                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
             }
         } catch (Exception e) {
-            CommandLogger.CommandLog("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
-
-        CommandLogger.CommandLog("Place", ctx, true);
 
         embed.setDescription("File " + id + " has been deleted");
         EmbedHelper.sendEmbed(ctx, embed, 32);

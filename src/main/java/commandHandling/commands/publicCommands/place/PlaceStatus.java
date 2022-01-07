@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
 import services.Miscellaneous.TimeFormat;
 import services.PermissionManager;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 import java.text.DecimalFormat;
@@ -22,8 +21,6 @@ public class PlaceStatus {
 
     private void main() {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");
-
-        CommandLogger.CommandLog("Place", ctx, true);
 
         if (pD.drawing) {
             embed.setDescription("Drawing project " + pD.id);

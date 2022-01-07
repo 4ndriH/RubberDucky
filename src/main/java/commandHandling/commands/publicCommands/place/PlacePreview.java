@@ -2,8 +2,9 @@ package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import services.*;
-import services.logging.CommandLogger;
+import services.BotExceptions;
+import services.GifSequenceWriter;
+import services.PlaceWebSocket;
 import services.logging.EmbedHelper;
 
 import javax.imageio.stream.FileImageOutputStream;
@@ -37,13 +38,10 @@ public class PlacePreview implements Runnable{
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                         .retrieveInputStream().get());
             } catch (Exception ee) {
-                CommandLogger.CommandLog("Place", ctx, false);
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
-
-        CommandLogger.CommandLog("Place", ctx, true);
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));

@@ -3,7 +3,6 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
 import services.logging.EmbedHelper;
 
 public class PlaceViewQ {
@@ -16,8 +15,6 @@ public class PlaceViewQ {
     private void main () {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         String[] strs = DatabaseHandler.getCompletePlaceQ();
-
-        CommandLogger.CommandLog("Place", ctx, true);
 
         if (strs[0].length() == 0) {
             embed.setDescription("There are no files in the queue");
