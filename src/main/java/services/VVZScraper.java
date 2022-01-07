@@ -39,7 +39,8 @@ public class VVZScraper {
                 LOGGER.error("Error during htmlContent fetching", e);
             }
             if (htmlContent.contains(NAME)) {
-                final String extractedTitle = scraper.extractTitle(htmlContent);
+                String extractedTitle = scraper.extractTitle(htmlContent);
+                extractedTitle = extractedTitle.replace("&ouml;", "ö").replace("&uuml;", "ü").replace("&auml;", "ä");
                 LOGGER.info("Found course: " + id + " - " + extractedTitle);
                 return extractedTitle;
             }
