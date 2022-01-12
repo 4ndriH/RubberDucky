@@ -77,9 +77,4 @@ public class Course implements CommandInterface {
         embed.addField("__Format__", "```" + CONFIG.Prefix.get() + "course <course number>```", false);
         return embed;
     }
-
-    @Override
-    public boolean requiresFurtherChecks() {
-        return true;
-    }
 }
