@@ -44,6 +44,7 @@ public class CommandManager {
         addCommand(new ExportDatabase(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Kill(LOGGER));
+        addCommand(new LetMeGoogleThatForYou(LOGGER));
         addCommand(new LockDown(LOGGER));
         addCommand(new NickName(LOGGER));
         addCommand(new Nuke(LOGGER));
