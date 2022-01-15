@@ -27,7 +27,7 @@ public class Help implements CommandInterface {
     public void handle(CommandContext ctx) {
         String prefix = CONFIG.Prefix.get();
 
-        if (ctx.getArguments().isEmpty()) {
+        if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(CONFIG.Prefix.get() + " ")) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Help");
 
             HashMap<String, StringBuilder> commandGroups = new HashMap<>();
