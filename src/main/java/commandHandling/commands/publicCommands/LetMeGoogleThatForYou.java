@@ -32,7 +32,7 @@ public class LetMeGoogleThatForYou implements CommandInterface {
             CommandContext ctxT = ctx;
             String id = ctx.getMessage().getId();
             String input = ctxT.getArguments().size() == 0 ? "lorem ipsum" : ctxT.getArguments().stream().map(Object::toString).collect(Collectors.joining(" "));
-            String searchURL = ctxT.getArguments().stream().map(Object::toString).collect(Collectors.joining("+"));
+            String searchURL = ctxT.getArguments().size() == 0 ? "lorem+ipsum" : ctxT.getArguments().stream().map(Object::toString).collect(Collectors.joining("+"));
 
             try {
                 ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/lmgtfy" + id + ".gif"));
