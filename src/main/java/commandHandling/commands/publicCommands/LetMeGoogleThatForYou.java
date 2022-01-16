@@ -32,7 +32,6 @@ public class LetMeGoogleThatForYou implements CommandInterface {
             CommandContext ctxT = ctx;
             String id = ctx.getMessage().getId();
             String input = ctxT.getArguments().size() == 0 ? "lorem ipsum" : ctxT.getArguments().stream().map(Object::toString).collect(Collectors.joining(" "));
-            String searchURL = ctxT.getArguments().stream().map(Object::toString).collect(Collectors.joining("+"));
 
             try {
                 ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/lmgtfy" + id + ".gif"));
@@ -98,7 +97,7 @@ public class LetMeGoogleThatForYou implements CommandInterface {
             File gif = new File("tempFiles/lmgtfy" + id + ".gif");
 
             EmbedBuilder embed = EmbedHelper.embedBuilder("Let Me Google That For You");
-            embed.setDescription("[Google](https://www.google.com/search?q=" + searchURL + ")");
+            embed.setDescription("[Google](https://www.google.com/search?q=" + input + ")");
             embed.setImage("attachment://lmgtfy" + id + ".gif");
 
             ctxT.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
