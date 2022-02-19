@@ -64,4 +64,9 @@ public class SQL implements CommandInterface {
     public int getRestrictionLevel() {
         return 0;
     }
+
+    @Override
+    public boolean requiresFurtherChecks() {
+        return true;
+    }
 }

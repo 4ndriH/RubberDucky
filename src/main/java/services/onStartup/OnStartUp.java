@@ -9,7 +9,8 @@ import services.PermissionManager;
 import services.database.DatabaseHandler;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class OnStartUp {
     private final Logger LOGGER = LoggerFactory.getLogger(OnStartUp.class);

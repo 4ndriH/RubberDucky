@@ -20,6 +20,7 @@ public class DirectoryVerification {
         directories.add(new File("resources/logs"));
         directories.add(new File("resources/purge"));
         directories.add(new File("resources/duckies"));
+        directories.add(new File("resources/lmgtfy"));
         directories.add(new File("tempFiles"));
         directories.add(new File("tempFiles/place"));
         directories.add(new File("tempFiles/place/queue"));
@@ -41,6 +42,9 @@ public class DirectoryVerification {
                 "ducky3.png", "ducky4.png", "ducky5.png", "ducky6.png", "ducky7.png")));
         files.put("resources/purge/", new ArrayList<>(List.of("busyPurging.png", "purgeCommenced.jpg",
                 "purgeEnded.jpg")));
+        files.put("resources/lmgtfy/", new ArrayList<>(List.of("lmgtfy.png", "lmgtfyResult.png", "lmgtfyFix.png", "cursor0.png", "cursor1.png", "cursor2.png", "cursor3.png", "cursor4.png",
+                "cursor5.png", "cursor6.png", "cursor7.png", "cursor8.png", "cursor9.png", "cursor10.png")));
+
         String url;
         try {
             Scanner scanner = new Scanner(new File("url.txt"));
