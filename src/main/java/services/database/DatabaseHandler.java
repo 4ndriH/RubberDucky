@@ -215,13 +215,13 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // Place Queue
     ////////////////////////////////////////
-    public static void addFileToQueue(int key, String file, String user) {
+    public static void addFileToQueue(int key, String user) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO placeQueue (key, file, user) VALUES (?, ?, ?)"
             );
             ps.setInt(1, key);
-            ps.setString(2, file);
+            ps.setString(2, "RDdraw" + key + ".txt");
             ps.setString(3, user);
             ps.executeUpdate();
         } catch (SQLException sqlE) {

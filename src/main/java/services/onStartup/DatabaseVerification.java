@@ -25,7 +25,7 @@ public class DatabaseVerification {
                 "\tPRIMARY KEY(key AUTOINCREMENT)");
         database.put("placeQueue", "key\tINTEGER NOT NULL UNIQUE,\n" +
                 "\tfile\tTEXT NOT NULL,\n" +
-                "\tprogress\tTEXT NOT NULL,\n" +
+                "\tprogress\tINTEGER DEFAULT 0,\n" +
                 "\tuser\tTEXT NOT NULL,\n" +
                 "\tPRIMARY KEY(key)");
         database.put("servers", "server\tTEXT NOT NULL UNIQUE");
