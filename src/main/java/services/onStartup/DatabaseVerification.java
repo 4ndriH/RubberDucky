@@ -23,9 +23,9 @@ public class DatabaseVerification {
                 "\tdeleteTime\tINTEGER NOT NULL,\n" +
                 "\tinstanceNr\tINTEGER,\n" +
                 "\tPRIMARY KEY(key AUTOINCREMENT)");
-        database.put("place_queue", "key\tINTEGER NOT NULL UNIQUE,\n" +
+        database.put("placeQueue", "key\tINTEGER NOT NULL UNIQUE,\n" +
                 "\tfile\tTEXT NOT NULL,\n" +
-                "\tprogress\tINTEGER NOT NULL DEFAULT 0,\n" +
+                "\tprogress\tTEXT NOT NULL,\n" +
                 "\tuser\tTEXT NOT NULL,\n" +
                 "\tPRIMARY KEY(key)");
         database.put("servers", "server\tTEXT NOT NULL UNIQUE");

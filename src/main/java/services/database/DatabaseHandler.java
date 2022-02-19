@@ -214,10 +214,10 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // Place Queue
     ////////////////////////////////////////
-    public static void insertPlaceQ(int key, String file, String user) {
+    public static void addFileToQueue(int key, String file, String user) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO place_queue (key, file, user) VALUES (?, ?, ?)"
+                    "INSERT INTO placeQueue (key, file, user) VALUES (?, ?, ?)"
             );
             ps.setInt(1, key);
             ps.setString(2, file);
@@ -228,10 +228,10 @@ public class DatabaseHandler {
         }
     }
 
-    public static void updatePlaceQ(int key, int progress) {
+    public static void updateProgress(int key, int progress) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE place_queue SET progress = ? WHERE key = ?"
+                    "UPDATE placeQueue SET progress = ? WHERE key = ?"
             );
             ps.setInt(1, progress);
             ps.setInt(2, key);
@@ -241,10 +241,10 @@ public class DatabaseHandler {
         }
     }
 
-    public static void removePlaceQ(int key) {
+    public static void removeFileFromQueue(int key) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM place_queue WHERE key = ?"
+                    "DELETE FROM placeQueue WHERE key = ?"
             );
             ps.setInt(1, key);
             ps.executeUpdate();
@@ -253,11 +253,11 @@ public class DatabaseHandler {
         }
     }
 
-    public static String[] getPlaceQProject(int key) {
+    public static String[] getPlaceProject(int key) {
         String[] project = new String[3];
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue WHERE key = ?"
+                    "SELECT * FROM placeQueue WHERE key = ?"
             );
             ps.setInt(1, key);
             ResultSet rs = ps.executeQuery();
@@ -272,12 +272,12 @@ public class DatabaseHandler {
         return project;
     }
 
-    public static String[] getCompletePlaceQ() {
+    public static String[] getPlaceQueue() {
         String[] strs = new String[]{"", "", ""};
         String project = "";
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue"
+                    "SELECT * FROM placeQueue"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
@@ -291,11 +291,11 @@ public class DatabaseHandler {
         return strs;
     }
 
-    public static ArrayList<Integer> getPlaceQIDs() {
+    public static ArrayList<Integer> getPlaceProjectIDs() {
         ArrayList<Integer> ids = new ArrayList<>();
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue"
+                    "SELECT * FROM placeQueue"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {

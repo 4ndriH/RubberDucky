@@ -42,7 +42,6 @@ public class CommandManager {
         addCommand(new NickName(LOGGER));
         addCommand(new Nuke(LOGGER));
         addCommand(new Ping(LOGGER));
-        addCommand(new Place(LOGGER));
         addCommand(new Prefix(LOGGER));
         addCommand(new ProfilePicture(LOGGER));
         addCommand(new Purge(LOGGER));

@@ -1,74 +1,39 @@
 package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import services.BotExceptions;
-import services.database.DatabaseHandler;
-import services.logging.CommandLogger;
-import services.logging.EmbedHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import services.PermissionManager;
 
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.List;
 
-public class PlaceQueue {
-    private final CommandContext ctx;
-    private final PlaceData placeData;
+public class PlaceQueue implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
 
-    public PlaceQueue(CommandContext ctx, PlaceData placeData) {
-        this.ctx = ctx;
-        this.placeData = placeData;
-        main();
+    public PlaceQueue(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
-    private void main () {
-        ArrayList<Integer> numbers = DatabaseHandler.getPlaceQIDs();
-        ArrayList<String> commands = new ArrayList<>();
-        Random random = new Random();
-        Scanner scanner;
-        int number;
+    @Override
+    public void handle(CommandContext ctx) {
+        int id;
+        if (ctx.getArguments().size() == 1 && ctx.perm)
+    }
 
-        do {
-            number = random.nextInt(10000);
-        } while (numbers.contains(number));
+    @Override
+    public String getName() {
+        return "PlaceQueue";
+    }
 
-        try {
-            scanner = new Scanner(ctx.getMessage().getAttachments().get(0).retrieveInputStream().get());
-        } catch (Exception e) {
-            try {
-                scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
-                        .retrieveInputStream().get());
-            } catch (Exception ee) {
-                CommandLogger.CommandLog("Place", ctx, false);
-                BotExceptions.missingAttachmentException(ctx);
-                return;
-            }
-        }
+    @Override
+    public EmbedBuilder getHelp() {
+        return null;
+    }
 
-        CommandLogger.CommandLog("Place", ctx, true);
-
-        while (scanner.hasNextLine()) {
-            commands.add(scanner.nextLine());
-        }
-        scanner.close();
-
-        try {
-            PrintStream printer = new PrintStream("tempFiles/place/queue/" + "RDdraw" + number + ".txt");
-            for (String s : commands) {
-                printer.println(s);
-            }
-            printer.close();
-        } catch (FileNotFoundException e) {
-            placeData.LOGGER.error("PlaceQueue Error", e);
-        }
-
-        EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
-        embed.setDescription("Your file got ID " + number);
-
-        EmbedHelper.sendEmbed(ctx, embed, 32);
-
-        DatabaseHandler.insertPlaceQ(number, "RDdraw" + number + ".txt", ctx.getMessage().getAuthor().getId());
+    @Override
+    public List<String> getAliases() {
+        return List.of("q");
     }
 }
