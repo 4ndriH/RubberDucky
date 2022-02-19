@@ -1,4 +1,4 @@
-package services.place;
+package services;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOInvalidTreeException;
