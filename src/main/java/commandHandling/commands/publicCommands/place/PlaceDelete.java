@@ -11,7 +11,6 @@ import services.logging.EmbedHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlaceDelete implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceDelete.class);
@@ -54,11 +53,6 @@ public class PlaceDelete implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return List.of("placeDelete");
     }
 
     @Override
