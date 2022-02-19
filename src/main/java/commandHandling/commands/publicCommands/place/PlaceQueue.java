@@ -68,7 +68,7 @@ public class PlaceQueue implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("place q", "pq");
+        return List.of("placeQ", "pQ");
     }
 
     @Override
