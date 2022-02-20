@@ -11,10 +11,7 @@ import commandHandling.commands.publicCommands.*;
 import commandHandling.commands.publicCommands.CourseReview.Course;
 import commandHandling.commands.publicCommands.CourseReview.CourseReview;
 import commandHandling.commands.publicCommands.CourseReview.CourseReviewVerify;
-import commandHandling.commands.publicCommands.place.PlaceDelete;
-import commandHandling.commands.publicCommands.place.PlaceGetFile;
-import commandHandling.commands.publicCommands.place.PlaceQueue;
-import commandHandling.commands.publicCommands.place.PlaceViewQueue;
+import commandHandling.commands.publicCommands.place.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -67,6 +64,7 @@ public class CommandManager {
         addCommand(new PlaceDelete(LOGGER));
         addCommand(new PlaceGetFile(LOGGER));
         addCommand(new PlaceViewQueue(LOGGER));
+        addCommand(new PlaceView(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
