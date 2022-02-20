@@ -274,22 +274,21 @@ public class DatabaseHandler {
     }
 
     public static String[] getPlaceQueue() {
-        String[] strs = new String[]{"", "", ""};
-        String project = "";
+        String[] strings = new String[]{"", "", ""};
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM placeQueue"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                strs[0] += rs.getInt("key") + "\n";
-                strs[1] += rs.getInt("progress") + "\n";
-                strs[2] += "<@!" + rs.getString("user") + ">\n";
+                strings[0] += rs.getInt("key") + "\n";
+                strings[1] += rs.getInt("progress") + "\n";
+                strings[2] += "<@!" + rs.getString("user") + ">\n";
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return strs;
+        return strings;
     }
 
     public static ArrayList<Integer> getPlaceProjectIDs() {
