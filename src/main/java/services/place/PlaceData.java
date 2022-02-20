@@ -35,6 +35,10 @@ public class PlaceData {
         return new ArrayList();
     }
 
+    public static int getProgress() {
+        return drawnPixels / totalPixels;
+    }
+
     public static Color getPixelColor(int x, int y) {
         if (System.currentTimeMillis() - time > 1800000) {
             place = PlaceWebSocket.getImage(true);
