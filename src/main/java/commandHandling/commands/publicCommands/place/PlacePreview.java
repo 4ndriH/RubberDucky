@@ -113,7 +113,7 @@ public class PlacePreview implements CommandInterface {
             LOGGER.error("PlacePreview Error", e);
         }
 
-        File gif = new File("tempFiles/preview.gif");
+        File gif = new File("tempFiles/place/preview.gif");
 
         try {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Preview");
