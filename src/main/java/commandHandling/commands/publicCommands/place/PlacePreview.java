@@ -33,9 +33,10 @@ public class PlacePreview implements CommandInterface {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         BufferedImage place = PlaceWebSocket.getImage(false);
         Scanner scanner;
+        // 0 = ID, 1 = sent, 2 = replied to
+        int sendMessageCase, id = -1;
 
         if (ctx.getArguments().size() > 0) {
-            int id;
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
             } catch (Exception e) {
@@ -50,6 +51,7 @@ public class PlacePreview implements CommandInterface {
                     e.printStackTrace();
                     return;
                 }
+                sendMessageCase = 0;
             } else {
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
@@ -57,10 +59,12 @@ public class PlacePreview implements CommandInterface {
         } else {
             try {
                 scanner = new Scanner(ctx.getMessage().getAttachments().get(0).retrieveInputStream().get());
+                sendMessageCase = 1;
             } catch (Exception e) {
                 try {
                     scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
                             .retrieveInputStream().get());
+                    sendMessageCase = 2;
                 } catch (Exception ee) {
                     BotExceptions.missingAttachmentException(ctx);
                     return;
@@ -76,7 +80,7 @@ public class PlacePreview implements CommandInterface {
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.length() > 15) {
+                if (line.length() > 18) {
                     pixels.add(line.substring(16));
                 } else {
                     pixels.add(line);
@@ -116,11 +120,24 @@ public class PlacePreview implements CommandInterface {
         File gif = new File("tempFiles/place/preview.gif");
 
         try {
-            EmbedBuilder embed = EmbedHelper.embedBuilder("Preview");
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Preview" + (sendMessageCase == 0 ? " - " + id : ""));
             embed.setImage("attachment://preview.gif");
-            ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> EmbedHelper.deleteMsg(msg, 1024)
-            );
+            switch (sendMessageCase) {
+                case 0:
+                    ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
+                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                    );
+                    break;
+                case 1:
+                    ctx.getMessage().replyEmbeds(embed.build()).addFile(gif).queue(
+                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                    );
+                    break;
+                case 2:
+                    ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFile(gif).queue(
+                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                    );
+            }
         } catch (IllegalArgumentException e) {
             LOGGER.error("PlacePreview Error", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
