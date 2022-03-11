@@ -62,7 +62,7 @@ public class SpokesPeople implements CommandInterface {
         Message discordCacheRefresh = ctx.getChannel().sendMessage("beep boop").complete();
         discordCacheRefresh.editMessage(yearOne + "\n" + yearTwo).complete();
         discordCacheRefresh.delete().queue();
-        EmbedHelper.sendEmbedWithFile(ctx, embed, 64, "resources/vis.png", "VIS.png");
+        EmbedHelper.sendEmbedWithFile(ctx, embed, 64, "resources/vis.png", "vis.png");
     }
 
     @Override
