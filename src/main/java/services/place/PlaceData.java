@@ -2,8 +2,11 @@ package services.place;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PlaceData {
@@ -14,25 +17,27 @@ public class PlaceData {
     public static int ID, totalPixels, drawnPixels, fixedPixels;
     public static boolean drawing, stop, stopQ, verify;
     public static LinkedList<String>  fixingQ;
-    public static ArrayList<String> pixels;
+    public static ArrayList<String> pixels, pixelVerify;
     private static LinkedList<String> requests;
     public static String user, file;
 
-    PlaceData(int ID, String user, String file) {
-        totalPixels = drawnPixels = fixedPixels = 0;
+    PlaceData(int ID, int drawnPixels, String user, String file) {
+        PlaceData.drawnPixels = drawnPixels;
+        PlaceData.user = user;
+        PlaceData.file = file;
+        PlaceData.ID = ID;
+
+        pixelVerify = new ArrayList<>();
         requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
         pixels = readPixelFile();
+
+        totalPixels = pixels.size();
+        fixedPixels = 0;
+        time = 0L;
+
         drawing = verify = true;
         stop = stopQ = false;
-        PlaceData.ID = ID;
-        PlaceData.user = user;
-        PlaceData.file = file;
-        time = 0L;
-    }
-
-    private ArrayList<String> readPixelFile() {
-        return new ArrayList();
     }
 
     public static int getProgress() {
@@ -62,5 +67,22 @@ public class PlaceData {
         } finally {
             lock.unlock();
         }
+    }
+
+    private ArrayList<String> readPixelFile() {
+        ArrayList<String> pxls = new ArrayList<>();
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File("tempFiles/place/queue/RDdraw" + ID + ".txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        while (scanner.hasNextLine()) {
+            pxls.add(scanner.nextLine());
+        }
+        scanner.close();
+
+        return pxls;
     }
 }
