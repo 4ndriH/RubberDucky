@@ -27,7 +27,7 @@ public class PlaceDraw implements Runnable{
 
     @Override
     public void run() {
-        TextChannel placeBots = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
+        TextChannel placeBots = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
         Random random = new Random();
 
         if (ctx.getArguments().size() > 1 && PermissionManager.authenticateOwner(ctx)) {
