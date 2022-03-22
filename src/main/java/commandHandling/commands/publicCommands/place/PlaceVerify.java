@@ -30,7 +30,7 @@ public class PlaceVerify {
             }
         }
 
-        placeData.fixingQ = fixingQ;
+        placeData.fixingQ = new LinkedList<>();
     }
 
     private boolean compareColors (Color img, Color place) {

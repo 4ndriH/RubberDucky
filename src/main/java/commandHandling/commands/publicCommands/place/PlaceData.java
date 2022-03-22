@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class PlaceData {
     public int id, totalPixels, drawnPixels, fixedPixels, progress;
-    public boolean drawing, stop, stopQ = false, verify = true;
+    public boolean drawing, stop, stopQ = false, verify = false;
     String user, file;
     public ArrayList<String> pixels;
     public LinkedList<String> fixingQ;

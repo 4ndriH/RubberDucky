@@ -131,7 +131,7 @@ public class Place implements CommandInterface {
 
     private void verify(CommandContext ctx) {
         if (PermissionManager.authenticateOwner(ctx)) {
-            placeData.verify = !placeData.verify;
+            placeData.verify = false; //!placeData.verify;
         } else {
             BotExceptions.missingPermissionException(ctx);
         }
