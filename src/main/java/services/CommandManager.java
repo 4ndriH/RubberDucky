@@ -69,6 +69,8 @@ public class CommandManager {
         addCommand(new PlacePreview(LOGGER));
         addCommand(new PlaceEncode(LOGGER));
         addCommand(new PlaceDraw(LOGGER));
+        addCommand(new PlaceStop(LOGGER));
+        addCommand(new PlaceStopQueue(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
