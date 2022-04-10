@@ -55,11 +55,13 @@ public class PlaceDraw implements CommandInterface {
 
             if (id < 0) {
                 BotExceptions.emptyQueueException(ctx);
+                DatabaseHandler.updateConfig("placeProject", "-1");
                 return;
             }
 
             String[] project = DatabaseHandler.getPlaceProject(id);
             new PlaceData(id, Integer.parseInt(project[0]), project[1]);
+            DatabaseHandler.updateConfig("placeProject", "" + id);
             boolean fixToggle = false;
 
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
