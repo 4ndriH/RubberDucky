@@ -255,7 +255,7 @@ public class DatabaseHandler {
     }
 
     public static String[] getPlaceProject(int key) {
-        String[] project = new String[3];
+        String[] project = new String[2];
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM placeQueue WHERE key = ?"
@@ -263,9 +263,8 @@ public class DatabaseHandler {
             ps.setInt(1, key);
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                project[0] = rs.getString("file");
-                project[1] = rs.getString("progress");
-                project[2] = rs.getString("user");
+                project[0] = rs.getString("progress");
+                project[1] = rs.getString("user");
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
@@ -305,6 +304,22 @@ public class DatabaseHandler {
             LOGGER.error("SQL Exception", sqlE);
         }
         return ids;
+    }
+
+    public static int getLowestPlaceProjectID() {
+        int id = -1;
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM placeQueue ORDER BY key asc LIMIT 1"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                id = rs.getInt("key");
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return id;
     }
 
     ////////////////////////////////////////
