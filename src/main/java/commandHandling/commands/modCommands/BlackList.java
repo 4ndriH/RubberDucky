@@ -22,8 +22,8 @@ public class BlackList implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (ctx.getArguments().size() > 0) {
-            String id = ctx.getArguments().get(0);
+        if (ctx.getArguments().size() > 0 && !ctx.getArguments().get(0).contains("&")) {
+            String id = ctx.getArguments().get(0).replace("<@", "").replace(">", "");
             if (PermissionManager.blackList.contains(id)) {
                 DatabaseHandler.removeBlacklist(id);
             } else {
