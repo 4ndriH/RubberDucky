@@ -1,5 +1,7 @@
 package services.place;
 
+import resources.Pixel;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,18 +18,16 @@ public class PlaceData {
 
     public static int ID, totalPixels, drawnPixels, fixedPixels;
     public static boolean drawing, stop, stopQ, verify;
-    public static LinkedList<String>  fixingQ;
-    public static ArrayList<String> pixels, pixelVerify;
+    public static LinkedList<Pixel>  fixingQ;
+    public static ArrayList<Pixel> pixels;
     private static LinkedList<String> requests;
-    public static String user, file;
+    public static String user;
 
-    PlaceData(int ID, int drawnPixels, String user, String file) {
+    public PlaceData(int ID, int drawnPixels, String user) {
         PlaceData.drawnPixels = drawnPixels;
         PlaceData.user = user;
-        PlaceData.file = file;
         PlaceData.ID = ID;
 
-        pixelVerify = new ArrayList<>();
         requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
         pixels = readPixelFile();
@@ -69,8 +69,8 @@ public class PlaceData {
         }
     }
 
-    private ArrayList<String> readPixelFile() {
-        ArrayList<String> pxls = new ArrayList<>();
+    private ArrayList<Pixel> readPixelFile() {
+        ArrayList<Pixel> pixels = new ArrayList<>();
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File("tempFiles/place/queue/RDdraw" + ID + ".txt"));
@@ -79,10 +79,22 @@ public class PlaceData {
         }
 
         while (scanner.hasNextLine()) {
-            pxls.add(scanner.nextLine());
+            int x, y;
+            double alpha;
+            String color;
+            try {
+                String[] line = scanner.nextLine().split(" ");
+                x = Integer.parseInt(line[0]);
+                y = Integer.parseInt(line[1]);
+                color = line[2];
+                alpha = (line.length == 4) ? Integer.parseInt(line[3]) / 255.0 : 1.0;
+            } catch (Exception e) {
+                continue;
+            }
+            pixels.add(new Pixel(x, y, alpha, color));
         }
         scanner.close();
 
-        return pxls;
+        return pixels;
     }
 }
