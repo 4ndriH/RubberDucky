@@ -21,7 +21,6 @@ public class PlaceDelete implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        System.out.println("twat");
         ArrayList<Integer> ids = DatabaseHandler.getPlaceProjectIDs();
         EmbedBuilder embed = EmbedHelper.embedBuilder("Delete");
         int id;
