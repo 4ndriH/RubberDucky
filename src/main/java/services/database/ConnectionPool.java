@@ -15,6 +15,7 @@ public class ConnectionPool {
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        config.addDataSourceProperty("foreign_keys", "true");
         dataSource = new HikariDataSource( config );
     }
 
