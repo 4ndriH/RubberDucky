@@ -372,13 +372,30 @@ public class DatabaseHandler {
                         rs.getInt("X"),
                         rs.getInt("Y"),
                         rs.getDouble("Alpha"),
-                        rs.getString("ImageColor")
+                        rs.getString("ImageColor"),
+                        rs.getString("placeProject")
                 ));
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
         return pixels;
+    }
+
+    public static void updatePlaceColor(double alpha, int x, int y, String imageColor, String placeColor) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE placePixels SET PlaceColor = ? WHERE X = ? AND Y = ? AND ImageColor = ? AND Alpha = ?"
+            );
+            ps.setString(1, placeColor);
+            ps.setInt(2, x);
+            ps.setInt(3, y);
+            ps.setString(4, imageColor);
+            ps.setDouble(5, alpha);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
     }
 
     ////////////////////////////////////////

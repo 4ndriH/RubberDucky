@@ -1,5 +1,6 @@
 package resources;
 
+import services.database.DatabaseHandler;
 import services.place.PlaceData;
 
 import java.awt.*;
@@ -9,11 +10,19 @@ public class Pixel {
     double alpha;
     String imageColor, placeColor;
 
-    public Pixel(int x, int y, double alpha, String img) {
+    public Pixel(int x, int y, double alpha, String imageColor) {
         this.x = x;
         this.y = y;
         this.alpha = alpha;
-        this.imageColor = img;
+        this.imageColor = imageColor;
+    }
+
+    public Pixel(int x, int y, double alpha, String imageColor, String placeColor) {
+        this.x = x;
+        this.y = y;
+        this.alpha = alpha;
+        this.imageColor = imageColor;
+        this.placeColor = placeColor;
     }
 
     public int getX() {
@@ -38,11 +47,14 @@ public class Pixel {
 
     @Override
     public String toString() {
+        return x + " " + y + " " + getColor();
+    }
+
+    public String getColor() {
         if (alpha == 1.0) {
-            return x + " " + y + " " + imageColor;
+            return imageColor;
         } else {
-            placeColor = imageColor;//mixAndMatch();
-            return x + " " + y + " " + placeColor;
+            return placeColor = imageColor;//mixAndMatch();
         }
     }
 
@@ -54,6 +66,8 @@ public class Pixel {
         int g = (int) (alpha * image.getGreen() + (1 - alpha) * place.getGreen());
         int b = (int) (alpha * image.getBlue() + (1 - alpha) * place.getBlue());
 
-        return String.format("#%02x%02x%02x", r, g, b);
+        String color = String.format("#%02x%02x%02x", r, g, b);
+        DatabaseHandler.updatePlaceColor(alpha, x, y, imageColor, color);
+        return color;
     }
 }
