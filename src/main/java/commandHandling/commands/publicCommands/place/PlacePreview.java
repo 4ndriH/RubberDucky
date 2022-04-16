@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.Pixel;
 import services.BotExceptions;
 import services.GifSequenceWriter;
 import services.database.DatabaseHandler;
@@ -16,7 +17,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -32,31 +32,29 @@ public class PlacePreview implements CommandInterface {
     public void handle(CommandContext ctx) {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         BufferedImage place = PlaceWebSocket.getImage(false);
-        Scanner scanner;
+        ArrayList<Pixel> pixels;
         // 0 = ID, 1 = sent, 2 = replied to
         int sendMessageCase, id = -1;
 
         if (ctx.getArguments().size() > 0) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
+                sendMessageCase = 0;
             } catch (Exception e) {
                 BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
 
             if (DatabaseHandler.getPlaceProjectIDs().contains(id)) {
-                try {
-                    scanner = new Scanner(new File("tempFiles/place/queue/RDdraw" + id + ".txt"));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                sendMessageCase = 0;
+                    pixels = DatabaseHandler.getPlacePixels(id);
             } else {
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
             }
         } else {
+            pixels = new ArrayList<>();
+            Scanner scanner;
+
             try {
                 scanner = new Scanner(ctx.getMessage().getAttachments().get(0).retrieveInputStream().get());
                 sendMessageCase = 1;
@@ -70,31 +68,40 @@ public class PlacePreview implements CommandInterface {
                     return;
                 }
             }
+
+            while (scanner.hasNextLine()) {
+                int x, y;
+                double alpha;
+                String color;
+                try {
+                    String[] line = scanner.nextLine().replace(".place setpixel ", "").split(" ");
+                    x = Integer.parseInt(line[0]);
+                    y = Integer.parseInt(line[1]);
+                    color = line[2];
+                    alpha = (line.length == 4) ? Integer.parseInt(line[3]) / 255.0 : 1.0;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
+                }
+                pixels.add(new Pixel(x, y, alpha, color));
+            }
+            scanner.close();
         }
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
-            ArrayList<String> pixels = new ArrayList<>();
             boolean exception = false;
 
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.length() > 18) {
-                    pixels.add(line.substring(16));
-                } else {
-                    pixels.add(line);
-                }
-            }
-            scanner.close();
+
 
             int pixelsPerFrame = Math.max(1, (int)(pixels.size() * 0.005));
             writer.writeToSequence(place);
 
             for (int i = 0; i < pixels.size(); i++) {
-                String[] pixel = pixels.get(i).split(" ");
+                Pixel pixel = pixels.get(i);
                 try {
-                    img.setRGB(Integer.parseInt(pixel[0]), Integer.parseInt(pixel[1]), Color.decode(pixel[2]).getRGB());
+                    img.setRGB(pixel.getX(), pixel.getY(), Color.decode(pixel.getColor()).getRGB());
                     if (i % pixelsPerFrame == 0) {
                         writer.writeToSequence(img);
                         img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
@@ -102,7 +109,7 @@ public class PlacePreview implements CommandInterface {
                 } catch (Exception e) {
                     if (!exception) {
                         exception = true;
-                        BotExceptions.faultyPixelFormatException(ctx, pixels.get(i));
+                        BotExceptions.faultyPixelFormatException(ctx, pixels.get(i).toString());
                     }
                 }
             }
