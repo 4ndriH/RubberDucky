@@ -11,7 +11,6 @@ import services.PermissionManager;
 import services.database.DatabaseHandler;
 import services.logging.EmbedHelper;
 import services.place.PlaceData;
-import services.place.PlaceVerify;
 import services.place.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
@@ -36,7 +35,7 @@ public class PlaceDraw implements CommandInterface {
 
         if (PlaceData.drawing) {
             return;
-        }else if (ctx.getArguments().size() > 0 && PermissionManager.authenticateOwner(ctx)) {
+        } else if (ctx.getArguments().size() > 0 && PermissionManager.authenticateOwner(ctx)) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
                 if (!DatabaseHandler.getPlaceProjectIDs().contains(id)) {
@@ -47,32 +46,29 @@ public class PlaceDraw implements CommandInterface {
                 BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
+        } else {
+            id = DatabaseHandler.getLowestPlaceProjectID();
         }
 
-
         while (!PlaceData.stop && !PlaceData.stopQ) {
-            id = (id == -1) ? DatabaseHandler.getLowestPlaceProjectID() : id;
-
             if (id < 0) {
                 BotExceptions.emptyQueueException(ctx);
                 DatabaseHandler.updateConfig("placeProject", "-1");
                 return;
             }
 
-            String[] project = DatabaseHandler.getPlaceProject(id);
-            new PlaceData(id, Integer.parseInt(project[0]), project[1]);
+            new PlaceData(id);
             DatabaseHandler.updateConfig("placeProject", "" + id);
             boolean fixToggle = false;
 
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
                 try {
-                    if (!PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
-                        placeChannel.sendMessage(".place setpixel " + PlaceData.fixingQ.poll()).complete();
+                    if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+                        placeChannel.sendMessage(".place setpixel " + PlaceData.fixingQ.poll().toString()).complete();
                         PlaceData.fixedPixels++;
                     } else {
-                        placeChannel.sendMessage(".place setpixel " + PlaceData.pixels.get(PlaceData.drawnPixels)).complete();
-
-                        if (++PlaceData.drawnPixels % 16 == 0) {
+                        placeChannel.sendMessage(".place setpixel " + PlaceData.getPixel().toString()).complete();
+                        if (PlaceData.drawnPixels++ % 16 == 0) {
                             DatabaseHandler.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
                         }
                     }
@@ -82,11 +78,14 @@ public class PlaceDraw implements CommandInterface {
                     } catch (InterruptedException ignored) {}
                 }
 
-                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0) {
-                    PlaceVerify.verify();
+                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
+                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
+//                    PlaceVerify.verify();
                 }
             }
 
+            DatabaseHandler.removeFileFromQueue(PlaceData.ID);
+            id = DatabaseHandler.getLowestPlaceProjectID();
             sendCompletionMessage(ctx);
         }
     }
