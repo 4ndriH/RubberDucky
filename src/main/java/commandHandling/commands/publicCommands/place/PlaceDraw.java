@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.Pixel;
 import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DatabaseHandler;
@@ -82,6 +83,11 @@ public class PlaceDraw implements CommandInterface {
                         || PlaceData.drawnPixels == PlaceData.totalPixels) {
 //                    PlaceVerify.verify();
                 }
+            }
+
+            for (Pixel pixel : PlaceData.fixingQ) {
+                placeChannel.sendMessage(pixel.getDrawCommand()).complete();
+                PlaceData.fixedPixels++;
             }
 
             DatabaseHandler.removeFileFromQueue(PlaceData.ID);
