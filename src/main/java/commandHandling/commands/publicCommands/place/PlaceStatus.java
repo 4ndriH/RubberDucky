@@ -6,11 +6,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.EMOTES;
-import services.Miscellaneous.TimeFormat;
 import services.logging.EmbedHelper;
 import services.place.PlaceData;
 
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.util.List;
 
 public class PlaceStatus implements CommandInterface {
@@ -24,10 +24,12 @@ public class PlaceStatus implements CommandInterface {
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");
 
+        new PlaceData(4);
+
         if (PlaceData.drawing) {
             embed.setDescription("Drawing project " + PlaceData.ID);
-            embed.addField("__Estimated time remaining__",
-                    TimeFormat.timeFormat(PlaceData.totalPixels - PlaceData.drawnPixels), false);
+            embed.addField("__Estimated completion date__", "<t:" +
+                    (Instant.now().getEpochSecond() + PlaceData.totalPixels - PlaceData.drawnPixels) + ":F>", false);
 
             embed.addField("__Total Pixels:__", "" + formatNr(PlaceData.totalPixels), true);
             embed.addField("__Drawn Pixels:__", "" + formatNr(PlaceData.drawnPixels), true);
@@ -48,7 +50,7 @@ public class PlaceStatus implements CommandInterface {
     }
 
     private String formatNr(int n) {
-        return new DecimalFormat("###,###,###").format(n);
+        return new DecimalFormat("###,###,###").format(n).replaceAll("[,,.]", "'");
     }
 
     private String progress () {
