@@ -28,7 +28,9 @@ public class PlaceStop implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Stops the drawing process");
+        return embed;
     }
 
     @Override

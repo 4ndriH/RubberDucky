@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 import resources.Pixel;
 import services.BotExceptions;
 import services.GifSequenceWriter;
@@ -164,7 +165,11 @@ public class PlacePreview implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns an animated preview of the given project\n" +
+                "You can either specify the ID, reply to a text file or send it as an attachment");
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " [<ID>]```", false);
+        return embed;
     }
 
     @Override

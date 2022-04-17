@@ -95,7 +95,7 @@ public class PlaceQueue implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Queues a file to be drawn later");
+        embed.setDescription("Queues a project to be drawn later");
         return embed;
     }
 

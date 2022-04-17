@@ -28,7 +28,9 @@ public class PlaceStopQueue implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Toggles whether or not the queue is stopped after the current project is finished.");
+        return embed;
     }
 
     @Override

@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 import resources.Pixel;
 import services.BotExceptions;
 import services.database.DatabaseHandler;
@@ -56,7 +57,10 @@ public class PlaceGetFile implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns the project with the given ID");
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <ID>```", false);
+        return embed;
     }
 
     @Override

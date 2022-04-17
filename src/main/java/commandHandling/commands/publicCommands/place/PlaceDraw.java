@@ -121,7 +121,10 @@ public class PlaceDraw implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Starts the drawing process\n" +
+                "Anyone can start the queue, which gets executed in ascending order");
+        return embed;
     }
 
     @Override

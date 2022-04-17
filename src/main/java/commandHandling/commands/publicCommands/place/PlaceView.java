@@ -46,7 +46,9 @@ public class PlaceView implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns an image of the current place.");
+        return embed;
     }
 
     @Override

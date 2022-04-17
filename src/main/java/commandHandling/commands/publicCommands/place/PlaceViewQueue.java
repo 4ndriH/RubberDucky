@@ -40,7 +40,9 @@ public class PlaceViewQueue implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns a list of all the current projects in the queue");
+        return embed;
     }
 
     @Override

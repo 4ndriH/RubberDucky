@@ -188,7 +188,9 @@ public class PlaceStatus implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns information about the current projects progress");
+        return embed;
     }
 
     @Override

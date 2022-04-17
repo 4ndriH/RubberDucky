@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.Miscellaneous.TimeFormat;
@@ -36,7 +37,7 @@ public class PlaceEncode implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String fileName, pattern = "";
+        String fileName, pattern;
         startingPoints = new ArrayList<>();
         pixels = new ArrayList<>();
         int width, height;
@@ -57,6 +58,7 @@ public class PlaceEncode implements CommandInterface {
             y = Integer.parseInt(ctx.getArguments().get(1));
             width = Integer.parseInt(ctx.getArguments().get(2));
             height = Integer.parseInt(ctx.getArguments().get(3));
+            pattern = ctx.getArguments().get(4).toLowerCase();
         } catch (Exception e) {
             CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
@@ -65,16 +67,15 @@ public class PlaceEncode implements CommandInterface {
 
         CommandManager.commandLogger("Place", ctx, true);
 
-        if (ctx.getArguments().contains("-p")) {
-            pattern = ctx.getArguments().get(ctx.getArguments().indexOf("-p") + 1);
-        }
-
         if (ctx.getArguments().contains("-c")) {
             spreadContained = true;
         }
 
         if (ctx.getArguments().contains("-s")) {
-            for (int i = ctx.getArguments().indexOf("-s") + 1; i + 1 < ctx.getArguments().size(); i += 2) {
+            int dashSIdx = ctx.getArguments().indexOf("-s");
+            int lastDashIdx = ctx.getArguments().lastIndexOf("-");
+
+            for (int i = dashSIdx + 1; i + 1 < ctx.getArguments().size() || i + 1 < lastDashIdx; i += 2) {
                 int x = 0, y = 0;
                 try {
                     x = Integer.parseInt(ctx.getArguments().get(i));
@@ -355,7 +356,18 @@ public class PlaceEncode implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns a file containing the commands to draw the provided image");
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
+        embed.addField("__Position/Size__", "Set the top left corner as well as the desired width and height" +
+                "```<Position/Size> = <X> <Y> <width> <height>```", false);
+        embed.addField("__<Pattern>__", "If nothing is provided or nothing can be matched, it defaults to `lefttoright`\n" +
+                "```\ntopdown\ndiagonal\nspiral\nrandom\rcircle\nspread\nlefttoright```", false);
+        embed.addField("__<Parameters>__", "These are completely optional and mostly only affect the `spread` pattern" +
+                "```\n-c\t\t\t  forces spread to stay within image bounds" +
+                "\n-r\t\t\t  reverses the list of commands" +
+                "\n-s {<x> <y>}\tset starting positions for spread```", false);
+        return embed;
     }
 
     @Override

@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 import services.BotExceptions;
 import services.database.DatabaseHandler;
 import services.logging.EmbedHelper;
@@ -51,7 +52,10 @@ public class PlaceDelete implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Deletes the project with the given ID");
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <ID>```", false);
+        return embed;
     }
 
     @Override
