@@ -5,12 +5,15 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.Pixel;
 import services.BotExceptions;
 import services.database.DatabaseHandler;
 import services.logging.EmbedHelper;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PlaceGetFile implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
@@ -32,7 +35,10 @@ public class PlaceGetFile implements CommandInterface {
 
         if (DatabaseHandler.getPlaceProjectIDs().contains(id)) {
             try {
-                ctx.getChannel().sendFile(new File("tempFiles/place/queue/RDdraw" + id + ".txt")).queue(
+                ArrayList<Pixel> pixels = DatabaseHandler.getPlacePixels(id);
+                String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
+
+                ctx.getChannel().sendFile(output.getBytes(), "RDdraw" + id + ".txt").queue(
                         msg -> EmbedHelper.deleteMsg(msg, 64)
                 );
             } catch (IllegalArgumentException e) {
