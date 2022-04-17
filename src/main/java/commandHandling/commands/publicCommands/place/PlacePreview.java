@@ -93,8 +93,6 @@ public class PlacePreview implements CommandInterface {
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
             boolean exception = false;
 
-
-
             int pixelsPerFrame = Math.max(1, (int)(pixels.size() * 0.005));
             writer.writeToSequence(place);
 

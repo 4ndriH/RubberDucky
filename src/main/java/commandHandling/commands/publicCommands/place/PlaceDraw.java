@@ -64,10 +64,10 @@ public class PlaceDraw implements CommandInterface {
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
                 try {
                     if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
-                        placeChannel.sendMessage(".place setpixel " + PlaceData.fixingQ.poll().toString()).complete();
+                        placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
                         PlaceData.fixedPixels++;
                     } else {
-                        placeChannel.sendMessage(".place setpixel " + PlaceData.getPixel().toString()).complete();
+                        placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
                         if (PlaceData.drawnPixels++ % 16 == 0) {
                             DatabaseHandler.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
                         }

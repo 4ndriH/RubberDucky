@@ -47,12 +47,20 @@ public class Pixel {
 
     @Override
     public String toString() {
-        return x + " " + y + " " + getColor();
+        if (alpha == 1.0) {
+            return x + " " + y + " " + imageColor;
+        } else {
+            return x + " " + y + " " + imageColor + " " + alpha;
+        }
+    }
+
+    public String getDrawCommand() {
+        return ".place setpixel " + x + " " + y + " " + getColor();
     }
 
     public String getColor() {
         if (alpha == 1.0) {
-            return imageColor;
+            return placeColor = imageColor;
         } else {
             return placeColor = imageColor;//mixAndMatch();
         }
