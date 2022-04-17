@@ -12,10 +12,12 @@ public class PlaceVerify {
         for (int i = 0; i < PlaceData.drawnPixels; i++) {
             Pixel pixel = PlaceData.pixels.get(i);
             Color placeColor = new Color(place.getRGB(pixel.getX(), pixel.getY()));
-            if (!compareColors(Color.decode((pixel.getAlpha() == 1.0 ? pixel.getImageColor() : pixel.getPlaceColor())), placeColor)) {
+            if (!compareColors(Color.decode(pixel.getPlaceColor()), placeColor)) {
                 PlaceData.fixingQ.add(pixel);
             }
         }
+
+        PlaceData.forceReloadImage();
     }
 
     private static boolean compareColors (Color img, Color place) {

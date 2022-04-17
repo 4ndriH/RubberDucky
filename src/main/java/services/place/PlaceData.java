@@ -53,6 +53,10 @@ public class PlaceData {
         return new Color(place.getRGB(x, y));
     }
 
+    public static void forceReloadImage() {
+        time = 0L;
+    }
+
     public static void addPixelRequest(String id) {
         lock.lock();
         try {
