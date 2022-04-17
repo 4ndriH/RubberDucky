@@ -373,7 +373,7 @@ public class DatabaseHandler {
                         rs.getInt("Y"),
                         rs.getDouble("Alpha"),
                         rs.getString("ImageColor"),
-                        rs.getString("placeProject")
+                        rs.getString("PlaceColor")
                 ));
             }
         } catch (SQLException sqlE) {
