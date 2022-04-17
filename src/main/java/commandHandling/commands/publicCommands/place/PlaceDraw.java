@@ -3,6 +3,7 @@ package commandHandling.commands.publicCommands.place;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ public class PlaceDraw implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        TextChannel placeChannel = ctx.getJDA().getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
         int id = -1;
 
         if (PlaceData.drawing) {
@@ -51,11 +51,20 @@ public class PlaceDraw implements CommandInterface {
             id = DatabaseHandler.getLowestPlaceProjectID();
         }
 
+        if (id == -1) {
+            BotExceptions.emptyQueueException(ctx);
+            return;
+        }
+
+        draw(ctx.getJDA(), id);
+    }
+
+    public static void draw(JDA jda, int id) {
+        TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
+
         while (!PlaceData.stop && !PlaceData.stopQ) {
             if (id < 0) {
-                BotExceptions.emptyQueueException(ctx);
-                DatabaseHandler.updateConfig("placeProject", "-1");
-                return;
+                break;
             }
 
             new PlaceData(id);
@@ -92,19 +101,21 @@ public class PlaceDraw implements CommandInterface {
 
             DatabaseHandler.removeFileFromQueue(PlaceData.ID);
             id = DatabaseHandler.getLowestPlaceProjectID();
-            sendCompletionMessage(ctx);
+            sendCompletionMessage(jda);
         }
+
+        DatabaseHandler.updateConfig("placeProject", "-1");
     }
 
-    private void sendCompletionMessage (CommandContext ctx) {
+    private static void sendCompletionMessage(JDA jda) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Your drawing has been finished");
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
-        ctx.getJDA().openPrivateChannelById(PlaceData.ID).complete().sendMessageEmbeds(embed.build())
+        jda.openPrivateChannelById(PlaceData.ID).complete().sendMessageEmbeds(embed.build())
                 .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue();
     }
 
-    private InputStream convert (BufferedImage img) {
+    private static InputStream convert(BufferedImage img) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ImageIO.write(img, "png", os);
