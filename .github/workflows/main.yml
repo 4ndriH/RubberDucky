@@ -35,19 +35,19 @@ jobs:
         
       # Runs a set of commands using the runners shell
       - name: Step 3 - Build Maven Project
-        run: mvn -B package --file pom.xml
+        run: |
+          mvn -B package --file pom.xml
+          mkdir staging && cp target/*.jar staging
         
-      - name: Step 5 - Cache Maven Dependencies
+      - name: Step 4 - Cache Maven Dependencies
         uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-key: ${{ runner.os }}-m2
     
-      - name: Step 6 - List the current directory
-        run: ls -a
-        
-      - name: Step 7 - What is in the target folder?
-        run: |
-          cd target
-          ls -a
+      - name: Step 5 - Persist workflow data as artifacts
+        uses: actions/upload-artifcats@v3
+        with:
+          name: github-actions-artifacts
+          path: staging
