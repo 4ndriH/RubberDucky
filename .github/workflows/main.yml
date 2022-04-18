@@ -36,11 +36,18 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Step 3 - Build Maven Project
         run: mvn -B package --file pom.xml
+        
+      - name: Step 5 - Cache Maven Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hasFiles('**/pom.xml') }}
+          restore-key: ${{ runner.os }}-m2
     
-      - name: Step 4 - List the current directory
+      - name: Step 6 - List the current directory
         run: ls -a
         
-      - name: Step 5 - What is in the target folder?
+      - name: Step 7 - What is in the target folder?
         run: |
           cd target
           ls -a
