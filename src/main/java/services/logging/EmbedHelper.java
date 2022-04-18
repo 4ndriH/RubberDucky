@@ -77,7 +77,9 @@ public class EmbedHelper {
 
     public static void deleteMsg(Message msg, int seconds) {
         try {
-            msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, failure -> {});
+            if (seconds >= 0) {
+                msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, failure -> {});
+            }
         } catch (Exception ignored) {}
 
         if (seconds > 0) {
