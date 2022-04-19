@@ -57,7 +57,7 @@ jobs:
         with:
           atomicPut: true    
           local: staging/RubberDucky.jar
-          remote: ${{ TARGET_DIRECTORY }}
+          remote: ${{ secrets.TARGET_DIRECTORY }}
           host: ${{ secrets.VSOS_IP_ADDRESS }}
           username: ${{ secrets.USERNAME }}
           privateKey: ${{ secrets.SSH_KEY }}
