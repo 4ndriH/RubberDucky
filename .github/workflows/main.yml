@@ -51,3 +51,13 @@ jobs:
         with:
           name: github-actions-artifacts
           path: staging
+          
+      - name: Step 6 - Deploy RubberDucky.jar to server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          atomicPut: true    
+          local: staging/RubberDucky.jar
+          remote: ${{ TARGET_DIRECTORY }}
+          host: ${{ secrets.VSOS_IP_ADDRESS }}
+          username: ${{ secrets.USERNAME }}
+          privateKey: ${{ secrets.SSH_KEY }}
