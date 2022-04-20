@@ -105,6 +105,7 @@ public class PlaceDraw implements CommandInterface {
         }
 
         DatabaseHandler.updateConfig("placeProject", "-1");
+        PlaceData.drawing = false;
     }
 
     private static void sendCompletionMessage(JDA jda) {
