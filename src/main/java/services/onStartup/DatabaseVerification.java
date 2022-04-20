@@ -23,11 +23,19 @@ public class DatabaseVerification {
                 "\tdeleteTime\tINTEGER NOT NULL,\n" +
                 "\tinstanceNr\tINTEGER,\n" +
                 "\tPRIMARY KEY(key AUTOINCREMENT)");
-        database.put("placeQueue", "key\tINTEGER NOT NULL UNIQUE,\n" +
-                "\tfile\tTEXT NOT NULL,\n" +
-                "\tprogress\tINTEGER DEFAULT 0,\n" +
-                "\tuser\tTEXT NOT NULL,\n" +
-                "\tPRIMARY KEY(key)");
+        database.put("placeProjects", "Id\tINTEGER NOT NULL,\n" +
+                "\tProgress\tINTEGER DEFAULT 0,\n" +
+                "\tDiscordUserId\tTEXT NOT NULL,\n" +
+                "\tPRIMARY KEY(Id)");
+        database.put("placePixels", "Id\tINTEGER NOT NULL,\n" +
+                "\tIdx\tINTEGER NOT NULL,\n" +
+                "\tX\tINTEGER NOT NULL,\n" +
+                "\tY\tINTEGER NOT NULL,\n" +
+                "\tImageColor\tTEXT NOT NULL,\n" +
+                "\tAlpha\tREAL NOT NULL,\n" +
+                "\tPlaceColor\tTEXT,\n" +
+                "\tPRIMARY KEY(Id,Idx),\n" +
+                "\tFOREIGN KEY(Id) REFERENCES placeProjects on update cascade on delete cascade");
         database.put("servers", "server\tTEXT NOT NULL UNIQUE");
         database.put("userBlacklist", "user\tTEXT NOT NULL UNIQUE");
         database.put("courseReviews", "key\tINTEGER NOT NULL,\n" +
