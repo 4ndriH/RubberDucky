@@ -25,7 +25,7 @@ jobs:
           mvn -B package --file pom.xml
           mkdir staging && cp target/*.jar staging
           
-      - name: SMove old RubberDucky.jar to a save palce
+      - name: Move old RubberDucky.jar to a save palce
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: mkdir --parents ${{ secrets.TARGET_DIRECTORY }}/oldVersions/$(date +%Y%m%d_%H%M%S) && mv ${{ secrets.TARGET_DIRECTORY }}/RubberDucky.jar $_
