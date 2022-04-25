@@ -16,11 +16,11 @@ public class ConnectionListener extends ListenerAdapter {
 
         //maybe change this to use the GitHubSHA instead of a boolean
         if (onStartupTasks) {
-            String placeID = DatabaseHandler.getConfig().get("placeProject");
-            if (!placeID.equals("-1")) {
+            int placeID = Integer.parseInt(DatabaseHandler.getConfig().get("placeProject"));
+            if (placeID != -1) {
                 if (DatabaseHandler.getPlaceProjectIDs().contains(placeID)) {
                     (new Thread(() -> {
-                        PlaceDraw.draw(event.getJDA(), Integer.parseInt(placeID));
+                        PlaceDraw.draw(event.getJDA(), placeID);
                     })).start();
                 } else {
                     DatabaseHandler.updateConfig("placeProject", "-1");
