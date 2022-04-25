@@ -18,10 +18,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class PlaceEncode implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
@@ -251,39 +249,36 @@ public class PlaceEncode implements CommandInterface {
 
     private void spread() {
         boolean[][] pM = new boolean[img.getWidth()][img.getHeight()];
-        ArrayList<int[]> list = new ArrayList<>();
-        boolean containedStartingPoint = false;
+        ArrayList<int[]> pixelProcessQueue = new ArrayList<>();
         Random random = new Random();
 
         for (int[] point : startingPoints) {
-            list.add(new int[]{point[0], point[1]});
-            pM[point[0]][point[1]] = true;
-
-            if (spreadContained && new Color(img.getRGB(x, y), true).getAlpha() > 50) {
-                containedStartingPoint = true;
+            if (new Color(img.getRGB(point[0], point[1]), true).getAlpha() > 10) {
+                pixelProcessQueue.add(point);
+                pM[point[0]][point[1]] = true;
             }
         }
 
-        if (!containedStartingPoint && spreadContained || startingPoints.size() == 0) {
+        if (pixelProcessQueue.size() == 0) {
             int startX;
             int startY;
 
             do {
                 startX = random.nextInt(img.getWidth());
                 startY = random.nextInt(img.getHeight());
-            } while (spreadContained && new Color(img.getRGB(x, y), true).getAlpha() <= 50);
+            } while (spreadContained && new Color(img.getRGB(startX, startY), true).getAlpha() <= 10);
 
-            list.add(new int[]{startX + x, startY + y});
+            pixelProcessQueue.add(new int[]{startX + x, startY + y});
             pM[startX + x][startY + y] = true;
         }
 
         int idx;
 
-        while(!list.isEmpty() && pixels.size() <= 1_000_000) {
-            idx = random.nextInt(list.size());
-            int pixelX = list.get(idx)[0];
-            int pixelY = list.get(idx)[1];
-            list.remove(idx);
+        while(!pixelProcessQueue.isEmpty() && pixels.size() <= 1_000_000) {
+            idx = random.nextInt(pixelProcessQueue.size());
+            int pixelX = pixelProcessQueue.get(idx)[0];
+            int pixelY = pixelProcessQueue.get(idx)[1];
+            pixelProcessQueue.remove(idx);
 
             writerUtility(new Color(img.getRGB(pixelX, pixelY), true), x + pixelX, y + pixelY);
 
@@ -292,25 +287,25 @@ public class PlaceEncode implements CommandInterface {
                     case 0:
                         if (spreadPixelCheck(pM, pixelX - 1, pixelY)) {
                             pM[pixelX - 1][pixelY] = true;
-                            list.add(new int[]{pixelX - 1, pixelY});
+                            pixelProcessQueue.add(new int[]{pixelX - 1, pixelY});
                         }
                         break;
                     case 1:
                         if (spreadPixelCheck(pM, pixelX + 1, pixelY)) {
                             pM[pixelX + 1][pixelY] = true;
-                            list.add(new int[]{pixelX + 1, pixelY});
+                            pixelProcessQueue.add(new int[]{pixelX + 1, pixelY});
                         }
                         break;
                     case 2:
                         if (spreadPixelCheck(pM, pixelX, pixelY - 1)) {
                             pM[pixelX][pixelY - 1] = true;
-                            list.add(new int[]{pixelX, pixelY - 1});
+                            pixelProcessQueue.add(new int[]{pixelX, pixelY - 1});
                         }
                         break;
                     case 3:
                         if (spreadPixelCheck(pM, pixelX, pixelY + 1)) {
                             pM[pixelX][pixelY + 1] = true;
-                            list.add(new int[]{pixelX, pixelY + 1});
+                            pixelProcessQueue.add(new int[]{pixelX, pixelY + 1});
                         }
                         break;
                 }
