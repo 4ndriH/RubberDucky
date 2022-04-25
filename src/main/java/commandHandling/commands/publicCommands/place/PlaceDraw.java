@@ -62,7 +62,7 @@ public class PlaceDraw implements CommandInterface {
     public static void draw(JDA jda, int id) {
         TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
 
-        while (!PlaceData.stop && !PlaceData.stopQ) {
+        while (!PlaceData.stopQ) {
             if (id < 0) {
                 break;
             }
@@ -99,9 +99,13 @@ public class PlaceDraw implements CommandInterface {
                 PlaceData.fixedPixels++;
             }
 
-            DatabaseHandler.removeFileFromQueue(PlaceData.ID);
-            id = DatabaseHandler.getLowestPlaceProjectID();
-            sendCompletionMessage(jda);
+            if (!PlaceData.stop) {
+                DatabaseHandler.removeFileFromQueue(PlaceData.ID);
+                id = DatabaseHandler.getLowestPlaceProjectID();
+                sendCompletionMessage(jda);
+            } else {
+                id = -1;
+            }
         }
 
         DatabaseHandler.updateConfig("placeProject", "-1");
