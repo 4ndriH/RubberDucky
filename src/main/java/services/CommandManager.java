@@ -115,10 +115,12 @@ public class CommandManager {
             if (!cmd.requiresFurtherChecks()) {
                 commandLogger(cmd.getName(), ctx, true);
             }
-
+            LOGGER.info("pre Thread");
             (new Thread(() -> {
+                LOGGER.info("Thread started");
                 cmd.handle(ctx);
             })).start();
+            LOGGER.info("post Thread");
         } else {
             commandLogger(invoke, ctx, false);
         }
