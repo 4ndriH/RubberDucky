@@ -50,7 +50,7 @@ public class Pixel {
         if (alpha == 1.0) {
             return x + " " + y + " " + imageColor;
         } else {
-            return x + " " + y + " " + imageColor + " " + alpha;
+            return x + " " + y + " " + imageColor + " " + (int)(alpha * 255);
         }
     }
 
