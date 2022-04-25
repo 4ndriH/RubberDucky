@@ -15,7 +15,9 @@ public class ConnectionListener extends ListenerAdapter {
 
         if (onStartupTasks) {
             if (!DatabaseHandler.getConfig().get("placeProject").equals("-1")) {
-                PlaceDraw.draw(event.getJDA(), Integer.parseInt(DatabaseHandler.getConfig().get("placeProject")));
+                (new Thread(() -> {
+                    PlaceDraw.draw(event.getJDA(), Integer.parseInt(DatabaseHandler.getConfig().get("placeProject")));
+                })).start();
             }
 
             onStartupTasks = false;
