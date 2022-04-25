@@ -49,6 +49,7 @@ public class PlaceEncode implements CommandInterface {
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
             CommandManager.commandLogger("Place", ctx, false);
+            System.out.println(e);
             BotExceptions.missingAttachmentException(ctx);
             return;
         }
@@ -58,11 +59,16 @@ public class PlaceEncode implements CommandInterface {
             y = Integer.parseInt(ctx.getArguments().get(1));
             width = Integer.parseInt(ctx.getArguments().get(2));
             height = Integer.parseInt(ctx.getArguments().get(3));
-            pattern = ctx.getArguments().get(4).toLowerCase();
         } catch (Exception e) {
             CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
+        }
+
+        try {
+            pattern = ctx.getArguments().get(4).toLowerCase();
+        } catch (Exception e) {
+            pattern = "";
         }
 
         CommandManager.commandLogger("Place", ctx, true);
