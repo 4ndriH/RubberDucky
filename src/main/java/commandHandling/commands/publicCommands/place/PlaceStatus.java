@@ -24,8 +24,6 @@ public class PlaceStatus implements CommandInterface {
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");
 
-        new PlaceData(4);
-
         if (PlaceData.drawing) {
             embed.setDescription("Drawing project " + PlaceData.ID);
             embed.addField("__Estimated completion date__", "<t:" +
