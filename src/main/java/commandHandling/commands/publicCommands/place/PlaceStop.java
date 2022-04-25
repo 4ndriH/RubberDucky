@@ -9,33 +9,33 @@ import services.place.PlaceData;
 
 import java.util.List;
 
-public class PlaceVerify implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceVerify.class);
+public class PlaceStop implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceStop.class);
 
-    public PlaceVerify(Logger cmdManagerLogger) {
+    public PlaceStop(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        PlaceData.verify = !PlaceData.verify;
+        PlaceData.stop = true;
     }
 
     @Override
     public String getName() {
-        return "PlaceVerify";
+        return "PlaceStop";
     }
 
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Toggles whether or not placed pixels are getting verified");
+        embed.setDescription("Stops the drawing process");
         return embed;
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("pv");
+        return List.of("ps");
     }
 
     @Override

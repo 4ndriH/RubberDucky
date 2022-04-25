@@ -24,7 +24,6 @@ public class DirectoryVerification {
         directories.add(new File("tempFiles"));
         directories.add(new File("tempFiles/place"));
         directories.add(new File("tempFiles/place/queue"));
-        directories.add(new File("tempFiles/place/encode"));
 
         for (File directory : directories) {
             if (!directory.isDirectory()) {

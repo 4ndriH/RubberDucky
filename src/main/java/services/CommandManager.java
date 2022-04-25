@@ -11,6 +11,7 @@ import commandHandling.commands.publicCommands.*;
 import commandHandling.commands.publicCommands.CourseReview.Course;
 import commandHandling.commands.publicCommands.CourseReview.CourseReview;
 import commandHandling.commands.publicCommands.CourseReview.CourseReviewVerify;
+import commandHandling.commands.publicCommands.place.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -49,7 +50,6 @@ public class CommandManager {
         addCommand(new NickName(LOGGER));
         addCommand(new Nuke(LOGGER));
         addCommand(new Ping(LOGGER));
-        addCommand(new Place(LOGGER));
         addCommand(new Prefix(LOGGER));
         addCommand(new ProfilePicture(LOGGER));
         addCommand(new Purge(LOGGER));
@@ -59,6 +59,18 @@ public class CommandManager {
         addCommand(new SpokesPeople(LOGGER));
         addCommand(new SQL(LOGGER));
         addCommand(new Status(LOGGER));
+
+        addCommand(new PlaceQueue(LOGGER));
+        addCommand(new PlaceDelete(LOGGER));
+        addCommand(new PlaceGetFile(LOGGER));
+        addCommand(new PlaceViewQueue(LOGGER));
+        addCommand(new PlaceView(LOGGER));
+        addCommand(new PlaceStatus(LOGGER));
+        addCommand(new PlacePreview(LOGGER));
+        addCommand(new PlaceEncode(LOGGER));
+        addCommand(new PlaceDraw(LOGGER));
+        addCommand(new PlaceStop(LOGGER));
+        addCommand(new PlaceStopQueue(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {

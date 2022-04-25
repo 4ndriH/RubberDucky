@@ -1,9 +1,12 @@
 package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.logging.EmbedHelper;
-import services.PlaceWebSocket;
+import services.place.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,22 +14,19 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
-public class PlaceView implements Runnable{
-    private final CommandContext ctx;
-
-    public PlaceView(CommandContext ctx) {
-        this.ctx = ctx;
-    }
+public class PlaceView implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceView.class);
 
     @Override
-    public void run() {
+    public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Place").setImage("attachment://place.png");
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue(
-                msg -> EmbedHelper.deleteMsg(msg, 64)
-        );
+                        msg -> EmbedHelper.deleteMsg(msg, 64)
+                );
     }
 
     private InputStream convert (BufferedImage img) {
@@ -37,5 +37,26 @@ public class PlaceView implements Runnable{
             e.printStackTrace();
         }
         return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    @Override
+    public String getName() {
+        return "PlaceView";
+    }
+
+    @Override
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns an image of the current place.");
+        return embed;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("pv");
+    }
+
+    public PlaceView(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 }

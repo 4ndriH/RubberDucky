@@ -2,6 +2,7 @@ package services.database;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.Pixel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -215,24 +216,23 @@ public class DatabaseHandler {
     ////////////////////////////////////////
     // Place Queue
     ////////////////////////////////////////
-    public static void insertPlaceQ(int key, String file, String user) {
+    public static void addFileToQueue(int key, String user) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO place_queue (key, file, user) VALUES (?, ?, ?)"
+                    "INSERT INTO placeProjects (Id, DiscordUserId) VALUES (?, ?)"
             );
             ps.setInt(1, key);
-            ps.setString(2, file);
-            ps.setString(3, user);
+            ps.setString(2, user);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
     }
 
-    public static void updatePlaceQ(int key, int progress) {
+    public static void updateProgress(int key, int progress) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE place_queue SET progress = ? WHERE key = ?"
+                    "UPDATE placeProjects SET progress = ? WHERE Id = ?"
             );
             ps.setInt(1, progress);
             ps.setInt(2, key);
@@ -242,10 +242,10 @@ public class DatabaseHandler {
         }
     }
 
-    public static void removePlaceQ(int key) {
+    public static void removeFileFromQueue(int key) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM place_queue WHERE key = ?"
+                    "DELETE FROM placeProjects WHERE Id = ?"
             );
             ps.setInt(1, key);
             ps.executeUpdate();
@@ -254,58 +254,148 @@ public class DatabaseHandler {
         }
     }
 
-    public static String[] getPlaceQProject(int key) {
-        String[] project = new String[3];
+    public static int getPlaceProjectProgress(int id) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue WHERE key = ?"
+                    "SELECT * FROM placeProjects WHERE Id = ?"
             );
-            ps.setInt(1, key);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            while (!rs.isClosed() && rs.next()) {
-                project[0] = rs.getString("file");
-                project[1] = rs.getString("progress");
-                project[2] = rs.getString("user");
+            if (!rs.isClosed() && rs.next()) {
+                return rs.getInt("progress");
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return project;
+        return 0;
     }
 
-    public static String[] getCompletePlaceQ() {
-        String[] strs = new String[]{"", "", ""};
-        String project = "";
+    public static String getPlaceProjectAuthor(int id) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue"
+                    "SELECT * FROM placeProjects WHERE Id = ?"
             );
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            while (!rs.isClosed() && rs.next()) {
-                strs[0] += rs.getInt("key") + "\n";
-                strs[1] += rs.getInt("progress") + "\n";
-                strs[2] += "<@!" + rs.getString("user") + ">\n";
+            if (!rs.isClosed() && rs.next()) {
+                return rs.getString("DiscordUserId");
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return strs;
+        return "";
     }
 
-    public static ArrayList<Integer> getPlaceQIDs() {
+    public static String[] getPlaceQueue() {
+        String[] strings = new String[]{"", "", ""};
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM placeProjects"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                strings[0] += rs.getInt("key") + "\n";
+                strings[1] += rs.getInt("progress") + "\n";
+                strings[2] += "<@!" + rs.getString("user") + ">\n";
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return strings;
+    }
+
+    public static ArrayList<Integer> getPlaceProjectIDs() {
         ArrayList<Integer> ids = new ArrayList<>();
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM place_queue"
+                    "SELECT * FROM placeProjects"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                ids.add(rs.getInt("key"));
+                ids.add(rs.getInt("Id"));
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
         return ids;
+    }
+
+    public static int getLowestPlaceProjectID() {
+        int id = -1;
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM placeProjects ORDER BY Id LIMIT 1"
+            );
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                id = rs.getInt("Id");
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return id;
+    }
+
+    public static void insertProjectIntoPlacePixels(int id, ArrayList<Pixel> pixels) {
+      try (Connection connection = ConnectionPool.getConnection()){
+          connection.setAutoCommit(false);
+          PreparedStatement ps = connection.prepareStatement(
+                  "INSERT INTO placePixels (Id, Idx, X, Y, ImageColor, Alpha) VALUES (?, ?, ?, ?, ?, ?)"
+          );
+          int idx = 1;
+          for (Pixel pixel : pixels) {
+              ps.setInt(1, id);
+              ps.setInt(2, idx++);
+              ps.setInt(3, pixel.getX());
+              ps.setInt(4, pixel.getY());
+              ps.setString(5, pixel.getImageColor());
+              ps.setDouble(6, pixel.getAlpha());
+              ps.addBatch();
+          }
+          ps.executeBatch();
+          connection.commit();
+      } catch (SQLException sqlE) {
+          throw new RuntimeException(sqlE);
+      }
+    }
+
+    public static ArrayList<Pixel> getPlacePixels(int id) {
+        ArrayList<Pixel> pixels = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM placePixels WHERE Id = ?"
+            );
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                pixels.add(new Pixel(
+                        rs.getInt("X"),
+                        rs.getInt("Y"),
+                        rs.getDouble("Alpha"),
+                        rs.getString("ImageColor"),
+                        rs.getString("PlaceColor")
+                ));
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return pixels;
+    }
+
+    public static void updatePlaceColor(double alpha, int x, int y, String imageColor, String placeColor) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE placePixels SET PlaceColor = ? WHERE X = ? AND Y = ? AND ImageColor = ? AND Alpha = ?"
+            );
+            ps.setString(1, placeColor);
+            ps.setInt(2, x);
+            ps.setInt(3, y);
+            ps.setString(4, imageColor);
+            ps.setDouble(5, alpha);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
     }
 
     ////////////////////////////////////////

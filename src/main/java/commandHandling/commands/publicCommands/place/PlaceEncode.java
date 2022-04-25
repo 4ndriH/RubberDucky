@@ -1,6 +1,11 @@
 package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
+import net.dv8tion.jda.api.EmbedBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.Miscellaneous.TimeFormat;
@@ -9,37 +14,38 @@ import services.logging.EmbedHelper;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.PrintStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class PlaceEncode implements Runnable {
-    private final ArrayList<String> pixels = new ArrayList<>();
-    private final PlaceData placeData;
-    private final CommandContext ctx;
+public class PlaceEncode implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
+    private ArrayList<String> pixels;
+    private ArrayList<int[]> startingPoints;
     private BufferedImage img = null;
     private int x, y;
+    private boolean spreadContained = false;
 
-    public PlaceEncode(PlaceData placeData, CommandContext ctx) {
-        this.placeData = placeData;
-        this.ctx = ctx;
+    public PlaceEncode(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
-    public void run() {
-        String pattern, path = "tempFiles/place/encode/";
-        PrintStream writer;
+    public void handle(CommandContext ctx) {
+        String fileName, pattern;
+        startingPoints = new ArrayList<>();
+        pixels = new ArrayList<>();
         int width, height;
-        boolean reverse = false;
 
         try {
-            String fileName = ctx.getMessage().getAttachments().get(0).getFileName();
-            path += fileName.substring(0, fileName.length() - 4);
+            fileName = ctx.getMessage().getAttachments().get(0).getFileName();
+            fileName = fileName.substring(0, fileName.length() - 4) + ".txt";
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            writer = new PrintStream(path + ".txt");
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
             CommandManager.commandLogger("Place", ctx, false);
@@ -48,10 +54,11 @@ public class PlaceEncode implements Runnable {
         }
 
         try {
-            x = Integer.parseInt(ctx.getArguments().get(1));
-            y = Integer.parseInt(ctx.getArguments().get(2));
-            width = Integer.parseInt(ctx.getArguments().get(3));
-            height = Integer.parseInt(ctx.getArguments().get(4));
+            x = Integer.parseInt(ctx.getArguments().get(0));
+            y = Integer.parseInt(ctx.getArguments().get(1));
+            width = Integer.parseInt(ctx.getArguments().get(2));
+            height = Integer.parseInt(ctx.getArguments().get(3));
+            pattern = ctx.getArguments().get(4).toLowerCase();
         } catch (Exception e) {
             CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
@@ -60,22 +67,30 @@ public class PlaceEncode implements Runnable {
 
         CommandManager.commandLogger("Place", ctx, true);
 
-        if (ctx.getArguments().size() == 6) {
-            pattern = ctx.getArguments().get(5);
-            if (pattern.endsWith("/r")) {
-                pattern = pattern.replace("/r", "");
-                reverse = true;
+        if (ctx.getArguments().contains("-c")) {
+            spreadContained = true;
+        }
+
+        if (ctx.getArguments().contains("-s")) {
+            int dashSIdx = ctx.getArguments().indexOf("-s");
+            int lastDashIdx = ctx.getArguments().lastIndexOf("-");
+
+            for (int i = dashSIdx + 1; i + 1 < ctx.getArguments().size() || i + 1 < lastDashIdx; i += 2) {
+                int x = 0, y = 0;
+                try {
+                    x = Integer.parseInt(ctx.getArguments().get(i));
+                    y = Integer.parseInt(ctx.getArguments().get(i + 1));
+                } catch (Exception e) {
+                    BotExceptions.invalidArgumentsException(ctx);
+                    return;
+                }
+                startingPoints.add(new int[]{x, y});
             }
-        } else {
-            pattern = "lr";
         }
 
         img = resize(img, width, height);
 
         switch (pattern) {
-            case "leftright": case "lr":
-                leftToRight();
-                break;
             case "topdown": case "td":
                 topDown();
                 break;
@@ -95,30 +110,30 @@ public class PlaceEncode implements Runnable {
                 spread();
                 break;
             default:
-                BotExceptions.unknownPatternException(ctx);
-                return;
+                leftToRight();
         }
 
-        if (reverse) {
+        if (ctx.getArguments().contains("-r")) {
             Collections.reverse(pixels);
         }
 
+        StringBuilder sb = new StringBuilder();
+
         for (String s : pixels) {
-            writer.println(s);
+            sb.append(s).append("\n");
         }
-        writer.close();
+
+        InputStream stream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
 
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    TimeFormat.timeFormat(pixels.size()) + "**").addFile(new File(path + ".txt")).queue(
-                            msg -> EmbedHelper.deleteMsg(msg, 128)
+                    TimeFormat.timeFormat(pixels.size()) + "**").addFile(stream, fileName).queue(
+                    msg -> EmbedHelper.deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
-            placeData.LOGGER.error("PlaceEncode Error", e);
+            LOGGER.error("PlaceEncode Error", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
-
-        delete(path);
     }
 
     private void leftToRight() {
@@ -207,11 +222,7 @@ public class PlaceEncode implements Runnable {
     }
 
     private void random() {
-        for (int i = 0; i < img.getWidth(); i++) {
-            for (int j = 0; j < img.getHeight(); j++) {
-                writerUtility(new Color(img.getRGB(i, j), true), i, j);
-            }
-        }
+        leftToRight();
         Collections.shuffle(pixels);
     }
 
@@ -235,13 +246,31 @@ public class PlaceEncode implements Runnable {
     private void spread() {
         boolean[][] pM = new boolean[img.getWidth()][img.getHeight()];
         ArrayList<int[]> list = new ArrayList<>();
+        boolean containedStartingPoint = false;
         Random random = new Random();
 
-        int startX = random.nextInt(img.getWidth());
-        int startY = random.nextInt(img.getHeight());
+        for (int[] point : startingPoints) {
+            list.add(new int[]{point[0], point[1]});
+            pM[point[0]][point[1]] = true;
 
-        list.add(new int[]{startX, startY});
-        pM[startX][startY] = true;
+            if (spreadContained && new Color(img.getRGB(x, y), true).getAlpha() > 50) {
+                containedStartingPoint = true;
+            }
+        }
+
+        if (!containedStartingPoint && spreadContained || startingPoints.size() == 0) {
+            int startX;
+            int startY;
+
+            do {
+                startX = random.nextInt(img.getWidth());
+                startY = random.nextInt(img.getHeight());
+            } while (spreadContained && new Color(img.getRGB(x, y), true).getAlpha() <= 50);
+
+            list.add(new int[]{startX + x, startY + y});
+            pM[startX + x][startY + y] = true;
+        }
+
         int idx;
 
         while(!list.isEmpty() && pixels.size() <= 1_000_000) {
@@ -289,12 +318,20 @@ public class PlaceEncode implements Runnable {
     }
 
     private boolean spreadPixelCheck(boolean[][] pM, int x, int y) {
-        return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y];
+        if (spreadContained) {
+            return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y] && new Color(img.getRGB(x, y), true).getAlpha() != 0;
+        } else {
+            return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y];
+        }
     }
 
     private void writerUtility (Color color, int i, int j) {
         if (color.getAlpha() > 230 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
-            pixels.add(".place setpixel " + (x + i) + " " + (y + j) + " " + rgbToHex(color));
+            if (color.getAlpha() != 255 && color.getAlpha() != 0) {
+                pixels.add((x + i) + " " + (y + j) + " " + rgbToHex(color) + " " + color.getAlpha());
+            } else {
+                pixels.add((x + i) + " " + (y + j) + " " + rgbToHex(color));
+            }
         }
     }
 
@@ -312,8 +349,29 @@ public class PlaceEncode implements Runnable {
         return newImage;
     }
 
-    private void delete(String path) {
-        File myTxtObj = new File(path + ".txt");
-        while(myTxtObj.exists() && !myTxtObj.delete());
+    @Override
+    public String getName() {
+        return "PlaceEncode";
+    }
+
+    @Override
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns a file containing the commands to draw the provided image");
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
+        embed.addField("__Position/Size__", "Set the top left corner as well as the desired width and height" +
+                "```<Position/Size> = <X> <Y> <width> <height>```", false);
+        embed.addField("__<Pattern>__", "If nothing is provided or nothing can be matched, it defaults to `lefttoright`\n" +
+                "```\ntopdown\ndiagonal\nspiral\nrandom\rcircle\nspread\nlefttoright```", false);
+        embed.addField("__<Parameters>__", "These are completely optional and mostly only affect the `spread` pattern" +
+                "```\n-c\t\t\t  forces spread to stay within image bounds" +
+                "\n-r\t\t\t  reverses the list of commands" +
+                "\n-s {<x> <y>}\tset starting positions for spread```", false);
+        return embed;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("pe");
     }
 }

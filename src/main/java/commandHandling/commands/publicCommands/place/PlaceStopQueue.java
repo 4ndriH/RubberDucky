@@ -9,33 +9,33 @@ import services.place.PlaceData;
 
 import java.util.List;
 
-public class PlaceVerify implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceVerify.class);
+public class PlaceStopQueue implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceStopQueue.class);
 
-    public PlaceVerify(Logger cmdManagerLogger) {
+    public PlaceStopQueue(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        PlaceData.verify = !PlaceData.verify;
+        PlaceData.stopQ = !PlaceData.stopQ;
     }
 
     @Override
     public String getName() {
-        return "PlaceVerify";
+        return "PlaceStopQueue";
     }
 
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Toggles whether or not placed pixels are getting verified");
+        embed.setDescription("Toggles whether or not the queue is stopped after the current project is finished.");
         return embed;
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("pv");
+        return List.of("psq");
     }
 
     @Override

@@ -1,66 +1,68 @@
 package commandHandling.commands.publicCommands.place;
 
 import commandHandling.CommandContext;
+import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import resources.EMOTES;
-import services.Miscellaneous.TimeFormat;
-import services.PermissionManager;
 import services.logging.EmbedHelper;
+import services.place.PlaceData;
 
 import java.text.DecimalFormat;
+import java.time.Instant;
+import java.util.List;
 
-public class PlaceStatus {
-    private final PlaceData pD;
-    private final CommandContext ctx;
+public class PlaceStatus implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceStatus.class);
 
-    public PlaceStatus(PlaceData pD, CommandContext ctx) {
-        this.pD = pD;
-        this.ctx = ctx;
-        main();
+    public PlaceStatus(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
     }
 
-    private void main() {
+    @Override
+    public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");
 
-        if (pD.drawing) {
-            embed.setDescription("Drawing project " + pD.id);
-            embed.addField("__Estimated time remaining__",
-                    TimeFormat.timeFormat(pD.totalPixels - pD.drawnPixels), false);
+        new PlaceData(4);
 
-            embed.addField("__Total Pixels:__", "" + formatNr(pD.totalPixels), true);
-            embed.addField("__Drawn Pixels:__", "" + formatNr(pD.drawnPixels), true);
-            embed.addField("__Pixels Left:__", "" + formatNr(pD.totalPixels - pD.drawnPixels), true);
+        if (PlaceData.drawing) {
+            embed.setDescription("Drawing project " + PlaceData.ID);
+            embed.addField("__Estimated completion date__", "<t:" +
+                    (Instant.now().getEpochSecond() + PlaceData.totalPixels - PlaceData.drawnPixels) + ":F>", false);
 
-            if (pD.fixedPixels > 0) {
-                embed.addField("__Fixed Pixels:__", "" + formatNr(pD.fixedPixels), true);
+            embed.addField("__Total Pixels:__", "" + formatNr(PlaceData.totalPixels), true);
+            embed.addField("__Drawn Pixels:__", "" + formatNr(PlaceData.drawnPixels), true);
+            embed.addField("__Pixels Left:__", "" + formatNr(PlaceData.totalPixels - PlaceData.drawnPixels), true);
+
+            if (PlaceData.fixedPixels > 0) {
+                embed.addField("__Fixed Pixels:__", "" + formatNr(PlaceData.fixedPixels), true);
             }
 
-            embed.addField("__Progress__", progress() + " " + pD.progress + "%", false);
-
-            if (PermissionManager.authenticateOwner(ctx) && ctx.getArguments().size() > 1) {
-                embed.addField("__StopQ__", "" + pD.stopQ, true);
-                embed.addField("__Verify__", "" + pD.verify, true);
-            }
+            embed.addField("__Progress__", progress() + " " + PlaceData.getProgress() + "%", false);
+            embed.addField("__StopQ__", "" + PlaceData.stopQ, true);
+            embed.addField("__Verify__", "" + PlaceData.verify, true);
         } else {
             embed.setDescription("Currently not drawing");
         }
 
-        EmbedHelper.sendEmbed(ctx, embed, 32);
+        EmbedHelper.sendEmbed(ctx, embed, 64);
     }
 
     private String formatNr(int n) {
-        return new DecimalFormat("###,###,###").format(n);
+        return new DecimalFormat("###,###,###").format(n).replaceAll("[,,.]", "'");
     }
 
     private String progress () {
-        int progress = pD.progress;
+        int progress = PlaceData.getProgress();
         StringBuilder bar = new StringBuilder();
 
         for (int i = 0; i < 10; i++) {
-            if (progress - 10 >= 0)
+            if (progress - 10 >= 0) {
                 bar.append(elementSelection(i, 10));
-            else
+            } else {
                 bar.append(elementSelection(i, progress));
+            }
             progress = Math.max(0, progress - 10);
         }
 
@@ -179,5 +181,22 @@ public class PlaceStatus {
             }
         }
         return ret;
+    }
+
+    @Override
+    public String getName() {
+        return "PlaceStatus";
+    }
+
+    @Override
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Returns information about the current projects progress");
+        return embed;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("ps");
     }
 }

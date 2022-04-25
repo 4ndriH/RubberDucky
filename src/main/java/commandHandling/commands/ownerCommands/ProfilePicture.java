@@ -61,7 +61,7 @@ public class ProfilePicture implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("picture", "pp");
+        return List.of("picture");
     }
 
     @Override
