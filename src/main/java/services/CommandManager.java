@@ -116,11 +116,9 @@ public class CommandManager {
                 commandLogger(cmd.getName(), ctx, true);
             }
 
-            (new Thread() {
-                public void run() {
-                    cmd.handle(ctx);
-                }
-            }).start();
+            (new Thread(() -> {
+                cmd.handle(ctx);
+            })).start();
         } else {
             commandLogger(invoke, ctx, false);
         }
