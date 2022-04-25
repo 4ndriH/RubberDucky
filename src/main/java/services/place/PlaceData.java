@@ -39,7 +39,7 @@ public class PlaceData {
     }
 
     public static int getProgress() {
-        return drawnPixels / totalPixels;
+        return drawnPixels * 100 / totalPixels;
     }
 
     public static Pixel getPixel() {
