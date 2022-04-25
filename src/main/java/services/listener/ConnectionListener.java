@@ -4,6 +4,7 @@ import commandHandling.commands.publicCommands.place.PlaceDraw;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import resources.CONFIG;
 import services.database.DatabaseHandler;
 
 public class ConnectionListener extends ListenerAdapter {
@@ -13,11 +14,24 @@ public class ConnectionListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         super.onReady(event);
 
+        //maybe change this to use the GitHubSHA instead of a boolean
         if (onStartupTasks) {
-            if (!DatabaseHandler.getConfig().get("placeProject").equals("-1")) {
-                (new Thread(() -> {
-                    PlaceDraw.draw(event.getJDA(), Integer.parseInt(DatabaseHandler.getConfig().get("placeProject")));
-                })).start();
+            String placeID = DatabaseHandler.getConfig().get("placeProject");
+            if (!placeID.equals("-1")) {
+                if (DatabaseHandler.getPlaceProjectIDs().contains(placeID)) {
+                    (new Thread(() -> {
+                        PlaceDraw.draw(event.getJDA(), Integer.parseInt(placeID));
+                    })).start();
+                } else {
+                    DatabaseHandler.updateConfig("placeProject", "-1");
+                }
+            }
+
+            String githubSHA = DatabaseHandler.getConfig().get("GitHubSHA");
+            if (githubSHA.length() > 0) {
+                event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.LogChannel.get())
+                        .sendMessage("Restarted with commit " + githubSHA).queue();
+                DatabaseHandler.updateConfig("GitHubSHA", "");
             }
 
             onStartupTasks = false;
