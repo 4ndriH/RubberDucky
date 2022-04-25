@@ -60,7 +60,7 @@ public class PlaceDraw implements CommandInterface {
     }
 
     public static void draw(JDA jda, int id) {
-        TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
+        TextChannel placeChannel = jda.getGuildById(817850050013036605L).getTextChannelById(956828636604948490L);
 
         while (!PlaceData.stopQ) {
             if (id < 0) {
@@ -116,7 +116,7 @@ public class PlaceDraw implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Your drawing has been finished");
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
-        jda.openPrivateChannelById(PlaceData.ID).complete().sendMessageEmbeds(embed.build())
+        jda.openPrivateChannelById(PlaceData.user).complete().sendMessageEmbeds(embed.build())
                 .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue();
     }
 
