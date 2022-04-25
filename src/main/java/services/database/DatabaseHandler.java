@@ -294,9 +294,9 @@ public class DatabaseHandler {
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                strings[0] += rs.getInt("key") + "\n";
-                strings[1] += rs.getInt("progress") + "\n";
-                strings[2] += "<@!" + rs.getString("user") + ">\n";
+                strings[0] += rs.getInt("Id") + "\n";
+                strings[1] += rs.getInt("Progress") + "\n";
+                strings[2] += "<@!" + rs.getString("DiscordUserId") + ">\n";
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
