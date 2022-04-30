@@ -27,5 +27,10 @@ public class Listener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().startsWith(CONFIG.Prefix.get())) {
             manager.handle(event);
         }
+
+        if (event.getChannel().getId().equals("819966095070330950") || event.getChannel().getId().equals("955751651942211604")) {
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("969901898389925959")
+                    .sendMessage(event.getAuthor().getName() + " [" + event.getAuthor().getId() +"]: " + event.getMessage().getContentRaw()).queue();
+        }
     }
 }
