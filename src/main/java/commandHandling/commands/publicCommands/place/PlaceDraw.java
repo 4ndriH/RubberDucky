@@ -60,7 +60,7 @@ public class PlaceDraw implements CommandInterface {
     }
 
     public static void draw(JDA jda, int id) {
-        TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(955751651942211604L);
+        TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
 
         while (!PlaceData.stopQ) {
             if (id < 0) {
