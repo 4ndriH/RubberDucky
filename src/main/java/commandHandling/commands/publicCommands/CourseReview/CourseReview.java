@@ -3,6 +3,7 @@ package commandHandling.commands.publicCommands.CourseReview;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,11 @@ import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.VVZScraper;
+import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
+import services.database.DBHandlerCourseReviewVerify;
 import services.logging.EmbedHelper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,8 +23,9 @@ import java.util.stream.Collectors;
 
 public class CourseReview implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReview.class);
-    private static HashMap<String, ArrayList<String>> inputs = new HashMap<>();
+    private static HashMap<String, Integer> inputs = new HashMap<>();
     Pattern pattern = Pattern.compile("^\\w{3}-\\w{4}-\\w{2}(l|L)$");
+    EmbedBuilder embed = EmbedHelper.embedBuilder("I hereby confirm that this is a constructive feedback and not just a rant");
 
     public CourseReview(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -44,32 +47,35 @@ public class CourseReview implements CommandInterface {
             return;
         }
 
-        EmbedBuilder embed = EmbedHelper.embedBuilder("I hereby confirm that this is a constructive feedback and not just a rant");
         CommandManager.commandLogger(getName(), ctx, true);
 
-        String feedback = ctx.getArguments().stream().skip(1).map(Object::toString).collect(Collectors.joining(" "));
-        inputs.put(ctx.getAuthor().getId(), new ArrayList<>(ctx.getArguments()));
-        embed.setDescription(feedback);
+        String feedback = ctx.getArguments().stream().skip(1).map(Object::toString).collect(Collectors.joining(" ")).replace("```", "");
+        String courseNumber = ctx.getArguments().get(0).toUpperCase();
 
-        ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
+        DBHandlerCourseReview.insertCourseReview(ctx.getAuthor().getId(), feedback, courseNumber);
+
+        inputs.put(ctx.getAuthor().getId(), DBHandlerCourse.getKeyOfReview(courseNumber, feedback));
+
+        embed.setDescription(feedback);
+        Message msg = ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
                 Button.danger("cfAbort - " + ctx.getAuthor().getId(), "Abort"),
                 Button.success("cfProceed - " + ctx.getAuthor().getId(), "Proceed")
-        ).queue();
+        ).complete();
 
-        if (!DBHandlerCourseReview.containsCourseNumber(ctx.getArguments().get(0))) {
-            String courseNumber = ctx.getArguments().get(0);
+        EmbedHelper.deleteMsg(msg, 256);
+
+        if (!DBHandlerCourseReview.containsCourseNumber(courseNumber)) {
             DBHandlerCourseReview.insertCourse(courseNumber, VVZScraper.getCourseName(courseNumber));
         }
     }
 
-    public static void processAbort(String id) {
-        inputs.remove(id);
+    public static void processAbort(String discordUserId) {
+        DBHandlerCourseReviewVerify.updateVerifiedStatus(inputs.get(discordUserId), -1);
+        inputs.remove(discordUserId);
     }
 
-    public static void processProceed(String userId) {
-        String feedback = inputs.get(userId).stream().skip(1).map(Object::toString).collect(Collectors.joining(" ")).replace("```", "");
-        DBHandlerCourseReview.insertCourseReview(userId, feedback, inputs.get(userId).get(0));
-        inputs.remove(userId);
+    public static void processProceed(String discordUserId) {
+        inputs.remove(discordUserId);
     }
 
     @Override
