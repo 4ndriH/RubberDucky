@@ -62,4 +62,22 @@ public class DBHandlerCourse {
         }
         return reviews;
     }
+
+    public static int getKeyOfReview(String courseNumber, String review) {
+        int key = 0;
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM CourseReviews WHERE CourseNumber = ? AND Review = ?"
+            );
+            ps.setString(1, courseNumber);
+            ps.setString(2, review);
+            ResultSet rs = ps.executeQuery();
+            while (!rs.isClosed() && rs.next()) {
+                key = rs.getInt("Key");
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return key;
+    }
 }
