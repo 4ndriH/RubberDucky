@@ -35,30 +35,26 @@ public class Servers implements CommandInterface {
             ArrayList<String> ids = PermissionManager.servers;
             EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
 
-            if (ids.size() == 0) {
-                embed.setDescription("-");
-            } else {
-                HashMap<String, String> servers = new HashMap<>();
-                ArrayList<String> names = new ArrayList<>();
-                StringBuilder sb = new StringBuilder();
-                String name;
+            HashMap<String, String> servers = new HashMap<>();
+            ArrayList<String> names = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            String name;
 
-                for (Guild guild : ctx.getJDA().getGuilds()) {
-                    names.add(name = guild.getName());
+            for (Guild guild : ctx.getJDA().getGuilds()) {
+                names.add(name = guild.getName());
 
-                    if (ids.contains(guild.getId())) {
-                        servers.put(name, EMOTES.RDG.getAsEmote() + " " + name);
-                    } else {
-                        servers.put(name, EMOTES.RDR.getAsEmote() + " " + name);
-                    }
+                if (ids.contains(guild.getId())) {
+                    servers.put(name, EMOTES.RDG.getAsEmote() + " " + name);
+                } else {
+                    servers.put(name, EMOTES.RDR.getAsEmote() + " " + name);
                 }
-
-                Collections.sort(names);
-                for (String s : names) {
-                    sb.append(servers.get(s)).append("\n");
-                }
-                embed.setDescription(sb.toString());
             }
+
+            Collections.sort(names);
+            for (String s : names) {
+                sb.append(servers.get(s)).append("\n");
+            }
+            embed.setDescription(sb.toString());
 
             EmbedHelper.sendEmbed(ctx, embed, 32);
         }
