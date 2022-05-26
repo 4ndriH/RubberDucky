@@ -30,14 +30,14 @@ public class Channel implements CommandInterface {
                 if (cm.getCommand(cmd).getRestrictionLevel() < 3) {
                     return;
                 } else if (channelCheck(cmd, channel)) {
-                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(cmd, channel);
+                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, cmd);
                 } else {
-                    DBHandlerWhitelistedChannels.addChannelToWhitelist(cmd, channel);
+                    DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, cmd);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (ci.getRestrictionLevel() == 3 && !channelCheck(ci.getName().toLowerCase(), channel)) {
-                        DBHandlerWhitelistedChannels.addChannelToWhitelist(ci.getName().toLowerCase(), channel);
+                        DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, ci.getName().toLowerCase());
                     }
                 }
             } else {
