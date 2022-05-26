@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -44,7 +43,6 @@ public class Kill implements CommandInterface{
         String file = attachments.get(new Random().nextInt(attachments.size()));
         LOGGER.info(ctx.getSelfUser().getName() + " is committing sudoku");
         EmbedBuilder embed = EmbedHelper.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
-        DatabaseHandler.pruneTableDeleteMsgs();
 
         Message msg = ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(new File("resources/" + file)).complete();

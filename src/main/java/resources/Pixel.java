@@ -1,6 +1,6 @@
 package resources;
 
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.place.PlaceData;
 
 import java.awt.*;
@@ -75,7 +75,7 @@ public class Pixel {
         int b = (int) (alpha * image.getBlue() + (1 - alpha) * place.getBlue());
 
         String color = String.format("#%02x%02x%02x", r, g, b);
-        DatabaseHandler.updatePlaceColor(alpha, x, y, imageColor, color);
+        DBHandlerPlace.updatePixelPlaceColor(alpha, x, y, imageColor, color);
         return color;
     }
 }

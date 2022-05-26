@@ -10,7 +10,7 @@ import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.VVZScraper;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerCourseReview;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -56,9 +56,9 @@ public class CourseReview implements CommandInterface {
                 Button.success("cfProceed - " + ctx.getAuthor().getId(), "Proceed")
         ).queue();
 
-        if (!DatabaseHandler.containsCourseNumber(ctx.getArguments().get(0))) {
+        if (!DBHandlerCourseReview.containsCourseNumber(ctx.getArguments().get(0))) {
             String courseNumber = ctx.getArguments().get(0);
-            DatabaseHandler.insertCourse(courseNumber, VVZScraper.getCourseName(courseNumber));
+            DBHandlerCourseReview.insertCourse(courseNumber, VVZScraper.getCourseName(courseNumber));
         }
     }
 
@@ -67,8 +67,8 @@ public class CourseReview implements CommandInterface {
     }
 
     public static void processProceed(String userId) {
-        String feedback = inputs.get(userId).stream().skip(1).map(Object::toString).collect(Collectors.joining(" "));
-        DatabaseHandler.insertCourseReview(userId, feedback, inputs.get(userId).get(0));
+        String feedback = inputs.get(userId).stream().skip(1).map(Object::toString).collect(Collectors.joining(" ")).replace("```", "");
+        DBHandlerCourseReview.insertCourseReview(userId, feedback, inputs.get(userId).get(0));
         inputs.remove(userId);
     }
 

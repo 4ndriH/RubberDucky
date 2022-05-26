@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.PermissionManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerBlacklistedUsers;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ public class BlackList implements CommandInterface {
         if (ctx.getArguments().size() > 0 && !ctx.getArguments().get(0).contains("&")) {
             String id = ctx.getArguments().get(0).replace("<@", "").replace(">", "");
             if (PermissionManager.blackList.contains(id)) {
-                DatabaseHandler.removeBlacklist(id);
+                DBHandlerBlacklistedUsers.removeUserFromBlacklist(id);
             } else {
-                DatabaseHandler.insertBlacklist(id);
+                DBHandlerBlacklistedUsers.addUserToBlacklist(id);
             }
             PermissionManager.reload();
         } else {

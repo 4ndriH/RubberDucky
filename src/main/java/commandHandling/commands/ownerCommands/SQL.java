@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.CommandManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerSQL;
 import services.logging.EmbedHelper;
 
 import java.awt.*;
@@ -26,7 +26,7 @@ public class SQL implements CommandInterface {
             sb.append(s).append(" ");
         }
 
-        int ret = DatabaseHandler.sqlExecuteUpdate(sb.toString());
+        int ret = DBHandlerSQL.sqlExecuteUpdate(sb.toString());
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Rows affected: " + ret);

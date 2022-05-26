@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerMessageDeleteTracker;
 
 import java.awt.*;
 import java.io.File;
@@ -83,7 +83,7 @@ public class EmbedHelper {
         } catch (Exception ignored) {}
 
         if (seconds > 0) {
-            DatabaseHandler.insertDeleteMessage(msg.getGuild().getId(), msg.getChannel().getId(), msg.getId(),
+            DBHandlerMessageDeleteTracker.insertDeleteMessage(msg.getGuild().getId(), msg.getChannel().getId(), msg.getId(),
                     System.currentTimeMillis() + seconds * 1000L);
         }
     }

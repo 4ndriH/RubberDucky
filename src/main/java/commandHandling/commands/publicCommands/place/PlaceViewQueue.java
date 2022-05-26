@@ -5,7 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class PlaceViewQueue implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
-        String[] strings = DatabaseHandler.getPlaceQueue();
+        String[] strings = DBHandlerPlace.getPlaceProjectQueue();
 
         if (strings[0].length() == 0) {
             embed.setDescription("The Queue is empty");

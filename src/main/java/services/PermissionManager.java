@@ -4,7 +4,9 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerBlacklistedUsers;
+import services.database.DBHandlerWhitelistedChannels;
+import services.database.DBHandlerWhitelistedServers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +57,9 @@ public class PermissionManager {
     }
 
     public static void reload() {
-        blackList = DatabaseHandler.getBlacklist();
-        servers = DatabaseHandler.getServers();
-        channels = DatabaseHandler.getChannels();
+        blackList = DBHandlerBlacklistedUsers.getBlacklistedUsers();
+        servers = DBHandlerWhitelistedServers.getWhitelistedServers();
+        channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
 
         LOGGER.info("Permissions loaded");
     }

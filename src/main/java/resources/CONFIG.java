@@ -3,7 +3,7 @@ package resources;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerConfig;
 
 import java.util.HashMap;
 
@@ -28,11 +28,11 @@ public enum CONFIG {
     }
 
     public static void reload() {
-        HashMap<String, String> config = DatabaseHandler.getConfig();
+        HashMap<String, String> config = DBHandlerConfig.getConfig();
         Token.id = config.get("token");
         Prefix.id = config.get("prefix");
-        OwnerID.id = config.get("ownerid");
-        LogChannel.id = config.get("logchannel");
+        OwnerID.id = config.get("ownerId");
+        LogChannel.id = config.get("logChannel");
         embedColor.id = config.get("embedColor");
 
         LOGGER.info("Config loaded");

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.EMOTES;
 import services.PermissionManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerWhitelistedServers;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -26,9 +26,9 @@ public class Servers implements CommandInterface {
     public void handle(CommandContext ctx) {
         try {
             if (ctx.getArguments().get(0).equals("this") && PermissionManager.servers.contains(ctx.getGuild().getId())) {
-                DatabaseHandler.removeServer(ctx.getGuild().getId());
+                DBHandlerWhitelistedServers.removeServerFromWhitelist(ctx.getGuild().getId());
             } else {
-                DatabaseHandler.insertServer(ctx.getGuild().getId());
+                DBHandlerWhitelistedServers.addServerToWhitelist(ctx.getGuild().getId());
             }
             PermissionManager.reload();
         } catch (Exception e) {

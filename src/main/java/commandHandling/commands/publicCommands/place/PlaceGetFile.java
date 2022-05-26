@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.Pixel;
 import services.BotExceptions;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class PlaceGetFile implements CommandInterface {
             return;
         }
 
-        if (DatabaseHandler.getPlaceProjectIDs().contains(id)) {
+        if (DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
             try {
-                ArrayList<Pixel> pixels = DatabaseHandler.getPlacePixels(id);
+                ArrayList<Pixel> pixels = DBHandlerPlace.getProjectPixels(id);
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
                 ctx.getChannel().sendFile(output.getBytes(), "RDdraw" + id + ".txt").queue(

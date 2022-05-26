@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerConfig;
 
 public class Prefix implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);
@@ -20,7 +20,7 @@ public class Prefix implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         try {
-            DatabaseHandler.updateConfig("prefix", ctx.getArguments().get(0));
+            DBHandlerConfig.updateConfig("prefix", ctx.getArguments().get(0));
             CommandManager.commandLogger(getName(), ctx, true);
             CONFIG.reload();
         } catch (Exception e) {

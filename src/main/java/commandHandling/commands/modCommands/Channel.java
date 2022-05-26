@@ -9,7 +9,7 @@ import resources.EMOTES;
 import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerWhitelistedChannels;
 import services.logging.EmbedHelper;
 
 public class Channel implements CommandInterface {
@@ -30,14 +30,14 @@ public class Channel implements CommandInterface {
                 if (cm.getCommand(cmd).getRestrictionLevel() < 3) {
                     return;
                 } else if (channelCheck(cmd, channel)) {
-                    DatabaseHandler.removeChannel(cmd, channel);
+                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(cmd, channel);
                 } else {
-                    DatabaseHandler.insertChannel(cmd, channel);
+                    DBHandlerWhitelistedChannels.addChannelToWhitelist(cmd, channel);
                 }
             } else if (ctx.getArguments().get(0).equals("all")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (ci.getRestrictionLevel() == 3 && !channelCheck(ci.getName().toLowerCase(), channel)) {
-                        DatabaseHandler.insertChannel(ci.getName().toLowerCase(), channel);
+                        DBHandlerWhitelistedChannels.addChannelToWhitelist(ci.getName().toLowerCase(), channel);
                     }
                 }
             } else {

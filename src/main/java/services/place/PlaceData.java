@@ -1,7 +1,7 @@
 package services.place;
 
 import resources.Pixel;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,8 +22,8 @@ public class PlaceData {
     public static String user;
 
     public PlaceData(int ID) {
-        PlaceData.drawnPixels = DatabaseHandler.getPlaceProjectProgress(ID);
-        PlaceData.user = DatabaseHandler.getPlaceProjectAuthor(ID);
+        PlaceData.drawnPixels = DBHandlerPlace.getProjectProgress(ID);
+        PlaceData.user = DBHandlerPlace.getProjectAuthor(ID);
         PlaceData.ID = ID;
 
         requests = new LinkedList<>();
@@ -76,6 +76,6 @@ public class PlaceData {
     }
 
     private ArrayList<Pixel> readPixelFile() {
-        return DatabaseHandler.getPlacePixels(ID);
+        return DBHandlerPlace.getProjectPixels(ID);
     }
 }

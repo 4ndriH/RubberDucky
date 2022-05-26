@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerCourse;
+import services.database.DBHandlerCourseReview;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Course implements CommandInterface {
@@ -25,14 +27,14 @@ public class Course implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        HashSet<String> courses = DatabaseHandler.getAllCourses();
+        HashSet<String> courses = DBHandlerCourse.getCoursesWithVerifiedReviews();
         EmbedBuilder embed = EmbedHelper.embedBuilder();
 
         if (ctx.getArguments().size() == 0) {
             embed.setTitle("Courses with reviews");
             StringBuilder sb = new StringBuilder();
             for (String course : courses) {
-                sb.append(DatabaseHandler.getCourse(course)).append("\n");
+                sb.append(DBHandlerCourse.getCourseName(course)).append("\n");
             }
             embed.setDescription(sb);
         } else if (!pattern.matcher(ctx.getArguments().get(0)).find()) {
@@ -41,12 +43,12 @@ public class Course implements CommandInterface {
             return;
         } else if (!courses.contains(ctx.getArguments().get(0))) {
             embed.setTitle("There are no reviews for " + ctx.getArguments().get(0));
-            if (DatabaseHandler.containsCourseNumber(ctx.getArguments().get(0))) {
-                embed.setDescription(DatabaseHandler.getCourse(ctx.getArguments().get(0)));
+            if (DBHandlerCourseReview.containsCourseNumber(ctx.getArguments().get(0))) {
+                embed.setDescription(DBHandlerCourse.getCourseName(ctx.getArguments().get(0)));
             }
         } else {
-            ArrayList<String> reviews = DatabaseHandler.getCourseReview(ctx.getArguments().get(0));
-            embed.setTitle(DatabaseHandler.getCourse(ctx.getArguments().get(0)));
+            ArrayList<String> reviews = DBHandlerCourse.getReviewsForCourse(ctx.getArguments().get(0));
+            embed.setTitle(DBHandlerCourse.getCourseName(ctx.getArguments().get(0)));
             StringBuilder sb = new StringBuilder();
 
             for (String s : reviews) {
@@ -76,5 +78,10 @@ public class Course implements CommandInterface {
         embed.setDescription("Get reviews for a specific course. If the course has no reviews or no course number is provided you get a list with all available courses.");
         embed.addField("__Format__", "```" + CONFIG.Prefix.get() + "course <course number>```", false);
         return embed;
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("c");
     }
 }

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class PlaceDelete implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<Integer> ids = DatabaseHandler.getPlaceProjectIDs();
+        ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
         EmbedBuilder embed = EmbedHelper.embedBuilder("Delete");
         int id;
 
@@ -30,7 +30,7 @@ public class PlaceDelete implements CommandInterface {
             id = Integer.parseInt(ctx.getArguments().get(0));
             if (ids.contains(id)) {
                 File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
-                DatabaseHandler.removeFileFromQueue(id);
+                DBHandlerPlace.removeProjectFromQueue(id);
                 while(myTxtObj.exists() && !myTxtObj.delete());
                 embed.setDescription("File " + id + " has been deleted");
             } else {

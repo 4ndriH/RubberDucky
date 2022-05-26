@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerCourseReviewVerify;
 import services.logging.EmbedHelper;
 
 import java.util.List;
@@ -23,14 +23,14 @@ public class CourseReviewVerify implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        reviews = DatabaseHandler.getUnverifiedReviews();
+        reviews = DBHandlerCourseReviewVerify.getUnverifiedReviews();
         CourseReviewVerify.ctx = ctx;
         sendEmbed();
     }
 
     public static void castVerdict(int key, int status) {
         if (status != 0) {
-            DatabaseHandler.updateVerifiedStatus(key, status);
+            DBHandlerCourseReviewVerify.updateVerifiedStatus(key, status);
             LOGGER.info("Review " + key + " has been " + (status == 1 ? "accepted" : "rejected"));
             reviews.remove(key);
             sendEmbed();
@@ -42,7 +42,7 @@ public class CourseReviewVerify implements CommandInterface {
             Map.Entry<Integer, String[]> entry = reviews.entrySet().iterator().next();
             EmbedBuilder embed = EmbedHelper.embedBuilder("Course Feedback: " + entry.getKey());
             embed.setDescription(entry.getValue()[0]);
-            embed.setFooter(getUserTag(entry.getValue()[1]));
+            embed.setFooter(entry.getValue()[1]);
             ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
                     Button.danger("$cfvReject - " + entry.getKey(), "Reject"),
                     Button.primary("$cfvQuit - " + entry.getKey(), "Quit"),
@@ -51,16 +51,6 @@ public class CourseReviewVerify implements CommandInterface {
         } else {
             EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("Nothing to review"), 32);
         }
-    }
-
-    private static String getUserTag(String id) {
-        String userTag;
-        try {
-            userTag = ctx.getJDA().getUserById(id).getAsTag();
-        } catch (Exception e) {
-            userTag = "<@!" + id + ">";
-        }
-        return userTag;
     }
 
     @Override

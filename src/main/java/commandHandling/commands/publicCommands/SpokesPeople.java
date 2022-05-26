@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerSpokesPeople;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SpokesPeople implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<HashMap<String, String>> spokesPeople = DatabaseHandler.getSpokesPeople();
+        ArrayList<HashMap<String, String>> spokesPeople = DBHandlerSpokesPeople.getSpokesPeople();
         EmbedBuilder embed = EmbedHelper.embedBuilder("Semester Spokes People");
         StringBuilder yearOne = new StringBuilder();
         StringBuilder yearTwo = new StringBuilder();

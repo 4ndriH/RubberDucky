@@ -9,7 +9,7 @@ import resources.Pixel;
 import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class PlaceQueue implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<Integer> ids = DatabaseHandler.getPlaceProjectIDs();
+        ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
         Random random = new Random();
         ArrayList<Pixel> pixels = new ArrayList<>();
         Scanner scanner;
@@ -77,8 +77,7 @@ public class PlaceQueue implements CommandInterface {
         }
         scanner.close();
 
-        DatabaseHandler.addFileToQueue(id, ctx.getAuthor().getId());
-        DatabaseHandler.insertProjectIntoPlacePixels(id, pixels);
+        DBHandlerPlace.insertProjectIntoQueue(id, ctx.getAuthor().getId(), pixels);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         CommandManager.commandLogger(getName(), ctx, true);

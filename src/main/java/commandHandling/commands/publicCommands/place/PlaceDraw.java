@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import resources.Pixel;
 import services.BotExceptions;
 import services.PermissionManager;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerConfig;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 import services.place.PlaceData;
 import services.place.PlaceWebSocket;
@@ -39,7 +40,7 @@ public class PlaceDraw implements CommandInterface {
         } else if (ctx.getArguments().size() > 0 && PermissionManager.authenticateOwner(ctx)) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
-                if (!DatabaseHandler.getPlaceProjectIDs().contains(id)) {
+                if (!DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
                     BotExceptions.invalidIdException(ctx);
                     return;
                 }
@@ -48,7 +49,7 @@ public class PlaceDraw implements CommandInterface {
                 return;
             }
         } else {
-            id = DatabaseHandler.getLowestPlaceProjectID();
+            id = DBHandlerPlace.getNextProject();
         }
 
         if (id == -1) {
@@ -68,7 +69,7 @@ public class PlaceDraw implements CommandInterface {
             }
 
             new PlaceData(id);
-            DatabaseHandler.updateConfig("placeProject", "" + id);
+            DBHandlerConfig.updateConfig("placeProject", "" + id);
             boolean fixToggle = false;
 
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
@@ -79,7 +80,7 @@ public class PlaceDraw implements CommandInterface {
                     } else {
                         placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
                         if (PlaceData.drawnPixels++ % 16 == 0) {
-                            DatabaseHandler.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+                            DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
                         }
                     }
                 } catch (Exception e) {
@@ -100,15 +101,15 @@ public class PlaceDraw implements CommandInterface {
             }
 
             if (!PlaceData.stop) {
-                DatabaseHandler.removeFileFromQueue(PlaceData.ID);
-                id = DatabaseHandler.getLowestPlaceProjectID();
+                DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
+                id = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
             } else {
                 id = -1;
             }
         }
 
-        DatabaseHandler.updateConfig("placeProject", "-1");
+        DBHandlerConfig.updateConfig("placeProject", "-1");
         PlaceData.drawing = false;
         PlaceData.stopQ = false;
     }

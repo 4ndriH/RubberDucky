@@ -42,7 +42,7 @@ public class CommandManager {
         addCommand(new CourseReviewVerify(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Ducky(LOGGER));
-        addCommand(new ExportDatabase(LOGGER));
+//        addCommand(new ExportDatabase(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Kill(LOGGER));
         addCommand(new LetMeGoogleThatForYou(LOGGER));

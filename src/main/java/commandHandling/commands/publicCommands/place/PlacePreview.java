@@ -9,7 +9,7 @@ import resources.CONFIG;
 import resources.Pixel;
 import services.BotExceptions;
 import services.GifSequenceWriter;
-import services.database.DatabaseHandler;
+import services.database.DBHandlerPlace;
 import services.logging.EmbedHelper;
 import services.place.PlaceWebSocket;
 
@@ -46,8 +46,8 @@ public class PlacePreview implements CommandInterface {
                 return;
             }
 
-            if (DatabaseHandler.getPlaceProjectIDs().contains(id)) {
-                    pixels = DatabaseHandler.getPlacePixels(id);
+            if (DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
+                    pixels = DBHandlerPlace.getProjectPixels(id);
             } else {
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
