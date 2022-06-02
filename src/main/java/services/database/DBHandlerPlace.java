@@ -23,6 +23,7 @@ public class DBHandlerPlace {
             ps.setString(2, discordUserId);
             ps.executeUpdate();
 
+            connection.setAutoCommit(false);
             ps = connection.prepareStatement(
                     "INSERT INTO PlacePixels (Id, Idx, X, Y, ImageColor, Alpha) VALUES (?, ?, ?, ?, ?, ?)"
             );
