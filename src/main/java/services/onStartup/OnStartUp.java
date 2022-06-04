@@ -3,6 +3,7 @@ package services.onStartup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
+import services.API.CourseReviewAPI;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;
 
@@ -21,6 +22,8 @@ public class OnStartUp {
         updateToken();
         CONFIG.reload();
         PermissionManager.reload();
+
+        CourseReviewAPI.start();
     }
 
     private void updateToken() {
