@@ -1,3 +1,2 @@
 # RubberDucky
-Discord Bot written in Java  
-//TODO
+smth smth java bot smth smth
