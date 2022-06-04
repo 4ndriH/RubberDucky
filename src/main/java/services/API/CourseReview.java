@@ -1,5 +1,7 @@
 package services.API;
 
+import services.database.DBHandlerConfig;
+
 import static spark.Spark.*;
 
 public class CourseReview {
@@ -8,7 +10,7 @@ public class CourseReview {
 
     public static void api() {
         //secure(keyStoreLocation, keyStorePassword, null, null);
-        ipAddress("rubberducky.vsos.ethz.ch");
+        ipAddress(DBHandlerConfig.getConfig().get("ip"));
         port(5678);
 
         get("/hello", (request, response) -> "Hello World!");
