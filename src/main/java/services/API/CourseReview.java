@@ -11,7 +11,7 @@ public class CourseReview {
     public static void api() {
         //secure(keyStoreLocation, keyStorePassword, null, null);
         ipAddress(DBHandlerConfig.getConfig().get("ip"));
-        port(5678);
+        port(Integer.parseInt(DBHandlerConfig.getConfig().get("port")));
 
         get("/hello", (request, response) -> "Hello World!");
     }
