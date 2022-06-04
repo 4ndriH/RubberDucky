@@ -3,6 +3,7 @@ package services;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,7 @@ public class VVZScraper {
                 LOGGER.error("Error during htmlContent fetching", e);
             }
             if (htmlContent.contains(NAME)) {
-                String extractedTitle = scraper.extractTitle(htmlContent);
-                extractedTitle = extractedTitle.replace("&ouml;", "ö").replace("&Ouml;", "Ö")
-                                               .replace("&uuml;", "ü").replace("&Uuml;", "Ü")
-                                               .replace("&auml;", "ä").replace("&Auml;", "Ä");
-
+                String extractedTitle = StringEscapeUtils.unescapeHtml4(scraper.extractTitle(htmlContent));
                 LOGGER.info("Found course: " + id + " - " + extractedTitle);
                 return extractedTitle;
             }
