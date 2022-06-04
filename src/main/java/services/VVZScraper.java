@@ -40,7 +40,10 @@ public class VVZScraper {
             }
             if (htmlContent.contains(NAME)) {
                 String extractedTitle = scraper.extractTitle(htmlContent);
-                extractedTitle = extractedTitle.replace("&ouml;", "ö").replace("&uuml;", "ü").replace("&auml;", "ä");
+                extractedTitle = extractedTitle.replace("&ouml;", "ö").replace("&Ouml;", "Ö")
+                                               .replace("&uuml;", "ü").replace("&Uuml;", "Ü")
+                                               .replace("&auml;", "ä").replace("&Auml;", "Ä");
+
                 LOGGER.info("Found course: " + id + " - " + extractedTitle);
                 return extractedTitle;
             }
