@@ -72,6 +72,6 @@ public class CourseReviewVerify implements CommandInterface {
 
     @Override
     public int getRestrictionLevel() {
-        return 0;
+        return 1;
     }
 }
