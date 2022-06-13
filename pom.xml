@@ -111,10 +111,5 @@
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
         </dependency>
-        <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin</artifactId>
-            <version>4.6.0</version>
-        </dependency>
     </dependencies>
 </project>
