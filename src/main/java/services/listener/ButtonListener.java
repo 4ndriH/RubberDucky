@@ -21,7 +21,7 @@ public class ButtonListener extends ListenerAdapter {
         } else if (event.getComponentId().equals("$KillProceed")) {
             event.getMessage().delete().queue();
             Kill.executeKill();
-        } else if(event.getComponentId().startsWith("$cfv")) {
+        } else if(event.getComponentId().startsWith("cfv") && event.getComponentId().endsWith(event.getUser().getId())) {
             if (event.getComponentId().contains("Reject")) {
                 CourseReviewVerify.castVerdict(Integer.parseInt(event.getComponentId().split(" - ")[1]), -1);
             } else if (event.getComponentId().contains("Quit")) {
