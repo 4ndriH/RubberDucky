@@ -44,9 +44,9 @@ public class CourseReviewVerify implements CommandInterface {
             embed.setDescription(entry.getValue()[0]);
             embed.setFooter(entry.getValue()[1]);
             ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
-                    Button.danger("$cfvReject - " + entry.getKey(), "Reject"),
-                    Button.primary("$cfvQuit - " + entry.getKey(), "Quit"),
-                    Button.success("$cfvAccept - " + entry.getKey(), "Accept")
+                    Button.danger("cfvReject - " + entry.getKey(), "Reject"),
+                    Button.primary("cfvQuit - " + entry.getKey(), "Quit"),
+                    Button.success("cfvAccept - " + entry.getKey(), "Accept")
             ).queue();
         } else {
             EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("Nothing to review"), 32);
