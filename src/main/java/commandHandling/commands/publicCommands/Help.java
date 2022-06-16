@@ -3,6 +3,7 @@ package commandHandling.commands.publicCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
@@ -11,8 +12,8 @@ import services.CommandManager;
 import services.logging.EmbedHelper;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.List;
+import java.util.*;
 
 public class Help implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Help.class);
@@ -30,7 +31,8 @@ public class Help implements CommandInterface {
         if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(CONFIG.Prefix.get() + " ")) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Help");
 
-            HashMap<String, StringBuilder> commandGroups = new HashMap<>();
+            HashMap<String, Entry> commandGroups = new HashMap<>();
+            PriorityQueue<Entry> sortedCommandGroups = new PriorityQueue<>();
 
             for (CommandInterface cmd : manager.getCommands()) {
                 String[] hierarchySplit = cmd.getClass().getName().split("\\.");
@@ -38,14 +40,20 @@ public class Help implements CommandInterface {
 
                 if (ctx.getSecurityClearance() <= cmd.getRestrictionLevel()) {
                     if (!commandGroups.containsKey(groupName)) {
-                        commandGroups.put(groupName, new StringBuilder());
+                        commandGroups.put(groupName, new Entry(0, groupName, new StringBuilder()));
                     }
-                    commandGroups.get(groupName).append(cmd.getName()).append("\n");
+                    commandGroups.get(groupName).lines++;
+                    commandGroups.get(groupName).commands.append(cmd.getName()).append("\n");
                 }
             }
 
             for (String key : commandGroups.keySet()) {
-                embed.addField("__" + key + "__", "```\n" + commandGroups.get(key) + "```", true);
+                sortedCommandGroups.add(commandGroups.get(key));
+            }
+
+            while (!sortedCommandGroups.isEmpty()) {
+                Entry e = sortedCommandGroups.poll();
+                embed.addField("__" + e.group + "__", "```\n" + e.commands + "```", true);
             }
 
             for (int i = commandGroups.size() % 3; i < 3 && i != 0; i++) {
@@ -99,5 +107,22 @@ public class Help implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("commands", "cmds", "commandlist", "");
+    }
+}
+
+class Entry implements Comparable<Entry> {
+    public int lines;
+    public String group;
+    public StringBuilder commands;
+
+    public Entry(int lines, String group, StringBuilder commands) {
+        this.lines = lines;
+        this.group = group;
+        this.commands = commands;
+    }
+
+    @Override
+    public int compareTo(@NotNull Entry o) {
+        return lines == o.lines ? 0 : o.lines - lines;
     }
 }
