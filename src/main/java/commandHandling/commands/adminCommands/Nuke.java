@@ -20,7 +20,7 @@ public class Nuke implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         new Thread(() -> {
-            long nr = 0;
+            long nr = 1;
 
             if (ctx.getMessage().getReferencedMessage() != null) {
                 String id = ctx.getMessage().getReferencedMessage().getId();
