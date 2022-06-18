@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.JDAInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous.TimeFormat;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

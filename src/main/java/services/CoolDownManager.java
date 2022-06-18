@@ -3,10 +3,11 @@ package services;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import services.logging.EmbedHelper;
 
 import java.awt.*;
 import java.util.HashMap;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class CoolDownManager {
     private static HashMap<String, HashMap<String, Long>> coolDown = new HashMap<>();
@@ -18,7 +19,7 @@ public class CoolDownManager {
             long coolDownMS = coolDown.get(user).get(command);
             if (coolDownMS > System.currentTimeMillis()) {
                 ctx.getMessage().replyEmbeds(buildEmbed(coolDownMS, command)).queue(
-                        msg -> EmbedHelper.deleteMsg(msg, 32)
+                        msg -> deleteMsg(msg, 32)
                 );
                 return true;
             } else {

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.awt.*;
 import java.util.List;

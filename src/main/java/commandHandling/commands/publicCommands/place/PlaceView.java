@@ -5,7 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 import services.place.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static services.MessageDeleteHelper.deleteMsg;
+
 public class PlaceView implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceView.class);
 
@@ -25,7 +27,7 @@ public class PlaceView implements CommandInterface {
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue(
-                        msg -> EmbedHelper.deleteMsg(msg, 64)
+                        msg -> deleteMsg(msg, 64)
                 );
     }
 

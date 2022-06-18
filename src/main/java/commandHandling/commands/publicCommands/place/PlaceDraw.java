@@ -12,7 +12,7 @@ import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerPlace;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 import services.place.PlaceData;
 import services.place.PlaceWebSocket;
 

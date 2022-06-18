@@ -7,12 +7,14 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class Kill implements CommandInterface{
     private static final Logger LOGGER = LoggerFactory.getLogger(Kill.class);
@@ -34,7 +36,7 @@ public class Kill implements CommandInterface{
                 Button.danger("$KillAbort", "Abort"),
                 Button.success("$KillProceed", "Proceed")
         ).queue(
-                msg -> EmbedHelper.deleteMsg(msg, 64)
+                msg -> deleteMsg(msg, 64)
         );
     }
 
@@ -46,7 +48,7 @@ public class Kill implements CommandInterface{
 
         Message msg = ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFile(new File("resources/" + file)).complete();
-        EmbedHelper.deleteMsg(msg, 64);
+        deleteMsg(msg, 64);
         ctx.getJDA().shutdownNow();
     }
 

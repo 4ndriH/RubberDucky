@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 import services.CommandManager;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 public class Avatar implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Avatar.class);

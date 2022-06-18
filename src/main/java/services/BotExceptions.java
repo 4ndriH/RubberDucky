@@ -3,9 +3,10 @@ package services;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import resources.EMOTES;
-import services.logging.EmbedHelper;
 
 import java.awt.*;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class BotExceptions {
     public static void invalidArgumentsException(CommandContext ctx) {
@@ -73,7 +74,7 @@ public class BotExceptions {
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
             msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
-            EmbedHelper.deleteMsg(msg, 32);
+            deleteMsg(msg, 32);
         });
     }
 }

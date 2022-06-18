@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerCourseReviewVerify;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.List;
 import java.util.Map;

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.database.DBHandlerPlace;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.io.File;
 import java.util.ArrayList;

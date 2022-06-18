@@ -5,9 +5,10 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.logging.EmbedHelper;
 
 import java.util.HashMap;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
@@ -43,7 +44,7 @@ public class Say implements CommandInterface {
             sb.append(ctx.getArguments().get(i)).append(" ");
         }
 
-        EmbedHelper.deleteMsg(ctx.getMessage(), 0);
+        deleteMsg(ctx.getMessage(), 0);
 
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);

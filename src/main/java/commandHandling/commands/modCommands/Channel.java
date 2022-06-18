@@ -10,7 +10,7 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
 import services.database.DBHandlerWhitelistedChannels;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);

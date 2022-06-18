@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.CommandManager;
 import services.database.DBHandlerSQL;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.awt.*;
 

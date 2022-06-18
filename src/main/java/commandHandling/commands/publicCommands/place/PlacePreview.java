@@ -10,7 +10,7 @@ import resources.Pixel;
 import services.BotExceptions;
 import services.GifSequenceWriter;
 import services.database.DBHandlerPlace;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 import services.place.PlaceWebSocket;
 
 import javax.imageio.stream.FileImageOutputStream;
@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class PlacePreview implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlacePreview.class);
@@ -131,17 +133,17 @@ public class PlacePreview implements CommandInterface {
             switch (sendMessageCase) {
                 case 0:
                     ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                            msg -> deleteMsg(msg, 1024)
                     );
                     break;
                 case 1:
                     ctx.getMessage().replyEmbeds(embed.build()).addFile(gif).queue(
-                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                            msg -> deleteMsg(msg, 1024)
                     );
                     break;
                 case 2:
                     ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFile(gif).queue(
-                            msg -> EmbedHelper.deleteMsg(msg, 1024)
+                            msg -> deleteMsg(msg, 1024)
                     );
             }
         } catch (IllegalArgumentException e) {

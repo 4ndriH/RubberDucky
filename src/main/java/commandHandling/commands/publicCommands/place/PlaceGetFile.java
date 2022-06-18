@@ -9,12 +9,13 @@ import resources.CONFIG;
 import resources.Pixel;
 import services.BotExceptions;
 import services.database.DBHandlerPlace;
-import services.logging.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class PlaceGetFile implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
@@ -40,7 +41,7 @@ public class PlaceGetFile implements CommandInterface {
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
                 ctx.getChannel().sendFile(output.getBytes(), "RDdraw" + id + ".txt").queue(
-                        msg -> EmbedHelper.deleteMsg(msg, 64)
+                        msg -> deleteMsg(msg, 64)
                 );
             } catch (IllegalArgumentException e) {
                 BotExceptions.FileExceedsUploadLimitException(ctx);

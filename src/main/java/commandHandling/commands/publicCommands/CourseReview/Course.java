@@ -10,7 +10,7 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;

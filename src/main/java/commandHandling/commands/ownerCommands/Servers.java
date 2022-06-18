@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import resources.EMOTES;
 import services.PermissionManager;
 import services.database.DBHandlerWhitelistedServers;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

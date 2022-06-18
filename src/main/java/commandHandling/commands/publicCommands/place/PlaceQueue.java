@@ -10,7 +10,7 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
 import services.database.DBHandlerPlace;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.List;

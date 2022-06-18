@@ -1,19 +1,18 @@
-package services.logging;
+package services;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import services.database.DBHandlerMessageDeleteTracker;
 
 import java.awt.*;
 import java.io.File;
 import java.util.EnumSet;
-import java.util.concurrent.TimeUnit;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class EmbedHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbedHelper.class);
@@ -72,19 +71,6 @@ public class EmbedHelper {
                         channel -> channel.sendMessage("Missing permissions:\n" + sb).queue()
                 );
             }
-        }
-    }
-
-    public static void deleteMsg(Message msg, int seconds) {
-        try {
-            if (seconds >= 0) {
-                msg.delete().queueAfter(seconds, TimeUnit.SECONDS, null, failure -> {});
-            }
-        } catch (Exception ignored) {}
-
-        if (seconds > 0) {
-            DBHandlerMessageDeleteTracker.insertDeleteMessage(msg.getGuild().getId(), msg.getChannel().getId(), msg.getId(),
-                    System.currentTimeMillis() + seconds * 1000L);
         }
     }
 }

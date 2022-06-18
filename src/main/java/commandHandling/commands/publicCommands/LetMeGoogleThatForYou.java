@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.GifSequenceWriter;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class LetMeGoogleThatForYou implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LetMeGoogleThatForYou.class);
@@ -102,7 +104,7 @@ public class LetMeGoogleThatForYou implements CommandInterface {
             embed.setImage("attachment://lmgtfy" + id + ".gif");
 
             ctxT.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
-                    msg -> EmbedHelper.deleteMsg(msg, 1024)
+                    msg -> deleteMsg(msg, 1024)
             );
 
             try {

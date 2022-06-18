@@ -14,12 +14,14 @@ import services.VVZScraper;
 import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
 import services.database.DBHandlerCourseReviewVerify;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class CourseReview implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReview.class);
@@ -62,7 +64,7 @@ public class CourseReview implements CommandInterface {
                 Button.success("cfProceed - " + ctx.getAuthor().getId(), "Proceed")
         ).complete();
 
-        EmbedHelper.deleteMsg(msg, 256);
+        deleteMsg(msg, 256);
 
         if (!DBHandlerCourseReview.containsCourseNumber(courseNumber)) {
             DBHandlerCourseReview.insertCourse(courseNumber, VVZScraper.getCourseName(courseNumber));

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.PermissionManager;
 import services.database.DBHandlerBlacklistedUsers;
-import services.logging.EmbedHelper;
+import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.List;

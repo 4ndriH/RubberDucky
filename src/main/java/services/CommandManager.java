@@ -19,13 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import resources.EMOTES;
-import services.logging.EmbedHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class CommandManager {
     private static final Logger cmdLogger = LoggerFactory.getLogger("Command Logger");
@@ -109,7 +110,7 @@ public class CommandManager {
         List<String> arguments = Arrays.asList(split).subList(1, split.length);
         CommandContext ctx = new CommandContext(event, arguments);
 
-        EmbedHelper.deleteMsg(ctx.getMessage(), 128);
+        deleteMsg(ctx.getMessage(), 128);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
             if (!cmd.requiresFurtherChecks()) {

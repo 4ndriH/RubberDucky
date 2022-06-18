@@ -9,7 +9,6 @@ import resources.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.Miscellaneous.TimeFormat;
-import services.logging.EmbedHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,8 +17,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
+import static services.MessageDeleteHelper.deleteMsg;
 
 public class PlaceEncode implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
@@ -132,7 +135,7 @@ public class PlaceEncode implements CommandInterface {
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
                     TimeFormat.timeFormat(pixels.size()) + "**").addFile(stream, fileName).queue(
-                    msg -> EmbedHelper.deleteMsg(msg, 128)
+                    msg -> deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
             LOGGER.error("PlaceEncode Error", e);
