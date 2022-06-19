@@ -9,21 +9,21 @@ import services.database.DBHandlerConfig;
 import java.io.File;
 import java.util.Scanner;
 
-public class OnStartUp {
-    private final Logger LOGGER = LoggerFactory.getLogger(OnStartUp.class);
+public class StartUp {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartUp.class);
 
-    public OnStartUp() {
+    public static void checks() {
         DirectoryVerification.verifyDirectoryIntegrity(LOGGER);
         DirectoryVerification.verifyFileIntegrity(LOGGER);
-        //DatabaseVerification.verifyDatabaseIntegrity(LOGGER);
-        //DatabaseVerification.databaseValueImport(LOGGER);
-        DBHandlerConfig.incrementUptimeCounter();
-        updateToken();
+        DatabaseVerification.verifyDatabaseIntegrity(LOGGER);
+    }
+
+    public static void loadEssentials() {
         CONFIG.reload();
         PermissionManager.reload();
     }
 
-    private void updateToken() {
+    public static void updateToken() {
         Scanner scanner;
         File txt = new File("token.txt");
         try {

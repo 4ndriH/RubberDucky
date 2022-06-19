@@ -4,17 +4,23 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import resources.CONFIG;
+import services.database.ConnectionPool;
+import services.database.DBHandlerConfig;
 import services.listener.ButtonListener;
 import services.listener.CatchListener;
 import services.listener.ConnectionListener;
 import services.listener.Listener;
-import services.onStartup.OnStartUp;
+import services.onStartup.StartUp;
 
 import javax.security.auth.login.LoginException;
 
 public class Bot {
     public static void main(String[] args) throws LoginException {
-        new OnStartUp();
+        new ConnectionPool();
+        StartUp.checks();
+        StartUp.loadEssentials();
+        StartUp.updateToken();
+        DBHandlerConfig.incrementUptimeCounter();
         CONFIG.instance = connectToDiscord();
     }
 
