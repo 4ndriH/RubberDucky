@@ -24,24 +24,30 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        try {
-            if (ctx.getArguments().get(0).equals("this") && PermissionManager.servers.contains(ctx.getGuild().getId())) {
+        if (ctx.getArguments().size() > 0) {
+            String argument = ctx.getArguments().get(0);
+
+            if (argument.equals("this")) {
+                argument = ctx.getGuild().getId();
+            }
+
+            if (PermissionManager.servers.contains(argument)) {
                 DBHandlerWhitelistedServers.removeServerFromWhitelist(ctx.getGuild().getId());
             } else {
                 DBHandlerWhitelistedServers.addServerToWhitelist(ctx.getGuild().getId());
             }
-            PermissionManager.reload();
-        } catch (Exception e) {
-            ArrayList<String> ids = PermissionManager.servers;
-            EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
 
+            PermissionManager.reload();
+        } else {
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
+            ArrayList<String> ids = PermissionManager.servers;
             HashMap<String, String> servers = new HashMap<>();
             ArrayList<String> names = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
-            String name;
 
             for (Guild guild : ctx.getJDA().getGuilds()) {
-                names.add(name = guild.getName());
+                String name = guild.getName();
+                names.add(name);
 
                 if (ids.contains(guild.getId())) {
                     servers.put(name, EMOTES.RDG.getAsEmote() + " " + name);
@@ -51,12 +57,13 @@ public class Servers implements CommandInterface {
             }
 
             Collections.sort(names);
+
             for (String s : names) {
                 sb.append(servers.get(s)).append("\n");
             }
-            embed.setDescription(sb.toString());
 
-            EmbedHelper.sendEmbed(ctx, embed, 32);
+            embed.setDescription(sb.toString());
+            EmbedHelper.sendEmbed(ctx, embed, 64);
         }
     }
 
