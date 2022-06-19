@@ -11,6 +11,10 @@ public interface CommandInterface {
 
     EmbedBuilder getHelp();
 
+    default String getNameLC() {
+        return getName().toLowerCase();
+    }
+
     default List<String> getAliases(){
         return List.of();
     }
