@@ -1,6 +1,6 @@
 package services.listener;
 
-import commandHandling.commands.publicCommands.place.PlaceDraw;
+import commandHandling.commands.place.PlaceDraw;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;

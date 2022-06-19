@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static services.MessageDeleteHelper.deleteMsg;
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class PlaceEncode implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);

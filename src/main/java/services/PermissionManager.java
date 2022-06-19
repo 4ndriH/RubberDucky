@@ -11,7 +11,7 @@ import services.database.DBHandlerWhitelistedServers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);

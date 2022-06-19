@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
 import java.io.File;
 import java.util.List;

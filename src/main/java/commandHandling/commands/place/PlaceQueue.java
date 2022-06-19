@@ -1,13 +1,13 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.Pixel;
+import resources.Objects.Pixel;
 import services.BotExceptions;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 import services.PermissionManager;
 import services.database.DBHandlerPlace;
 
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class PlaceQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);

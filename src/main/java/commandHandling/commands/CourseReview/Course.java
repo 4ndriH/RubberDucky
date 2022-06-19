@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.CourseReview;
+package commandHandling.commands.CourseReview;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
 
@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class Course implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(Course.class);

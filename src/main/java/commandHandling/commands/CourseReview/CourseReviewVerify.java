@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.CourseReview;
+package commandHandling.commands.CourseReview;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.EmbedHelper;
-import services.Objects.Review;
+import services.discordHelpers.EmbedHelper;
+import resources.Objects.Review;
 import services.database.DBHandlerCourseReviewVerify;
 
 import java.util.List;

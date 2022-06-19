@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.JDAInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous.TimeFormat;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

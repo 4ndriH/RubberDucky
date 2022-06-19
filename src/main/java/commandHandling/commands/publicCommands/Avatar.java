@@ -8,9 +8,9 @@ import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class Avatar implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Avatar.class);

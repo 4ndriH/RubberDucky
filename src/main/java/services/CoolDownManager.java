@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.awt.*;
 import java.util.HashMap;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class CoolDownManager {
     private static HashMap<String, HashMap<String, Long>> coolDown = new HashMap<>();

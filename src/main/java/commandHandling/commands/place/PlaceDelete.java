@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
 import services.database.DBHandlerPlace;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
 import java.io.File;
 import java.util.ArrayList;

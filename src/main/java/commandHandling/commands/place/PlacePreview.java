@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -6,11 +6,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import resources.Pixel;
+import resources.Objects.Pixel;
 import services.BotExceptions;
-import services.GifSequenceWriter;
+import services.Miscellaneous.GifSequenceWriter;
 import services.database.DBHandlerPlace;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 import services.place.PlaceWebSocket;
 
 import javax.imageio.stream.FileImageOutputStream;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlacePreview implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlacePreview.class);

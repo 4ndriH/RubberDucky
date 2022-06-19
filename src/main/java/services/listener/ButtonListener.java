@@ -1,8 +1,8 @@
 package services.listener;
 
 import commandHandling.commands.ownerCommands.Kill;
-import commandHandling.commands.publicCommands.CourseReview.CourseReview;
-import commandHandling.commands.publicCommands.CourseReview.CourseReviewVerify;
+import commandHandling.commands.CourseReview.CourseReview;
+import commandHandling.commands.CourseReview.CourseReviewVerify;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;

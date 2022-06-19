@@ -8,10 +8,10 @@ import commandHandling.commands.modCommands.BlackList;
 import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
 import commandHandling.commands.publicCommands.*;
-import commandHandling.commands.publicCommands.CourseReview.Course;
-import commandHandling.commands.publicCommands.CourseReview.CourseReview;
-import commandHandling.commands.publicCommands.CourseReview.CourseReviewVerify;
-import commandHandling.commands.publicCommands.place.*;
+import commandHandling.commands.CourseReview.Course;
+import commandHandling.commands.CourseReview.CourseReview;
+import commandHandling.commands.CourseReview.CourseReviewVerify;
+import commandHandling.commands.place.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static services.MessageDeleteHelper.deleteMsg;
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {

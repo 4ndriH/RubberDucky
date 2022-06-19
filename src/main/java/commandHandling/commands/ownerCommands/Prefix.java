@@ -9,7 +9,7 @@ import resources.CONFIG;
 import services.BotExceptions;
 import services.database.DBHandlerConfig;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class Prefix implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);

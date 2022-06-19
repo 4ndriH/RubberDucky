@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
 public class Ping implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Ping.class);

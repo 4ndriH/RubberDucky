@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class ProfilePicture implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(ProfilePicture.class);

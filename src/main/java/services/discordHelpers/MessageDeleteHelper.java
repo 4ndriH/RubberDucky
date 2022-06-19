@@ -1,4 +1,4 @@
-package services;
+package services.discordHelpers;
 
 import net.dv8tion.jda.api.entities.Message;
 import services.database.DBHandlerMessageDeleteTracker;

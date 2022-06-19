@@ -1,4 +1,4 @@
-package services;
+package services.discordHelpers;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.EnumSet;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class EmbedHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbedHelper.class);

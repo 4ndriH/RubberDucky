@@ -5,8 +5,8 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.GifSequenceWriter;
-import services.EmbedHelper;
+import services.Miscellaneous.GifSequenceWriter;
+import services.discordHelpers.EmbedHelper;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class LetMeGoogleThatForYou implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LetMeGoogleThatForYou.class);

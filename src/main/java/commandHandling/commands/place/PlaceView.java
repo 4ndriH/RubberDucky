@@ -1,11 +1,11 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 import services.place.PlaceWebSocket;
 
 import javax.imageio.ImageIO;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlaceView implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceView.class);

@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerPlace;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 
 import java.util.List;
 

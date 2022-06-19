@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import resources.Pixel;
+import resources.Objects.Pixel;
 import services.BotExceptions;
 import services.database.DBHandlerPlace;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlaceGetFile implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);

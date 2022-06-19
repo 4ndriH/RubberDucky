@@ -6,8 +6,8 @@ import resources.EMOTES;
 
 import java.awt.*;
 
-import static services.MessageDeleteHelper.deleteMsg;
-import static services.ReactionHelper.addReaction;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class BotExceptions {
     public static void invalidArgumentsException(CommandContext ctx) {

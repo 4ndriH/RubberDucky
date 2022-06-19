@@ -1,4 +1,4 @@
-package commandHandling.commands.publicCommands.place;
+package commandHandling.commands.place;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
@@ -7,12 +7,12 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.Pixel;
+import resources.Objects.Pixel;
 import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerPlace;
-import services.EmbedHelper;
+import services.discordHelpers.EmbedHelper;
 import services.place.PlaceData;
 import services.place.PlaceWebSocket;
 

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-import static services.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
