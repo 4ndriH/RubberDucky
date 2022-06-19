@@ -15,7 +15,7 @@ import commandHandling.commands.place.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
+import assets.CONFIG;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

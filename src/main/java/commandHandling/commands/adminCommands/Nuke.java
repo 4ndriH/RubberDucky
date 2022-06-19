@@ -43,7 +43,7 @@ public class Nuke implements CommandInterface {
                 embed.setImage("attachment://nuke.gif");
 
                 ctx.getChannel().sendMessageEmbeds(embed.build())
-                        .addFile(new File("resources/nuke.gif")).complete();
+                        .addFile(new File("assets/nuke.gif")).complete();
                 try {
                     Thread.sleep(2048);
                 } catch (Exception ignored) {}

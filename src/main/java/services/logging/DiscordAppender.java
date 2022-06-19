@@ -2,7 +2,7 @@ package services.logging;
 
 import ch.qos.logback.core.AppenderBase;
 import net.dv8tion.jda.api.EmbedBuilder;
-import resources.CONFIG;
+import assets.CONFIG;
 
 import java.awt.*;
 

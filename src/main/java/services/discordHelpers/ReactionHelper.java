@@ -3,7 +3,7 @@ package services.discordHelpers;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
-import resources.EMOTES;
+import assets.EMOTES;
 import services.PermissionManager;
 
 import static services.database.DBHandlerBlacklistedUsers.addUserToBlacklist;

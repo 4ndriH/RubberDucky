@@ -2,7 +2,7 @@ package services.onStartup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
+import assets.CONFIG;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;
 

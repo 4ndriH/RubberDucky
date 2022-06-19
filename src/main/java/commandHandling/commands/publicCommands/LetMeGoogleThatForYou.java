@@ -40,8 +40,8 @@ public class LetMeGoogleThatForYou implements CommandInterface {
                 ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/lmgtfy" + id + ".gif"));
                 GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 80, true);
 
-                BufferedImage lmgtfy = ImageIO.read(new File("resources/lmgtfy/lmgtfy.png"));
-                BufferedImage lmgtfyResult = ImageIO.read(new File("resources/lmgtfy/lmgtfyResult.png"));
+                BufferedImage lmgtfy = ImageIO.read(new File("assets/lmgtfy/lmgtfy.png"));
+                BufferedImage lmgtfyResult = ImageIO.read(new File("assets/lmgtfy/lmgtfyResult.png"));
                 BufferedImage temp = new BufferedImage(lmgtfy.getWidth(), lmgtfy.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
                 Font font = new Font("Arial", Font.BOLD, 16);
@@ -54,9 +54,9 @@ public class LetMeGoogleThatForYou implements CommandInterface {
                 g.setBackground(new Color(69, 69, 69, 0));
 
                 writer.writeToSequence(lmgtfy);
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor0.png")));
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor0.png")));
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor0.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor0.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor0.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor0.png")));
                 int offset = 0;
 
                 for (int i = 1; i <= input.length(); i++) {
@@ -73,19 +73,19 @@ public class LetMeGoogleThatForYou implements CommandInterface {
                 }
 
                 for (int i = 1; i < 10; i++) {
-                    writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor" + i + ".png")));
+                    writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor" + i + ".png")));
                 }
 
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor10.png")));
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor10.png")));
-                writer.writeToSequence(ImageIO.read(new File("resources/lmgtfy/cursor10.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor10.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor10.png")));
+                writer.writeToSequence(ImageIO.read(new File("assets/lmgtfy/cursor10.png")));
 
                 g = lmgtfyResult.createGraphics();
                 g.setFont(font);
                 g.setColor(textColor);
                 g.drawString(input, 180, 54);
 
-                g.drawImage(ImageIO.read(new File("resources/lmgtfy/lmgtfyFix.png")), null, 721, 26);
+                g.drawImage(ImageIO.read(new File("assets/lmgtfy/lmgtfyFix.png")), null, 721, 26);
 
                 for (int i = 0; i < 50; i++) {
                     writer.writeToSequence(lmgtfyResult);

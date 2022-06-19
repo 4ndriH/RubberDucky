@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.discordHelpers.EmbedHelper;
-import resources.Objects.Review;
+import assets.Objects.Review;
 import services.database.DBHandlerCourseReviewVerify;
 
 import java.util.List;

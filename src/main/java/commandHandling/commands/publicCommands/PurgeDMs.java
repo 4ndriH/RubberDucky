@@ -39,7 +39,7 @@ public class PurgeDMs implements CommandInterface {
 
             PrivateChannel channel = ctx.getJDA().getPrivateChannelById(id[0]);
             channel.sendMessageEmbeds(purgeCommenced.build())
-                    .addFile(new File("resources/purge/purgeCommenced.jpg"))
+                    .addFile(new File("assets/purge/purgeCommenced.jpg"))
                     .queueAfter(1, TimeUnit.SECONDS);
             List<Message> messages;
             do {
@@ -57,7 +57,7 @@ public class PurgeDMs implements CommandInterface {
             } while(messages.size() != 0);
 
             Message msg = channel.sendMessageEmbeds(purgeEnded.build())
-                    .addFile(new File("resources/purge/purgeEnded.jpg")).complete();
+                    .addFile(new File("assets/purge/purgeEnded.jpg")).complete();
             msg.delete().queueAfter(32, TimeUnit.SECONDS);
         })).start();
     }

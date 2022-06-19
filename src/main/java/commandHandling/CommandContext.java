@@ -4,7 +4,7 @@ import me.duncte123.botcommons.commands.ICommandContext;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import resources.CONFIG;
+import assets.CONFIG;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.Objects.Pixel;
+import assets.Objects.Pixel;
 import services.BotExceptions;
 import services.discordHelpers.EmbedHelper;
 import services.PermissionManager;

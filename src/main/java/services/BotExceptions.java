@@ -2,7 +2,7 @@ package services;
 
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import resources.EMOTES;
+import assets.EMOTES;
 
 import java.awt.*;
 

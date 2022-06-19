@@ -1,6 +1,6 @@
 package services.place;
 
-import resources.Objects.Pixel;
+import assets.Objects.Pixel;
 import services.database.DBHandlerPlace;
 
 import java.awt.*;

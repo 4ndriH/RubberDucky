@@ -1,6 +1,6 @@
 package services.place;
 
-import resources.Objects.Pixel;
+import assets.Objects.Pixel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

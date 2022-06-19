@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.Objects.Pixel;
+import assets.Objects.Pixel;
 import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;

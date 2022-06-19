@@ -5,11 +5,11 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
+import assets.CONFIG;
 import services.BotExceptions;
 import services.CommandManager;
 import services.discordHelpers.EmbedHelper;
-import resources.Objects.HelpEntry;
+import assets.Objects.HelpEntry;
 
 import java.awt.*;
 import java.util.HashMap;

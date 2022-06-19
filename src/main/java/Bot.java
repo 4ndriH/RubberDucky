@@ -3,7 +3,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import resources.CONFIG;
+import assets.CONFIG;
 import services.database.ConnectionPool;
 import services.database.DBHandlerConfig;
 import services.listener.ButtonListener;

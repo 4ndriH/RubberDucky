@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.EMOTES;
+import assets.EMOTES;
 import services.PermissionManager;
 import services.database.DBHandlerWhitelistedServers;
 import services.discordHelpers.EmbedHelper;

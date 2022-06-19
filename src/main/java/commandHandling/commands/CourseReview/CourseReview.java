@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import resources.CONFIG;
+import assets.CONFIG;
 import services.BotExceptions;
 import services.discordHelpers.EmbedHelper;
 import services.Miscellaneous.VVZScraper;
