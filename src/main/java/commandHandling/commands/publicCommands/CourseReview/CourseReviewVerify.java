@@ -6,15 +6,18 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DBHandlerCourseReviewVerify;
 import services.EmbedHelper;
+import services.Objects.Review;
+import services.database.DBHandlerCourseReviewVerify;
 
 import java.util.List;
 import java.util.Map;
 
+import static services.database.DBHandlerCourse.getCourseName;
+
 public class CourseReviewVerify implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReviewVerify.class);
-    private static Map<Integer, String[]> reviews;
+    private static Map<Integer, Review> reviews;
     private static CommandContext ctx;
 
     public CourseReviewVerify(Logger cmdManagerLogger) {
@@ -39,14 +42,20 @@ public class CourseReviewVerify implements CommandInterface {
 
     private static void sendEmbed() {
         if (!reviews.isEmpty()) {
-            Map.Entry<Integer, String[]> entry = reviews.entrySet().iterator().next();
-            EmbedBuilder embed = EmbedHelper.embedBuilder("Course Feedback: " + entry.getKey());
-            embed.setDescription(entry.getValue()[0]);
-            embed.setFooter(entry.getValue()[1]);
+            Review review  = reviews.entrySet().iterator().next().getValue();
+            EmbedBuilder embed = EmbedHelper.embedBuilder(review.courseNumber + " - " + getCourseName(review.courseNumber));
+            embed.setDescription(review.review);
+
+            if (review.discordUserId != null) {
+                embed.setFooter(ctx.getJDA().getUserById(review.discordUserId).getAsTag());
+            } else {
+                embed.setFooter("eth_id");
+            }
+
             ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
-                    Button.danger("cfvReject - " + entry.getKey() + " - " + ctx.getAuthor().getId(), "Reject"),
-                    Button.primary("cfvQuit - " + entry.getKey() + " - " + ctx.getAuthor().getId(), "Quit"),
-                    Button.success("cfvAccept - " + entry.getKey() + " - " + ctx.getAuthor().getId(), "Accept")
+                    Button.danger("cfvReject - " + review.key + " - " + ctx.getAuthor().getId(), "Reject"),
+                    Button.primary("cfvQuit - " + review.key + " - " + ctx.getAuthor().getId(), "Quit"),
+                    Button.success("cfvAccept - " + review.key + " - " + ctx.getAuthor().getId(), "Accept")
             ).queue();
         } else {
             EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("Nothing to review"), 32);
