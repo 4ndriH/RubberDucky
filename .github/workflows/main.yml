@@ -25,7 +25,7 @@ jobs:
           mvn -B package --file pom.xml
           mkdir staging && cp target/*.jar staging
           
-      - name: Move old RubberDucky.jar to a save palce
+      - name: Move old RubberDucky.jar to a save place
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: mkdir --parents ${{ secrets.TARGET_DIRECTORY }}/oldVersions/$(date +%Y%m%d_%H%M%S) && mv ${{ secrets.TARGET_DIRECTORY }}/RubberDucky.jar $_
@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           privateKey: ${{ secrets.SSH_KEY }}
           
-      - name: Set the comit SHA key in the database
+      - name: Set the commit SHA key in the database
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: sqlite3 ${{ secrets.TARGET_DIRECTORY }}/DB/RubberDucky.db 'UPDATE config SET value="${{ github.sha }}"  WHERE key="GitHubSHA"'
