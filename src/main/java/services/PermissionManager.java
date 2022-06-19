@@ -21,33 +21,21 @@ public class PermissionManager {
     public static ArrayList<String> servers = new ArrayList<>();
 
     public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
-        return authenticateOwner(ctx) || !blackListCheck(ctx) &&  securityClearanceCheck(ctx, cmd) &&  channelCheck(ctx, cmd.getNameLC())
-                && serverCheck(ctx);
-    }
-
-    private static boolean securityClearanceCheck(CommandContext ctx, CommandInterface cmd) {
-        if (!administratorCheck(ctx, cmd) && !moderatorCheck(ctx, cmd) && !userCheck(ctx, cmd)) {
-           addReaction(ctx, 4);
-           return false;
-        }
-
-        return true;
+        return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
+                securityClearanceCheck(ctx, cmd) && channelCheck(ctx, cmd.getNameLC());
     }
 
     public static boolean authenticateOwner(CommandContext ctx) {
         return ctx.getSecurityClearance() == 0;
     }
 
-    public static boolean administratorCheck(CommandContext ctx, CommandInterface cmd) {
-        return ctx.getSecurityClearance() == 1 && cmd.getRestrictionLevel() > 0;
-    }
+    public static boolean securityClearanceCheck(CommandContext ctx, CommandInterface cmd) {
+        if (ctx.getSecurityClearance() > cmd.getRestrictionLevel()) {
+           addReaction(ctx, 4);
+           return false;
+        }
 
-    public static boolean moderatorCheck(CommandContext ctx, CommandInterface cmd) {
-        return ctx.getSecurityClearance() == 2 && cmd.getRestrictionLevel() > 1;
-    }
-
-    public static boolean userCheck(CommandContext ctx, CommandInterface cmd) {
-        return ctx.getSecurityClearance() == 3 && cmd.getRestrictionLevel() > 2;
+        return true;
     }
 
     public static boolean serverCheck(CommandContext ctx) {
@@ -59,8 +47,8 @@ public class PermissionManager {
         return true;
     }
 
-    public static boolean channelCheck(CommandContext ctx, String invoke) {
-        if (channels.get(invoke) == null || !channels.get(invoke).contains(ctx.getChannel().getId())) {
+    public static boolean channelCheck(CommandContext ctx, String command) {
+        if (ctx.getSecurityClearance() == 3 && channelWhitelistCheck(ctx, command)) {
             addReaction(ctx, 2);
             return false;
         }
@@ -92,5 +80,9 @@ public class PermissionManager {
     public static void initiateLockdown() {
         channels = new HashMap<>();
         servers = new ArrayList<>();
+    }
+
+    private static boolean channelWhitelistCheck(CommandContext ctx, String command) {
+        return channels.get(command) == null || !channels.get(command).contains(ctx.getChannel().getId());
     }
 }
