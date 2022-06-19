@@ -11,6 +11,8 @@ import services.database.DBHandlerWhitelistedServers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static services.ReactionHelper.addReaction;
+
 public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
 
@@ -19,8 +21,17 @@ public class PermissionManager {
     public static ArrayList<String> servers = new ArrayList<>();
 
     public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
-        return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
-                (administratorCheck(ctx, cmd) || moderatorCheck(ctx, cmd) || userCheck(ctx, cmd));
+        return authenticateOwner(ctx) || !blackListCheck(ctx) &&  securityClearanceCheck(ctx, cmd) &&  channelCheck(ctx, cmd.getNameLC())
+                && serverCheck(ctx);
+    }
+
+    private static boolean securityClearanceCheck(CommandContext ctx, CommandInterface cmd) {
+        if (!administratorCheck(ctx, cmd) && !moderatorCheck(ctx, cmd) && !userCheck(ctx, cmd)) {
+           addReaction(ctx, 4);
+           return false;
+        }
+
+        return true;
     }
 
     public static boolean authenticateOwner(CommandContext ctx) {
@@ -36,20 +47,34 @@ public class PermissionManager {
     }
 
     public static boolean userCheck(CommandContext ctx, CommandInterface cmd) {
-        return ctx.getSecurityClearance() == 3 && cmd.getRestrictionLevel() > 2
-                && channelCheck(ctx, cmd.getName().toLowerCase());
+        return ctx.getSecurityClearance() == 3 && cmd.getRestrictionLevel() > 2;
     }
 
     public static boolean serverCheck(CommandContext ctx) {
-        return servers.contains(ctx.getGuild().getId());
-    }
+        if (!servers.contains(ctx.getGuild().getId())) {
+            addReaction(ctx, 3);
+            return false;
+        }
 
-    public static boolean blackListCheck(CommandContext ctx) {
-        return blackList.contains(ctx.getAuthor().getId());
+        return true;
     }
 
     public static boolean channelCheck(CommandContext ctx, String invoke) {
-        return channels.get(invoke) != null && channels.get(invoke).contains(ctx.getChannel().getId());
+        if (channels.get(invoke) == null || !channels.get(invoke).contains(ctx.getChannel().getId())) {
+            addReaction(ctx, 2);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean blackListCheck(CommandContext ctx) {
+        if (blackList.contains(ctx.getAuthor().getId())) {
+            addReaction(ctx, 1);
+            return true;
+        }
+
+        return false;
     }
 
     public static boolean coolDownCheck(CommandContext ctx, String command) {

@@ -7,6 +7,7 @@ import resources.EMOTES;
 import java.awt.*;
 
 import static services.MessageDeleteHelper.deleteMsg;
+import static services.ReactionHelper.addReaction;
 
 public class BotExceptions {
     public static void invalidArgumentsException(CommandContext ctx) {
@@ -59,6 +60,7 @@ public class BotExceptions {
 
     // Builds the embed and sends it as a response to a failed sub command
     private static void sendMessage(String type, String message, CommandContext ctx, boolean arguments) {
+        addReaction(ctx, 5);
         EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle(type);

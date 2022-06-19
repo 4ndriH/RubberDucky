@@ -13,12 +13,9 @@ import commandHandling.commands.publicCommands.CourseReview.CourseReview;
 import commandHandling.commands.publicCommands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.publicCommands.place.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
-import resources.EMOTES;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,9 +24,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static services.MessageDeleteHelper.deleteMsg;
+import static services.ReactionHelper.addReaction;
+import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
-    private static final Logger cmdLogger = LoggerFactory.getLogger("Command Logger");
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private final List<CommandInterface> commands = new ArrayList<>();
 
@@ -111,33 +109,13 @@ public class CommandManager {
         CommandContext ctx = new CommandContext(event, arguments);
 
         deleteMsg(ctx.getMessage(), 128);
+        commandLogger(ctx);
 
         if (cmd != null && PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
-            if (!cmd.requiresFurtherChecks()) {
-                commandLogger(cmd.getName(), ctx, true);
+            (new Thread(() -> cmd.handle(ctx))).start();
+            if (!getCommand(invoke).requiresFurtherChecks()) {
+                addReaction(ctx, 0);
             }
-
-            (new Thread(() -> {
-                cmd.handle(ctx);
-            })).start();
-        } else {
-            commandLogger(invoke, ctx, false);
         }
-    }
-
-    public static void commandLogger(String name, CommandContext ctx, boolean success) {
-        if (success) {
-            ctx.getMessage().addReaction(EMOTES.RDG.getAsReaction()).queue(
-                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
-            );
-        } else {
-            ctx.getMessage().addReaction(EMOTES.RDR.getAsReaction()).queue(
-                    null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)
-            );
-        }
-
-        cmdLogger.info(ctx.getAuthor().getName() + " ran command " + CONFIG.Prefix.get() + name.toLowerCase() +
-                (ctx.getArguments().size() != 0 ? " " + ctx.getArguments().toString() : "") +
-                (success ? " successfully" : " unsuccessfully"));
     }
 }

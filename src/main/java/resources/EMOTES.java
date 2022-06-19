@@ -3,6 +3,13 @@ package resources;
 public enum EMOTES {
     RDG(":rubberDuckyGreen:854040000902201384"),
     RDR(":rubberDuckyRed:854040013284180028"),
+    RDSuccess(":Success:988039759337259008"),
+    RDError(":Error:988039773711118357"),
+    RDBlacklisted(":Blacklisted:988039788860960818"),
+    RDCoolDown(":Cooldown:988039803222233128"),
+    RDLackingPermissions(":LackingPermissions:988040009686855771"),
+    RDChannelWhitelist(":ChannelNotWhitelisted:988040025792995388"),
+    RDServerWhitelist(":ServerNotWhitelisted:988040042402443284"),
     NLD(":NotLikeDis:919314084552376410"),
     // Progressbar left
     L0(":left00:854039658374496256"),

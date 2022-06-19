@@ -7,15 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.CommandManager;
+import services.EmbedHelper;
 import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
-import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static services.ReactionHelper.addReaction;
 
 public class Course implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(Course.class);
@@ -38,7 +39,6 @@ public class Course implements CommandInterface {
             }
             embed.setDescription(sb);
         } else if (!pattern.matcher(ctx.getArguments().get(0)).find()) {
-            CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.invalidCourseNumber(ctx, "\nUse `" + CONFIG.Prefix.get() + "course` to get a list of courses with reviews");
             return;
         } else if (!courses.contains(ctx.getArguments().get(0))) {
@@ -60,7 +60,7 @@ public class Course implements CommandInterface {
                 }
             }
 
-            CommandManager.commandLogger(getName(), ctx, true);
+            addReaction(ctx, 0);
             embed.setDescription(sb.toString());
         }
 

@@ -5,11 +5,12 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.CommandManager;
-import services.database.DBHandlerSQL;
 import services.EmbedHelper;
+import services.database.DBHandlerSQL;
 
 import java.awt.*;
+
+import static services.ReactionHelper.addReaction;
 
 public class SQL implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(SQL.class);
@@ -33,10 +34,10 @@ public class SQL implements CommandInterface {
         embed.setDescription("rdsql " + sb);
 
         if (ret > 0) {
-            CommandManager.commandLogger(getName(), ctx, true);
+            addReaction(ctx, 0);
             embed.setColor(new Color(0x009608));
         } else {
-            CommandManager.commandLogger(getName(), ctx, false);
+            addReaction(ctx, 5);
             if (ret == 0) {
                 embed.setColor(new Color(0xe3d800));
             } else {

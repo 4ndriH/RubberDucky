@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.CommandManager;
 import services.Miscellaneous.TimeFormat;
 
 import javax.imageio.ImageIO;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import static services.MessageDeleteHelper.deleteMsg;
+import static services.ReactionHelper.addReaction;
 
 public class PlaceEncode implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
@@ -49,7 +49,6 @@ public class PlaceEncode implements CommandInterface {
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             ctx.getMessage().delete().queue();
         } catch (Exception e) {
-            CommandManager.commandLogger("Place", ctx, false);
             System.out.println(e);
             BotExceptions.missingAttachmentException(ctx);
             return;
@@ -61,7 +60,6 @@ public class PlaceEncode implements CommandInterface {
             width = Integer.parseInt(ctx.getArguments().get(2));
             height = Integer.parseInt(ctx.getArguments().get(3));
         } catch (Exception e) {
-            CommandManager.commandLogger("Place", ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
@@ -72,7 +70,7 @@ public class PlaceEncode implements CommandInterface {
             pattern = "";
         }
 
-        CommandManager.commandLogger("Place", ctx, true);
+        addReaction(ctx, 0);
 
         if (ctx.getArguments().contains("-c")) {
             spreadContained = true;

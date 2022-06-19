@@ -9,12 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.CONFIG;
 import services.BotExceptions;
-import services.CommandManager;
+import services.EmbedHelper;
 import services.VVZScraper;
 import services.database.DBHandlerCourse;
 import services.database.DBHandlerCourseReview;
 import services.database.DBHandlerCourseReviewVerify;
-import services.EmbedHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static services.MessageDeleteHelper.deleteMsg;
+import static services.ReactionHelper.addReaction;
 
 public class CourseReview implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReview.class);
@@ -36,20 +36,17 @@ public class CourseReview implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         if (ctx.getArguments().size() == 0) {
-            CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.invalidArgumentsException(ctx);
             return;
         } else if (!pattern.matcher(ctx.getArguments().get(0)).find()) {
-            CommandManager.commandLogger(getName(), ctx, false);
             BotExceptions.invalidCourseNumber(ctx, "");
             return;
         }else if (inputs.containsKey(ctx.getAuthor().getId())) {
-            CommandManager.commandLogger(getName(), ctx, false);
             EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("You have an unfinished course feedback"), 64);
             return;
         }
 
-        CommandManager.commandLogger(getName(), ctx, true);
+        addReaction(ctx, 0);
 
         String feedback = ctx.getArguments().stream().skip(1).map(Object::toString).collect(Collectors.joining(" ")).replace("```", "");
         String courseNumber = ctx.getArguments().get(0).toUpperCase();

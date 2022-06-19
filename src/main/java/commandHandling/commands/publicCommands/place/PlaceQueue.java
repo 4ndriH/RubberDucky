@@ -7,15 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import resources.Pixel;
 import services.BotExceptions;
-import services.CommandManager;
+import services.EmbedHelper;
 import services.PermissionManager;
 import services.database.DBHandlerPlace;
-import services.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+
+import static services.ReactionHelper.addReaction;
 
 public class PlaceQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
@@ -80,7 +81,7 @@ public class PlaceQueue implements CommandInterface {
         DBHandlerPlace.insertProjectIntoQueue(id, ctx.getAuthor().getId(), pixels);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
-        CommandManager.commandLogger(getName(), ctx, true);
+        addReaction(ctx, 0);
         embed.setDescription("Your file got ID " + id);
 
         EmbedHelper.sendEmbed(ctx, embed, 32);
