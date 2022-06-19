@@ -19,10 +19,10 @@ public class DirectoryVerification {
 
         directories.add(new File("DB"));
         directories.add(new File("logs"));
-        directories.add(new File("assets"));
-        directories.add(new File("assets/purge"));
-        directories.add(new File("assets/duckies"));
-        directories.add(new File("assets/lmgtfy"));
+        directories.add(new File("resources"));
+        directories.add(new File("resources/purge"));
+        directories.add(new File("resources/duckies"));
+        directories.add(new File("resources/lmgtfy"));
         directories.add(new File("tempFiles"));
         directories.add(new File("tempFiles/place"));
         directories.add(new File("tempFiles/place/queue"));
@@ -45,13 +45,13 @@ public class DirectoryVerification {
         boolean fileDownloaded = false;
 
         files.put("DB/", new ArrayList<>(List.of("RubberDucky.db")));
-        files.put("assets/",
+        files.put("resources/",
                 new ArrayList<>(List.of(
                     "shutdown.gif",
                     "sudoku.jpg",
                     "nuke.gif"
                 )));
-        files.put("assets/duckies/",
+        files.put("resources/duckies/",
                 new ArrayList<>(List.of(
                         "ducky0.png",
                         "ducky1.png",
@@ -62,13 +62,13 @@ public class DirectoryVerification {
                         "ducky6.png",
                         "ducky7.png"
                 )));
-        files.put("assets/purge/",
+        files.put("resources/purge/",
                 new ArrayList<>(List.of(
                         "busyPurging.png",
                         "purgeCommenced.jpg",
                     "purgeEnded.jpg"
                 )));
-        files.put("assets/lmgtfy/",
+        files.put("resources/lmgtfy/",
                 new ArrayList<>(List.of(
                         "lmgtfy.png",
                         "lmgtfyResult.png",
