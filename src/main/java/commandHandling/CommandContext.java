@@ -13,6 +13,14 @@ public class CommandContext implements ICommandContext {
     private final List<String> arguments;
     private final int securityClearance;
 
+    // ---------------------------------------------------------
+    // SecurityClearance:
+    // 0 - Owner
+    // 1 - Administrator
+    // 2 - Moderators
+    // 3 - Plebs
+    // ---------------------------------------------------------
+
     public CommandContext(GuildMessageReceivedEvent event, List<String> arguments) {
         this.event = event;
         this.arguments = arguments;
