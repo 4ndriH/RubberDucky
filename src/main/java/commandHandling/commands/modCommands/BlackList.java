@@ -13,6 +13,8 @@ import services.discordHelpers.EmbedHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static services.PermissionManager.getBlacklist;
+
 public class BlackList implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(BlackList.class);
 
@@ -22,16 +24,18 @@ public class BlackList implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        ArrayList<String> blacklist = getBlacklist();
+
         if (ctx.getArguments().size() > 0 && !ctx.getArguments().get(0).contains("&")) {
             String id = ctx.getArguments().get(0).replace("<@", "").replace(">", "");
-            if (PermissionManager.blackList.contains(id)) {
+            if (blacklist.contains(id)) {
                 DBHandlerBlacklistedUsers.removeUserFromBlacklist(id);
             } else {
                 DBHandlerBlacklistedUsers.addUserToBlacklist(id);
             }
             PermissionManager.reload();
         } else {
-            ArrayList<String> ids = PermissionManager.blackList;
+            ArrayList<String> ids = blacklist;
             EmbedBuilder embed = EmbedHelper.embedBuilder("Blacklisted people");
 
             if (ids.size() == 0) {

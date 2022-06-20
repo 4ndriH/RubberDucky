@@ -16,9 +16,9 @@ import static services.discordHelpers.ReactionHelper.addReaction;
 public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
 
-    public static HashMap<String, ArrayList<String>> channels = new HashMap<>();
-    public static ArrayList<String> blackList = new ArrayList<>();
-    public static ArrayList<String> servers = new ArrayList<>();
+    private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
+    private static ArrayList<String> blackList = new ArrayList<>();
+    private static ArrayList<String> servers = new ArrayList<>();
 
     public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
         return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
@@ -48,7 +48,7 @@ public class PermissionManager {
     }
 
     public static boolean channelCheck(CommandContext ctx, String command) {
-        if (ctx.getSecurityClearance() == 3 && channelWhitelistCheck(ctx, command)) {
+        if (ctx.getSecurityClearance() == 3 && channelWhitelistCheck(ctx.getChannel().getId(), command)) {
             addReaction(ctx, 2);
             return false;
         }
@@ -82,7 +82,19 @@ public class PermissionManager {
         servers = new ArrayList<>();
     }
 
-    private static boolean channelWhitelistCheck(CommandContext ctx, String command) {
-        return channels.get(command) == null || !channels.get(command).contains(ctx.getChannel().getId());
+    public static ArrayList<String> getBlacklist() {
+        return new ArrayList<>(blackList);
+    }
+
+    public static ArrayList<String> getWhitelistedServers() {
+        return new ArrayList<>(servers);
+    }
+
+    public static HashMap<String, ArrayList<String>> getWhitelistedChannels() {
+        return new HashMap<>(channels);
+    }
+
+    private static boolean channelWhitelistCheck(String discordChannelId, String command) {
+        return channels.get(discordChannelId) == null || !channels.get(discordChannelId).contains(command);
     }
 }

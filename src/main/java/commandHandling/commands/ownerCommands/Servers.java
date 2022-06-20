@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static services.PermissionManager.getWhitelistedServers;
+
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
 
@@ -24,6 +26,8 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        ArrayList<String> serverIds = getWhitelistedServers();
+
         if (ctx.getArguments().size() > 0) {
             String argument = ctx.getArguments().get(0);
 
@@ -31,7 +35,7 @@ public class Servers implements CommandInterface {
                 argument = ctx.getGuild().getId();
             }
 
-            if (PermissionManager.servers.contains(argument)) {
+            if (serverIds.contains(argument)) {
                 DBHandlerWhitelistedServers.removeServerFromWhitelist(ctx.getGuild().getId());
             } else {
                 DBHandlerWhitelistedServers.addServerToWhitelist(ctx.getGuild().getId());
@@ -40,7 +44,6 @@ public class Servers implements CommandInterface {
             PermissionManager.reload();
         } else {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
-            ArrayList<String> ids = PermissionManager.servers;
             HashMap<String, String> servers = new HashMap<>();
             ArrayList<String> names = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
@@ -49,7 +52,7 @@ public class Servers implements CommandInterface {
                 String name = guild.getName();
                 names.add(name);
 
-                if (ids.contains(guild.getId())) {
+                if (serverIds.contains(guild.getId())) {
                     servers.put(name, EMOTES.RDG.getAsEmote() + " " + name);
                 } else {
                     servers.put(name, EMOTES.RDR.getAsEmote() + " " + name);

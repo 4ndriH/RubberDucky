@@ -9,6 +9,8 @@ import services.PermissionManager;
 
 import java.util.List;
 
+import static services.PermissionManager.getWhitelistedChannels;
+
 public class LockDown implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LockDown.class);
 
@@ -18,7 +20,7 @@ public class LockDown implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (PermissionManager.channels.size() == 0) {
+        if (getWhitelistedChannels().size() == 0) {
             PermissionManager.reload();
         } else {
             LOGGER.info("Initiating Lockdown!");

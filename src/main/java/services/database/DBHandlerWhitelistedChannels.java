@@ -47,11 +47,11 @@ public class DBHandlerWhitelistedChannels {
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                String command = rs.getString("Command");
-                if (!whitelistedChannels.containsKey(command)) {
-                    whitelistedChannels.put(command, new ArrayList<>());
+                String discordChannelId = rs.getString("DiscordChannelId");
+                if (!whitelistedChannels.containsKey(discordChannelId)) {
+                    whitelistedChannels.put(discordChannelId, new ArrayList<>());
                 }
-                whitelistedChannels.get(command).add(rs.getString("DiscordChannelId"));
+                whitelistedChannels.get(discordChannelId).add(rs.getString("Command"));
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
