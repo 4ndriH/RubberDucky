@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import static services.PermissionManager.getWhitelistedServers;
 
+
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
 
