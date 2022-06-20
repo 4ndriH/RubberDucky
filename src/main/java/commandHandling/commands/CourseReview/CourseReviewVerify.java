@@ -1,22 +1,25 @@
 package commandHandling.commands.CourseReview;
 
+import assets.Objects.Review;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.discordHelpers.EmbedHelper;
-import assets.Objects.Review;
 import services.database.DBHandlerCourseReviewVerify;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static services.database.DBHandlerCourse.getCourseName;
+import static services.discordHelpers.EmbedHelper.embedBuilder;
+import static services.discordHelpers.EmbedHelper.sendEmbed;
 
 public class CourseReviewVerify implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReviewVerify.class);
+    private static final AtomicBoolean alreadyVerifying = new AtomicBoolean(false);
     private static Map<Integer, Review> reviews;
     private static CommandContext ctx;
 
@@ -26,9 +29,15 @@ public class CourseReviewVerify implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        reviews = DBHandlerCourseReviewVerify.getUnverifiedReviews();
-        CourseReviewVerify.ctx = ctx;
-        sendEmbed();
+        if (alreadyVerifying.compareAndSet(false, true)) {
+            reviews = DBHandlerCourseReviewVerify.getUnverifiedReviews();
+            CourseReviewVerify.ctx = ctx;
+            sendEmbedCRV();
+        } else {
+            EmbedBuilder embed = embedBuilder("Someone is already reviewing reviews");
+            embed.setDescription(CourseReviewVerify.ctx.getAuthor().getAsTag());
+            sendEmbed(ctx, embed, 32);
+        }
     }
 
     public static void castVerdict(int key, int status) {
@@ -36,14 +45,15 @@ public class CourseReviewVerify implements CommandInterface {
             DBHandlerCourseReviewVerify.updateVerifiedStatus(key, status);
             LOGGER.info("Review " + key + " has been " + (status == 1 ? "accepted" : "rejected"));
             reviews.remove(key);
-            sendEmbed();
+            sendEmbedCRV();
         }
+        alreadyVerifying.set(false);
     }
 
-    private static void sendEmbed() {
+    private static void sendEmbedCRV() {
         if (!reviews.isEmpty()) {
             Review review  = reviews.entrySet().iterator().next().getValue();
-            EmbedBuilder embed = EmbedHelper.embedBuilder(review.courseNumber + " - " + getCourseName(review.courseNumber));
+            EmbedBuilder embed = embedBuilder(review.courseNumber + " - " + getCourseName(review.courseNumber));
             embed.setDescription(review.review);
 
             if (review.discordUserId != null) {
@@ -58,7 +68,8 @@ public class CourseReviewVerify implements CommandInterface {
                     Button.success("cfvAccept - " + review.key + " - " + ctx.getAuthor().getId(), "Accept")
             ).queue();
         } else {
-            EmbedHelper.sendEmbed(ctx, EmbedHelper.embedBuilder("Nothing to review"), 32);
+            sendEmbed(ctx, embedBuilder("Nothing to review"), 32);
+            alreadyVerifying.set(false);
         }
     }
 
