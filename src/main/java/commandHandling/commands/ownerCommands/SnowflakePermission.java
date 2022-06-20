@@ -44,7 +44,8 @@ public class SnowflakePermission implements CommandInterface {
             } else {
                 if (discordChannelId.equals("e")) {
                     for (TextChannel channel : ctx.getGuild().getTextChannels()) {
-                        if (ctx.getSelfMember().getPermissions(channel).contains(Permission.MESSAGE_EMBED_LINKS)) {
+                        if (ctx.getSelfMember().getPermissions(channel).contains(Permission.MESSAGE_EMBED_LINKS) &&
+                                ctx.getSelfMember().getPermissions(channel).contains(Permission.MESSAGE_WRITE)) {
                             addSnowflakePermissions(discordUserId, discordServerId, channel.getId(), command);
                         }
                     }
