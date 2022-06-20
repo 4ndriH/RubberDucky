@@ -48,7 +48,7 @@ public class DatabaseVerification {
                 "DiscordMessageId TEXT," +
                 "DeleteTime INTEGER NOT NULL," +
                 "UptimeNumber INTEGER," +
-                "PRIMARY KEY(DiscordServerId,DiscordChannelId,DiscordMessageId)"
+                "PRIMARY KEY(DiscordServerId, DiscordChannelId, DiscordMessageId)"
         );
         database.put("PlaceProjects",
                 "Id INTEGER NOT NULL," +
@@ -65,7 +65,7 @@ public class DatabaseVerification {
                 "Alpha REAL NOT NULL," +
                 "PlaceColor TEXT," +
                 "FOREIGN KEY(Id) REFERENCES PlaceProjects on update cascade on delete cascade," +
-                "PRIMARY KEY(Id,Idx)"
+                "PRIMARY KEY(Id, Idx)"
         );
         database.put("SpokesPeople",
                 "user TEXT NOT NULL UNIQUE," +
@@ -76,11 +76,18 @@ public class DatabaseVerification {
         database.put("WhitelistedChannels",
                 "DiscordChannelId TEXT," +
                 "Command TEXT," +
-                "PRIMARY KEY(DiscordChannelId,Command)"
+                "PRIMARY KEY(DiscordChannelId, Command)"
         );
         database.put("WhitelistedServers",
                 "DiscordServerId TEXT," +
                 "PRIMARY KEY(DiscordServerId)"
+        );
+        database.put("SnowflakePermissions",
+                "DiscordUserId TEXT," +
+                "DiscordServerId TEXT," +
+                "DiscordChannelId TEXT," +
+                "Command TEXT," +
+                "PRIMARY KEY(DiscordUserId, DiscordServerId, DiscordChannelId, Command)"
         );
 
         for (String table : database.keySet()) {

@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerBlacklistedUsers;
+import services.database.DBHandlerSnowflakePermissions;
 import services.database.DBHandlerWhitelistedChannels;
 import services.database.DBHandlerWhitelistedServers;
 
@@ -17,16 +18,27 @@ public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
 
     private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
+    private static HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = new HashMap<>();
     private static ArrayList<String> blackList = new ArrayList<>();
     private static ArrayList<String> servers = new ArrayList<>();
 
     public static boolean permissionCheck(CommandContext ctx, CommandInterface cmd) {
-        return authenticateOwner(ctx) || serverCheck(ctx) && !blackListCheck(ctx) &&
-                securityClearanceCheck(ctx, cmd) && channelCheck(ctx, cmd.getNameLC());
+        return authenticateOwner(ctx) || snowflakeCheck(ctx, cmd.getNameLC()) || serverCheck(ctx) &&
+                !blackListCheck(ctx) && securityClearanceCheck(ctx, cmd) && channelCheck(ctx, cmd.getNameLC());
     }
 
     public static boolean authenticateOwner(CommandContext ctx) {
         return ctx.getSecurityClearance() == 0;
+    }
+
+    public static boolean snowflakeCheck(CommandContext ctx, String command) {
+        String discordUserId = ctx.getAuthor().getId();
+        String discordServerId = ctx.getGuild().getId();
+        String discordChannelId = ctx.getChannel().getId();
+        return snowflakes.containsKey(discordUserId) &&
+                snowflakes.get(discordUserId).containsKey(discordServerId) &&
+                snowflakes.get(discordUserId).get(discordServerId).containsKey(discordChannelId)  &&
+                snowflakes.get(discordUserId).get(discordServerId).get(discordChannelId).contains(command);
     }
 
     public static boolean securityClearanceCheck(CommandContext ctx, CommandInterface cmd) {
@@ -73,6 +85,7 @@ public class PermissionManager {
         blackList = DBHandlerBlacklistedUsers.getBlacklistedUsers();
         servers = DBHandlerWhitelistedServers.getWhitelistedServers();
         channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
+        snowflakes = DBHandlerSnowflakePermissions.getSnowflakePermissions();
 
         LOGGER.info("Permissions loaded");
     }
@@ -92,6 +105,10 @@ public class PermissionManager {
 
     public static HashMap<String, ArrayList<String>> getWhitelistedChannels() {
         return new HashMap<>(channels);
+    }
+
+    public static HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> getSnowflakes() {
+        return new HashMap<>(snowflakes);
     }
 
     private static boolean channelWhitelistCheck(String discordChannelId, String command) {

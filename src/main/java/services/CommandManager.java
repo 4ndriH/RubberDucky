@@ -41,6 +41,7 @@ public class CommandManager {
         addCommand(new CourseReviewVerify(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Ducky(LOGGER));
+        addCommand(new SnowflakePermission(LOGGER));
 //        addCommand(new ExportDatabase(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Kill(LOGGER));
