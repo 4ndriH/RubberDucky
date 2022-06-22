@@ -9,13 +9,15 @@ import org.slf4j.LoggerFactory;
 import services.discordHelpers.EmbedHelper;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Purge implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Purge.class);
     private final EmbedBuilder purgeCommenced = EmbedHelper.embedBuilder("Happy purging");
     private final EmbedBuilder busyPurging = EmbedHelper.embedBuilder("Already busy purging");
     private final EmbedBuilder purgeEnded = EmbedHelper.embedBuilder();
-    private volatile boolean isRunning, stop;
+    private static final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private static final AtomicBoolean stop = new AtomicBoolean(false);
 
     public Purge(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -25,32 +27,30 @@ public class Purge implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (isRunning) {
+        if (isRunning.compareAndSet(false, true)) {
+            (new Thread(() -> {
+                List<Message> messages = ctx.getChannel().getHistory().retrievePast(64).complete();
+                EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "resources/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
+                do {
+                    for (int i = 0; i < messages.size() && !stop.get(); i++) {
+                        messages.get(i).delete().complete();
+                        try {
+                            Thread.sleep(1024);
+                        } catch (Exception ignored) {}
+                    }
+                    messages = ctx.getChannel().getHistory().retrievePast(64).complete();
+                } while (messages.size() != 0 && !stop.get());
+                EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "resources/purge/purgeEnded.jpg", "purgeEnded.jpg");
+                isRunning.set(false);
+                stop.set(false);
+            })).start();
+        } else {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
-                stop = true;
+                stop.set(true);
             } else {
-                EmbedHelper.sendEmbedWithFile(ctx, busyPurging, 32, "assets/purge/busyPurging.png", "busyPurging.png");
+                EmbedHelper.sendEmbedWithFile(ctx, busyPurging, 32, "resources/purge/busyPurging.png", "busyPurging.png");
             }
-            return;
         }
-
-        isRunning = true;
-
-        (new Thread(() -> {
-            EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "assets/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
-            List<Message> messages;
-            do {
-                messages = ctx.getChannel().getHistory().retrievePast(64).complete();
-                for (int i = 0; i < messages.size() && !stop; i++) {
-                    messages.get(i).delete().complete();
-                    try {
-                        Thread.sleep(1024);
-                    } catch (Exception ignored) {}
-                }
-            } while (messages.size() != 0 && !stop);
-            EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "assets/purge/purgeEnded.jpg", "purgeEnded.jpg");
-            isRunning = stop = false;
-        })).start();
     }
 
     private void embedSetUp() {
