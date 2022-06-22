@@ -1,21 +1,21 @@
 package services;
 
+import assets.CONFIG;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
+import commandHandling.commands.CourseReview.Course;
+import commandHandling.commands.CourseReview.CourseReview;
+import commandHandling.commands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.adminCommands.LockDown;
 import commandHandling.commands.adminCommands.Nuke;
 import commandHandling.commands.modCommands.BlackList;
 import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
-import commandHandling.commands.publicCommands.*;
-import commandHandling.commands.CourseReview.Course;
-import commandHandling.commands.CourseReview.CourseReview;
-import commandHandling.commands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.place.*;
+import commandHandling.commands.publicCommands.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import assets.CONFIG;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

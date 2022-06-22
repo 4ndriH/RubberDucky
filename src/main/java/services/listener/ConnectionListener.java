@@ -1,10 +1,10 @@
 package services.listener;
 
+import assets.CONFIG;
 import commandHandling.commands.place.PlaceDraw;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import assets.CONFIG;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerMessageDeleteTracker;
 import services.database.DBHandlerPlace;
@@ -49,7 +49,6 @@ public class ConnectionListener extends ListenerAdapter {
                     }
                 }
             })).start();
-
             onStartupTasks = false;
         }
     }

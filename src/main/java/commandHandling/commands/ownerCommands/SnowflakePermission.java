@@ -35,9 +35,9 @@ public class SnowflakePermission implements CommandInterface {
 
         if (ctx.getArguments().size() == 4) {
             String discordUserId = ctx.getArguments().get(0).replace("<@", "").replace(">", "");
-            String discordServerId = ctx.getArguments().get(1);
-            String discordChannelId = ctx.getArguments().get(2);
-            String command = ctx.getArguments().get(3);
+            String discordServerId = ctx.getGuild().getId();
+            String discordChannelId = ctx.getArguments().get(1).replace("<#", "").replace(">", "");
+            String command = ctx.getArguments().get(2);
 
             if (snowFlakeCheck(snowflakes, discordUserId, discordServerId, discordChannelId, command)) {
                 removeSnowflakePermissions(discordUserId, discordServerId, discordChannelId, command);
