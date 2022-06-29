@@ -38,12 +38,12 @@ public class Nuke implements CommandInterface {
 
             if (ctx.getMessage().getContentRaw().contains("-g")) {
                 nr++;
-
+                System.out.println("gif");
                 EmbedBuilder embed = EmbedHelper.embedBuilder("**TACTICAL NUKE INCOMING**");
                 embed.setImage("attachment://nuke.gif");
 
                 ctx.getChannel().sendMessageEmbeds(embed.build())
-                        .addFile(new File("assets/nuke.gif")).complete();
+                        .addFile(new File("resources/nuke.gif")).complete();
                 try {
                     Thread.sleep(2048);
                 } catch (Exception ignored) {}
