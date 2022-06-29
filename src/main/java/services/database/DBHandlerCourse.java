@@ -14,7 +14,7 @@ public class DBHandlerCourse {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBHandlerCourse.class);
 
     public static String getCourseName(String courseNumber) {
-        String name = "";
+        String course = "";
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM Courses WHERE CourseNumber=?"
@@ -22,12 +22,12 @@ public class DBHandlerCourse {
             ps.setString(1, courseNumber);
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
-                name = courseNumber + " - " + rs.getString("CourseName");
+                course = rs.getString("CourseNumber") + " - " + rs.getString("CourseName");
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
-        return name;
+        return course;
     }
 
     public static HashSet<String> getCoursesWithVerifiedReviews() {
