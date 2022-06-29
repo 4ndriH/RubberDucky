@@ -4,7 +4,6 @@ import assets.CONFIG;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import commandHandling.commands.CourseReview.Course;
-import commandHandling.commands.CourseReview.CourseReview;
 import commandHandling.commands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.adminCommands.LockDown;
 import commandHandling.commands.adminCommands.Nuke;
@@ -37,7 +36,6 @@ public class CommandManager {
         addCommand(new BlackList(LOGGER));
         addCommand(new Channel(this, LOGGER));
         addCommand(new Course(LOGGER));
-        addCommand(new CourseReview(LOGGER));
         addCommand(new CourseReviewVerify(LOGGER));
         addCommand(new Delete(LOGGER));
         addCommand(new Ducky(LOGGER));

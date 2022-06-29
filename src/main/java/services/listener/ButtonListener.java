@@ -1,7 +1,6 @@
 package services.listener;
 
 import commandHandling.commands.ownerCommands.Kill;
-import commandHandling.commands.CourseReview.CourseReview;
 import commandHandling.commands.CourseReview.CourseReviewVerify;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -30,15 +29,6 @@ public class ButtonListener extends ListenerAdapter {
                 CourseReviewVerify.castVerdict(Integer.parseInt(event.getComponentId().split(" - ")[1]), 1);
             }
             event.getMessage().delete().queue();
-        } else if (event.getComponentId().endsWith(event.getUser().getId())) {
-            if (event.getComponentId().startsWith("cf")) {
-                if (event.getComponentId().contains("Proceed")) {
-                    CourseReview.processProceed(event.getComponentId().split(" - ")[1]);
-                } else if (event.getComponentId().contains("Abort")) {
-                    CourseReview.processAbort(event.getComponentId().split(" - ")[1]);
-                }
-                event.getMessage().delete().queue();
-            }
         } else {
             event.reply("You are not supposed to press this button").setEphemeral(true).queue();
         }
