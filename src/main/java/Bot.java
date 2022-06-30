@@ -6,10 +6,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import assets.CONFIG;
 import services.database.ConnectionPool;
 import services.database.DBHandlerConfig;
-import services.listener.ButtonListener;
-import services.listener.CatchListener;
-import services.listener.ConnectionListener;
-import services.listener.Listener;
+import services.listener.*;
 import services.onStartup.StartUp;
 
 import javax.security.auth.login.LoginException;
@@ -39,6 +36,7 @@ public class Bot {
                 .addEventListeners(new CatchListener())
                 .addEventListeners(new ButtonListener())
                 .addEventListeners(new ConnectionListener())
+                .addEventListeners(new BGListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
