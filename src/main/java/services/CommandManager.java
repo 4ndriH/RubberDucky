@@ -28,7 +28,7 @@ import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
-    private final List<CommandInterface> commands = new ArrayList<>();
+    private static final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
         addCommand(new About(LOGGER));
@@ -86,7 +86,7 @@ public class CommandManager {
     }
 
     @Nullable
-    public CommandInterface getCommand(String search) {
+    public static CommandInterface getCommand(String search) {
         String searchLowerCase = search.toLowerCase();
 
         for (CommandInterface cmd : commands) {
@@ -116,5 +116,9 @@ public class CommandManager {
                 addReaction(ctx, 0);
             }
         }
+    }
+
+    public static boolean isCommand(String command) {
+        return getCommand(command) != null;
     }
 }
