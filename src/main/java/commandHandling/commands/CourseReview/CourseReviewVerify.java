@@ -43,7 +43,7 @@ public class CourseReviewVerify implements CommandInterface {
     public static void castVerdict(int key, int status) {
         if (status != 0) {
             DBHandlerCourseReviewVerify.updateVerifiedStatus(key, status);
-            LOGGER.info("Review " + key + " has been " + (status == 1 ? "accepted" : "rejected"));
+            LOGGER.info("Review " + key + " has been " + (status == 1 ? "accepted" : "rejected") + "by " + ctx.getAuthor().getAsTag());
             reviews.remove(key);
             sendEmbedCRV();
         }
