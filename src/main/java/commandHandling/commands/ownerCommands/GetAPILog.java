@@ -34,7 +34,7 @@ public class GetAPILog implements CommandInterface {
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
 
-            if (line.contains("Started server process")) {
+            if (line.contains("Starting gunicorn")) {
                 sb = new StringBuilder();
             }
 
