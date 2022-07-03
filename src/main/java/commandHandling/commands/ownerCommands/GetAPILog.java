@@ -41,7 +41,7 @@ public class GetAPILog implements CommandInterface {
             sb.append(line).append("\n");
         }
 
-        ctx.getJDA().openPrivateChannelById("155419933998579713").complete()
+        ctx.getJDA().openPrivateChannelById(ctx.getAuthor().getId()).complete()
                 .sendFile(new ByteArrayInputStream(sb.toString().getBytes()), "api_error_log.txt").queue();
     }
 
