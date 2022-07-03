@@ -13,8 +13,8 @@ import javax.security.auth.login.LoginException;
 
 public class Bot {
     public static void main(String[] args) throws LoginException {
-        new ConnectionPool();
         StartUp.checks();
+        new ConnectionPool();
         StartUp.loadEssentials();
         StartUp.updateToken();
         DBHandlerConfig.incrementUptimeCounter();
