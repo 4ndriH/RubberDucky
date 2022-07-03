@@ -42,7 +42,7 @@ public class GetAPILog implements CommandInterface {
         }
 
         ctx.getJDA().openPrivateChannelById("155419933998579713").complete()
-                .sendFile(new ByteArrayInputStream(sb.toString().getBytes()), "api_error_log").queue();
+                .sendFile(new ByteArrayInputStream(sb.toString().getBytes()), "api_error_log.txt").queue();
     }
 
     @Override
