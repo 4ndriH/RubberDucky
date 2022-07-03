@@ -22,12 +22,14 @@ public class Say implements CommandInterface {
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();
         String channel = ctx.getChannel().getId();
-        int repeats;
+        int repeats, i;
 
         try {
             repeats = Integer.parseInt(ctx.getArguments().get(0));
+            i = 1;
         } catch (Exception e) {
             repeats = 1;
+            i = 0;
         }
 
         if (ctx.getArguments().size() == 0) {
@@ -40,8 +42,16 @@ public class Say implements CommandInterface {
             return;
         }
 
-        for (int i = 1; i < ctx.getArguments().size(); i++) {
-            sb.append(ctx.getArguments().get(i)).append(" ");
+        for (; i < ctx.getArguments().size(); i++) {
+            if (ctx.getArguments().get(i).equals("-up")) {
+                String ping = ctx.getArguments().get(++i);
+                sb.append("<@").append(ping).append("> ");
+            } else if (ctx.getArguments().get(i).equals("-rp")) {
+                String ping = ctx.getArguments().get(++i);
+                sb.append("<@&").append(ping).append("> ");
+            } else {
+                sb.append(ctx.getArguments().get(i)).append(" ");
+            }
         }
 
         deleteMsg(ctx.getMessage(), 0);
@@ -52,7 +62,7 @@ public class Say implements CommandInterface {
 
         int finalRepeats = repeats;
         (new Thread(() -> {
-            for (int i = 0; i < finalRepeats && sayChannels.get(channel); i++) {
+            for (int j = 0; j < finalRepeats && sayChannels.get(channel); j++) {
                 ctx.getChannel().sendMessage(sb.toString()).complete();
             }
             sayChannels.remove(channel);
@@ -68,6 +78,9 @@ public class Say implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Repeats a message a certain amount of times");
+        embed.addField("__Additional functionality__", "For the bot to add a user ping do" +
+                "```-up <User ID>``` \n for the bot to add a role ping do" +
+                "```-rp <Role ID>```", false);
         return embed;
     }
 
