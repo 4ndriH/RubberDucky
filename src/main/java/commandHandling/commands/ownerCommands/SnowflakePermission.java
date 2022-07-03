@@ -127,7 +127,7 @@ public class SnowflakePermission implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Give permissions to some special snowflake which they are usually not meant to have");
-        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " [<Server ID>] [<Channel ID>] <User> <Command>```", false);
+        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " [<-s> <Server ID>] [<-c> <Channel ID>] <-u> <User> <-cmd> <Command>```", false);
         embed.addField("__Server ID__", "Specify the server which the channel is in, defaults to current server", false);
         embed.addField("__<Channel ID>__", "Specify the channel where the command should be usable, defaults to current channel", false);
         embed.addField("__<User>__", "Specify who to give the perms to. Can be ping or user ID", false);
