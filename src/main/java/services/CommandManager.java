@@ -57,6 +57,7 @@ public class CommandManager {
         addCommand(new SpokesPeople(LOGGER));
         addCommand(new SQL(LOGGER));
         addCommand(new Status(LOGGER));
+        addCommand(new GetAPILog(LOGGER));
 
         addCommand(new PlaceQueue(LOGGER));
         addCommand(new PlaceDelete(LOGGER));
