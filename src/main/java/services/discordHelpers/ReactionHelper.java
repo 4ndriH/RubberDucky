@@ -50,7 +50,7 @@ public class ReactionHelper {
                         (ex) -> {
                             addUserToBlacklist(ctx.getAuthor().getId());
                             PermissionManager.reload();
-                        })
+                        }).handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
         );
     }
 }
