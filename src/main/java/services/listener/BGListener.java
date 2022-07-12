@@ -1,8 +1,8 @@
 package services.listener;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ public class BGListener extends ListenerAdapter {
     private static int nextNotification = 0;
 
     @Override
-    public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
+    public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
         Message message = event.getMessage();
 
         if (event.getAuthor().getId().equals("778731540359675904") && message.getContentRaw().contains("button")) {
@@ -38,7 +38,7 @@ public class BGListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().getId().equals("778731540359675904")) {
             String messageContent = event.getMessage().getContentRaw();
 

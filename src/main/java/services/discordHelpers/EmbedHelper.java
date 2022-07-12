@@ -48,7 +48,7 @@ public class EmbedHelper {
             EnumSet<Permission> channelPermissions = ctx.getSelfMember().getPermissionsExplicit(ctx.getChannel());
             StringBuilder sb = new StringBuilder();
             Permission[] requiredPermissions = new Permission[]{
-                    Permission.MESSAGE_WRITE,
+                    Permission.MESSAGE_SEND,
                     Permission.MESSAGE_ADD_REACTION,
                     Permission.MESSAGE_ATTACH_FILES,
                     Permission.MESSAGE_EMBED_LINKS,

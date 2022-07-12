@@ -12,7 +12,7 @@ import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
 import commandHandling.commands.place.*;
 import commandHandling.commands.publicCommands.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class CommandManager {
 
     public CommandManager() {
         addCommand(new About(LOGGER));
-        addCommand(new Avatar(LOGGER));
+//        addCommand(new Avatar(LOGGER));
         addCommand(new BlackList(LOGGER));
         addCommand(new Channel(this, LOGGER));
         addCommand(new Course(LOGGER));
@@ -99,7 +99,7 @@ public class CommandManager {
         return null;
     }
 
-    public void handle(GuildMessageReceivedEvent event) {
+    public void handle(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(CONFIG.Prefix.get()), "").split("\\s+");
 

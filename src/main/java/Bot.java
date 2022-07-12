@@ -30,7 +30,7 @@ public class Bot {
                 )
                 .disableCache(CacheFlag.CLIENT_STATUS,
                         CacheFlag.ACTIVITY,
-                        CacheFlag.EMOTE
+                        CacheFlag.EMOJI
                 )
                 .addEventListeners(new Listener())
                 .addEventListeners(new CatchListener())

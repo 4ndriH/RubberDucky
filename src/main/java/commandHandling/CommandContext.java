@@ -3,13 +3,13 @@ package commandHandling;
 import me.duncte123.botcommons.commands.ICommandContext;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import assets.CONFIG;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 
-public class CommandContext implements ICommandContext {
-    private final GuildMessageReceivedEvent event;
+public class CommandContext { //implements ICommandContext {
+    private final MessageReceivedEvent event;
     private final List<String> arguments;
     private final int securityClearance;
 
@@ -21,7 +21,7 @@ public class CommandContext implements ICommandContext {
     // 3 - Plebs
     // ---------------------------------------------------------
 
-    public CommandContext(GuildMessageReceivedEvent event, List<String> arguments) {
+    public CommandContext(MessageReceivedEvent event, List<String> arguments) {
         this.event = event;
         this.arguments = arguments;
 
@@ -30,18 +30,46 @@ public class CommandContext implements ICommandContext {
         event.getMember().hasPermission(Permission.KICK_MEMBERS) ? 2 : 3;
     }
 
-    @Override
+    public MessageReceivedEvent getEvent() {
+        return this.event;
+    }
+
+//    @Override
     public Guild getGuild() {
         return this.getEvent().getGuild();
     }
 
-    @Override
-    public GuildMessageReceivedEvent getEvent() {
-        return event;
-    }
-
     public List<String> getArguments() {
         return arguments;
+    }
+
+    public net.dv8tion.jda.api.entities.TextChannel getChannel() {
+        return this.event.getTextChannel();
+    }
+
+    public net.dv8tion.jda.api.entities.Message getMessage() {
+        return this.event.getMessage();
+    }
+
+    public net.dv8tion.jda.api.entities.User getAuthor() {
+        return this.event.getAuthor();
+    }
+
+    public net.dv8tion.jda.api.entities.Member getMember() {
+        return this.event.getMember();
+    }
+
+    public net.dv8tion.jda.api.JDA getJDA() {
+        return this.event.getJDA();
+    }
+
+    public net.dv8tion.jda.api.entities.User getSelfUser() {
+        return this.event.getJDA().getSelfUser();
+    }
+
+
+    public net.dv8tion.jda.api.entities.Member getSelfMember() {
+        return this.event.getGuild().getMember(this.getSelfUser());
     }
 
     public int getSecurityClearance() {

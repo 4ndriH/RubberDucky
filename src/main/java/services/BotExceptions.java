@@ -3,6 +3,7 @@ package services;
 import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import assets.EMOTES;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.awt.*;
 
@@ -75,7 +76,7 @@ public class BotExceptions {
         }
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
-            msg.addReaction(EMOTES.NLD.getAsReaction()).queue();
+            msg.addReaction(Emoji.fromFormatted(EMOTES.NLD.getAsReaction())).queue();
             deleteMsg(msg, 32);
         });
     }

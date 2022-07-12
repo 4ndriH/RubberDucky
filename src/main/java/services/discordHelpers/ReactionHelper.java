@@ -1,6 +1,7 @@
 package services.discordHelpers;
 
 import commandHandling.CommandContext;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import assets.EMOTES;
@@ -45,7 +46,7 @@ public class ReactionHelper {
                 return;
         }
 
-        ctx.getMessage().addReaction(reaction).queue(
+        ctx.getMessage().addReaction(Emoji.fromFormatted(reaction)).queue(
                 null, new ErrorHandler().handle(ErrorResponse.REACTION_BLOCKED,
                         (ex) -> {
                             addUserToBlacklist(ctx.getAuthor().getId());

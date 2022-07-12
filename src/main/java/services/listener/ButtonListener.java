@@ -2,14 +2,15 @@ package services.listener;
 
 import commandHandling.commands.ownerCommands.Kill;
 import commandHandling.commands.CourseReview.CourseReviewVerify;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import assets.CONFIG;
 
 public class ButtonListener extends ListenerAdapter {
+
     @Override
-    public void onButtonClick(@NotNull ButtonClickEvent event) {
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getComponentId().startsWith("$") && !event.getUser().getId().equals(CONFIG.OwnerID.get())) {
             event.reply("Did you really think this would work?").setEphemeral(true).queue();
             return;
