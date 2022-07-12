@@ -33,9 +33,9 @@ public class Purge implements CommandInterface {
                 EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "resources/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
                 do {
                     for (int i = 0; i < messages.size() && !stop.get(); i++) {
-                        messages.get(i).delete().complete();
+                        messages.get(i).delete().queue();
                         try {
-                            Thread.sleep(1024);
+                            Thread.sleep(2048);
                         } catch (Exception ignored) {}
                     }
                     messages = ctx.getChannel().getHistory().retrievePast(64).complete();
