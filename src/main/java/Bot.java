@@ -30,14 +30,15 @@ public class Bot {
                 )
                 .disableCache(CacheFlag.CLIENT_STATUS,
                         CacheFlag.ACTIVITY,
-                        CacheFlag.EMOJI
+                        CacheFlag.EMOJI,
+                        CacheFlag.STICKER
                 )
                 .addEventListeners(new Listener())
                 .addEventListeners(new CatchListener())
                 .addEventListeners(new ButtonListener())
                 .addEventListeners(new ConnectionListener())
                 .addEventListeners(new BGListener())
-                .addEventListeners(new CountThreadListener())
+//                .addEventListeners(new CountThreadListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
