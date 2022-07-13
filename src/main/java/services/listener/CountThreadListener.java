@@ -30,8 +30,7 @@ public class CountThreadListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getChannel().getId().equals("993390913881640970")) {
             try {
-                if (lastDiscordUserId.equals(event.getAuthor().getId()) ||
-                        lastCountedNumber + 1 != Integer.parseInt(event.getMessage().getContentRaw())) {
+                if (lastDiscordUserId.equals(event.getAuthor().getId()) || lastCountedNumber + 1 != Integer.parseInt(event.getMessage().getContentRaw())) {
                     event.getMessage().delete().queue();
                     return;
                 }
@@ -41,6 +40,12 @@ public class CountThreadListener extends ListenerAdapter {
             } catch (Exception e) {
                 event.getMessage().delete().queue();
             }
+        } else if (event.getChannel().getId().equals("996746797236105236")) {
+            if (!event.getAuthor().getId().equals("781601968736960543") && !event.getAuthor().getId().equals("817846061347242026")) {
+                event.getMessage().delete().queue();
+                return;
+            }
+            event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
         }
     }
 }
