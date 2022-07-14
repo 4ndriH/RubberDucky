@@ -89,6 +89,11 @@ public class DatabaseVerification {
                 "Command TEXT," +
                 "PRIMARY KEY(DiscordUserId, DiscordServerId, DiscordChannelId, Command)"
         );
+        database.put("PinghellHQ",
+                "DiscordUserId TEXT," +
+                "PinghellStatus INTEGER NOT NULL DEFAULT 1," +
+                "ServerMember INTEGER NOT NULL DEFAULT 0," +
+                "PRIMARY KEY(DiscordUserId)");
 
         for (String table : database.keySet()) {
             if (!doesTableExist(table)) {
