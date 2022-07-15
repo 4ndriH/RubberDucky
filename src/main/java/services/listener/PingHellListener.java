@@ -46,9 +46,11 @@ public class PingHellListener extends ListenerAdapter {
 
                 updatePinghellStatus(discordUserId, 1);
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
-                event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
-                event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
-                updatePinghellStatus(discordUserId, 0);
+                if (isServerMember(discordUserId)) {
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
+                    event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
+                    updatePinghellStatus(discordUserId, 0);
+                }
             }
         }
     }
