@@ -29,13 +29,10 @@ public class CountThreadListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getChannel().getId().equals("996746797236105236")) {
-            if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().equals("start")) {
-                event.getThreadChannel().sendMessage("0").queue();
-            }
             if (!event.getAuthor().getId().equals("838098002844844032") && !event.getAuthor().getId().equals("817846061347242026")) {
                 event.getMessage().delete().queue();
             } else if (event.getAuthor().getId().equals("838098002844844032")) {
-                event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).complete();
+                event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
             }
         }
     }
