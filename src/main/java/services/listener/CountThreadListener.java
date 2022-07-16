@@ -15,14 +15,15 @@ public class CountThreadListener extends ListenerAdapter {
 
         for (Message message : thread.getHistory().retrievePast(64).complete()) {
             try {
-                if (message.getAuthor().getId().equals("838098002844844032")) {
+                if (message.getAuthor().getId().equals("817846061347242026")) {
+                    break;
+                } else if (message.getAuthor().getId().equals("838098002844844032")) {
                     thread.sendMessage("" + (Integer.parseInt(message.getContentRaw()) + 1)).queue();
                     break;
                 } else if (!message.getAuthor().getId().equals("817846061347242026")) {
                     message.delete().queue();
                 }
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 
