@@ -11,6 +11,10 @@ public class CountThreadListener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+        if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+            return;
+        }
+
         ThreadChannel thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
 
         for (Message message : thread.getHistory().retrievePast(64).complete()) {
