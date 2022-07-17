@@ -40,6 +40,7 @@ public class Bot {
                 .addEventListeners(new BGListener())
                 .addEventListeners(new CountThreadListener())
                 .addEventListeners(new PingHellListener())
+                .addEventListeners(new PlaceListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }

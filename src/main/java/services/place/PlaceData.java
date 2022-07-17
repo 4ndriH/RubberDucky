@@ -1,12 +1,14 @@
 package services.place;
 
 import assets.Objects.Pixel;
+import net.dv8tion.jda.api.entities.ThreadChannel;
 import services.database.DBHandlerPlace;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PlaceData {
@@ -18,6 +20,7 @@ public class PlaceData {
     public static boolean drawing, stop, stopQ, verify;
     public static LinkedList<Pixel>  fixingQ;
     public static ArrayList<Pixel> pixels;
+    public static ArrayList<ThreadChannel> threads;
     private static LinkedList<String> requests;
     public static String user;
 
@@ -28,6 +31,7 @@ public class PlaceData {
 
         requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
+        threads = new ArrayList<>();
         pixels = readPixelFile();
 
         totalPixels = pixels.size();
@@ -55,6 +59,14 @@ public class PlaceData {
 
     public static void forceReloadImage() {
         time = 0L;
+    }
+
+    public static void addThreads(List<ThreadChannel> ts) {
+        for (ThreadChannel t : ts) {
+            if (t.getName().contains("phdt")) {
+                threads.add(t);
+            }
+        }
     }
 
     public static void addPixelRequest(String id) {
