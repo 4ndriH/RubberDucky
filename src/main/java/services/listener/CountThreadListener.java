@@ -37,7 +37,10 @@ public class CountThreadListener extends ListenerAdapter {
             if (!event.getAuthor().getId().equals("838098002844844032") && !event.getAuthor().getId().equals("817846061347242026")) {
                 event.getMessage().delete().queue();
             } else if (event.getAuthor().getId().equals("838098002844844032")) {
-                event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
+                try {
+
+                    event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
+                } catch (Exception ignored) {}
             }
         }
     }
