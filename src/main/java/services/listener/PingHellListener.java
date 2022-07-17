@@ -23,10 +23,9 @@ public class PingHellListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        formerPingHellMember = event.getJDA().getGuildById("817850050013036605").getRoleById("997211963002191942");
-        pingHell = event.getJDA().getGuildById("817850050013036605").getRoleById("991687045644824679");
-
-        if (event.getAuthor().getId().equals("774276700557148170")) {
+        if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Pinghell") && event.getMessage().getContentRaw().contains("<@")) {
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw()).queue();
+        } else if (event.getChannel().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
@@ -47,7 +46,6 @@ public class PingHellListener extends ListenerAdapter {
                 updatePinghellStatus(discordUserId, 1);
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
                 if (isServerMember(discordUserId)) {
-                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                     updatePinghellStatus(discordUserId, 0);
                 }
