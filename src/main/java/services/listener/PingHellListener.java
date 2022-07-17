@@ -23,6 +23,9 @@ public class PingHellListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        formerPingHellMember = event.getJDA().getGuildById("817850050013036605").getRoleById("997211963002191942");
+        pingHell = event.getJDA().getGuildById("817850050013036605").getRoleById("991687045644824679");
+
         if (event.getAuthor().getId().equals("774276700557148170")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
