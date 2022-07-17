@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import assets.CONFIG;
 import services.CommandManager;
 
-public class Listener extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
+public class CommandListener extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandListener.class);
     private final CommandManager manager = new CommandManager();
 
     @Override

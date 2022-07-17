@@ -33,8 +33,8 @@ public class Bot {
                         CacheFlag.EMOJI,
                         CacheFlag.STICKER
                 )
-                .addEventListeners(new Listener())
-                .addEventListeners(new CatchListener())
+                .addEventListeners(new CommandListener())
+//                .addEventListeners(new CatchListener())
                 .addEventListeners(new ButtonListener())
                 .addEventListeners(new ConnectionListener())
                 .addEventListeners(new BGListener())
