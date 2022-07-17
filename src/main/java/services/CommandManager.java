@@ -70,7 +70,6 @@ public class CommandManager {
         addCommand(new PlaceDraw(LOGGER));
         addCommand(new PlaceStop(LOGGER));
         addCommand(new PlaceStopQueue(LOGGER));
-        addCommand(new PlaceHyperDraw(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {

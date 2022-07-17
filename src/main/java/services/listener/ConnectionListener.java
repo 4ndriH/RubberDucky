@@ -2,7 +2,6 @@ package services.listener;
 
 import assets.CONFIG;
 import commandHandling.commands.place.PlaceDraw;
-import commandHandling.commands.place.PlaceHyperDraw;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,7 @@ public class ConnectionListener extends ListenerAdapter {
             if (placeID != -1) {
                 if (DBHandlerPlace.getPlaceProjectIDs().contains(placeID)) {
                     (new Thread(() -> {
-                        PlaceHyperDraw.draw(event.getJDA(), placeID);
+                        PlaceDraw.draw(event.getJDA(), placeID);
                     })).start();
                 } else {
                     DBHandlerConfig.updateConfig("placeProject", "-1");
