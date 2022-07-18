@@ -26,7 +26,7 @@ public class PingHellListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Pinghell")) {
+        if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
             LOGGER.info(event.getMessage().getContentRaw());
             event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw()).queue();
         } else if (event.getChannel().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
