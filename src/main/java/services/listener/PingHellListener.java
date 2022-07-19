@@ -30,7 +30,7 @@ public class PingHellListener extends ListenerAdapter {
             LOGGER.info(event.getMessage().getContentRaw());
             event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue();
         } else if (event.getChannel().getId().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
-            String discordUserId = event.getMessage().getContentRaw();
+            String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
                 if (!isInPinghellHQ(discordUserId)) {
