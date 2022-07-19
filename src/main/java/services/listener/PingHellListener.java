@@ -28,9 +28,9 @@ public class PingHellListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
             LOGGER.info(event.getMessage().getContentRaw());
-            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw()).queue();
-        } else if (event.getChannel().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
-            String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue();
+        } else if (event.getChannel().getId().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
+            String discordUserId = event.getMessage().getContentRaw();
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
                 if (!isInPinghellHQ(discordUserId)) {
@@ -54,6 +54,8 @@ public class PingHellListener extends ListenerAdapter {
                     updatePinghellStatus(discordUserId, 0);
                 }
             }
+
+            event.getMessage().delete().queue();
         }
 
         if (event.getAuthor().getId().equals("774276700557148170")) {
