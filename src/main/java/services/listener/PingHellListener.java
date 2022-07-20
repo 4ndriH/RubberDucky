@@ -8,10 +8,13 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static services.database.DBHandlerPingHell.*;
 
 public class PingHellListener extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PingHellListener.class);
     private Role formerPingHellMember;
     private Role pingHell;
 
@@ -23,9 +26,10 @@ public class PingHellListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Pinghell") && event.getMessage().getContentRaw().contains("<@")) {
-            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw()).queue();
-        } else if (event.getChannel().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
+        if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
+            LOGGER.info(event.getMessage().getContentRaw());
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue();
+        } else if (event.getChannel().getId().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
@@ -35,6 +39,7 @@ public class PingHellListener extends ListenerAdapter {
 
                 if (isServerMember(discordUserId)) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                 } else {
                     String inviteLink = event.getJDA().getGuildById("817850050013036605").getTextChannelById("991686525651800175")
                             .createInvite().setMaxAge(1800).setMaxUses(1).complete().getUrl();
@@ -47,9 +52,16 @@ public class PingHellListener extends ListenerAdapter {
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
                 if (isServerMember(discordUserId)) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     updatePinghellStatus(discordUserId, 0);
                 }
             }
+
+            event.getMessage().delete().queue();
+        }
+
+        if (event.getAuthor().getId().equals("774276700557148170")) {
+            LOGGER.info("BRH catch: " + event.getMessage().getContentRaw());
         }
     }
 
