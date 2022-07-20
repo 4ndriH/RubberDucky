@@ -39,6 +39,7 @@ public class PingHellListener extends ListenerAdapter {
 
                 if (isServerMember(discordUserId)) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                 } else {
                     String inviteLink = event.getJDA().getGuildById("817850050013036605").getTextChannelById("991686525651800175")
                             .createInvite().setMaxAge(1800).setMaxUses(1).complete().getUrl();
@@ -51,6 +52,7 @@ public class PingHellListener extends ListenerAdapter {
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
                 if (isServerMember(discordUserId)) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
+                    event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     updatePinghellStatus(discordUserId, 0);
                 }
             }
