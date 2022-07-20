@@ -2,6 +2,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import assets.CONFIG;
 import services.database.ConnectionPool;
@@ -22,17 +23,23 @@ public class Bot {
     }
 
     private static JDA connectToDiscord() throws LoginException {
-        return JDABuilder.createDefault(CONFIG.Token.get(),
+        return JDABuilder.createDefault(CONFIG.Token.get()
+                ).enableIntents(
                         GatewayIntent.GUILD_MESSAGES,
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
                         GatewayIntent.GUILD_VOICE_STATES,
-                        GatewayIntent.GUILD_MEMBERS
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+                        GatewayIntent.GUILD_PRESENCES
+                ).enableCache(
+                        CacheFlag.CLIENT_STATUS,
+                        CacheFlag.ONLINE_STATUS
+                ).setMemberCachePolicy(
+                        MemberCachePolicy.ONLINE
                 )
-                .disableCache(CacheFlag.CLIENT_STATUS,
-                        CacheFlag.ACTIVITY,
-                        CacheFlag.EMOJI,
-                        CacheFlag.STICKER
-                )
+//                .disableCache(
+//                        CacheFlag.ACTIVITY
+//                )
                 .addEventListeners(new CommandListener())
 //                .addEventListeners(new CatchListener())
                 .addEventListeners(new ButtonListener())
@@ -41,6 +48,7 @@ public class Bot {
                 .addEventListeners(new CountThreadListener())
                 .addEventListeners(new PingHellListener())
                 .addEventListeners(new PlaceListener())
+                .addEventListeners(new SubstiifyDownListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
