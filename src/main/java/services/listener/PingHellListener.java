@@ -27,7 +27,6 @@ public class PingHellListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
-            LOGGER.info(event.getMessage().getContentRaw());
             event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue();
         } else if (event.getChannel().getId().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
@@ -50,7 +49,7 @@ public class PingHellListener extends ListenerAdapter {
 
                 updatePinghellStatus(discordUserId, 1);
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
-                if (isServerMember(discordUserId)) {
+                if (isServerMember(discordUserId) && !event.getJDA().getUserById(discordUserId).isBot()) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                     event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     updatePinghellStatus(discordUserId, 0);
@@ -58,10 +57,6 @@ public class PingHellListener extends ListenerAdapter {
             }
 
             event.getMessage().delete().queue();
-        }
-
-        if (event.getAuthor().getId().equals("774276700557148170")) {
-            LOGGER.info("BRH catch: " + event.getMessage().getContentRaw());
         }
     }
 
