@@ -37,11 +37,13 @@ public class BGListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().getId().equals("778731540359675904")) {
+        if (event.getAuthor().getId().equals("778731540359675904") && event.getMessage().getContentRaw().contains("claimed")) {
             String messageContent = event.getMessage().getContentRaw();
 
             if (messageContent.contains("155419933998579713")) {
-                updateConfig("Button Score", messageContent.split(" ")[3]);
+                String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
+                LOGGER.info("Button Score Updated. New Score: " + score);
+                updateConfig("ButtonScore", score);
             }
 
             if (messageContent.contains("has claimed")) {
