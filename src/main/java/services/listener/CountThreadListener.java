@@ -38,8 +38,8 @@ public class CountThreadListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getChannel().getId().equals("996746797236105236")) {
             if (event.getAuthor().getId().equals("817846061347242026")) {
-                if (Integer.parseInt(event.getMessage().getContentRaw()) == 400000) {
-                    LOGGER.warn("400k baby");
+                if (Integer.parseInt(event.getMessage().getContentRaw()) == 1000000) {
+                    event.getJDA().getGuildById("747752542741725244").getThreadChannelById("768600365602963496").sendMessage("**1'000'000** <@205704051856244736> <@155419933998579713>").queue();
                 }
             } else if (event.getAuthor().getId().equals("838098002844844032")) {
                 try {
