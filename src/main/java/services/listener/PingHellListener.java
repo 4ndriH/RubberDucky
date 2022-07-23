@@ -11,10 +11,14 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.util.Random;
+
 import static services.database.DBHandlerPingHell.*;
 
 public class PingHellListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PingHellListener.class);
+    private final Random random = new Random();
     private Role formerPingHellMember;
     private Role pingHell;
 
@@ -57,6 +61,8 @@ public class PingHellListener extends ListenerAdapter {
             }
 
             event.getMessage().delete().queue();
+        } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Message graph for last day")) {
+            pingHell.getManager().setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat())).queue();
         }
     }
 
