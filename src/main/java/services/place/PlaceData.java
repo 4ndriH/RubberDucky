@@ -66,7 +66,16 @@ public class PlaceData {
         }
     }
 
-    public static String getPixelRequests() {
+    public static boolean openPixelRequests() {
+        lock.lock();
+        try {
+            return !requests.isEmpty();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static String getPixelRequest() {
         lock.lock();
         try {
             return requests.poll();
