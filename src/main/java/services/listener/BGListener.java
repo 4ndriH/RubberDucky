@@ -28,7 +28,8 @@ public class BGListener extends ListenerAdapter {
                     event.getJDA().openPrivateChannelById("155419933998579713").complete().sendMessage(
                             "Button is ready [" + myCurrentScore + " -> " + buttonScore + "]\n" +
                                 "https://discord.com/channels/747752542741725244/" + event.getChannel().getId() +
-                                "/" + event.getMessage().getId()).queue();
+                                "/" + event.getMessage().getId()
+                    ).queue();
                     nextNotification = 10;
                 }
             }
@@ -37,11 +38,13 @@ public class BGListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().getId().equals("778731540359675904")) {
+        if (event.getAuthor().getId().equals("778731540359675904") && event.getMessage().getContentRaw().contains("claimed")) {
             String messageContent = event.getMessage().getContentRaw();
 
             if (messageContent.contains("155419933998579713")) {
-                updateConfig("Button Score", messageContent.split(" ")[3]);
+                String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
+                LOGGER.info("Button Score Updated. New Score: " + score);
+                updateConfig("ButtonScore", score);
             }
 
             if (messageContent.contains("has claimed")) {
