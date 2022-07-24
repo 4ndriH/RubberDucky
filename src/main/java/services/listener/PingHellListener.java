@@ -53,7 +53,7 @@ public class PingHellListener extends ListenerAdapter {
 
                 updatePinghellStatus(discordUserId, 1);
             } else if(event.getMessage().getContentRaw().endsWith("finally escaped PingHell. May you never ping it ever again.")) {
-                if (isServerMember(discordUserId) && !event.getJDA().getUserById(discordUserId).isBot()) {
+                if (isServerMember(discordUserId)) {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                     event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     updatePinghellStatus(discordUserId, 0);
