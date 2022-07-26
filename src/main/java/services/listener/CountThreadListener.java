@@ -54,5 +54,9 @@ public class CountThreadListener extends ListenerAdapter {
                     (msg) -> msg.delete().queueAfter(60, TimeUnit.SECONDS)
             );
         }
+
+        if (!event.getAuthor().isBot()) {
+            event.getMessage().delete().queue();
+        }
     }
 }
