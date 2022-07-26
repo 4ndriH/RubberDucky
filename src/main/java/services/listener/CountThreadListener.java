@@ -9,8 +9,14 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
+import static services.database.DBHandlerConfig.getConfig;
+import static services.database.DBHandlerConfig.updateConfig;
+
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
+    private static String listenTo;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -19,16 +25,15 @@ public class CountThreadListener extends ListenerAdapter {
         }
 
         ThreadChannel thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
+        listenTo = getConfig().get("CountThreadListenTo");
 
         for (Message message : thread.getHistory().retrievePast(64).complete()) {
             try {
                 if (message.getAuthor().getId().equals("817846061347242026")) {
                     break;
-                } else if (message.getAuthor().getId().equals("838098002844844032")) {
+                } else if (message.getAuthor().getId().equals(listenTo)) {
                     thread.sendMessage("" + (Integer.parseInt(message.getContentRaw()) + 1)).queue();
                     break;
-                } else if (!message.getAuthor().getId().equals("817846061347242026")) {
-                    message.delete().queue();
                 }
             } catch (Exception ignored) {}
         }
@@ -37,18 +42,17 @@ public class CountThreadListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getChannel().getId().equals("996746797236105236")) {
-            if (event.getAuthor().getId().equals("817846061347242026")) {
-                if (Integer.parseInt(event.getMessage().getContentRaw()) == 1000000) {
-                    event.getJDA().getGuildById("747752542741725244").getThreadChannelById("768600365602963496").sendMessage("**1'000'000** <@205704051856244736> <@155419933998579713>").queue();
-                }
-            } else if (event.getAuthor().getId().equals("838098002844844032")) {
+            if (event.getAuthor().getId().equals(listenTo)) {
                 try {
-
                     event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
                 } catch (Exception ignored) {}
-            } else {
-                event.getMessage().delete().queue();
             }
+        } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().contains("rdwatch")) {
+            updateConfig("CountThreadListenTo", event.getMessage().getContentRaw().replace("rdwatch ", ""));
+
+            event.getChannel().sendMessage("I am watching you <@" + (listenTo = getConfig().get("CountThreadListenTo")) + "> <:bustinGood:747783377171644417>").queue(
+                    (msg) -> msg.delete().queueAfter(60, TimeUnit.SECONDS)
+            );
         }
     }
 }
