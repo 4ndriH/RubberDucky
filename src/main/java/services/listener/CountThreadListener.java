@@ -47,6 +47,10 @@ public class CountThreadListener extends ListenerAdapter {
                     event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
                 } catch (Exception ignored) {}
             }
+
+            if (!event.getAuthor().isBot()) {
+                event.getMessage().delete().queue();
+            }
         } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().contains("rdwatch")) {
             updateConfig("CountThreadListenTo", event.getMessage().getContentRaw().replace("rdwatch ", ""));
 
@@ -55,8 +59,5 @@ public class CountThreadListener extends ListenerAdapter {
             );
         }
 
-        if (!event.getAuthor().isBot()) {
-            event.getMessage().delete().queue();
-        }
     }
 }
