@@ -17,6 +17,7 @@ import static services.database.DBHandlerConfig.updateConfig;
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static String listenTo;
+    private static int lastSent;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -27,13 +28,11 @@ public class CountThreadListener extends ListenerAdapter {
         ThreadChannel thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
         listenTo = getConfig().get("CountThreadListenTo");
 
-        for (Message message : thread.getHistory().retrievePast(64).complete()) {
+        for (Message message : thread.getHistory().retrievePast(1).complete()) {
             try {
-                if (message.getAuthor().getId().equals("817846061347242026")) {
-                    break;
-                } else if (message.getAuthor().getId().equals(listenTo)) {
-                    thread.sendMessage("" + (Integer.parseInt(message.getContentRaw()) + 1)).queue();
-                    break;
+                if (message.getAuthor().getId().equals(listenTo)) {
+                    lastSent = Integer.parseInt(message.getContentRaw()) + 1;
+                    thread.sendMessage("" + lastSent).queue();
                 }
             } catch (Exception ignored) {}
         }
@@ -44,7 +43,12 @@ public class CountThreadListener extends ListenerAdapter {
         if (event.getChannel().getId().equals("996746797236105236")) {
             if (event.getAuthor().getId().equals(listenTo)) {
                 try {
-                    event.getThreadChannel().sendMessage("" + (Integer.parseInt(event.getMessage().getContentRaw()) + 1)).queue();
+                    int nextNumber = (Integer.parseInt(event.getMessage().getContentRaw()) + 1);
+
+                    if (nextNumber > lastSent) {
+                        event.getThreadChannel().sendMessage("" + nextNumber).queue();
+                        lastSent = nextNumber;
+                    }
                 } catch (Exception ignored) {}
             }
 
