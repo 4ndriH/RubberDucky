@@ -150,6 +150,21 @@ public class DBHandlerPlace {
         return pixels;
     }
 
+    public static int getPixelsInQueue() {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "SELECT (SELECT COUNT(*) FROM PlacePixels) - (SELECT SUM(Progress) FROM PlaceProjects WHERE Progress > 0) AS pixelsInQueue"
+            );
+            ResultSet rs = ps.executeQuery();
+            if (!rs.isClosed() && rs.next()) {
+                return rs.getInt("pixelsInQueue");
+            }
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+        return 0;
+    }
+
     public static void updateProgress(int id, int progress) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(

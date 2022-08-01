@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import services.database.DBHandlerPlace;
 import services.discordHelpers.EmbedHelper;
 
+import java.time.Instant;
 import java.util.List;
+
+import static services.database.DBHandlerPlace.getPixelsInQueue;
 
 public class PlaceViewQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceViewQueue.class);
@@ -25,6 +28,9 @@ public class PlaceViewQueue implements CommandInterface {
         if (strings[0].length() == 0) {
             embed.setDescription("The Queue is empty");
         } else {
+            int pixelsInQueue = getPixelsInQueue();
+            embed.setDescription("There are " + pixelsInQueue + " pixels in the queue.\n" +
+                    "Earliest completion <t:" + (Instant.now().getEpochSecond() + pixelsInQueue) + ":R>");
             embed.addField("__ID__", strings[0], true);
             embed.addField("__Drawn Pixels__", strings[1], true);
             embed.addField("__Queued by__", strings[2], true);
