@@ -10,6 +10,7 @@ import services.discordHelpers.EmbedHelper;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Locale;
 
 import static services.database.DBHandlerPlace.getPixelsInQueue;
 
@@ -29,7 +30,7 @@ public class PlaceViewQueue implements CommandInterface {
             embed.setDescription("The Queue is empty");
         } else {
             int pixelsInQueue = getPixelsInQueue();
-            embed.setDescription("There are " + pixelsInQueue + " pixels in the queue.\n" +
+            embed.setDescription("There are " + String.format(Locale.US, "%,d", pixelsInQueue).replace(',', '\'') + " pixels in the queue.\n" +
                     "Earliest completion <t:" + (Instant.now().getEpochSecond() + pixelsInQueue) + ":R>");
             embed.addField("__ID__", strings[0], true);
             embed.addField("__Drawn Pixels__", strings[1], true);

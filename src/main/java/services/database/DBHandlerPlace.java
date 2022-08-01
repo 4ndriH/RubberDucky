@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 public class DBHandlerPlace {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBHandlerPlace.class);
@@ -65,7 +66,7 @@ public class DBHandlerPlace {
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
                 strings[0] += rs.getInt("Id") + "\n";
-                strings[1] += rs.getInt("Progress") + "\n";
+                strings[1] += String.format(Locale.US, "%,d", rs.getInt("Progress")).replace(',', '\'') + "\n";
                 strings[2] += "<@!" + rs.getString("DiscordUserId") + ">\n";
             }
         } catch (SQLException sqlE) {
