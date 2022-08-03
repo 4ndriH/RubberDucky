@@ -56,7 +56,7 @@ public class CountThreadListener extends ListenerAdapter {
                 event.getMessage().delete().queue();
             }
         } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().contains("rdwatch")) {
-            String tempId = event.getMessage().getContentRaw().replace("rdwatch ", "").replaceAll("\\D", "");
+            String tempId = event.getMessage().getContentRaw().replaceAll("\\D", "");
             updateConfig("CountThreadListenTo", tempId);
 
             event.getChannel().sendMessage("I am watching you <@" + (listenTo = getConfig().get("CountThreadListenTo")) + "> <:bustinGood:747783377171644417>").queue(
