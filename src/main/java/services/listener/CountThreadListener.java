@@ -55,7 +55,7 @@ public class CountThreadListener extends ListenerAdapter {
             if (!event.getAuthor().isBot()) {
                 event.getMessage().delete().queue();
             }
-        } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().contains("rdwatch")) {
+        } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().startsWith("rdwatch")) {
             String tempId = event.getMessage().getContentRaw().replaceAll("\\D", "");
             updateConfig("CountThreadListenTo", tempId);
 
