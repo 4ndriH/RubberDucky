@@ -16,6 +16,7 @@ import static services.database.DBHandlerConfig.updateConfig;
 
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
+    private static ThreadChannel thread;
     private static String listenTo;
     private static int lastSent;
 
@@ -25,17 +26,10 @@ public class CountThreadListener extends ListenerAdapter {
             return;
         }
 
-        ThreadChannel thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
+        thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
         listenTo = getConfig().get("CountThreadListenTo");
 
-        for (Message message : thread.getHistory().retrievePast(1).complete()) {
-            try {
-                if (message.getAuthor().getId().equals(listenTo)) {
-                    lastSent = Integer.parseInt(message.getContentRaw()) + 1;
-                    thread.sendMessage("" + lastSent).queue();
-                }
-            } catch (Exception ignored) {}
-        }
+        checkRecentMessages();
     }
 
     @Override
@@ -62,7 +56,19 @@ public class CountThreadListener extends ListenerAdapter {
             event.getChannel().sendMessage("I am watching you <@" + (listenTo = getConfig().get("CountThreadListenTo")) + "> <:bustinGood:747783377171644417>").queue(
                     (msg) -> msg.delete().queueAfter(60, TimeUnit.SECONDS)
             );
-        }
 
+            checkRecentMessages();
+        }
+    }
+
+    private void checkRecentMessages() {
+        for (Message message : thread.getHistory().retrievePast(1).complete()) {
+            try {
+                if (message.getAuthor().getId().equals(listenTo)) {
+                    lastSent = Integer.parseInt(message.getContentRaw()) + 1;
+                    thread.sendMessage("" + lastSent).queue();
+                }
+            } catch (Exception ignored) {}
+        }
     }
 }
