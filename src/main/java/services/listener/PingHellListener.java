@@ -62,8 +62,6 @@ public class PingHellListener extends ListenerAdapter {
                     updatePinghellStatus(discordUserId, 0);
                 }
             }
-
-            event.getMessage().delete().queue();
         } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Message graph for last day")) {
             pingHell.getManager().setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat())).queue();
         }
