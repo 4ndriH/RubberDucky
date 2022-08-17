@@ -45,6 +45,18 @@ public class DBHandlerPlace {
         }
     }
 
+    public static void insertTimeTaken(int secondsTaken) {
+        try (Connection connection = ConnectionPool.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO PlaceEfficiencyLog (SecondsTaken) VALUES (?)"
+            );
+            ps.setInt(1, secondsTaken);
+            ps.executeUpdate();
+        } catch (SQLException sqlE) {
+            LOGGER.error("SQL Exception", sqlE);
+        }
+    }
+
     public static void removeProjectFromQueue(int key) {
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(

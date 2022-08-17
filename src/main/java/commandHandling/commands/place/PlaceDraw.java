@@ -62,6 +62,8 @@ public class PlaceDraw implements CommandInterface {
 
     public static void draw(JDA jda, int id) {
         TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
+        long time3600 = System.currentTimeMillis();
+        int pixelDrawnCnt3600 = 0;
 
         while (!PlaceData.stopQ) {
             if (id < 0) {
@@ -89,9 +91,16 @@ public class PlaceDraw implements CommandInterface {
                     } catch (InterruptedException ignored) {}
                 }
 
-                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
-                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
+//                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
+//                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
 //                    PlaceVerify.verify();
+//                }
+
+                if (++pixelDrawnCnt3600 == 3600) {
+                    int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
+                    DBHandlerPlace.insertTimeTaken(tempSec);
+                    time3600 = System.currentTimeMillis();
+                    pixelDrawnCnt3600 = 0;
                 }
             }
 

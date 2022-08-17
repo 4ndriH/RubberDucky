@@ -93,7 +93,15 @@ public class DatabaseVerification {
                 "DiscordUserId TEXT," +
                 "PinghellStatus INTEGER NOT NULL DEFAULT 1," +
                 "ServerMember INTEGER NOT NULL DEFAULT 0," +
-                "PRIMARY KEY(DiscordUserId)");
+                "PRIMARY KEY(DiscordUserId)"
+        );
+        database.put("PlaceEfficiencyLog",
+                "Key INTEGER," +
+                "NumberOfPixels INTEGER NOT NULL DEFAULT 3600," +
+                "SecondsTaken INTEGER NOT NULL," +
+                "Date INTEGER DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY(Key AUTOINCREMENT)"
+        );
 
         for (String table : database.keySet()) {
             if (!doesTableExist(table)) {
