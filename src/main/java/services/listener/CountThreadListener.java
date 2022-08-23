@@ -3,6 +3,7 @@ package services.listener;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.ReconnectedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,12 @@ public class CountThreadListener extends ListenerAdapter {
         listenTo = getConfig().get("CountThreadListenTo");
 
         checkRecentMessages();
+    }
+
+    @Override
+    public void onReconnected(@NotNull ReconnectedEvent event) {
+        checkRecentMessages();
+        event.getJDA().getGuildById("747752542741725244").getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> did I resume?").queue();
     }
 
     @Override
