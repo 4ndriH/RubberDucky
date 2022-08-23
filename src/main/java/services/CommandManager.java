@@ -111,11 +111,15 @@ public class CommandManager {
         deleteMsg(ctx.getMessage(), 128);
         commandLogger(ctx);
 
-        if (cmd != null && PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
-            (new Thread(() -> cmd.handle(ctx))).start();
-            if (!getCommand(invoke).requiresFurtherChecks()) {
-                addReaction(ctx, 0);
+        if (cmd != null) {
+            if (PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
+                (new Thread(() -> cmd.handle(ctx))).start();
+                if (!getCommand(invoke).requiresFurtherChecks()) {
+                    addReaction(ctx, 0);
+                }
             }
+        } else {
+            addReaction(ctx, 5);
         }
     }
 
