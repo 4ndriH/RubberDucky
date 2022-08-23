@@ -47,6 +47,12 @@ public class PingHellListener extends ListenerAdapter {
                     event.getGuild().addRoleToMember(UserSnowflake.fromId(discordUserId), pingHell).complete();
                     event.getGuild().removeRoleFromMember(UserSnowflake.fromId(discordUserId), formerPingHellMember).complete();
                 } else {
+                    try {
+                        if (event.getJDA().getUserById(discordUserId).isBot()) {
+                            return;
+                        }
+                    } catch (Exception ignored) {}
+
                     String inviteLink = event.getJDA().getGuildById("817850050013036605").getTextChannelById("991686525651800175")
                             .createInvite().setMaxAge(1800).setMaxUses(1).complete().getUrl();
 
