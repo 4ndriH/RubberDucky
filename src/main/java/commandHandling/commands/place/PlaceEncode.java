@@ -133,7 +133,7 @@ public class PlaceEncode implements CommandInterface {
 
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    TimeFormat.timeFormat(pixels.size()) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
+                    TimeFormat.timeFormat((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
                     msg -> deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {
