@@ -18,6 +18,7 @@ public class ReactionHelper {
     // 2 - Channel not whitelisted
     // 3 - Server not whitelisted
     // 4 - Security Clearance not high enough
+    // 5 - Error
     // ---------------------------------------------------------
 
     public static void addReaction(CommandContext ctx, int type) {
