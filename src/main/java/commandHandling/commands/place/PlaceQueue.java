@@ -47,11 +47,11 @@ public class PlaceQueue implements CommandInterface {
         }
 
         try {
-            scanner = new Scanner(ctx.getMessage().getAttachments().get(0).retrieveInputStream().get());
+            scanner = new Scanner(ctx.getMessage().getAttachments().get(0).getProxy().download().get());
         } catch (Exception e) {
             try {
                 scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
-                        .retrieveInputStream().get());
+                        .getProxy().download().get());
             } catch (Exception ee) {
                 BotExceptions.missingAttachmentException(ctx);
                 return;

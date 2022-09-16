@@ -27,6 +27,7 @@ public class Bot {
                 ).enableIntents(
                         GatewayIntent.GUILD_MESSAGES,
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_VOICE_STATES,
                         GatewayIntent.GUILD_MEMBERS,
                         GatewayIntent.GUILD_EMOJIS_AND_STICKERS,

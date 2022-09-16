@@ -4,7 +4,8 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.discordHelpers.EmbedHelper;
@@ -39,7 +40,7 @@ public class PurgeDMs implements CommandInterface {
 
             PrivateChannel channel = ctx.getJDA().getPrivateChannelById(id[0]);
             channel.sendMessageEmbeds(purgeCommenced.build())
-                    .addFile(new File("resources/purge/purgeCommenced.jpg"))
+                    .addFiles(FileUpload.fromData(new File("resources/purge/purgeCommenced.jpg")))
                     .queueAfter(1, TimeUnit.SECONDS);
             List<Message> messages;
             do {
@@ -57,7 +58,7 @@ public class PurgeDMs implements CommandInterface {
             } while(messages.size() != 0);
 
             Message msg = channel.sendMessageEmbeds(purgeEnded.build())
-                    .addFile(new File("resources/purge/purgeEnded.jpg")).complete();
+                    .addFiles(FileUpload.fromData(new File("resources/purge/purgeEnded.jpg"))).complete();
             msg.delete().queueAfter(32, TimeUnit.SECONDS);
         })).start();
     }

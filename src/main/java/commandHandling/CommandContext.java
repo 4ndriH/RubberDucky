@@ -43,8 +43,8 @@ public class CommandContext { //implements ICommandContext {
         return arguments;
     }
 
-    public net.dv8tion.jda.api.entities.TextChannel getChannel() {
-        return this.event.getTextChannel();
+    public net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion getChannel() {
+        return this.event.getChannel();
     }
 
     public net.dv8tion.jda.api.entities.Message getMessage() {

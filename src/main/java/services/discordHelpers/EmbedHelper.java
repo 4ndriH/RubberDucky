@@ -4,6 +4,7 @@ import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.CONFIG;
@@ -36,7 +37,7 @@ public class EmbedHelper {
     private static void sendEmbed(CommandContext ctx, EmbedBuilder embed, int secsDelete, boolean file, String path, String name) {
         try {
             if (file) {
-                ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(new File(path), name).queue(
+                ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(path), name)).queue(
                         msg -> deleteMsg(msg, secsDelete)
                 );
             } else {
@@ -45,7 +46,7 @@ public class EmbedHelper {
                 );
             }
         } catch (InsufficientPermissionException ipe) {
-            EnumSet<Permission> channelPermissions = ctx.getSelfMember().getPermissionsExplicit(ctx.getChannel());
+            EnumSet<Permission> channelPermissions = ctx.getSelfMember().getPermissionsExplicit(ctx.getChannel().asGuildMessageChannel());
             StringBuilder sb = new StringBuilder();
             Permission[] requiredPermissions = new Permission[]{
                     Permission.MESSAGE_SEND,

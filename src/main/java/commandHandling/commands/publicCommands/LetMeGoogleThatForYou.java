@@ -3,6 +3,7 @@ package commandHandling.commands.publicCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.Miscellaneous.GifSequenceWriter;
@@ -103,7 +104,7 @@ public class LetMeGoogleThatForYou implements CommandInterface {
             embed.setDescription("[Google](https://www.google.com/search?q=" + searchURL + ")");
             embed.setImage("attachment://lmgtfy" + id + ".gif");
 
-            ctxT.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
+            ctxT.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
                     msg -> deleteMsg(msg, 1024)
             );
 

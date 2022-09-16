@@ -3,6 +3,7 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.CONFIG;
@@ -34,7 +35,7 @@ public class PlacePreview implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage place = PlaceWebSocket.getImage(false);
+        BufferedImage place = PlaceWebSocket.getImage(false, 1);
         ArrayList<Pixel> pixels;
         // 0 = ID, 1 = sent, 2 = replied to
         int sendMessageCase, id = -1;
@@ -59,12 +60,12 @@ public class PlacePreview implements CommandInterface {
             Scanner scanner;
 
             try {
-                scanner = new Scanner(ctx.getMessage().getAttachments().get(0).retrieveInputStream().get());
+                scanner = new Scanner(ctx.getMessage().getAttachments().get(0).getProxy().download().get());
                 sendMessageCase = 1;
             } catch (Exception e) {
                 try {
                     scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
-                            .retrieveInputStream().get());
+                            .getProxy().download().get());
                     sendMessageCase = 2;
                 } catch (Exception ee) {
                     BotExceptions.missingAttachmentException(ctx);
@@ -132,17 +133,17 @@ public class PlacePreview implements CommandInterface {
             embed.setImage("attachment://preview.gif");
             switch (sendMessageCase) {
                 case 0:
-                    ctx.getChannel().sendMessageEmbeds(embed.build()).addFile(gif).queue(
+                    ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
                             msg -> deleteMsg(msg, 1024)
                     );
                     break;
                 case 1:
-                    ctx.getMessage().replyEmbeds(embed.build()).addFile(gif).queue(
+                    ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
                             msg -> deleteMsg(msg, 1024)
                     );
                     break;
                 case 2:
-                    ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFile(gif).queue(
+                    ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
                             msg -> deleteMsg(msg, 1024)
                     );
             }

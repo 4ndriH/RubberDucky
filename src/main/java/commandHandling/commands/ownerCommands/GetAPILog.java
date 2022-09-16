@@ -3,6 +3,7 @@ package commandHandling.commands.ownerCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class GetAPILog implements CommandInterface {
         }
 
         ctx.getJDA().openPrivateChannelById(ctx.getAuthor().getId()).complete()
-                .sendFile(new ByteArrayInputStream(sb.toString().getBytes()), "api_error_log.txt").queue();
+                .sendFiles(FileUpload.fromData(sb.toString().getBytes(), "api_error_log.txt")).queue();
     }
 
     @Override

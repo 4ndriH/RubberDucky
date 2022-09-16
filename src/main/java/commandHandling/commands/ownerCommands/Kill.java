@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.discordHelpers.EmbedHelper;
@@ -47,7 +48,7 @@ public class Kill implements CommandInterface{
         EmbedBuilder embed = EmbedHelper.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
 
         Message msg = ctx.getChannel().sendMessageEmbeds(embed.build())
-                .addFile(new File("resources/" + file)).complete();
+                .addFiles(FileUpload.fromData(new File("resources/" + file))).complete();
         deleteMsg(msg, 64);
         ctx.getJDA().shutdownNow();
     }

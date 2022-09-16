@@ -1,7 +1,7 @@
 package services.listener;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ReconnectedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -46,7 +46,7 @@ public class CountThreadListener extends ListenerAdapter {
                     int nextNumber = (Integer.parseInt(event.getMessage().getContentRaw()) + 1);
 
                     if (nextNumber > lastSent) {
-                        event.getThreadChannel().sendMessage("" + nextNumber).queue();
+                        event.getChannel().sendMessage("" + nextNumber).queue();
                         lastSent = nextNumber;
                     }
                 } catch (Exception ignored) {}

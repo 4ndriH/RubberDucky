@@ -3,6 +3,7 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.CONFIG;
@@ -132,7 +133,7 @@ public class PlaceEncode implements CommandInterface {
 
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    TimeFormat.timeFormat(pixels.size()) + "**").addFile(stream, fileName).queue(
+                    TimeFormat.timeFormat(pixels.size()) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
                     msg -> deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {

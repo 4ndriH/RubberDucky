@@ -3,6 +3,7 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.discordHelpers.EmbedHelper;
@@ -26,7 +27,7 @@ public class PlaceView implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Place").setImage("attachment://place.png");
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
-                .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue(
+                .addFiles(FileUpload.fromData(convert(PlaceWebSocket.getImage(true)), "place.png")).queue(
                         msg -> deleteMsg(msg, 64)
                 );
     }

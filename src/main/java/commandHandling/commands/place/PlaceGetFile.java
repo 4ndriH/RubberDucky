@@ -3,6 +3,7 @@ package commandHandling.commands.place;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.CONFIG;
@@ -40,7 +41,7 @@ public class PlaceGetFile implements CommandInterface {
                 ArrayList<Pixel> pixels = DBHandlerPlace.getProjectPixels(id);
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
-                ctx.getChannel().sendFile(output.getBytes(), "RDdraw" + id + ".txt").queue(
+                ctx.getChannel().sendFiles(FileUpload.fromData(output.getBytes(), "RDdraw" + id + ".txt")).queue(
                         msg -> deleteMsg(msg, 64)
                 );
             } catch (IllegalArgumentException e) {

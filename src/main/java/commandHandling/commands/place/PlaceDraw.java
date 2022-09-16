@@ -4,7 +4,8 @@ import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Objects.Pixel;
@@ -128,7 +129,7 @@ public class PlaceDraw implements CommandInterface {
         embed.setDescription("Thank you for using RubberDucky to draw");
         embed.setThumbnail("attachment://place.png");
         jda.openPrivateChannelById(PlaceData.user).complete().sendMessageEmbeds(embed.build())
-                .addFile(convert(PlaceWebSocket.getImage(true)), "place.png").queue();
+                .addFiles(FileUpload.fromData(convert(PlaceWebSocket.getImage(true)), "place.png")).queue();
     }
 
     private static InputStream convert(BufferedImage img) {

@@ -3,6 +3,7 @@ package commandHandling.commands.adminCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
@@ -43,7 +44,7 @@ public class Nuke implements CommandInterface {
                 embed.setImage("attachment://nuke.gif");
 
                 ctx.getChannel().sendMessageEmbeds(embed.build())
-                        .addFile(new File("resources/nuke.gif")).complete();
+                        .addFiles(FileUpload.fromData(new File("resources/nuke.gif"))).complete();
                 try {
                     Thread.sleep(2048);
                 } catch (Exception ignored) {}
