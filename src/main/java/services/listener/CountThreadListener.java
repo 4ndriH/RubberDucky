@@ -10,16 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
-
 import static services.database.DBHandlerConfig.getConfig;
-import static services.database.DBHandlerConfig.updateConfig;
 
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static ThreadChannel thread;
-    private static String listenTo;
+    public static String listenTo;
     private static int lastSent;
+    private static int interruptCount = 60;
+    private static boolean spamPingProtection = false;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -56,19 +55,20 @@ public class CountThreadListener extends ListenerAdapter {
             if (!event.getAuthor().isBot()) {
                 event.getMessage().delete().queue();
             }
-        } else if (event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().startsWith("rdwatch")) {
-            String tempId = event.getMessage().getContentRaw().replaceAll("\\D", "");
-            updateConfig("CountThreadListenTo", tempId);
 
-            event.getChannel().sendMessage("I am watching you <@" + (listenTo = getConfig().get("CountThreadListenTo")) + "> <:bustinGood:747783377171644417>").queue(
-                    (msg) -> msg.delete().queueAfter(60, TimeUnit.SECONDS)
-            );
-
-            checkRecentMessages();
+            if (interruptCount < 60)  {
+                interruptCount++;
+            }
+        } else if (event.getChannel().getId().equals("819966095070330950")) {
+            if (!spamPingProtection && --interruptCount <= 0) {
+                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<#996746797236105236> stopped <@155419933998579713>");
+                spamPingProtection = true;
+                interruptCount = 60;
+            }
         }
     }
 
-    private void checkRecentMessages() {
+    public static void checkRecentMessages() {
         for (Message message : thread.getHistory().retrievePast(1).complete()) {
             try {
                 if (message.getAuthor().getId().equals(listenTo)) {
