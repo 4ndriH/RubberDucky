@@ -7,6 +7,7 @@ import commandHandling.commands.CourseReview.Course;
 import commandHandling.commands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.adminCommands.LockDown;
 import commandHandling.commands.adminCommands.Nuke;
+import commandHandling.commands.adminCommands.Watch;
 import commandHandling.commands.modCommands.BlackList;
 import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
@@ -58,6 +59,7 @@ public class CommandManager {
         addCommand(new SQL(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new GetAPILog(LOGGER));
+        addCommand(new Watch(LOGGER));
 
         addCommand(new PlaceQueue(LOGGER));
         addCommand(new PlaceDelete(LOGGER));
