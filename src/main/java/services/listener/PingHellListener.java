@@ -1,5 +1,6 @@
 package services.listener;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -7,15 +8,23 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static services.database.DBHandlerPingHell.*;
+import static services.discordHelpers.EmbedHelper.embedBuilder;
 
 public class PingHellListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PingHellListener.class);
@@ -69,7 +78,28 @@ public class PingHellListener extends ListenerAdapter {
                 }
             }
         } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Message graph for last day")) {
-            pingHell.getManager().setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat())).queue();
+            float r = random.nextFloat();
+            float g = random.nextFloat();
+            float b = random.nextFloat();
+            Color color = new Color(r, g, b);
+
+            pingHell.getManager().setColor(color).queue();
+
+            BufferedImage image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+
+            for (int i = 0; i < image.getWidth(); i++) {
+                for (int j = 0; j < image.getHeight(); j++) {
+                    image.setRGB(i, j, color.getRGB());
+                }
+            }
+
+            EmbedBuilder embed = embedBuilder("Today's Color is #" + Integer.toHexString(color.getRGB()).substring(2));
+            embed.setThumbnail("attachment://PingHellColor.png");
+            embed.setDescription("Have a lovely day and happy Pinging! \n\n<@&991687045644824679>");
+
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("955393971432079370")
+                    .sendMessageEmbeds(embed.build())
+                    .addFiles(FileUpload.fromData(convert(image), "PingHellColor.png")).queue();
         }
     }
 
@@ -90,5 +120,15 @@ public class PingHellListener extends ListenerAdapter {
         if (isInPinghellHQ(event.getUser().getId())) {
             updateServerMemberStatus(event.getUser().getId(), 0);
         }
+    }
+
+    private InputStream convert (BufferedImage img) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(img, "png", os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(os.toByteArray());
     }
 }
