@@ -97,7 +97,7 @@ public class PingHellListener extends ListenerAdapter {
             embed.setThumbnail("attachment://PingHellColor.png");
             embed.setDescription("Have a lovely day and happy Pinging! \n\n<@&991687045644824679>");
 
-            event.getJDA().getGuildById("817850050013036605").getTextChannelById("955393971432079370")
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("991686525651800175")
                     .sendMessageEmbeds(embed.build())
                     .addFiles(FileUpload.fromData(convert(image), "PingHellColor.png")).queue();
         }
