@@ -41,10 +41,10 @@ public class PingHellListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
-            event.getJDA().getGuildById("817850050013036605").getTextChannelById("997215232562827274").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue(
+            event.getJDA().getGuildById("817850050013036605").getTextChannelById("1020951518582673478").sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue(
                     (msg) -> msg.delete().queueAfter(5, TimeUnit.SECONDS)
             );
-        } else if (event.getChannel().getId().equals("997215232562827274") && event.getAuthor().getId().equals("817846061347242026")) {
+        } else if (event.getChannel().getId().equals("1020951518582673478") && event.getAuthor().getId().equals("817846061347242026")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
