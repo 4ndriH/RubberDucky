@@ -56,14 +56,15 @@ public class CountThreadListener extends ListenerAdapter {
                 event.getMessage().delete().queue();
             }
 
-            if (interruptCount < 60)  {
+            if (interruptCount < 60) {
                 interruptCount++;
+            } else {
+                spamPingProtection = false;
             }
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (!spamPingProtection && --interruptCount <= 0) {
                 event.getGuild().getTextChannelById("768600365602963496").sendMessage("<#996746797236105236> stopped <@155419933998579713>").queue();
                 spamPingProtection = true;
-                interruptCount = 60;
             }
         }
     }
