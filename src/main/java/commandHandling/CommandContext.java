@@ -6,12 +6,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import assets.CONFIG;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandContext { //implements ICommandContext {
     private final MessageReceivedEvent event;
-    private final List<String> arguments;
+    private final ArrayList<String> arguments;
     private final int securityClearance;
+    private boolean persist;
 
     // ---------------------------------------------------------
     // SecurityClearance:
@@ -21,7 +23,7 @@ public class CommandContext { //implements ICommandContext {
     // 3 - Plebs
     // ---------------------------------------------------------
 
-    public CommandContext(MessageReceivedEvent event, List<String> arguments) {
+    public CommandContext(MessageReceivedEvent event, ArrayList<String> arguments) {
         this.event = event;
         this.arguments = arguments;
 
@@ -74,5 +76,15 @@ public class CommandContext { //implements ICommandContext {
 
     public int getSecurityClearance() {
         return securityClearance;
+    }
+
+    // allow only moderators or higher to set a message as persistent
+    public void setPersistent() {
+        arguments.remove("--persist");
+        persist = securityClearance < 3;
+    }
+
+    public boolean getPersist() {
+        return persist;
     }
 }

@@ -107,8 +107,12 @@ public class CommandManager {
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);
-        List<String> arguments = Arrays.asList(split).subList(1, split.length);
+        ArrayList<String> arguments = new ArrayList<>(Arrays.asList(split).subList(1, split.length));
         CommandContext ctx = new CommandContext(event, arguments);
+
+        if (arguments.contains("--persist")) {
+            ctx.setPersistent();
+        }
 
         deleteMsg(ctx.getMessage(), 128);
         commandLogger(ctx);

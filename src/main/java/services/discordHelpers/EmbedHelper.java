@@ -34,15 +34,16 @@ public class EmbedHelper {
         sendEmbed(ctx, embed, secondsDelete, true, path, name);
     }
 
-    private static void sendEmbed(CommandContext ctx, EmbedBuilder embed, int secsDelete, boolean file, String path, String name) {
+    private static void sendEmbed(CommandContext ctx, EmbedBuilder embed, int seconds, boolean file, String path, String name) {
+        int secondsUntilDeletion = (ctx.getPersist() ? -1 : seconds);
         try {
             if (file) {
                 ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(path), name)).queue(
-                        msg -> deleteMsg(msg, secsDelete)
+                        msg -> deleteMsg(msg, secondsUntilDeletion)
                 );
             } else {
                 ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                        msg -> deleteMsg(msg, secsDelete)
+                        msg -> deleteMsg(msg, secondsUntilDeletion)
                 );
             }
         } catch (InsufficientPermissionException ipe) {

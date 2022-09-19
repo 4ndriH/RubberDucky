@@ -61,7 +61,8 @@ public class Help implements CommandInterface {
                 embed.addBlankField(true);
             }
 
-            embed.setFooter(CONFIG.Prefix.get() + "help <command> gives you a more detailed description");
+            embed.setFooter(CONFIG.Prefix.get() + "help <command> gives you a more detailed description" +
+                    (ctx.getSecurityClearance() < 3 ? "\nAppending '--persist' prevents messages from being deleted" : ""));
 
             EmbedHelper.sendEmbed(ctx, embed, 64);
         } else {
