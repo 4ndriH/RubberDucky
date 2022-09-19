@@ -55,8 +55,6 @@ public class SpokesPeople implements CommandInterface {
             }
         }
 
-        int secondsUntilDelete = ctx.getArguments().contains("-persist") ? -1 : 64;
-
         embed.setThumbnail("attachment://vis.png");
         embed.addField("__First Year__", yearOne.toString(), true);
         embed.addBlankField(true);
@@ -64,7 +62,7 @@ public class SpokesPeople implements CommandInterface {
         Message discordCacheRefresh = ctx.getChannel().sendMessage("beep boop").complete();
         discordCacheRefresh.editMessage(yearOne + "\n" + yearTwo).complete();
         discordCacheRefresh.delete().queue();
-        EmbedHelper.sendEmbedWithFile(ctx, embed, secondsUntilDelete, "resources/vis.png", "vis.png");
+        EmbedHelper.sendEmbedWithFile(ctx, embed, 64, "resources/vis.png", "vis.png");
     }
 
     @Override
