@@ -97,26 +97,13 @@ public class PlaceEncode implements CommandInterface {
         img = resize(img, width, height);
 
         switch (pattern) {
-            case "topdown": case "td":
-                topDown();
-                break;
-            case "diagonal":
-                diagonal();
-                break;
-            case "spiral":
-                spiral();
-                break;
-            case "random":
-                random();
-                break;
-            case "circle":
-                circle();
-                break;
-            case "spread":
-                spread();
-                break;
-            default:
-                leftToRight();
+            case "topdown", "td" -> topDown();
+            case "diagonal" -> diagonal();
+            case "spiral" -> spiral();
+            case "random" -> random();
+            case "circle" -> circle();
+            case "spread" -> spread();
+            default -> leftToRight();
         }
 
         if (ctx.getArguments().contains("-r")) {
@@ -286,30 +273,30 @@ public class PlaceEncode implements CommandInterface {
 
             while(spreadPixelCheckComplete(pM, pixelX, pixelY)) {
                 switch (random.nextInt(4)) {
-                    case 0:
+                    case 0 -> {
                         if (spreadPixelCheck(pM, pixelX - 1, pixelY)) {
                             pM[pixelX - 1][pixelY] = true;
                             pixelProcessQueue.add(new int[]{pixelX - 1, pixelY});
                         }
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         if (spreadPixelCheck(pM, pixelX + 1, pixelY)) {
                             pM[pixelX + 1][pixelY] = true;
                             pixelProcessQueue.add(new int[]{pixelX + 1, pixelY});
                         }
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         if (spreadPixelCheck(pM, pixelX, pixelY - 1)) {
                             pM[pixelX][pixelY - 1] = true;
                             pixelProcessQueue.add(new int[]{pixelX, pixelY - 1});
                         }
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         if (spreadPixelCheck(pM, pixelX, pixelY + 1)) {
                             pM[pixelX][pixelY + 1] = true;
                             pixelProcessQueue.add(new int[]{pixelX, pixelY + 1});
                         }
-                        break;
+                    }
                 }
             }
         }
@@ -363,13 +350,15 @@ public class PlaceEncode implements CommandInterface {
         embed.setDescription("Returns a file containing the commands to draw the provided image");
         embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
         embed.addField("__<Position/Size>__", "Set the top left corner as well as the desired width and height" +
-                "```<Position/Size> = <X> <Y> <width> <height>```", false);
+                                                          "```<Position/Size> = <X> <Y> <width> <height>```", false);
         embed.addField("__<Pattern>__", "If nothing is provided or nothing can be matched, it defaults to `lefttoright`\n" +
-                "```\ntopdown\ndiagonal\nspiral\nrandom\rcircle\nspread\nlefttoright```", false);
-        embed.addField("__<Parameters>__", "These are completely optional and mostly only affect the `spread` pattern" +
-                "```\n-c\t\t\t  forces spread to stay within image bounds" +
-                "\n-r\t\t\t  reverses the list of commands" +
-                "\n-s {<x> <y>}\tset starting positions for spread```", false);
+                                                    "```\ntopdown\ndiagonal\nspiral\nrandom\rcircle\nspread\nlefttoright```", false);
+        embed.addField("__<Parameters>__", """
+            These are completely optional and mostly only affect the `spread` pattern
+            ```-c             forces spread to stay within image bounds
+            -r             reverses the list of commands
+            -s {<x> <y>}   set starting positions for spread```
+            """, false);
         return embed;
     }
 

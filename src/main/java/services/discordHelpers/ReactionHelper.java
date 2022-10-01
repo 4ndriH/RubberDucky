@@ -25,26 +25,13 @@ public class ReactionHelper {
         String reaction;
 
         switch (type) {
-            case 0:
-                reaction = EMOTES.RDSuccess.getAsReaction();
-                break;
-            case 1:
-                reaction = EMOTES.RDBlacklisted.getAsReaction();
-                break;
-            case 2:
-                reaction = EMOTES.RDChannelWhitelist.getAsReaction();
-                break;
-            case 3:
-                reaction = EMOTES.RDServerWhitelist.getAsReaction();
-                break;
-            case 4:
-                reaction = EMOTES.RDLackingPermissions.getAsReaction();
-                break;
-            case 5:
-                reaction = EMOTES.RDError.getAsReaction();
-                break;
-            default:
-                return;
+            case 0 -> reaction = EMOTES.RDSuccess.getAsReaction();
+            case 1 -> reaction = EMOTES.RDBlacklisted.getAsReaction();
+            case 2 -> reaction = EMOTES.RDChannelWhitelist.getAsReaction();
+            case 3 -> reaction = EMOTES.RDServerWhitelist.getAsReaction();
+            case 4 -> reaction = EMOTES.RDLackingPermissions.getAsReaction();
+            case 5 -> reaction = EMOTES.RDError.getAsReaction();
+            default -> {return;}
         }
 
         ctx.getMessage().addReaction(Emoji.fromFormatted(reaction)).queue(

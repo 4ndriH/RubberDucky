@@ -38,20 +38,11 @@ public class Status implements CommandInterface {
         addReaction(ctx, 0);
 
         switch (activity) {
-            case "competing":
-                ctx.getJDA().getPresence().setActivity(Activity.competing(sb.toString()));
-                break;
-            case "listening":
-                ctx.getJDA().getPresence().setActivity(Activity.listening(sb.toString()));
-                break;
-            case "playing":
-                ctx.getJDA().getPresence().setActivity(Activity.playing(sb.toString()));
-                break;
-            case "watching":
-                ctx.getJDA().getPresence().setActivity(Activity.watching(sb.toString()));
-                break;
-            default:
-                ctx.getJDA().getPresence().setActivity(Activity.playing("With Duckies"));
+            case "competing" -> ctx.getJDA().getPresence().setActivity(Activity.competing(sb.toString()));
+            case "listening" -> ctx.getJDA().getPresence().setActivity(Activity.listening(sb.toString()));
+            case "playing" -> ctx.getJDA().getPresence().setActivity(Activity.playing(sb.toString()));
+            case "watching" -> ctx.getJDA().getPresence().setActivity(Activity.watching(sb.toString()));
+            default -> ctx.getJDA().getPresence().setActivity(Activity.playing("With Duckies"));
         }
     }
 

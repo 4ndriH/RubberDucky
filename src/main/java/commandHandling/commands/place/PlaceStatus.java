@@ -71,112 +71,48 @@ public class PlaceStatus implements CommandInterface {
         String ret = "";
         if (segment == 0) {
             switch (percentage) {
-                case 0:
-                    ret = EMOTES.L0.getAsEmote();
-                    break;
-                case 1:
-                    ret = EMOTES.L1.getAsEmote();
-                    break;
-                case 2:
-                    ret = EMOTES.L2.getAsEmote();
-                    break;
-                case 3:
-                    ret = EMOTES.L3.getAsEmote();
-                    break;
-                case 4:
-                    ret = EMOTES.L4.getAsEmote();
-                    break;
-                case 5:
-                    ret = EMOTES.L5.getAsEmote();
-                    break;
-                case 6:
-                    ret = EMOTES.L6.getAsEmote();
-                    break;
-                case 7:
-                    ret = EMOTES.L7.getAsEmote();
-                    break;
-                case 8:
-                    ret = EMOTES.L8.getAsEmote();
-                    break;
-                case 9:
-                    ret = EMOTES.L9.getAsEmote();
-                    break;
-                case 10:
-                    ret = EMOTES.L10.getAsEmote();
-                    break;
+                case 0 -> ret = EMOTES.L0.getAsEmote();
+                case 1 -> ret = EMOTES.L1.getAsEmote();
+                case 2 -> ret = EMOTES.L2.getAsEmote();
+                case 3 -> ret = EMOTES.L3.getAsEmote();
+                case 4 -> ret = EMOTES.L4.getAsEmote();
+                case 5 -> ret = EMOTES.L5.getAsEmote();
+                case 6 -> ret = EMOTES.L6.getAsEmote();
+                case 7 -> ret = EMOTES.L7.getAsEmote();
+                case 8 -> ret = EMOTES.L8.getAsEmote();
+                case 9 -> ret = EMOTES.L9.getAsEmote();
+                case 10 -> ret = EMOTES.L10.getAsEmote();
             }
         } else if (segment == 9) {
-            switch (percentage) {
-                case 0:
-                    ret = EMOTES.R0.getAsEmote();
-                    break;
-                case 1:
-                    ret = EMOTES.R1.getAsEmote();
-                    break;
-                case 2:
-                    ret = EMOTES.R2.getAsEmote();
-                    break;
-                case 3:
-                    ret = EMOTES.R3.getAsEmote();
-                    break;
-                case 4:
-                    ret = EMOTES.R4.getAsEmote();
-                    break;
-                case 5:
-                    ret = EMOTES.R5.getAsEmote();
-                    break;
-                case 6:
-                    ret = EMOTES.R6.getAsEmote();
-                    break;
-                case 7:
-                    ret = EMOTES.R7.getAsEmote();
-                    break;
-                case 8:
-                    ret = EMOTES.R8.getAsEmote();
-                    break;
-                case 9:
-                    ret = EMOTES.R9.getAsEmote();
-                    break;
-                case 10:
-                    ret = EMOTES.R10.getAsEmote();
-                    break;
-            }
+            ret = switch (percentage) {
+                case 0 -> EMOTES.R0.getAsEmote();
+                case 1 -> EMOTES.R1.getAsEmote();
+                case 2 -> EMOTES.R2.getAsEmote();
+                case 3 -> EMOTES.R3.getAsEmote();
+                case 4 -> EMOTES.R4.getAsEmote();
+                case 5 -> EMOTES.R5.getAsEmote();
+                case 6 -> EMOTES.R6.getAsEmote();
+                case 7 -> EMOTES.R7.getAsEmote();
+                case 8 -> EMOTES.R8.getAsEmote();
+                case 9 -> EMOTES.R9.getAsEmote();
+                case 10 -> EMOTES.R10.getAsEmote();
+                default -> ret;
+            };
         } else {
-            switch (percentage) {
-                case 0:
-                    ret = EMOTES.M0.getAsEmote();
-                    break;
-                case 1:
-                    ret = EMOTES.M1.getAsEmote();
-                    break;
-                case 2:
-                    ret = EMOTES.M2.getAsEmote();
-                    break;
-                case 3:
-                    ret = EMOTES.M3.getAsEmote();
-                    break;
-                case 4:
-                    ret = EMOTES.M4.getAsEmote();
-                    break;
-                case 5:
-                    ret = EMOTES.M5.getAsEmote();
-                    break;
-                case 6:
-                    ret = EMOTES.M6.getAsEmote();
-                    break;
-                case 7:
-                    ret = EMOTES.M7.getAsEmote();
-                    break;
-                case 8:
-                    ret = EMOTES.M8.getAsEmote();
-                    break;
-                case 9:
-                    ret = EMOTES.M9.getAsEmote();
-                    break;
-                case 10:
-                    ret = EMOTES.M10.getAsEmote();
-                    break;
-            }
+            ret = switch (percentage) {
+                case 0 -> EMOTES.M0.getAsEmote();
+                case 1 -> EMOTES.M1.getAsEmote();
+                case 2 -> EMOTES.M2.getAsEmote();
+                case 3 -> EMOTES.M3.getAsEmote();
+                case 4 -> EMOTES.M4.getAsEmote();
+                case 5 -> EMOTES.M5.getAsEmote();
+                case 6 -> EMOTES.M6.getAsEmote();
+                case 7 -> EMOTES.M7.getAsEmote();
+                case 8 -> EMOTES.M8.getAsEmote();
+                case 9 -> EMOTES.M9.getAsEmote();
+                case 10 -> EMOTES.M10.getAsEmote();
+                default -> ret;
+            };
         }
         return ret;
     }

@@ -132,20 +132,15 @@ public class PlacePreview implements CommandInterface {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Preview" + (sendMessageCase == 0 ? " - " + id : ""));
             embed.setImage("attachment://preview.gif");
             switch (sendMessageCase) {
-                case 0:
-                    ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                            msg -> deleteMsg(msg, 1024)
-                    );
-                    break;
-                case 1:
-                    ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                            msg -> deleteMsg(msg, 1024)
-                    );
-                    break;
-                case 2:
-                    ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                            msg -> deleteMsg(msg, 1024)
-                    );
+                case 0 -> ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
+                        msg -> deleteMsg(msg, 1024)
+                );
+                case 1 -> ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
+                        msg -> deleteMsg(msg, 1024)
+                );
+                case 2 -> ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
+                        msg -> deleteMsg(msg, 1024)
+                );
             }
         } catch (IllegalArgumentException e) {
             LOGGER.error("PlacePreview Error", e);
@@ -170,7 +165,7 @@ public class PlacePreview implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns an animated preview of the given project\n" +
-                "You can either specify the ID, reply to a text file or send it as an attachment");
+                             "You can either specify the ID, reply to a text file or send it as an attachment");
         embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " [<ID>]```", false);
         return embed;
     }
