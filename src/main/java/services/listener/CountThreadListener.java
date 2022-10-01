@@ -10,15 +10,23 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+
 import static services.database.DBHandlerConfig.getConfig;
 
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
+    private static boolean spamPingProtection = false;
+    private static int lastSent, interruptCount = 60;
     private static ThreadChannel thread;
     public static String listenTo;
-    private static int lastSent;
-    private static int interruptCount = 60;
-    private static boolean spamPingProtection = false;
+
+    private static HashMap<String, String> botUserMapping = new HashMap<>(){{
+        put("817846061347242026", "187822944326647808"); // RubberDucky -> Tobi
+        put("820098162013503498", "205704051856244736"); // AvAnis -> Mark
+        put("838098002844844032", "344065593483460618"); // Cup -> Alex
+        put("1002592429268029531", "155419933998579713"); // The Carcinizer -> Andri
+    }};
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -63,7 +71,8 @@ public class CountThreadListener extends ListenerAdapter {
             }
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (!spamPingProtection && --interruptCount <= 0) {
-                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<#996746797236105236> stopped <@155419933998579713>").queue();
+                String botId = thread.getHistory().retrievePast(1).complete().get(0).getAuthor().getId();
+                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@" + botUserMapping.get(botId) + "> please make sure your bot continues in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
                 spamPingProtection = true;
             }
         }
