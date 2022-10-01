@@ -11,6 +11,7 @@ import java.util.List;
 
 import static services.database.DBHandlerCourseReviewStats.getPublishedReviews;
 import static services.database.DBHandlerCourseReviewStats.getReviewedCourseCount;
+import static services.discordHelpers.EmbedHelper.sendEmbed;
 import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class CourseReviewStats implements CommandInterface {
@@ -26,9 +27,7 @@ public class CourseReviewStats implements CommandInterface {
         embed.setDescription("**" + getPublishedReviews() + "** reviews for **" + getReviewedCourseCount() + "** courses have been published");
         embed.setFooter("If you are curious about other stats let me know and maybe I add them");
 
-        ctx.getChannel().sendMessageEmbeds(embed.build()).queue(
-                msg -> deleteMsg(msg, 128)
-        );
+        sendEmbed(ctx, embed, 128);
     }
 
     @Override
