@@ -4,6 +4,7 @@ import assets.CONFIG;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import commandHandling.commands.CourseReview.Course;
+import commandHandling.commands.CourseReview.CourseReviewStats;
 import commandHandling.commands.CourseReview.CourseReviewVerify;
 import commandHandling.commands.adminCommands.LockDown;
 import commandHandling.commands.adminCommands.Nuke;
@@ -60,6 +61,7 @@ public class CommandManager {
         addCommand(new Status(LOGGER));
         addCommand(new GetAPILog(LOGGER));
         addCommand(new Watch(LOGGER));
+        addCommand(new CourseReviewStats(LOGGER));
 
         addCommand(new PlaceQueue(LOGGER));
         addCommand(new PlaceDelete(LOGGER));
