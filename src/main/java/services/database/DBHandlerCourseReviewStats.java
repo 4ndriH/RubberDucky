@@ -31,7 +31,7 @@ public class DBHandlerCourseReviewStats {
         int reviewedCourseCount = 0;
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT COUNT(DISTINCT CourseNumber) AS total FROM CourseReviews"
+                    "SELECT COUNT(DISTINCT CourseNumber) AS total FROM CourseReviews WHERE Verified = 1"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
