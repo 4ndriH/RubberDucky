@@ -33,6 +33,7 @@ public class Verifier {
     }
 
     private static boolean compareColors (Color img, Color place) {
+        LOGGER.info("do I get here?");
         return img.getRed() == place.getRed() && img.getGreen() == place.getGreen() && img.getBlue() == place.getBlue();
     }
 }
