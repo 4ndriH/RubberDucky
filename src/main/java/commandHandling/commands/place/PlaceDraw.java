@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.util.List;
 
 public class PlaceDraw implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
 
     public PlaceDraw(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -80,6 +80,7 @@ public class PlaceDraw implements CommandInterface {
                 try {
                     if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
                         placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
+                        LOGGER.info("fixed a pixel");
                         PlaceData.fixedPixels++;
                     } else {
                         placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
@@ -90,11 +91,12 @@ public class PlaceDraw implements CommandInterface {
                 } catch (Exception e) {
                     try {
                         Thread.sleep(16000);
-                    } catch (InterruptedException ignored) {}
+                    } catch (InterruptedException ignored) {
+                        LOGGER.error("caught an error in PlaceDraw");
+                    }
                 }
 
-                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
-                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
+                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
                     Verifier.verify();
                 }
 
