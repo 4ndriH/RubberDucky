@@ -28,14 +28,13 @@ public class PlaceWebSocket {
             CountDownLatch latch = new CountDownLatch(1);
             WebSocketClient wsc = new WebSocketClient(latch);
             WebSocket ws;
-            System.out.println("gugus");
+
             try {
                 ws = HttpClient
                     .newHttpClient()
                     .newWebSocketBuilder()
-                    .buildAsync(URI.create("wss://place.battlerush.dev:9000/place"), wsc)
+                    .buildAsync(URI.create("wss://ws.battlerush.dev/"), wsc)
                     .join();
-                System.out.println("breh");
             } catch(Exception e) {
                 if(e.getMessage().contains("javax.net.ssl.SSLHandshakeException")) {
                     LOGGER.error("Websocket Problem", e);
@@ -45,23 +44,19 @@ public class PlaceWebSocket {
                     return new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
                 }
             }
-            System.out.println("here");
+
             WebSocketClient.buffer = ByteBuffer.allocate(0);
             ws.sendText(""+(char)1, true);
-            System.out.println("heree");
 
             try {
                 latch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("hereee");
 
             buffer = WebSocketClient.buffer;
             ws.abort();
-            System.out.println("hereeee");
         } while (buffer.remaining() <= 3000000);
-            System.out.println("hereeeee");
 
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         int x = 0, y = 0;
