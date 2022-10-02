@@ -5,7 +5,7 @@ import assets.Objects.Pixel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class PlaceVerify {
+public class Verifier {
     public static void verify() {
         BufferedImage place = PlaceWebSocket.getImage(true);
 
