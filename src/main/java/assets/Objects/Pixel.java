@@ -62,7 +62,7 @@ public class Pixel {
         if (alpha == 1.0) {
             return placeColor = imageColor;
         } else {
-            return placeColor = imageColor;//mixAndMatch();
+            return placeColor = mixAndMatch();
         }
     }
 

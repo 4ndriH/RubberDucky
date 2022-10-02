@@ -16,6 +16,7 @@ import services.database.DBHandlerPlace;
 import services.discordHelpers.EmbedHelper;
 import services.place.PlaceData;
 import services.place.PlaceWebSocket;
+import services.place.Verifier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -92,10 +93,10 @@ public class PlaceDraw implements CommandInterface {
                     } catch (InterruptedException ignored) {}
                 }
 
-//                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
-//                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
-//                    PlaceVerify.verify();
-//                }
+                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0
+                        || PlaceData.drawnPixels == PlaceData.totalPixels) {
+                    Verifier.verify();
+                }
 
                 if (++pixelDrawnCnt3600 == 3600) {
                     int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
