@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerPlace;
 import services.place.PlaceData;
-import services.place.Verifier;
 
 import java.awt.*;
 
@@ -27,7 +26,7 @@ public class Pixel {
         this.y = y;
         this.alpha = alpha;
         this.imageColor = imageColor;
-        this.placeColor = placeColor;
+        this.placeColor = (placeColor == null) ? imageColor : placeColor;
     }
 
     public int getX() {
@@ -39,7 +38,6 @@ public class Pixel {
     }
 
     public String getPlaceColor() {
-        System.out.println("place Color " + placeColor);
         LOGGER.info("place Color " + placeColor);
         return placeColor;
     }
