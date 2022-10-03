@@ -79,22 +79,20 @@ public class PlaceDraw implements CommandInterface {
 
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
                 try {
-
-                    //if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
-                      //  placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
-                        //LOGGER.info("fixed a pixel");
-                        //PlaceData.fixedPixels++;
-                    //} else {
-                      //  placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
-                        //if (PlaceData.drawnPixels++ % 16 == 0) {
-                          //  DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
-                        //}
-
-                    placeChannel.sendMessage(messageGenerator()).complete();
-
-                    if (PlaceData.drawnPixels++ % 16 == 0) {
-                        DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+                    if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+                        placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
+                        PlaceData.fixedPixels++;
+                    } else {
+                        placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
+                        if (PlaceData.drawnPixels++ % 16 == 0) {
+                            DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+                        }
                     }
+//                    placeChannel.sendMessage(messageGenerator()).complete();
+
+//                    if (PlaceData.drawnPixels++ % 16 == 0) {
+//                        DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+//                    }
                 } catch (Exception e) {
                     try {
                         Thread.sleep(16000);
@@ -107,7 +105,6 @@ public class PlaceDraw implements CommandInterface {
                     Verifier.verify();
                 }
 
-
                 if (++pixelDrawnCnt3600 == 3600) {
                     int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
                     DBHandlerPlace.insertTimeTaken(tempSec);
@@ -116,7 +113,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
 //                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
-//                    PlaceVerify.verify();
+//                    Verifier.verify();
 //                }
 
             }
