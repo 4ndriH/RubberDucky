@@ -28,6 +28,8 @@ import java.util.List;
 
 public class PlaceDraw implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
+    private static boolean fixToggle = false;
+
 
     public PlaceDraw(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -74,19 +76,24 @@ public class PlaceDraw implements CommandInterface {
 
             new PlaceData(id);
             DBHandlerConfig.updateConfig("placeProject", "" + id);
-            boolean fixToggle = false;
 
             while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
                 try {
-                    if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
-                        placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
-                        LOGGER.info("fixed a pixel");
-                        PlaceData.fixedPixels++;
-                    } else {
-                        placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
-                        if (PlaceData.drawnPixels++ % 16 == 0) {
-                            DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
-                        }
+
+                    //if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+                      //  placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
+                        //LOGGER.info("fixed a pixel");
+                        //PlaceData.fixedPixels++;
+                    //} else {
+                      //  placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
+                        //if (PlaceData.drawnPixels++ % 16 == 0) {
+                          //  DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+                        //}
+
+                    placeChannel.sendMessage(messageGenerator()).complete();
+
+                    if (PlaceData.drawnPixels++ % 16 == 0) {
+                        DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
                     }
                 } catch (Exception e) {
                     try {
@@ -100,12 +107,18 @@ public class PlaceDraw implements CommandInterface {
                     Verifier.verify();
                 }
 
+
                 if (++pixelDrawnCnt3600 == 3600) {
                     int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
                     DBHandlerPlace.insertTimeTaken(tempSec);
                     time3600 = System.currentTimeMillis();
                     pixelDrawnCnt3600 = 0;
                 }
+
+//                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
+//                    PlaceVerify.verify();
+//                }
+
             }
 
             for (Pixel pixel : PlaceData.fixingQ) {
@@ -125,6 +138,34 @@ public class PlaceDraw implements CommandInterface {
         DBHandlerConfig.updateConfig("placeProject", "-1");
         PlaceData.drawing = false;
         PlaceData.stopQ = false;
+    }
+
+    private static String messageGenerator() {
+        StringBuilder command = new StringBuilder();
+
+        command.append(drawOrContinue());
+
+        if (PlaceData.totalPixels - PlaceData.drawnPixels > 128) {
+            if (PlaceData.openPixelRequests()) {
+                command.append(" | ").append(PlaceData.getPixelRequest());
+
+                for (int i = 0; i < 60; i++) {
+                    command.append(drawOrContinue());
+                }
+            }
+        }
+
+        return command.toString();
+    }
+
+    private static String drawOrContinue() {
+        if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+            PlaceData.fixedPixels++;
+            return "/" + PlaceData.fixingQ.poll().getDrawCommand();
+        } else {
+            PlaceData.drawnPixels++;
+            return "/" + PlaceData.getPixel().getDrawCommand();
+        }
     }
 
     private static void sendCompletionMessage(JDA jda) {
