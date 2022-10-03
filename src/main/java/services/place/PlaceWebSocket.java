@@ -17,10 +17,6 @@ import java.util.concurrent.CountDownLatch;
 public class PlaceWebSocket {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaceWebSocket.class);
 
-    public static BufferedImage getImage (boolean colored, int i) {
-        return new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
-    }
-
     public static BufferedImage getImage (boolean colored) {
         ByteBuffer buffer;
 

@@ -35,7 +35,7 @@ public class PlacePreview implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage place = PlaceWebSocket.getImage(false, 1);
+        BufferedImage place = PlaceWebSocket.getImage(false);
         ArrayList<Pixel> pixels;
         // 0 = ID, 1 = sent, 2 = replied to
         int sendMessageCase, id = -1;
