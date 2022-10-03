@@ -49,6 +49,7 @@ public class PlaceData {
     public static Color getPixelColor(int x, int y) {
         if (System.currentTimeMillis() - time > 1800000) {
             place = PlaceWebSocket.getImage(true);
+            time = System.currentTimeMillis();
         }
         return new Color(place.getRGB(x, y));
     }
