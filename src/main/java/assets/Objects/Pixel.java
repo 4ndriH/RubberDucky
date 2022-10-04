@@ -38,7 +38,6 @@ public class Pixel {
     }
 
     public String getPlaceColor() {
-        LOGGER.info("place Color " + placeColor);
         return placeColor;
     }
 
