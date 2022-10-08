@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import assets.CONFIG;
 import services.database.ConnectionPool;
 import services.database.DBHandlerConfig;
-import services.listener.*;
+import services.listeners.*;
 import services.onStartup.StartUp;
 
 import javax.security.auth.login.LoginException;

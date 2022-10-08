@@ -1,4 +1,4 @@
-package services.listener;
+package services.listeners;
 
 import commandHandling.commands.ownerCommands.Kill;
 import commandHandling.commands.CourseReview.CourseReviewVerify;

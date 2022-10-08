@@ -1,4 +1,4 @@
-package services.listener;
+package services.listeners;
 
 import assets.CONFIG;
 import commandHandling.commands.place.PlaceDraw;

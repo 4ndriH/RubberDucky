@@ -1,4 +1,4 @@
-package services.listener;
+package services.listeners;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

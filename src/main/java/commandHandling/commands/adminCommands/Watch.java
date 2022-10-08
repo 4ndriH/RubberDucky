@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.listener.CountThreadListener;
+import services.listeners.CountThreadListener;
 
 import java.util.concurrent.TimeUnit;
 
