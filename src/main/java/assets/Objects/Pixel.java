@@ -66,11 +66,19 @@ public class Pixel {
         if (alpha == 1.0) {
             return placeColor = imageColor;
         } else {
-            return placeColor = mixAndMatch();
+            return placeColor = mixAndMatch(true);
         }
     }
 
-    private String mixAndMatch() {
+    public String getColor(boolean dbUpdate) {
+        if (alpha == 1.0) {
+            return placeColor = imageColor;
+        } else {
+            return placeColor = mixAndMatch(dbUpdate);
+        }
+    }
+
+    private String mixAndMatch(boolean dbUpdate) {
         Color image = Color.decode(imageColor);
         Color place = PlaceData.getPixelColor(x, y);
 
@@ -79,7 +87,9 @@ public class Pixel {
         int b = (int) (alpha * image.getBlue() + (1 - alpha) * place.getBlue());
 
         String color = String.format("#%02x%02x%02x", r, g, b);
-        DBHandlerPlace.updatePixelPlaceColor(alpha, x, y, imageColor, color);
+        if (dbUpdate) {
+            DBHandlerPlace.updatePixelPlaceColor(alpha, x, y, imageColor, color);
+        }
         return color;
     }
 }

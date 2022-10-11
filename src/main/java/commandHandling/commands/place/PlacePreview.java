@@ -103,7 +103,7 @@ public class PlacePreview implements CommandInterface {
             for (int i = 0; i < pixels.size(); i++) {
                 Pixel pixel = pixels.get(i);
                 try {
-                    img.setRGB(pixel.getX(), pixel.getY(), Color.decode(pixel.getColor()).getRGB());
+                    img.setRGB(pixel.getX(), pixel.getY(), Color.decode(pixel.getColor(false)).getRGB());
                     if (i % pixelsPerFrame == 0) {
                         writer.writeToSequence(img);
                         img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
