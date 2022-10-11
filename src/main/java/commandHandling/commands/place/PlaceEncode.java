@@ -316,7 +316,7 @@ public class PlaceEncode implements CommandInterface {
     }
 
     private void writerUtility (Color color, int i, int j) {
-        if (color.getAlpha() > 230 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
+        if (color.getAlpha() > 0 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
             if (color.getAlpha() != 255 && color.getAlpha() != 0) {
                 pixels.add((x + i) + " " + (y + j) + " " + rgbToHex(color) + " " + color.getAlpha());
             } else {
