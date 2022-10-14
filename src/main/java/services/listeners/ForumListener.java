@@ -13,17 +13,17 @@ public class ForumListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot()) {
-            LOGGER.info("forum post?\nchannel name: " + event.getChannel().getName() + "\nchannel type" + event.getChannelType());
-            LOGGER.info("" + event.getChannelType());
-        }
+//        if (!event.getAuthor().isBot()) {
+//            LOGGER.info("forum post?\nchannel name: " + event.getChannel().getName() + "\nchannel type" + event.getChannelType());
+//            LOGGER.info("" + event.getChannelType());
+//        }
 
 
     }
 
     @Override
     public void onChannelCreate(@NotNull ChannelCreateEvent event) {
-        LOGGER.info(event.getChannel().asForumChannel().getTopic());
+        LOGGER.info("name: " + event.getChannel().getName() + "\nid: " + event.getChannel().getId() + "\ntype: " + event.getChannelType() + "\nparent channel" + event.getChannel().asThreadChannel().getParentChannel());
 //        if (event.getChannel().getName().equals("bunnyvibe")) {
 //
 //        }
