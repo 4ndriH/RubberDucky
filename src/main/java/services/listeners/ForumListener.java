@@ -1,5 +1,6 @@
 package services.listeners;
 
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -16,18 +17,15 @@ public class ForumListener extends ListenerAdapter {
         if (!event.getAuthor().isBot() && event.getChannelType().isThread()) {
             LOGGER.info("thread channel | "+ event.getChannel().asThreadChannel().getParentChannel().getName());
 
-            if (event.getChannel().asThreadChannel().getParentChannel().getName().equals("bots-testing")) {
+            if (event.getChannel().asThreadChannel().getParentChannel().getName().equalsIgnoreCase("bots-testing")) {
                 LOGGER.info("success");
-                event.getMessage().addReaction(Emoji.fromFormatted("bunnyvibes:989952440126296116")).queue();
-                LOGGER.info("bunny vibes added");
+                if (event.getMessage().getType().equals(MessageType.THREAD_CREATED)) {
+                    event.getMessage().addReaction(Emoji.fromFormatted("bunnyvibes:989952440126296116")).queue();
+                    LOGGER.info("bunny vibes added");
+                } else {
+                    LOGGER.info(event.getMessage().getType().toString());
+                }
             }
         }
-//        if (!event.getAuthor().isBot()) {
-//            LOGGER.info("forum post?\nchannel name: " + event.getChannel().getName() + "\nchannel type" + event.getChannelType());
-//            LOGGER.info("" + event.getChannelType());
-//        }
-
-
     }
-
 }
