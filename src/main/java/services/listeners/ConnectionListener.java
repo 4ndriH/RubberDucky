@@ -2,7 +2,7 @@ package services.listeners;
 
 import assets.CONFIG;
 import commandHandling.commands.place.PlaceDraw;
-import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import services.database.DBHandlerConfig;

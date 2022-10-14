@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +90,6 @@ public class CommandManager {
         return commands;
     }
 
-    @Nullable
     public static CommandInterface getCommand(String search) {
         String searchLowerCase = search.toLowerCase();
 
