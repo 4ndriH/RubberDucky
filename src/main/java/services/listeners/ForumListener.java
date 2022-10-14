@@ -19,11 +19,11 @@ public class ForumListener extends ListenerAdapter {
 
             if (event.getChannel().asThreadChannel().getParentChannel().getName().equalsIgnoreCase("bots-testing")) {
                 LOGGER.info("success");
-                if (event.getMessage().getType().equals(MessageType.THREAD_CREATED)) {
+                if (System.currentTimeMillis() - event.getChannel().getTimeCreated().toInstant().toEpochMilli() < 1000) {
                     event.getMessage().addReaction(Emoji.fromFormatted("bunnyvibes:989952440126296116")).queue();
                     LOGGER.info("bunny vibes added");
                 } else {
-                    LOGGER.info(event.getMessage().getType().toString());
+                    LOGGER.info("older than 1 second");
                 }
             }
         }
