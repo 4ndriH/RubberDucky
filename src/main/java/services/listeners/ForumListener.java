@@ -13,8 +13,7 @@ public class ForumListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot() && event.getChannelType().isThread()) {
-            if (event.getChannel().asThreadChannel().getParentChannel().getId().equals("1019663716804997192")) {
-                LOGGER.warn("works with id too");
+            if (event.getChannel().asThreadChannel().getParentChannel().getId().equals("1030381069553385533")) {
                 if (System.currentTimeMillis() - event.getChannel().getTimeCreated().toInstant().toEpochMilli() < 1000) {
                     event.getMessage().addReaction(Emoji.fromFormatted("bunnyvibes:989952440126296116")).queue();
                 }
