@@ -50,6 +50,7 @@ public class Bot {
                 .addEventListeners(new PingHellListener())
                 .addEventListeners(new PlaceListener())
                 .addEventListeners(new BotDownDetectionListener())
+                .addEventListeners(new ForumListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
