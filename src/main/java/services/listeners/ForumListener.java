@@ -13,7 +13,7 @@ public class ForumListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getChannelType().isThread()) {
+        if (!event.getAuthor().isBot() && event.getChannelType().isThread()) {
             LOGGER.info("thread channel | "+ event.getChannel().asThreadChannel().getParentChannel().getName());
 
             if (event.getChannel().asThreadChannel().getParentChannel().getName().equals("bots-testing")) {
