@@ -13,6 +13,15 @@ public class ForumListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getChannelType().isThread()) {
+            LOGGER.info("thread channel | "+ event.getChannel().asThreadChannel().getParentChannel().getName());
+
+            if (event.getChannel().asThreadChannel().getParentChannel().getName().equals("bots-testing")) {
+                LOGGER.info("success");
+                event.getMessage().addReaction(Emoji.fromFormatted("bunnyvibes:989952440126296116")).queue();
+                LOGGER.info("bunny vibes added");
+            }
+        }
 //        if (!event.getAuthor().isBot()) {
 //            LOGGER.info("forum post?\nchannel name: " + event.getChannel().getName() + "\nchannel type" + event.getChannelType());
 //            LOGGER.info("" + event.getChannelType());
@@ -21,11 +30,4 @@ public class ForumListener extends ListenerAdapter {
 
     }
 
-    @Override
-    public void onChannelCreate(@NotNull ChannelCreateEvent event) {
-        LOGGER.info("name: " + event.getChannel().getName() + "\nid: " + event.getChannel().getId() + "\ntype: " + event.getChannelType() + "\nparent channel" + event.getChannel().asThreadChannel().getParentChannel());
-//        if (event.getChannel().getName().equals("bunnyvibe")) {
-//
-//        }
-    }
 }
