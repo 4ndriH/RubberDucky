@@ -51,6 +51,7 @@ public class Bot {
                 .addEventListeners(new PlaceListener())
                 .addEventListeners(new BotDownDetectionListener())
                 .addEventListeners(new ForumListener())
+                .addEventListeners(new CountThread10kPolicingListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
