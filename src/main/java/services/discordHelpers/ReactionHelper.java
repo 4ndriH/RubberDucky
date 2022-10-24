@@ -1,6 +1,7 @@
 package services.discordHelpers;
 
 import commandHandling.CommandContext;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -34,10 +35,18 @@ public class ReactionHelper {
             default -> {return;}
         }
 
-        ctx.getMessage().addReaction(Emoji.fromFormatted(reaction)).queue(
+        reactionAdder(ctx.getMessage(), reaction);
+    }
+
+    public static void addReaction(Message msg, String reaction) {
+        reactionAdder(msg, reaction);
+    }
+
+    private static void reactionAdder(Message message, String reaction) {
+        message.addReaction(Emoji.fromFormatted(reaction)).queue(
                 null, new ErrorHandler().handle(ErrorResponse.REACTION_BLOCKED,
                         (ex) -> {
-                            addUserToBlacklist(ctx.getAuthor().getId());
+                            addUserToBlacklist(message.getAuthor().getId());
                             PermissionManager.reload();
                         }).handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
         );
