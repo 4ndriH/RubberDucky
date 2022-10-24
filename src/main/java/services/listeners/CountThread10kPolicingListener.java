@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -72,11 +74,23 @@ public class CountThread10kPolicingListener extends ListenerAdapter {
     }
 
     private void wrongCountHandler(Message msg) {
-        msg.addReaction(Emoji.fromUnicode("U+1F1FC")).queue();
-        msg.addReaction(Emoji.fromUnicode("U+1F1F7")).queue();
-        msg.addReaction(Emoji.fromUnicode("U+1F1F4")).queue();
-        msg.addReaction(Emoji.fromUnicode("U+1F1F3")).queue();
-        msg.addReaction(Emoji.fromUnicode("U+1F1EC")).queue();
-        msg.addReaction(Emoji.fromFormatted("a:POLICE:796671967922749441")).queue();
+        msg.addReaction(Emoji.fromUnicode("U+1F1FC")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
+        msg.addReaction(Emoji.fromUnicode("U+1F1F7")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
+        msg.addReaction(Emoji.fromUnicode("U+1F1F4")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
+        msg.addReaction(Emoji.fromUnicode("U+1F1F3")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
+        msg.addReaction(Emoji.fromUnicode("U+1F1EC")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
+        msg.addReaction(Emoji.fromFormatted("a:POLICE:796671967922749441")).queue(
+                null, new ErrorHandler().handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+        );
     }
 }
