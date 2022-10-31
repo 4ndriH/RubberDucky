@@ -77,7 +77,7 @@ public class PingHellListener extends ListenerAdapter {
                     updatePinghellStatus(discordUserId, 0);
                 }
             }
-        } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("Message graph for last day") || event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().equalsIgnoreCase("Rubberducky, please change the color")) {
+        } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().equalsIgnoreCase("Message graph for last day") || event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().equalsIgnoreCase("Rubberducky, please change the color")) {
             float r = random.nextFloat();
             float g = random.nextFloat();
             float b = random.nextFloat();
