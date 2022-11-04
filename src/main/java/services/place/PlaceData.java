@@ -34,7 +34,9 @@ public class PlaceData {
         fixedPixels = 0;
         time = 0L;
 
-        drawing = verify = true;
+        //drawing = verify = true;
+        drawing = true;
+        verify = false;
         stop = stopQ = false;
     }
 
