@@ -20,6 +20,7 @@ public class Bot {
         StartUp.updateToken();
         DBHandlerConfig.incrementUptimeCounter();
         CONFIG.instance = connectToDiscord();
+        CONFIG.instance.upsertCommand("ping", "Pong!").queue();
     }
 
     private static JDA connectToDiscord() throws LoginException {
@@ -52,6 +53,7 @@ public class Bot {
                 .addEventListeners(new BotDownDetectionListener())
                 .addEventListeners(new ForumListener())
                 .addEventListeners(new CountThread10kPolicingListener())
+                .addEventListeners(new SlashCommandListener())
                 .setActivity(Activity.playing("With Duckies"))
                 .build();
     }
