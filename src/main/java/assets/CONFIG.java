@@ -12,7 +12,8 @@ public enum CONFIG {
     Prefix("ipsum"),
     OwnerID("dolor"),
     LogChannel("sit"),
-    embedColor("amet");
+    embedColor("amet"),
+    placeVerify("bla");
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
     private String id;
@@ -34,6 +35,7 @@ public enum CONFIG {
         OwnerID.id = config.get("ownerId");
         LogChannel.id = config.get("logChannel");
         embedColor.id = config.get("embedColor");
+        placeVerify.id = config.get("PlaceVerify");
 
         LOGGER.info("Config loaded");
     }

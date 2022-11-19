@@ -1,10 +1,12 @@
 package commandHandling.commands.place;
 
+import assets.CONFIG;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.database.DBHandlerConfig;
 import services.place.PlaceData;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class PlaceVerify implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         PlaceData.verify = !PlaceData.verify;
+        DBHandlerConfig.updateConfig("PlaceVerify", "" + PlaceData.verify);
+        CONFIG.reload();
     }
 
     @Override
