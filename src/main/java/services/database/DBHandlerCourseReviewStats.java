@@ -13,7 +13,7 @@ public class DBHandlerCourseReviewStats {
 
     public static int getPublishedReviews() {
         int publishedReviews = 0;
-        try (Connection connection = ConnectionPool.getConnection()){
+        try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT COUNT(*) AS total FROM CourseReviews WHERE Verified = 1"
             );
@@ -29,7 +29,7 @@ public class DBHandlerCourseReviewStats {
 
     public static int getReviewedCourseCount() {
         int reviewedCourseCount = 0;
-        try (Connection connection = ConnectionPool.getConnection()){
+        try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT COUNT(DISTINCT CourseNumber) AS total FROM CourseReviews WHERE Verified = 1"
             );

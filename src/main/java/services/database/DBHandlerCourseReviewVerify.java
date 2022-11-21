@@ -15,7 +15,7 @@ public class DBHandlerCourseReviewVerify {
 
     public static HashMap<Integer, Review> getUnverifiedReviews() {
         HashMap<Integer, Review> reviews = new HashMap<>();
-        try (Connection connection = ConnectionPool.getConnection()){
+        try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM CourseReviews WHERE Verified=0"
             );
@@ -37,7 +37,7 @@ public class DBHandlerCourseReviewVerify {
     }
 
     public static void updateVerifiedStatus(int key, int verificationStatus) {
-        try (Connection connection = ConnectionPool.getConnection()){
+        try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE CourseReviews SET Verified = ? WHERE Key = ?"
             );
