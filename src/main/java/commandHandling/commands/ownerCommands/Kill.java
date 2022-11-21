@@ -51,6 +51,7 @@ public class Kill implements CommandInterface{
                 .addFiles(FileUpload.fromData(new File("resources/" + file))).complete();
         deleteMsg(msg, 64);
         ctx.getJDA().shutdownNow();
+        System.exit(0);
     }
 
     @Override
