@@ -19,8 +19,6 @@ public class ConnectionPoolCR {
         dataSource = new HikariDataSource( config );
     }
 
-    //public ConnectionPoolCR() {}
-
     public static Connection getConnection() {
         try {
             return dataSource.getConnection();
@@ -28,5 +26,9 @@ public class ConnectionPoolCR {
             sqlE.printStackTrace();
             return null;
         }
+    }
+
+    public static void closeDBConnection() {
+        dataSource.close();
     }
 }

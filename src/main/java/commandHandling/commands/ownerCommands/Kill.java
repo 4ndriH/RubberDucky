@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.database.ConnectionPool;
+import services.database.ConnectionPoolCR;
 import services.discordHelpers.EmbedHelper;
 
 import java.io.File;
@@ -51,6 +53,8 @@ public class Kill implements CommandInterface{
                 .addFiles(FileUpload.fromData(new File("resources/" + file))).complete();
         deleteMsg(msg, 64);
         ctx.getJDA().shutdownNow();
+        ConnectionPool.closeDBConnection();
+        ConnectionPoolCR.closeDBConnection();
         System.exit(0);
     }
 

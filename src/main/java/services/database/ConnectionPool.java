@@ -27,4 +27,8 @@ public class ConnectionPool {
             return null;
         }
     }
+
+    public static void closeDBConnection() {
+        dataSource.close();
+    }
 }
