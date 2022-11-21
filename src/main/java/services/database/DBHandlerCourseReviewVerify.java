@@ -22,7 +22,7 @@ public class DBHandlerCourseReviewVerify {
             ResultSet rs = ps.executeQuery();
             int key = 1;
             while (!rs.isClosed() && rs.next()) {
-                reviews.put(rs.getInt("Key"), new Review(
+                reviews.put(key, new Review(
                         key++,
                         rs.getString("uniqueUserId"),
                         rs.getString("Review"),
