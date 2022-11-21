@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CountThread10kPolicingListener extends ListenerAdapter {
     private String lastDiscordUserId = "";
-    private int lastCountedNumber = -1;
+    private static int lastCountedNumber = -1;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -80,5 +80,11 @@ public class CountThread10kPolicingListener extends ListenerAdapter {
         for (String reaction : reactions) {
             ReactionHelper.addReaction(msg, reaction);
         }
+    }
+
+    public static int updateLastCountedNumber(int progress) {
+        int temp = lastCountedNumber;
+        lastCountedNumber = progress;
+        return temp;
     }
 }
