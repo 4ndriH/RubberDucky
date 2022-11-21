@@ -20,11 +20,11 @@ public class DBHandlerCourseReviewVerify {
                     "SELECT * FROM CourseReviews WHERE VerificationStatus=0"
             );
             ResultSet rs = ps.executeQuery();
+            int key = 1;
             while (!rs.isClosed() && rs.next()) {
                 reviews.put(rs.getInt("Key"), new Review(
-                        rs.getInt("Key"),
-                        rs.getString("DiscordUserId"),
-                        rs.getString("nethz"),
+                        key++,
+                        rs.getString("uniqueUserId"),
                         rs.getString("Review"),
                         rs.getString("CourseNumber"),
                         rs.getLong("Date")
@@ -36,13 +36,14 @@ public class DBHandlerCourseReviewVerify {
         return reviews;
     }
 
-    public static void updateVerifiedStatus(int key, int verificationStatus) {
+    public static void updateVerifiedStatus(String uniqueUserId, String courseNumber, int verificationStatus) {
         try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE CourseReviews SET VerificationStatus = ? WHERE Key = ?"
+                    "UPDATE CourseReviews SET VerificationStatus = ? WHERE UniqueUserId = ? AND CourseNumber = ?"
             );
             ps.setInt(1, verificationStatus);
-            ps.setInt(2, key);
+            ps.setString(2, uniqueUserId);
+            ps.setString(2, courseNumber);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
