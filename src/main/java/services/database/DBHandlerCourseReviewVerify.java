@@ -43,7 +43,7 @@ public class DBHandlerCourseReviewVerify {
             );
             ps.setInt(1, verificationStatus);
             ps.setString(2, uniqueUserId);
-            ps.setString(2, courseNumber);
+            ps.setString(3, courseNumber);
             ps.executeUpdate();
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
