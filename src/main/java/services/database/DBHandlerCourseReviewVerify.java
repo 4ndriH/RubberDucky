@@ -17,7 +17,7 @@ public class DBHandlerCourseReviewVerify {
         HashMap<Integer, Review> reviews = new HashMap<>();
         try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM CourseReviews WHERE Verified=0"
+                    "SELECT * FROM CourseReviews WHERE VerificationStatus=0"
             );
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
@@ -39,7 +39,7 @@ public class DBHandlerCourseReviewVerify {
     public static void updateVerifiedStatus(int key, int verificationStatus) {
         try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE CourseReviews SET Verified = ? WHERE Key = ?"
+                    "UPDATE CourseReviews SET VerificationStatus = ? WHERE Key = ?"
             );
             ps.setInt(1, verificationStatus);
             ps.setInt(2, key);
