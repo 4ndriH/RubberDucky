@@ -19,8 +19,6 @@ public class ConnectionPool {
         dataSource = new HikariDataSource( config );
     }
 
-    public ConnectionPool() {}
-
     public static Connection getConnection() {
         try {
             return dataSource.getConnection();
