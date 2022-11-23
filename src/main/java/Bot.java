@@ -15,10 +15,11 @@ import javax.security.auth.login.LoginException;
 
 public class Bot {
     public static void main(String[] args) throws LoginException {
+        CONFIG.reload();
         StartUp.checks();
         new ConnectionPool();
 
-        if (CONFIG.LogChannel.get().equals("841393155478650920")) {
+        if (CONFIG.logChannelID.equals("841393155478650920")) {
             new ConnectionPoolCR();
         }
 
@@ -30,7 +31,7 @@ public class Bot {
     }
 
     private static JDA connectToDiscord() throws LoginException {
-        return JDABuilder.createDefault(CONFIG.Token.get()
+        return JDABuilder.createDefault(CONFIG.token
                 ).enableIntents(
                         GatewayIntent.GUILD_MESSAGES,
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,

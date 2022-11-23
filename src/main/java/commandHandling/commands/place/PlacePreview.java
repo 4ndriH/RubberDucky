@@ -166,7 +166,7 @@ public class PlacePreview implements CommandInterface {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns an animated preview of the given project\n" +
                              "You can either specify the ID, reply to a text file or send it as an attachment");
-        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " [<ID>]```", false);
+        embed.addField("__Usage__", "```" + CONFIG.prefix + getName() + " [<ID>]```", false);
         return embed;
     }
 

@@ -30,7 +30,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
 
         embed.setFooter(eventObject.getLoggerName());
 
-        CONFIG.instance.getGuildById("817850050013036605").getTextChannelById(CONFIG.LogChannel.get())
+        CONFIG.instance.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
                 .sendMessageEmbeds(embed.build()).queue();
     }
 }
