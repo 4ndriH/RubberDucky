@@ -32,6 +32,10 @@ public class PingHellListener extends ListenerAdapter {
     private Role formerPingHellMember;
     private Role pingHell;
 
+    private float r = 0.0f;
+    private float g = 0.0f;
+    private float b = 0.0f;
+
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         formerPingHellMember = event.getJDA().getGuildById("817850050013036605").getRoleById("997211963002191942");
@@ -78,9 +82,9 @@ public class PingHellListener extends ListenerAdapter {
                 }
             }
         } else if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().equalsIgnoreCase("Message graph for last day") || event.getAuthor().getId().equals("155419933998579713") && event.getMessage().getContentRaw().equalsIgnoreCase("Rubberducky, please change the color")) {
-            float r = random.nextFloat();
-            float g = random.nextFloat();
-            float b = random.nextFloat();
+            r = (r + random.nextFloat()) % 1.0f;
+            g = (g + random.nextFloat()) % 1.0f;
+            b = (b + random.nextFloat()) % 1.0f;
             Color color = new Color(r, g, b);
 
             pingHell.getManager().setColor(color).queue();
