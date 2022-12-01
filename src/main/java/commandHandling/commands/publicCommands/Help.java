@@ -10,6 +10,7 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.discordHelpers.EmbedHelper;
 import assets.Objects.HelpEntry;
+import services.discordHelpers.ReactionHelper;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -90,6 +91,7 @@ public class Help implements CommandInterface {
             }
 
             EmbedHelper.sendEmbed(ctx, embed, 64);
+            ReactionHelper.addReaction(ctx, 0);
         }
     }
 
@@ -109,5 +111,10 @@ public class Help implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("commands", "cmds", "commandlist", "");
+    }
+
+    @Override
+    public boolean requiresFurtherChecks() {
+        return true;
     }
 }
