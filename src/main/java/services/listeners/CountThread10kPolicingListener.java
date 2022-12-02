@@ -62,7 +62,8 @@ public class CountThread10kPolicingListener extends ListenerAdapter {
 //        if (event.getChannel().getId().equals("1020951518582673478")) {
         if (event.getChannel().getId().equals("993390913881640970")) {
             try {
-                if (lastDiscordUserId.equals(event.getAuthor().getId()) || lastCountedNumber + 1 != Integer.parseInt(event.getMessage().getContentRaw())) {
+                if (lastDiscordUserId.equals(event.getAuthor().getId()) || lastCountedNumber + 1 != Integer.parseInt(event.getMessage().getContentRaw()) ||
+                !event.getMessage().getContentRaw().equals("" + (lastCountedNumber + 1))) {
                     throw new IllegalArgumentException();
                 }
 
