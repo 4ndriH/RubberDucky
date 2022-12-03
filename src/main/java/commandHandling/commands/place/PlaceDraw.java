@@ -121,6 +121,10 @@ public class PlaceDraw implements CommandInterface {
             for (Pixel pixel : PlaceData.fixingQ) {
                 placeChannel.sendMessage(pixel.getDrawCommand()).complete();
                 PlaceData.fixedPixels++;
+
+                if (PlaceData.stop) {
+                    break;
+                }
             }
 
             if (!PlaceData.stop) {
