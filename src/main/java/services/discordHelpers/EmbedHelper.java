@@ -23,7 +23,7 @@ public class EmbedHelper {
     }
 
     public static EmbedBuilder embedBuilder() {
-        return (new EmbedBuilder()).setColor(new Color(Integer.decode(CONFIG.embedColor.get())));
+        return (new EmbedBuilder()).setColor(CONFIG.embedColor);
     }
 
     public static void sendEmbed(CommandContext ctx, EmbedBuilder embed, int secondsDelete) {

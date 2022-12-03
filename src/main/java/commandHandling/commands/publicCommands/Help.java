@@ -10,6 +10,7 @@ import services.BotExceptions;
 import services.CommandManager;
 import services.discordHelpers.EmbedHelper;
 import assets.Objects.HelpEntry;
+import services.discordHelpers.ReactionHelper;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -27,9 +28,9 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String prefix = CONFIG.Prefix.get();
+        String prefix = CONFIG.prefix;
 
-        if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(CONFIG.Prefix.get() + " ")) {
+        if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(CONFIG.prefix + " ")) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Help");
 
             HashMap<String, HelpEntry> commandGroups = new HashMap<>();
@@ -61,7 +62,7 @@ public class Help implements CommandInterface {
                 embed.addBlankField(true);
             }
 
-            embed.setFooter(CONFIG.Prefix.get() + "help <command> gives you a more detailed description" +
+            embed.setFooter(CONFIG.prefix + "help <command> gives you a more detailed description" +
                     (ctx.getSecurityClearance() < 3 ? "\nAppending '--persist' prevents messages from being deleted" : ""));
 
             EmbedHelper.sendEmbed(ctx, embed, 64);
@@ -90,6 +91,7 @@ public class Help implements CommandInterface {
             }
 
             EmbedHelper.sendEmbed(ctx, embed, 64);
+            ReactionHelper.addReaction(ctx, 0);
         }
     }
 
@@ -109,5 +111,10 @@ public class Help implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("commands", "cmds", "commandlist", "");
+    }
+
+    @Override
+    public boolean requiresFurtherChecks() {
+        return true;
     }
 }

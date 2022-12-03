@@ -5,38 +5,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerConfig;
 
+import java.awt.*;
 import java.util.HashMap;
 
-public enum CONFIG {
-    Token("lorem"),
-    Prefix("ipsum"),
-    OwnerID("dolor"),
-    LogChannel("sit"),
-    embedColor("amet"),
-    placeVerify("bla");
-
+public class CONFIG {
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
-    private String id;
+
+    public static String token;
+    public static String prefix;
+    public static String ownerID;
+    public static String logChannelID;
+    public static Color embedColor;
+    public static boolean placeVerify;
 
     public static JDA instance;
 
-    CONFIG(String id) {
-        this.id = id;
-    }
-
-    public String get() {
-        return this.id;
-    }
-
     public static void reload() {
         HashMap<String, String> config = DBHandlerConfig.getConfig();
-        Token.id = config.get("token");
-        Prefix.id = config.get("prefix");
-        OwnerID.id = config.get("ownerId");
-        LogChannel.id = config.get("logChannel");
-        embedColor.id = config.get("embedColor");
-        placeVerify.id = config.get("PlaceVerify");
+        token = config.get("token");
+        prefix = config.get("prefix");
+        ownerID = config.get("ownerId");
+        logChannelID = config.get("logChannel");
+        embedColor = Color.decode(config.get("embedColor"));
+        placeVerify = Boolean.parseBoolean(config.get("PlaceVerify"));
 
-        LOGGER.info("Config loaded");
+        LOGGER.warn("Config loaded");
     }
 }

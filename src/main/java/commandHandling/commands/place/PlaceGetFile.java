@@ -61,7 +61,7 @@ public class PlaceGetFile implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns the project with the given ID");
-        embed.addField("__Usage__", "```" + CONFIG.Prefix.get() + getName() + " <ID>```", false);
+        embed.addField("__Usage__", "```" + CONFIG.prefix + getName() + " <ID>```", false);
         return embed;
     }
 

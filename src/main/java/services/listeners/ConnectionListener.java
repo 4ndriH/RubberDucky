@@ -33,8 +33,7 @@ public class ConnectionListener extends ListenerAdapter {
 
             String githubSHA = DBHandlerConfig.getConfig().get("GitHubSHA");
             if (githubSHA != null) {
-                event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.LogChannel.get())
-                        .sendMessage("Restarted with commit " + githubSHA).queue();
+                event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("Restarted with commit " + githubSHA).queue();
                 DBHandlerConfig.updateConfig("GitHubSHA", null);
             }
 

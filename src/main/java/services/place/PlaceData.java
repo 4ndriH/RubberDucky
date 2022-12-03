@@ -36,7 +36,7 @@ public class PlaceData {
         time = 0L;
 
         drawing = true;
-        verify = Boolean.parseBoolean(CONFIG.placeVerify.get());
+        verify = CONFIG.placeVerify;
         stop = stopQ = false;
     }
 

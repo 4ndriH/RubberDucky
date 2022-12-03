@@ -3,6 +3,7 @@ package commandHandling.commands.ownerCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
 
 public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
-    private volatile HashMap<String, Boolean> sayChannels = new HashMap<>();
+    private volatile HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
 
     public Say(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
@@ -21,7 +22,7 @@ public class Say implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();
-        String channel = ctx.getChannel().getId();
+        MessageChannelUnion channel = ctx.getChannel();
         int repeats, i;
 
         try {
@@ -36,8 +37,8 @@ public class Say implements CommandInterface {
             sayChannels.replace(channel, false);
             return;
         } else if (ctx.getArguments().get(0).equalsIgnoreCase("stopAll")) {
-            for (String key : sayChannels.keySet()) {
-                sayChannels.replace(key, false);
+            for (MessageChannelUnion c : sayChannels.keySet()) {
+                sayChannels.replace(c, false);
             }
             return;
         }
@@ -63,7 +64,7 @@ public class Say implements CommandInterface {
         int finalRepeats = repeats;
         (new Thread(() -> {
             for (int j = 0; j < finalRepeats && sayChannels.get(channel); j++) {
-                ctx.getChannel().sendMessage(sb.toString()).complete();
+                channel.sendMessage(sb.toString()).queue();
             }
             sayChannels.remove(channel);
         })).start();

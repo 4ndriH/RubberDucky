@@ -106,7 +106,7 @@ public class CommandManager {
 
     public void handle(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(CONFIG.Prefix.get()), "").split("\\s+");
+                .replaceFirst("(?i)" + Pattern.quote(CONFIG.prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);

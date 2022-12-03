@@ -27,7 +27,7 @@ public class CommandContext { //implements ICommandContext {
         this.event = event;
         this.arguments = arguments;
 
-        securityClearance = event.getAuthor().getId().equals(CONFIG.OwnerID.get()) ? 0 :
+        securityClearance = event.getAuthor().getId().equals(CONFIG.ownerID) ? 0 :
         event.getMember().hasPermission(Permission.ADMINISTRATOR) ? 1 :
         event.getMember().hasPermission(Permission.KICK_MEMBERS) ? 2 : 3;
     }

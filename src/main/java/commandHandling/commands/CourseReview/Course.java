@@ -44,7 +44,7 @@ public class Course implements CommandInterface {
             String course = getCourseName(ctx.getArguments().get(0));
 
             if (course.length() == 0) {
-                BotExceptions.invalidCourseNumber(ctx, "\nUse `" + CONFIG.Prefix.get() + "course` to get a list of courses with reviews");
+                BotExceptions.invalidCourseNumber(ctx, "\nUse `" + CONFIG.prefix + "course` to get a list of courses with reviews");
                 return;
             }
 
@@ -82,7 +82,7 @@ public class Course implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Get reviews for a specific course. If the course has no reviews or no course number is provided you get a list with all available courses.");
-        embed.addField("__Format__", "```" + CONFIG.Prefix.get() + "course <course number>```", false);
+        embed.addField("__Format__", "```" + CONFIG.prefix + "course <course number>```", false);
         return embed;
     }
 

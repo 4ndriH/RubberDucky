@@ -11,7 +11,7 @@ public class ButtonListener extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        if (event.getComponentId().startsWith("$") && !event.getUser().getId().equals(CONFIG.OwnerID.get())) {
+        if (event.getComponentId().startsWith("$") && !event.getUser().getId().equals(CONFIG.ownerID)) {
             event.reply("Did you really think this would work?").setEphemeral(true).queue();
             return;
         }
