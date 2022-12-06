@@ -48,7 +48,7 @@ public class Course implements CommandInterface {
                 return;
             }
 
-            embed.setTitle(course, "https://n.ethz.ch/~lteufelbe/coursereview/" + courseNumber + "/");
+            embed.setTitle(course, "https://n.ethz.ch/~lteufelbe/coursereview/course/" + courseNumber + "/");
             ArrayList<String> reviews = getReviewsForCourse(ctx.getArguments().get(0));
 
             if (reviews.isEmpty()) {
