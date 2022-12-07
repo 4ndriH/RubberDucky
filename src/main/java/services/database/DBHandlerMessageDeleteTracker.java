@@ -1,5 +1,6 @@
 package services.database;
 
+import assets.Objects.DeletableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,38 +42,28 @@ public class DBHandlerMessageDeleteTracker {
         }
     }
 
-    public static HashMap<String, HashMap<String, ArrayList<String>>> getMessagesToDelete() {
+    public static ArrayList<DeletableMessage> getMessagesToDelete() {
         int SystemStartUps = Integer.parseInt(DBHandlerConfig.getConfig().get("systemStartUps"));
-        long currentSystemTime = System.currentTimeMillis();
+        ArrayList<DeletableMessage> messages = new ArrayList<>();
 
-        HashMap<String, HashMap<String, ArrayList<String>>> messages = new HashMap<>();
         try (Connection connection = ConnectionPool.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM MessageDeleteTracker WHERE UptimeNumber < ? AND DeleteTime < ?"
+                    "SELECT * FROM MessageDeleteTracker WHERE UptimeNumber < ?"
             );
             ps.setInt(1, SystemStartUps);
-            ps.setLong(2, currentSystemTime);
             ResultSet rs = ps.executeQuery();
             while (!rs.isClosed() && rs.next()) {
                 String DiscordServerId = rs.getString("DiscordServerId");
                 String DiscordChannelId = rs.getString("DiscordChannelId");
                 String DiscordMessageId = rs.getString("DiscordMessageId");
-
-                if (!messages.containsKey(DiscordServerId)) {
-                    messages.put(DiscordServerId, new HashMap<>());
-                }
-
-                if (!messages.get(DiscordServerId).containsKey(DiscordChannelId)) {
-                    messages.get(DiscordServerId).put(DiscordChannelId, new ArrayList<>());
-                }
-
-                messages.get(DiscordServerId).get(DiscordChannelId).add(DiscordMessageId);
+                long DeleteTime = rs.getLong("DeleteTime");
+                messages.add(new DeletableMessage(DiscordServerId, DiscordChannelId, DiscordMessageId, DeleteTime));
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
         }
 
-        pruneMessageDeleteTracker(currentSystemTime);
+        pruneMessageDeleteTracker(System.currentTimeMillis());
 
         return messages;
     }

@@ -1,16 +1,21 @@
 package services.listeners;
 
 import assets.CONFIG;
+import assets.Objects.DeletableMessage;
 import commandHandling.commands.place.PlaceDraw;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerMessageDeleteTracker;
 import services.database.DBHandlerPlace;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class ConnectionListener extends ListenerAdapter {
     private static boolean onStartupTasks = true;
@@ -38,13 +43,21 @@ public class ConnectionListener extends ListenerAdapter {
             }
 
             (new Thread(() -> {
-                HashMap<String, HashMap<String, ArrayList<String>>> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
+                ArrayList<DeletableMessage> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
+                Collections.sort(messages);
 
-                for (String server : messages.keySet()) {
-                    for (String channel : messages.get(server).keySet()) {
-                        System.out.println(server + " " + channel + " - " + messages.get(server).get(channel));
-                        event.getJDA().getGuildById(server).getTextChannelById(channel)
-                                .purgeMessagesById(messages.get(server).get(channel));
+                long currentSystemTime = System.currentTimeMillis();
+                int deletionDelay = 16;
+
+                for (DeletableMessage dm : messages) {
+                    Message msg = dm.getMessage(event.getJDA());
+
+                    if (msg != null) {
+                        if (dm.deleteLater(currentSystemTime)) {
+                            msg.delete().queueAfter(deletionDelay++, TimeUnit.SECONDS);
+                        } else {
+                            msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                        }
                     }
                 }
             })).start();

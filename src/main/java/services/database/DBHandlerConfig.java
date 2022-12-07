@@ -42,6 +42,6 @@ public class DBHandlerConfig {
     }
 
     public static void incrementUptimeCounter() {
-        updateConfig("UptimeCount", "" + (Integer.parseInt(getConfig().get("systemStartUps")) + 1));
+        updateConfig("systemStartUps", "" + (Integer.parseInt(getConfig().get("systemStartUps")) + 1));
     }
 }
