@@ -59,6 +59,6 @@ public enum EMOTES {
     }
 
     public String getAsEmote() {
-        return "<" + this.id + ">";
+        return this.id;
     }
 }

@@ -64,7 +64,7 @@ public class PlaceStatus implements CommandInterface {
             progress = Math.max(0, progress - 10);
         }
 
-        return bar.toString().replace("<", "").replace(">", " ");
+        return bar.toString();
     }
 
     private String elementSelection(int segment, int percentage) {
