@@ -4,10 +4,17 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import assets.CONFIG;
+import net.dv8tion.jda.api.JDA;
 
 import java.awt.*;
 
 public class DiscordAppender extends AppenderBase<ILoggingEvent> {
+    private static JDA jda;
+
+    public static void setJDA(JDA jda) {
+        DiscordAppender.jda = jda;
+    }
+
     @Override
     protected void append(ILoggingEvent eventObject) {
         StringBuilder sb = new StringBuilder().append("```");
@@ -30,7 +37,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
 
         embed.setFooter(eventObject.getLoggerName());
 
-        CONFIG.instance.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
+        jda.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
                 .sendMessageEmbeds(embed.build()).queue();
     }
 }

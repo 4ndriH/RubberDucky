@@ -9,15 +9,17 @@ import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
+import services.database.ConnectionPoolCR;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerMessageDeleteTracker;
 import services.database.DBHandlerPlace;
+import services.logging.DiscordAppender;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionListener extends ListenerAdapter {
+public class StartupListener extends ListenerAdapter {
     private static boolean onStartupTasks = true;
 
     @Override
@@ -41,6 +43,13 @@ public class ConnectionListener extends ListenerAdapter {
                 event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("Restarted with commit " + githubSHA).queue();
                 DBHandlerConfig.updateConfig("GitHubSHA", null);
             }
+
+            if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+                new ConnectionPoolCR();
+            }
+
+            event.getJDA().upsertCommand("ping", "Pong!").queue();
+            DiscordAppender.setJDA(event.getJDA());
 
             (new Thread(() -> {
                 ArrayList<DeletableMessage> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
