@@ -1,9 +1,9 @@
+import assets.CONFIG;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import assets.CONFIG;
 import services.listeners.*;
 import services.onStartup.StartUp;
 
