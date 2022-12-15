@@ -42,7 +42,7 @@ public class Bot {
             .addEventListeners(new PlaceListener())
             .addEventListeners(new BotDownDetectionListener())
             .addEventListeners(new ForumListener())
-            .addEventListeners(new CountThread10kPolicingListener())
+            //.addEventListeners(new CountThread10kPolicingListener())
             .addEventListeners(new SlashCommandListener())
             .setActivity(Activity.playing("With Duckies"))
             .build();
