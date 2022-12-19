@@ -48,7 +48,7 @@ public class ReactionHelper {
                         (ex) -> {
                             addUserToBlacklist(message.getAuthor().getId());
                             PermissionManager.reload();
-                        }).handle(ErrorResponse.UNKNOWN_MESSAGE, (ex) -> {})
+                        }).ignore(ErrorResponse.UNKNOWN_MESSAGE)
         );
     }
 }

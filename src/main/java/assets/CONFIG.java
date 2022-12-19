@@ -1,6 +1,5 @@
 package assets;
 
-import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerConfig;
@@ -17,8 +16,6 @@ public class CONFIG {
     public static String logChannelID;
     public static Color embedColor;
     public static boolean placeVerify;
-
-    public static JDA instance;
 
     public static void reload() {
         HashMap<String, String> config = DBHandlerConfig.getConfig();
