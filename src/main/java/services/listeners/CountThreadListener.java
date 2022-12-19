@@ -74,7 +74,7 @@ public class CountThreadListener extends ListenerAdapter {
                 String botId = thread.getHistory().retrievePast(1).complete().get(0).getAuthor().getId();
                 if (botId.equals("1002592429268029531")) {
                     checkRecentMessages();
-                    event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky should have restarted automatically in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
+                    //event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky should have restarted automatically in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
                 } else {
                     event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@" + botUserMapping.get(botId) + "> please make sure your bot continues in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
                 }
