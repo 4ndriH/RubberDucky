@@ -1,7 +1,7 @@
 package services.listeners;
 
 import assets.CONFIG;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -17,18 +17,18 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         if (event.getUser().getId().equals(CONFIG.ownerID) && event.getReaction().getEmoji().getFormatted().equals("<:DuckyShut:1056189438142717952>")) {
-            Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-            System.out.println(msg.getAuthor().getId());
-            event.getGuild().getMemberById(msg.getAuthor().getId()).timeoutFor(60l, TimeUnit.SECONDS).queue();
+            Member member = event.getChannel().retrieveMessageById(event.getMessageId()).complete().getMember();
+            member.timeoutFor(60L, TimeUnit.MINUTES).complete();
+            LOGGER.info("Timed out " + member.getEffectiveName() + " for 60 minutes");
         }
     }
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         if (event.getUser().getId().equals(CONFIG.ownerID) && event.getReaction().getEmoji().getFormatted().equals("<:DuckyShut:1056189438142717952>")) {
-            Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-            System.out.println(msg.getAuthor().getId());
-            event.getGuild().getMemberById(msg.getAuthor().getId()).timeoutFor(1l, TimeUnit.SECONDS).queue();
+            Member member = event.getChannel().retrieveMessageById(event.getMessageId()).complete().getMember();
+            member.timeoutFor(1L, TimeUnit.SECONDS).complete();
+            LOGGER.info("Removed Time out from " + member.getEffectiveName());
         }
     }
 }

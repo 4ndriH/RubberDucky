@@ -30,7 +30,7 @@ public class Bot {
                     CacheFlag.CLIENT_STATUS,
                     CacheFlag.ONLINE_STATUS
             ).setMemberCachePolicy(
-                    MemberCachePolicy.ONLINE
+                    MemberCachePolicy.ALL
             )
             .addEventListeners(new CommandListener())
             .addEventListeners(new ButtonListener())
