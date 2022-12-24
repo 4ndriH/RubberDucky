@@ -33,7 +33,6 @@ public class Bot {
                     MemberCachePolicy.ONLINE
             )
             .addEventListeners(new CommandListener())
-//                .addEventListeners(new CatchListener())
             .addEventListeners(new ButtonListener())
             .addEventListeners(new StartupListener())
             .addEventListeners(new BGListener())
@@ -42,8 +41,8 @@ public class Bot {
             .addEventListeners(new PlaceListener())
             .addEventListeners(new BotDownDetectionListener())
             .addEventListeners(new ForumListener())
-            //.addEventListeners(new CountThread10kPolicingListener())
             .addEventListeners(new SlashCommandListener())
+            .addEventListeners(new ReactionListener())
             .setActivity(Activity.playing("With Duckies"))
             .build();
     }
