@@ -11,7 +11,6 @@ import commandHandling.commands.adminCommands.Nuke;
 import commandHandling.commands.adminCommands.Watch;
 import commandHandling.commands.modCommands.BlackList;
 import commandHandling.commands.modCommands.Channel;
-import commandHandling.commands.modCommands.SetCountProgress;
 import commandHandling.commands.ownerCommands.*;
 import commandHandling.commands.place.*;
 import commandHandling.commands.publicCommands.*;
@@ -62,7 +61,6 @@ public class CommandManager {
         addCommand(new GetAPILog(LOGGER));
         addCommand(new Watch(LOGGER));
         addCommand(new CourseReviewStats(LOGGER));
-        addCommand(new SetCountProgress(LOGGER));
 
         addCommand(new PlaceQueue(LOGGER));
         addCommand(new PlaceDelete(LOGGER));
