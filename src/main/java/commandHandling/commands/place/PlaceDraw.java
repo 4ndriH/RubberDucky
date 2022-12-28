@@ -122,7 +122,7 @@ public class PlaceDraw implements CommandInterface {
                 placeChannel.sendMessage(pixel.getDrawCommand()).complete();
                 PlaceData.fixedPixels++;
 
-                if (PlaceData.stop) {
+                if (PlaceData.stop || !PlaceData.verify) {
                     break;
                 }
             }
