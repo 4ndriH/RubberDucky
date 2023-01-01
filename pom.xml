@@ -69,7 +69,6 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-beta.2</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>pw.chew</groupId>
             <artifactId>jda-chewtils</artifactId>
@@ -82,7 +81,6 @@
             <artifactId>botCommons</artifactId>
             <version>2.3.14</version>
         </dependency>
-        -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
