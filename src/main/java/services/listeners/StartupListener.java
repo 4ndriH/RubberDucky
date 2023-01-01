@@ -2,7 +2,7 @@ package services.listeners;
 
 import assets.CONFIG;
 import assets.Objects.DeletableMessage;
-import commandHandling.commands.place.PlaceDraw;
+import commandHandling.commands.placeCommands.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;

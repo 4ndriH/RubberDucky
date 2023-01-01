@@ -1,4 +1,4 @@
-package commandHandling.commands.place;
+package commandHandling.commands.placeCommands;
 
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;

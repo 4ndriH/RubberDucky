@@ -1,45 +1,41 @@
-package commandHandling.commands.place;
+package commandHandling.commands.placeCommands;
 
-import assets.CONFIG;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DBHandlerConfig;
 import services.place.PlaceData;
 
 import java.util.List;
 
-public class PlaceVerify implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceVerify.class);
+public class PlaceStop implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(PlaceStop.class);
 
-    public PlaceVerify(Logger cmdManagerLogger) {
+    public PlaceStop(Logger cmdManagerLogger) {
         cmdManagerLogger.info("Loaded Command " + getName());
     }
 
     @Override
     public void handle(CommandContext ctx) {
-        PlaceData.verify = !PlaceData.verify;
-        DBHandlerConfig.updateConfig("PlaceVerify", "" + PlaceData.verify);
-        CONFIG.reload();
+        PlaceData.stop = true;
     }
 
     @Override
     public String getName() {
-        return "PlaceVerify";
+        return "PlaceStop";
     }
 
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Toggles whether or not placed pixels are getting verified");
+        embed.setDescription("Stops the drawing process");
         return embed;
     }
 
     @Override
     public List<String> getAliases() {
-        return List.of("pv");
+        return List.of("ps");
     }
 
     @Override

@@ -12,7 +12,7 @@ import commandHandling.commands.adminCommands.Watch;
 import commandHandling.commands.modCommands.BlackList;
 import commandHandling.commands.modCommands.Channel;
 import commandHandling.commands.ownerCommands.*;
-import commandHandling.commands.place.*;
+import commandHandling.commands.placeCommands.*;
 import commandHandling.commands.publicCommands.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
