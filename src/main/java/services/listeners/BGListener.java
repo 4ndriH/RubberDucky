@@ -14,6 +14,7 @@ import static services.database.DBHandlerConfig.updateConfig;
 public class BGListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static int nextNotification = 0;
+    private static int myCurrentScore = Integer.parseInt(getConfig().get("ButtonScore"));
 
     @Override
     public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
@@ -21,12 +22,11 @@ public class BGListener extends ListenerAdapter {
 
         if (event.getAuthor().getId().equals("778731540359675904") && message.getContentRaw().contains("button")) {
             int buttonScore = Integer.parseInt(message.getActionRows().get(0).getButtons().get(0).getLabel());
-            int myCurrentScore = Integer.parseInt(getConfig().get("ButtonScore"));
 
             if (buttonScore > myCurrentScore) {
                 if (--nextNotification <= 0) {
                     event.getJDA().openPrivateChannelById("155419933998579713").complete().sendMessage(
-                            "Button is ready [" + myCurrentScore + " -> " + buttonScore + "]\n" +
+                            "You can claim the button [" + myCurrentScore + " -> " + buttonScore + "]\n" +
                                 "https://discord.com/channels/747752542741725244/" + event.getChannel().getId() +
                                 "/" + event.getMessage().getId()
                     ).queue();
@@ -44,10 +44,15 @@ public class BGListener extends ListenerAdapter {
             if (messageContent.contains("155419933998579713")) {
                 String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
                 LOGGER.info("Button Score Updated. New Score: " + score);
+                myCurrentScore = Integer.parseInt(score);
                 updateConfig("ButtonScore", score);
             }
 
             if (messageContent.contains("has claimed")) {
+                event.getJDA().openPrivateChannelById("155419933998579713").complete().sendMessage(
+                        "The button will be claimable on <t:" + (System.currentTimeMillis() / 1000 + myCurrentScore) + ":f>"
+                ).queue();
+
                 nextNotification = 0;
             }
         }
