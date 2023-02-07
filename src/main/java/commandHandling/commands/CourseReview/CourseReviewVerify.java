@@ -59,7 +59,7 @@ public class CourseReviewVerify implements CommandInterface {
             if (review.discordUserId != null) {
                 embed.setFooter(ctx.getJDA().getUserById(review.discordUserId).getAsTag());
             } else {
-                embed.setFooter("eth_id");
+                embed.setFooter(review.uniqueUserId);
             }
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
