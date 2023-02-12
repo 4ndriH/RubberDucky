@@ -1,15 +1,32 @@
 package assets;
 
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+
 public class CHANNELS {
     // DINFK channels
-    public static final String ethPlaceBots = "819966095070330950";
-    public static final String ethPlaceBots2 = "955751651942211604";
-    public static final String spam = "768600365602963496";
+    public static TextChannel ethPlaceBots;
+    public static TextChannel ethPlaceBots2;
+    public static TextChannel spam;
+    public static ThreadChannel toInfinityAndBeyond;
 
     // RubberDuckyDev channels
-    public static final String randomShit = "1020951518582673478";
-    public static final String hq = "991686525651800175";
-    public static final String botExceptionLog = "841393155478650920";
-    public static final String devBotExceptions = "865693419376738315";
-    public static final String placeLog = "969901898389925959";
+    public static TextChannel randomShit;
+    public static TextChannel hq;
+    public static TextChannel botExceptionLog;
+    public static TextChannel devBotExceptions;
+    public static TextChannel placeLog;
+
+    public CHANNELS() {
+        ethPlaceBots = SERVERS.DINFK.getTextChannelById("819966095070330950");
+        ethPlaceBots2 = SERVERS.DINFK.getTextChannelById("955751651942211604");
+        spam = SERVERS.DINFK.getTextChannelById("768600365602963496");
+        toInfinityAndBeyond = SERVERS.DINFK.getThreadChannelById("996746797236105236");
+
+        randomShit = SERVERS.RubberDuckyDev.getTextChannelById("1020951518582673478");
+        hq = SERVERS.RubberDuckyDev.getTextChannelById("991686525651800175");
+        botExceptionLog = SERVERS.RubberDuckyDev.getTextChannelById("841393155478650920");
+        devBotExceptions = SERVERS.RubberDuckyDev.getTextChannelById("865693419376738315");
+        placeLog = SERVERS.RubberDuckyDev.getTextChannelById("969901898389925959");
+    }
 }
