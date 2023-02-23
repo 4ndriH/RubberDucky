@@ -23,7 +23,7 @@ public class CourseReviewStats implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        EmbedBuilder embed = EmbedHelper.embedBuilder("CourseReview Statistics");
+        EmbedBuilder embed = EmbedHelper.embedBuilder("[CourseReview](https://n.ethz.ch/~lteufelbe/coursereview/) Statistics");
         embed.setDescription("**" + getPublishedReviews() + "** reviews for **" + getReviewedCourseCount() + "** courses have been published");
         embed.setFooter("If you are curious about other stats let me know and maybe I add them");
         embed.setThumbnail("https://n.ethz.ch/~lteufelbe/coursereview/icon.png");
