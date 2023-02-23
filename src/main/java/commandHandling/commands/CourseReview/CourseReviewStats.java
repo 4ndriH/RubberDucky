@@ -26,6 +26,7 @@ public class CourseReviewStats implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("CourseReview Statistics");
         embed.setDescription("**" + getPublishedReviews() + "** reviews for **" + getReviewedCourseCount() + "** courses have been published");
         embed.setFooter("If you are curious about other stats let me know and maybe I add them");
+        embed.setThumbnail("https://n.ethz.ch/~lteufelbe/coursereview/icon.png");
 
         sendEmbed(ctx, embed, 128);
     }
