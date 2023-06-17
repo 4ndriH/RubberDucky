@@ -14,9 +14,9 @@ import services.PermissionManager;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerPlace;
 import services.discordHelpers.EmbedHelper;
-import services.place.PlaceData;
+import assets.Objects.PlaceData;
 import services.place.PlaceWebSocket;
-import services.place.Verifier;
+import services.place.PlaceVerifier;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -102,7 +102,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
-                    Verifier.verify();
+                    PlaceVerifier.verify();
                 }
 
                 if (++pixelDrawnCnt3600 == 3600) {

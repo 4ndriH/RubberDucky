@@ -1,8 +1,8 @@
-package services.place;
+package assets.Objects;
 
 import assets.CONFIG;
-import assets.Objects.Pixel;
 import services.database.DBHandlerPlace;
+import services.place.PlaceWebSocket;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

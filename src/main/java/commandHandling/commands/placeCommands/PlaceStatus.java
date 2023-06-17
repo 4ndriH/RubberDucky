@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.EMOTES;
 import services.discordHelpers.EmbedHelper;
-import services.place.PlaceData;
+import assets.Objects.PlaceData;
 
 import java.text.DecimalFormat;
 import java.time.Instant;

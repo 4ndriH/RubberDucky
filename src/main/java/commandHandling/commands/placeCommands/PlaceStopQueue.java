@@ -5,7 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.place.PlaceData;
+import assets.Objects.PlaceData;
 
 import java.util.List;
 

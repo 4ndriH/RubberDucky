@@ -1,14 +1,15 @@
 package services.place;
 
 import assets.Objects.Pixel;
+import assets.Objects.PlaceData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Verifier {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Verifier.class);
+public class PlaceVerifier {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceVerifier.class);
 
     public static void verify() {
         BufferedImage place = PlaceWebSocket.getImage(true);
