@@ -50,7 +50,7 @@ public class BGListener extends ListenerAdapter {
 
             if (messageContent.contains("has claimed")) {
                 event.getJDA().openPrivateChannelById("155419933998579713").complete().sendMessage(
-                        "The button will be claimable on <t:" + (System.currentTimeMillis() / 1000 + myCurrentScore) + ":f>"
+                        "The button will be claimable on <t:" + (System.currentTimeMillis() / 1000 + 60 * myCurrentScore) + ":f>"
                 ).queue();
 
                 nextNotification = 0;

@@ -1,7 +1,9 @@
 package services.listeners;
 
+import assets.CHANNELS;
 import assets.CONFIG;
 import assets.Objects.DeletableMessage;
+import assets.SERVERS;
 import commandHandling.commands.placeCommands.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -24,9 +26,8 @@ public class StartupListener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        super.onReady(event);
-
         if (onStartupTasks) {
+            // restart place drawing
             int placeID = Integer.parseInt(DBHandlerConfig.getConfig().get("placeProject"));
             if (placeID != -1) {
                 if (DBHandlerPlace.getPlaceProjectIDs().contains(placeID)) {
@@ -38,19 +39,27 @@ public class StartupListener extends ListenerAdapter {
                 }
             }
 
+            // send new commit message
             String githubSHA = DBHandlerConfig.getConfig().get("GitHubSHA");
             if (githubSHA != null) {
                 event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("Restarted with commit " + githubSHA).queue();
                 DBHandlerConfig.updateConfig("GitHubSHA", null);
             }
 
+            // set up SERVERS and CHANNELS
+            new SERVERS(event.getJDA());
+            new CHANNELS();
+            
+            // set up DB connection pool for CR
             if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
                 new ConnectionPoolCR();
             }
 
+            // add command for active dev badge
             event.getJDA().upsertCommand("ping", "Pong!").queue();
             DiscordAppender.setJDA(event.getJDA());
 
+            // delete messages that were scheduled for deletion
             (new Thread(() -> {
                 ArrayList<DeletableMessage> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
                 Collections.sort(messages);
@@ -70,6 +79,7 @@ public class StartupListener extends ListenerAdapter {
                     }
                 }
             })).start();
+
             onStartupTasks = false;
         }
     }

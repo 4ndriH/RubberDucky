@@ -55,7 +55,7 @@ public class CommandManager {
         addCommand(new PurgeDMs(LOGGER));
         addCommand(new Say(LOGGER));
         addCommand(new Servers(LOGGER));
-        addCommand(new SpokesPeople(LOGGER));
+        //addCommand(new SpokesPeople(LOGGER));
         addCommand(new SQL(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new GetAPILog(LOGGER));
