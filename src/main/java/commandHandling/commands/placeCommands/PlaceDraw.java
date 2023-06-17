@@ -113,7 +113,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
-                    Verifier.verify();
+                    PlaceVerifier.verify();
                 }
 
             }
