@@ -1,9 +1,7 @@
 package services.listeners;
 
-import assets.CHANNELS;
 import assets.CONFIG;
 import assets.Objects.DeletableMessage;
-import assets.SERVERS;
 import commandHandling.commands.placeCommands.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -46,10 +44,6 @@ public class StartupListener extends ListenerAdapter {
                 DBHandlerConfig.updateConfig("GitHubSHA", null);
             }
 
-            // set up SERVERS and CHANNELS
-            new SERVERS(event.getJDA());
-            new CHANNELS();
-            
             // set up DB connection pool for CR
             if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
                 new ConnectionPoolCR();

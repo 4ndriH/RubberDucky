@@ -1,7 +1,5 @@
 package services.listeners;
 
-import assets.CHANNELS;
-import assets.SERVERS;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
@@ -47,10 +45,10 @@ public class PingHellListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().contains("PingHell") && event.getMessage().getContentRaw().contains("<@")) {
-            CHANNELS.randomShit.sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue(
+            event.getGuild().getTextChannelById(1020951518582673478L).sendMessage(event.getMessage().getContentRaw().replace("@", "")).queue(
                     (msg) -> msg.delete().queueAfter(5, TimeUnit.SECONDS)
             );
-        } else if (event.getChannel().getId().equals(CHANNELS.randomShit.getId()) && event.getAuthor().getId().equals("817846061347242026")) {
+        } else if (event.getChannel().getId().equals("1020951518582673478") && event.getAuthor().getId().equals("817846061347242026")) {
             String discordUserId = event.getMessage().getContentRaw().replaceAll("\\D", "");
 
             if (event.getMessage().getContentRaw().endsWith("welcome to PingHell!")) {
@@ -68,7 +66,7 @@ public class PingHellListener extends ListenerAdapter {
                         }
                     } catch (Exception ignored) {}
 
-                    String inviteLink = CHANNELS.hq.createInvite().setMaxAge(1800).setMaxUses(1).complete().getUrl();
+                    String inviteLink = event.getGuild().getTextChannelById(991686525651800175L).createInvite().setMaxAge(1800).setMaxUses(1).complete().getUrl();
 
                     event.getJDA().openPrivateChannelById(discordUserId).complete().sendMessage(inviteLink).complete();
                     event.getJDA().openPrivateChannelById(discordUserId).complete().sendMessage("Welcome to Pinghell! Feel free to join the Pinghell HQ with this link").queue();
@@ -110,7 +108,7 @@ public class PingHellListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        if (event.getGuild().getId().equals(SERVERS.RubberDuckyDev.getId())) {
+        if (event.getGuild().getId().equals("817850050013036605")) {
             if (isInPinghell(event.getUser().getId())) {
                 event.getGuild().addRoleToMember(event.getMember(), pingHell).complete();
 
