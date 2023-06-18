@@ -26,13 +26,13 @@ public class PlaceData {
     public static String user;
 
     public PlaceData(int id) {
-        drawnPixels = DBHandlerPlace.getProjectProgress(ID);
-        user = DBHandlerPlace.getProjectAuthor(ID);
+        drawnPixels = DBHandlerPlace.getProjectProgress(id);
+        user = DBHandlerPlace.getProjectAuthor(id);
         ID = id;
 
         requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
-        pixels = DBHandlerPlace.getProjectPixels(ID);
+        pixels = DBHandlerPlace.getProjectPixels(id);
 
         totalPixels = pixels.size();
         fixedPixels = 0;

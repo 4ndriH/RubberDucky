@@ -132,7 +132,7 @@ public class DBHandlerPlace {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (!rs.isClosed() && rs.next()) {
-                return rs.getInt("progress");
+                return rs.getInt("Progress");
             }
         } catch (SQLException sqlE) {
             LOGGER.error("SQL Exception", sqlE);
