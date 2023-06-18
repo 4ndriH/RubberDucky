@@ -101,7 +101,7 @@ public class PlaceDraw implements CommandInterface {
                     }
                 }
 
-                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
+                if (PlaceData.verificationCondition()) {
                     PlaceVerifier.verify();
                 }
 
@@ -111,11 +111,6 @@ public class PlaceDraw implements CommandInterface {
                     time3600 = System.currentTimeMillis();
                     pixelDrawnCnt3600 = 0;
                 }
-
-                if (PlaceData.verify && PlaceData.fixingQ.isEmpty() && PlaceData.drawnPixels % 2000 == 0 || PlaceData.drawnPixels == PlaceData.totalPixels) {
-                    PlaceVerifier.verify();
-                }
-
             }
 
             for (Pixel pixel : PlaceData.fixingQ) {

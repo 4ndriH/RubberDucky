@@ -1,14 +1,10 @@
 package assets.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import services.database.DBHandlerPlace;
 
 import java.awt.*;
 
 public class Pixel {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Pixel.class);
-
     int x, y;
     double alpha;
     String imageColor, placeColor;
@@ -65,7 +61,7 @@ public class Pixel {
         if (alpha == 1.0) {
             return placeColor = imageColor;
         } else {
-            return placeColor = mixAndMatch(true);
+            return placeColor = overlayColors(true);
         }
     }
 
@@ -73,11 +69,11 @@ public class Pixel {
         if (alpha == 1.0) {
             return placeColor = imageColor;
         } else {
-            return placeColor = mixAndMatch(dbUpdate);
+            return placeColor = overlayColors(dbUpdate);
         }
     }
 
-    private String mixAndMatch(boolean dbUpdate) {
+    private String overlayColors(boolean dbUpdate) {
         Color image = Color.decode(imageColor);
         Color place = PlaceData.getPixelColor(x, y);
 
@@ -90,5 +86,11 @@ public class Pixel {
             DBHandlerPlace.updatePixelPlaceColor(alpha, x, y, imageColor, color);
         }
         return color;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Pixel pObj = (Pixel) obj;
+        return x == pObj.x && y == pObj.y;
     }
 }

@@ -6,9 +6,13 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.BotExceptions;
 import services.database.DBHandlerConfig;
 import assets.Objects.PlaceData;
 
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class PlaceVerify implements CommandInterface {
@@ -20,9 +24,20 @@ public class PlaceVerify implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        PlaceData.verify = !PlaceData.verify;
-        DBHandlerConfig.updateConfig("PlaceVerify", "" + PlaceData.verify);
-        CONFIG.reload();
+        if (ctx.getMessage().getReferencedMessage() == null) {
+            PlaceData.verify = !PlaceData.verify;
+            DBHandlerConfig.updateConfig("PlaceVerify", "" + PlaceData.verify);
+            CONFIG.reload();
+        } else {
+            try {
+                PlaceData.addPlaceImageManually(ImageIO.read(new URL(ctx.getMessage().getReferencedMessage().getAttachments().get(0).getUrl())));
+            } catch (IOException e) {
+                BotExceptions.missingAttachmentException(ctx);
+                return;
+            }
+
+            PlaceData.verify = true;
+        }
     }
 
     @Override

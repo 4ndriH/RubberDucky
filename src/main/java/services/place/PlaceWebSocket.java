@@ -1,5 +1,7 @@
 package services.place;
 
+import assets.CONFIG;
+import assets.Objects.PlaceData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.nio.ByteBuffer;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
 
@@ -37,12 +40,10 @@ public class PlaceWebSocket {
                             .newWebSocketBuilder()
                             .buildAsync(URI.create("wss://ws.battlerush.dev/"), wsc)
                             .join();
-                    if (retryCnt++ >= 5) {
-                        throw new IOException("Stopped after 5 retries");
-                    }
-                } catch (IOException e) {
-                  LOGGER.error("5 RETRIES ARE ENOUGH", e);
-                  return img;
+                } catch (CompletionException ce) {
+                    LOGGER.error("Websocket Problem", ce);
+                    PlaceData.websocketFailed = true;
+                    return img;
                 } catch(Exception e) {
                     LOGGER.error("Websocket Problem", e);
                     return img;

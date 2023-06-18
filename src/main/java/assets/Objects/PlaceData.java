@@ -6,38 +6,41 @@ import services.place.PlaceWebSocket;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PlaceData {
     private final static ReentrantLock lock = new ReentrantLock();
+    private static LinkedList<String> requests;
+    private static boolean runVerificationNow;
     private static BufferedImage place;
-    private static long time;
+    private static long lastRequestTime;
 
     public static int ID, totalPixels, drawnPixels, fixedPixels;
-    public static boolean drawing, stop, stopQ, verify;
+    public static boolean drawing, stop, stopQ, verify, websocketFailed;
     public static LinkedList<Pixel>  fixingQ;
     public static ArrayList<Pixel> pixels;
-    private static LinkedList<String> requests;
     public static String user;
 
-    public PlaceData(int ID) {
-        PlaceData.drawnPixels = DBHandlerPlace.getProjectProgress(ID);
-        PlaceData.user = DBHandlerPlace.getProjectAuthor(ID);
-        PlaceData.ID = ID;
+    public PlaceData(int id) {
+        drawnPixels = DBHandlerPlace.getProjectProgress(ID);
+        user = DBHandlerPlace.getProjectAuthor(ID);
+        ID = id;
 
         requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
-        pixels = readPixelFile();
+        pixels = DBHandlerPlace.getProjectPixels(ID);
 
         totalPixels = pixels.size();
         fixedPixels = 0;
-        time = 0L;
+        lastRequestTime = 0L;
 
         drawing = true;
         verify = CONFIG.placeVerify;
-        stop = stopQ = false;
+        stop = stopQ = websocketFailed = runVerificationNow = false;
     }
 
     public static int getProgress() {
@@ -49,15 +52,44 @@ public class PlaceData {
     }
 
     public static Color getPixelColor(int x, int y) {
-        if (System.currentTimeMillis() - time > 1800000) {
-            place = PlaceWebSocket.getImage(true);
-            time = System.currentTimeMillis();
+        if (System.currentTimeMillis() - lastRequestTime > 1800000) {
+            if (!websocketFailed) {
+                place = PlaceWebSocket.getImage(true);
+                lastRequestTime = System.currentTimeMillis();
+            } else {
+                place = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+                lastRequestTime = Long.MAX_VALUE;
+            }
         }
+
         return new Color(place.getRGB(x, y));
     }
 
-    public static void forceReloadImage() {
-        time = 0L;
+    public static boolean verificationCondition() {
+        return verify && fixingQ.isEmpty() && drawnPixels % 2000 == 0 || fixingQ.isEmpty() && drawnPixels == totalPixels || runVerificationNow;
+    }
+
+    public static void triggerPlaceImageReload() {
+        if (!websocketFailed) {
+            place = PlaceWebSocket.getImage(true);
+        } else {
+            if (!runVerificationNow) {
+                verify = !websocketFailed;
+            } else {
+                runVerificationNow = false;
+            }
+        }
+
+        lastRequestTime = System.currentTimeMillis();
+    }
+
+    public static void addPlaceImageManually(BufferedImage image) {
+        runVerificationNow = true;
+
+        ColorModel cm = image.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = image.copyData(null);
+        place = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
     public static void addPixelRequest(String id) {
@@ -85,9 +117,5 @@ public class PlaceData {
         } finally {
             lock.unlock();
         }
-    }
-
-    private ArrayList<Pixel> readPixelFile() {
-        return DBHandlerPlace.getProjectPixels(ID);
     }
 }
