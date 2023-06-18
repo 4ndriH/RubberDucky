@@ -85,6 +85,7 @@ public class PlaceData {
 
     public static void addPlaceImageManually(BufferedImage image) {
         runVerificationNow = true;
+        websocketFailed = true;
 
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
