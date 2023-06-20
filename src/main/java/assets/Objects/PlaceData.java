@@ -44,7 +44,7 @@ public class PlaceData {
     }
 
     public static int getProgress() {
-        return drawnPixels * 100 / totalPixels;
+        return ((drawnPixels - (fixingQ.size() - fixedPixels)) * 100 / totalPixels);
     }
 
     public static Pixel getPixel() {
