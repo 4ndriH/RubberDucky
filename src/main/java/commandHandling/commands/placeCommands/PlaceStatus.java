@@ -27,7 +27,7 @@ public class PlaceStatus implements CommandInterface {
         if (PlaceData.drawing) {
             embed.setDescription("Drawing project " + PlaceData.ID);
             embed.addField("__Estimated completion time__", "<t:" +
-                    (Instant.now().getEpochSecond() + (int)((PlaceData.totalPixels - PlaceData.drawnPixels) * 1.0587)) + ":F>", false);
+                    (Instant.now().getEpochSecond() + (int)((PlaceData.totalPixels - PlaceData.drawnPixels + PlaceData.fixingQ.size() - PlaceData.fixedPixels) * 1.0587)) + ":F>", false);
 
             embed.addField("__Total Pixels:__", "" + formatNr(PlaceData.totalPixels), true);
             embed.addField("__Drawn Pixels:__", "" + formatNr(PlaceData.drawnPixels), true);
