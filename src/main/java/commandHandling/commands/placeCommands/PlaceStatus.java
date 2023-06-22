@@ -36,6 +36,7 @@ public class PlaceStatus implements CommandInterface {
             if (!PlaceData.fixingQ.isEmpty() || PlaceData.fixedPixels > 0) {
                 embed.addField("__Pixels to fix:__", "" + formatNr(PlaceData.fixingQ.size()), true);
                 embed.addField("__Fixed Pixels:__", "" + formatNr(PlaceData.fixedPixels), true);
+                embed.addBlankField(true);
             }
 
             embed.addField("__Progress__", progress() + " " + PlaceData.getProgress() + "%", false);
