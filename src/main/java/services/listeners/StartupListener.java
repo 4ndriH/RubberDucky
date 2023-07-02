@@ -37,12 +37,7 @@ public class StartupListener extends ListenerAdapter {
                 }
             }
 
-            // send new commit message
-            String githubSHA = DBHandlerConfig.getConfig().get("GitHubSHA");
-            if (githubSHA != null) {
-                event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("Restarted with commit " + githubSHA).queue();
-                DBHandlerConfig.updateConfig("GitHubSHA", null);
-            }
+            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("RubberDucky restarted").queue();
 
             // set up DB connection pool for CR
             if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
