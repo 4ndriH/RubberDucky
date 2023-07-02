@@ -37,7 +37,7 @@ public class StartupListener extends ListenerAdapter {
                 }
             }
 
-            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("RubberDucky restarted").queue();
+            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage("RubberDucky started successfully and is ready to go").queue();
 
             // set up DB connection pool for CR
             if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
