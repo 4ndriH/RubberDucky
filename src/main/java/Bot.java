@@ -33,9 +33,9 @@ public class Bot {
                     MemberCachePolicy.ALL
             )
             .addEventListeners(new CommandListener())
-            //.addEventListeners(new ButtonListener())
+            .addEventListeners(new ButtonListener())
             .addEventListeners(new StartupListener())
-            .addEventListeners(new BGListener())
+            //.addEventListeners(new BGListener())
             .addEventListeners(new CountThreadListener())
             //.addEventListeners(new PingHellListener())
             .addEventListeners(new PlaceListener())
