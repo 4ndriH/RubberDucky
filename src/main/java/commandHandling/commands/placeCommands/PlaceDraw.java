@@ -70,6 +70,7 @@ public class PlaceDraw implements CommandInterface {
         int pixelDrawnCnt3600 = 0;
 
         while (!PlaceData.stopQ) {
+            LOGGER.info("started drawing project: " + id):
             if (id < 0) {
                 break;
             }
@@ -102,6 +103,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.verificationCondition()) {
+                    LOGGER.info("does this potentially fuck things up?"):
                     PlaceVerifier.verify();
                 }
 
@@ -114,15 +116,18 @@ public class PlaceDraw implements CommandInterface {
             }
 
             for (Pixel pixel : PlaceData.fixingQ) {
+                LOGGER.info("finishing left over pixels"):
                 placeChannel.sendMessage(pixel.getDrawCommand()).complete();
                 PlaceData.fixedPixels++;
 
                 if (PlaceData.stop || !PlaceData.verify) {
+                    LOGGER.info("BREAK"):
                     break;
                 }
             }
 
             if (!PlaceData.stop) {
+                LOGGER.info("stop?"):
                 DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
                 id = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
