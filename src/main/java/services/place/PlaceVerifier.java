@@ -17,7 +17,7 @@ public class PlaceVerifier {
         if (PlaceData.verify) {
             boolean[][] zoomiesImprovement = new boolean[1000][1000];
 
-            for (int i = PlaceData.drawnPixels; i >= 0 ; i--) {
+            for (int i = PlaceData.drawnPixels - 1; i >= 0 ; i--) {
                 LOGGER.info("are we looping here?");
                 LOGGER.info("i " + i);
                 LOGGER.info("sze " + PlaceData.pixels.size());
