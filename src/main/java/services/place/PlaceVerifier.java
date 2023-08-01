@@ -18,6 +18,7 @@ public class PlaceVerifier {
             boolean[][] zoomiesImprovement = new boolean[1000][1000];
 
             for (int i = PlaceData.drawnPixels; i >= 0 ; i--) {
+                LOGGER.info("are we looping here?");
                 Pixel pixel = PlaceData.pixels.get(i);
                 Color placeColor = PlaceData.getPixelColor(pixel.getX(), pixel.getY());
                 if (Color.decode(pixel.getPlaceColor()).getRGB() != placeColor.getRGB()) {
