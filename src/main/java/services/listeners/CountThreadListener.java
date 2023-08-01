@@ -65,7 +65,7 @@ public class CountThreadListener extends ListenerAdapter {
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (!spamPingProtection && --interruptCount <= 0) {
                 String botId = thread.getHistory().retrievePast(1).complete().get(0).getAuthor().getId();
-                if (botId.equals("1002592429268029531")) {
+                if (botId.equals(listenTo)) {
                     checkRecentMessages();
                 }
                 
