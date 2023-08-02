@@ -21,13 +21,6 @@ public class CountThreadListener extends ListenerAdapter {
     private static ThreadChannel thread;
     public static String listenTo;
 
-    private static HashMap<String, String> botUserMapping = new HashMap<>(){{
-        put("817846061347242026", "187822944326647808"); // RubberDucky -> Tobi
-        put("820098162013503498", "205704051856244736"); // AvAnis -> Mark
-        put("838098002844844032", "344065593483460618"); // Cup -> Alex
-        put("1002592429268029531", "155419933998579713"); // The Carcinizer -> Andri
-    }};
-
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
@@ -72,12 +65,11 @@ public class CountThreadListener extends ListenerAdapter {
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (!spamPingProtection && --interruptCount <= 0) {
                 String botId = thread.getHistory().retrievePast(1).complete().get(0).getAuthor().getId();
-                if (botId.equals("1002592429268029531")) {
+                if (botId.equals(listenTo)) {
                     checkRecentMessages();
-                    event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky should have restarted automatically in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
-                } else {
-                    event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@" + botUserMapping.get(botId) + "> please make sure your bot continues in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
                 }
+                
+                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky dected something weird in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
                 spamPingProtection = true;
             }
         }
