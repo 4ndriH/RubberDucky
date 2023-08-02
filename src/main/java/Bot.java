@@ -37,12 +37,10 @@ public class Bot {
             .addEventListeners(new StartupListener())
             //.addEventListeners(new BGListener())
             .addEventListeners(new CountThreadListener())
-            //.addEventListeners(new PingHellListener())
             .addEventListeners(new PlaceListener())
             .addEventListeners(new BotDownDetectionListener())
             .addEventListeners(new ForumListener())
             .addEventListeners(new SlashCommandListener())
-            .addEventListeners(new ReactionListener())
             .setActivity(Activity.playing("With Duckies"))
             .build();
     }
