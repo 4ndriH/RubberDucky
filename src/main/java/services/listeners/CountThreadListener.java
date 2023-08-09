@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static services.database.DBHandlerConfig.getConfig;
@@ -20,6 +21,16 @@ public class CountThreadListener extends ListenerAdapter {
     private static int lastSent, interruptCount = 60;
     private static ThreadChannel thread;
     public static String listenTo;
+
+    private static final ArrayList<String> helloThere = new ArrayList<>(){
+        {
+            add("Genewal Kenowi UwU");
+            add("General Kenobi");
+            add("General Kenobi-chan");
+            add("OwO");
+            add("hello there");
+        }
+    };
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -53,7 +64,7 @@ public class CountThreadListener extends ListenerAdapter {
                 } catch (Exception ignored) {}
             }
 
-            if (!event.getAuthor().isBot()) {
+            if (!event.getAuthor().isBot() || helloThere.contains(event.getMessage().getContentRaw()) || event.getMessage().getContentRaw().equals("NaN")) {
                 event.getMessage().delete().queue();
             }
 
@@ -68,8 +79,9 @@ public class CountThreadListener extends ListenerAdapter {
                 if (botId.equals(listenTo)) {
                     checkRecentMessages();
                 }
-                
+
                 event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> <@466292292945313799> RubberDucky detected something weird in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
+                thread.sendMessage("hello there").queue();
                 spamPingProtection = true;
             }
         }
