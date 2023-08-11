@@ -81,7 +81,7 @@ public class CountThreadListener extends ListenerAdapter {
                 }
 
                 event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> <@466292292945313799> RubberDucky detected something weird in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
-                //thread.sendMessage("hello there").queue();
+                thread.sendMessage("hello there").queue();
                 spamPingProtection = true;
             }
         }
