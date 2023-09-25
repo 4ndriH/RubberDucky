@@ -22,16 +22,6 @@ public class CountThreadListener extends ListenerAdapter {
     private static ThreadChannel thread;
     public static String listenTo;
 
-    private static final ArrayList<String> helloThere = new ArrayList<>(){
-        {
-            add("Genewal Kenowi UwU");
-            add("General Kenobi");
-            add("General Kenobi-chan");
-            add("OwO");
-            add("hello there");
-        }
-    };
-
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
@@ -64,7 +54,7 @@ public class CountThreadListener extends ListenerAdapter {
                 } catch (Exception ignored) {}
             }
 
-            if (!event.getAuthor().isBot() || helloThere.contains(event.getMessage().getContentRaw()) || event.getMessage().getContentRaw().equals("NaN")) {
+            if (!event.getAuthor().isBot()) {
                 event.getMessage().delete().queue();
             }
 
@@ -81,7 +71,8 @@ public class CountThreadListener extends ListenerAdapter {
                 }
 
                 event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky detected something weird in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
-                //thread.sendMessage("hello there").queue();
+                event.getGuild().getTextChannelById("768600365602963496").sendMessage("https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId()).queue();
+                thread.sendMessage("" + lastSent).queue();
                 spamPingProtection = true;
             }
         }
