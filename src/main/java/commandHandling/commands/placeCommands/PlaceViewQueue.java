@@ -26,7 +26,7 @@ public class PlaceViewQueue implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         String[] strings = DBHandlerPlace.getPlaceProjectQueue();
 
-        System.out.println(strings[0].length() + " " + strings[1].length() + " " + strings[2].length() + " " + "chars");
+        LOGGER.info(strings[0].length() + " " + strings[1].length() + " " + strings[2].length() + " " + "chars");
 
         if (strings[0].length() == 0) {
             embed.setDescription("The Queue is empty");
