@@ -71,6 +71,7 @@ public class Help implements CommandInterface {
 
             if (command == null) {
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
+                ReactionHelper.addReaction(ctx, 5);
                 return;
             }
 
@@ -91,8 +92,8 @@ public class Help implements CommandInterface {
             }
 
             EmbedHelper.sendEmbed(ctx, embed, 64);
-            ReactionHelper.addReaction(ctx, 0);
         }
+            ReactionHelper.addReaction(ctx, 0);
     }
 
     @Override
@@ -111,5 +112,10 @@ public class Help implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("commands", "cmds", "commandlist", "");
+    }
+
+    @Override
+    public boolean requiresFurtherChecks() {
+        return true;
     }
 }
