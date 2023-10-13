@@ -34,7 +34,7 @@ public class PlaceViewQueue implements CommandInterface {
                     "Earliest completion <t:" + (Instant.now().getEpochSecond() + (int)(pixelsInQueue * 1.0587)) + ":R>");
             embed.addField("__ID__", strings[0], true);
             embed.addField("__Drawn Pixels__", strings[1], true);
-            embed.addField("__Queued by__", strings[2], true);
+            //embed.addField("__Queued by__", strings[2], true);
         }
 
         EmbedHelper.sendEmbed(ctx, embed, 64);
