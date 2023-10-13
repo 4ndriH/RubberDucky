@@ -112,9 +112,4 @@ public class Help implements CommandInterface {
     public List<String> getAliases() {
         return List.of("commands", "cmds", "commandlist", "");
     }
-
-    @Override
-    public boolean requiresFurtherChecks() {
-        return true;
-    }
 }
