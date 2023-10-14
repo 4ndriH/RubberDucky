@@ -10,11 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static services.database.DBHandlerConfig.getConfig;
-
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static boolean spamPingProtection = false;
@@ -29,8 +24,6 @@ public class CountThreadListener extends ListenerAdapter {
         }
 
         thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
-        //listenTo = getConfig().get("CountThreadListenTo");
-
         checkRecentMessages();
     }
 
@@ -70,8 +63,7 @@ public class CountThreadListener extends ListenerAdapter {
                     checkRecentMessages();
                 }
 
-                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky detected something weird in <#996746797236105236> <a:dinkdonk:1006477116835110942>").queue();
-                event.getGuild().getTextChannelById("768600365602963496").sendMessage("https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId()).queue();
+                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky detected something weird in https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId() + " <a:dinkdonk:1006477116835110942>").queue();
                 thread.sendMessage("" + lastSent).queue();
                 spamPingProtection = true;
             }
@@ -79,11 +71,18 @@ public class CountThreadListener extends ListenerAdapter {
     }
 
     public static void checkRecentMessages() {
-        for (Message message : thread.getHistory().retrievePast(1).complete()) {
+        for (Message message : thread.getHistory().retrievePast(5).complete()) {
             try {
-                if (message.getAuthor().getId().equals(listenTo)) {
+                String authorId = message.getAuthor().getId();
+                if (authorId.equals(listenTo)) {
                     lastSent = Integer.parseInt(message.getContentRaw()) + 1;
+                } else if (authorId.equals("817846061347242026")) { // self
+                    lastSent = Integer.parseInt(message.getContentRaw());
+                }
+
+                if (lastSent != 0) {
                     thread.sendMessage("" + lastSent).queue();
+                    return;
                 }
             } catch (Exception ignored) {}
         }
