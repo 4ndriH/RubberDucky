@@ -116,11 +116,11 @@ public class ChannelEfficiency implements CommandInterface {
 
     private static ArrayList<Integer> createDataSet(String channel) {
         ArrayList<Integer> dataPoints = DBHandlerEfficiencyLog.getDataPoints(channel);
+        Collections.reverse(dataPoints);
 
         while (dataPoints.size() < 1440) {
             dataPoints.add(0, 0);
         }
-        Collections.reverse(dataPoints);
 
         return dataPoints;
     }
