@@ -33,7 +33,7 @@ public class EfficiencyTrackerListener extends ListenerAdapter {
         };
 
         try {
-            sqlExecutor.scheduleAtFixedRate (r , 0L , 1L , TimeUnit.MINUTES);
+            sqlExecutor.scheduleAtFixedRate (r , 1L , 1L , TimeUnit.MINUTES);
         } catch (Exception e) {
             LOGGER.info("error executor");
         }
