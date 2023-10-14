@@ -20,7 +20,7 @@ public class CountThreadListener extends ListenerAdapter {
     private static boolean spamPingProtection = false;
     private static int lastSent, interruptCount = 60;
     private static ThreadChannel thread;
-    public static String listenTo;
+    public static String listenTo = "742380498986205234";
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -29,7 +29,7 @@ public class CountThreadListener extends ListenerAdapter {
         }
 
         thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
-        listenTo = getConfig().get("CountThreadListenTo");
+        //listenTo = getConfig().get("CountThreadListenTo");
 
         checkRecentMessages();
     }
