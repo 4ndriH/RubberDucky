@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 import services.database.ConnectionPoolCR;
@@ -45,7 +47,12 @@ public class StartupListener extends ListenerAdapter {
             }
 
             // add command for active dev badge
-            event.getJDA().upsertCommand("ping", "Pong!").queue();
+            event.getJDA().upsertCommand("channelefficiency", "How are channels performing").addOptions(new OptionData(OptionType.STRING, "channel", "Which channel to show")
+                    .addChoice("To Infinity And Beyond", "Count")
+                    .addChoice("ETH-Place-Bots", "Place")
+                    .setRequired(false)
+            ).queue();
+            event.getJDA().deleteCommandById("1040679780690960526");
             DiscordAppender.setJDA(event.getJDA());
 
             // delete messages that were scheduled for deletion

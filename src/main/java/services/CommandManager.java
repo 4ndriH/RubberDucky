@@ -33,7 +33,6 @@ public class CommandManager {
 
     public CommandManager() {
         addCommand(new About(LOGGER));
-//        addCommand(new Avatar(LOGGER));
         addCommand(new BlackList(LOGGER));
         addCommand(new Channel(this, LOGGER));
         addCommand(new Course(LOGGER));
@@ -41,7 +40,6 @@ public class CommandManager {
         addCommand(new Delete(LOGGER));
         addCommand(new Ducky(LOGGER));
         addCommand(new SnowflakePermission(LOGGER));
-//        addCommand(new ExportDatabase(LOGGER));
         addCommand(new Help(this, LOGGER));
         addCommand(new Kill(LOGGER));
         addCommand(new LetMeGoogleThatForYou(LOGGER));
@@ -55,7 +53,6 @@ public class CommandManager {
         addCommand(new PurgeDMs(LOGGER));
         addCommand(new Say(LOGGER));
         addCommand(new Servers(LOGGER));
-        //addCommand(new SpokesPeople(LOGGER));
         addCommand(new SQL(LOGGER));
         addCommand(new Status(LOGGER));
         addCommand(new GetAPILog(LOGGER));
@@ -74,6 +71,7 @@ public class CommandManager {
         addCommand(new PlaceStop(LOGGER));
         addCommand(new PlaceStopQueue(LOGGER));
         addCommand(new PlaceVerify(LOGGER));
+        addCommand(new ChannelEfficiency(LOGGER));
     }
 
     private void addCommand(CommandInterface cmd) {
