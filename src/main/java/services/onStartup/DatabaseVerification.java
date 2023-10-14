@@ -12,12 +12,6 @@ public class DatabaseVerification {
         HashMap<String, String> database = new HashMap<>();
         boolean tableAdded = false;
 
-        database.put("ApiUsers", """
-                Username TEXT NOT NULL,
-                Password TEXT NOT NULL,
-                Whitelisted INTEGER DEFAULT 1,
-                PRIMARY KEY(Username)"""
-        );
         database.put("BlacklistedUsers", """
                 DiscordUserId TEXT,
                 PRIMARY KEY(DiscordUserId)"""
@@ -26,21 +20,6 @@ public class DatabaseVerification {
                 Key TEXT,
                 Value TEXT,
                 PRIMARY KEY(Key)"""
-        );
-        database.put("CourseReviews", """
-                Key INTEGER,
-                DiscordUserId TEXT,
-                nethz TEXT,
-                Review TEXT NOT NULL,
-                CourseNumber TEXT NOT NULL,
-                Verified INTEGER NOT NULL DEFAULT 0,
-                Date INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY(Key)"""
-        );
-        database.put("Courses", """
-                CourseNumber TEXT,
-                CourseName TEXT NOT NULL,
-                PRIMARY KEY(CourseNumber)"""
         );
         database.put("MessageDeleteTracker", """
                 DiscordServerId TEXT,
@@ -67,12 +46,6 @@ public class DatabaseVerification {
                 FOREIGN KEY(Id) REFERENCES PlaceProjects on update cascade on delete cascade,
                 PRIMARY KEY(Id, Idx)"""
         );
-        database.put("SpokesPeople", """
-                user TEXT NOT NULL UNIQUE,
-                subject TEXT NOT NULL,
-                year TEXT NOT NULL,
-                PRIMARY KEY(user)"""
-        );
         database.put("WhitelistedChannels", """
                 DiscordChannelId TEXT,
                 Command TEXT,
@@ -89,18 +62,18 @@ public class DatabaseVerification {
                 Command TEXT,
                 PRIMARY KEY(DiscordUserId, DiscordServerId, DiscordChannelId, Command)"""
         );
-        database.put("PinghellHQ", """
-                DiscordUserId TEXT,
-                PinghellStatus INTEGER NOT NULL DEFAULT 1,
-                ServerMember INTEGER NOT NULL DEFAULT 0,
-                PRIMARY KEY(DiscordUserId)"""
-        );
         database.put("PlaceEfficiencyLog", """
                 Key INTEGER,
                 NumberOfPixels INTEGER NOT NULL DEFAULT 3600,
                 SecondsTaken INTEGER NOT NULL,
                 Date INTEGER DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY(Key AUTOINCREMENT)"""
+        );
+        database.put("EfficiencyLog", """
+                PiT	INTEGER,
+                EthPlaceBots INTEGER DEFAULT 0,
+                CountThread	INTEGER DEFAULT 0,
+                PRIMARY KEY(PiT)"""
         );
 
         for (String table : database.keySet()) {
