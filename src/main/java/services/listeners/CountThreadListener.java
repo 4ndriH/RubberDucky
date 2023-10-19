@@ -58,10 +58,7 @@ public class CountThreadListener extends ListenerAdapter {
             }
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (!spamPingProtection && --interruptCount <= 0) {
-                String botId = thread.getHistory().retrievePast(1).complete().get(0).getAuthor().getId();
-                if (botId.equals(listenTo)) {
-                    checkRecentMessages();
-                }
+                checkRecentMessages();
 
                 event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky detected something weird in https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId() + " <a:dinkdonk:1006477116835110942>").queue();
                 thread.sendMessage("" + lastSent).queue();
