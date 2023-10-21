@@ -3,11 +3,15 @@ package commandHandling.commands.publicCommands;
 import commandHandling.CommandContext;
 import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.Miscellaneous.Format;
 import services.database.DBHandlerEfficiencyLog;
 import services.discordHelpers.EmbedHelper;
+import services.listeners.CountThreadListener;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -34,14 +38,38 @@ public class ChannelEfficiency implements CommandInterface {
             parameter = "Place";
         }
 
-        String embedTitel = parameter.equals("Count") ? "To Infinity And Beyond" : "ETH-Place-Bots";
-        EmbedBuilder embed = EmbedHelper.embedBuilder(embedTitel);
-        embed.setImage("attachment://LineChart.jpg");
-
-        ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(parameter)), "LineChart.jpg")).queue((msg) -> msg.delete().queueAfter(2, TimeUnit.MINUTES));
+        doCommandStuff(ctx.getChannel(), parameter);
     }
 
-    public static BufferedImage generatePlot(String channel) {
+    public static void doCommandStuff(MessageChannelUnion channel, String parameter) {
+        String embedTitel = parameter.equals("Count") ? "To Infinity And Beyond" : "ETH-Place-Bots";
+        EmbedBuilder embed = EmbedHelper.embedBuilder(embedTitel);
+        ArrayList<Integer> dataPoints = createDataSet(parameter);
+
+        int messageCnt = dataPoints.stream().mapToInt(Integer::intValue).sum();
+        double min = Collections.min(dataPoints) / 60.0;
+        double max = Collections.max(dataPoints) / 60.0;
+        double average = messageCnt / 1440.0 / 60.0;
+
+        embed.addField("__24h Peak__", String.format("%.2f", max) + " msgs/sec", true);
+        embed.addField("__24h Average__", String.format("%.2f", average) + " msgs/sec", true);
+        embed.addField("__24h Low__", String.format("%.2f", min) + " msgs/sec", true);
+        embed.addField("__24h Progress__", Format.Number(messageCnt) + " msgs", true);
+
+        if (parameter.equals("Count")) {
+            embed.addField("__Current Count __", "" + Format.Number(CountThreadListener.lastSent), true);
+        } else {
+            embed.addBlankField(true);
+        }
+
+        embed.addBlankField(true);
+        embed.setImage("attachment://LineChart.jpg");
+        embed.setFooter("/channelefficency");
+
+        channel.sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg")).queue((msg) -> msg.delete().queueAfter(2, TimeUnit.MINUTES));
+    }
+
+    public static BufferedImage generatePlot(ArrayList<Integer> dataPoints) {
         int graphWidth = 1440;
         int graphHeight = 300;
         int graphPadding = 50;
@@ -70,8 +98,6 @@ public class ChannelEfficiency implements CommandInterface {
         // draw data
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(Color.decode("#B074AD"));
-
-        ArrayList<Integer> dataPoints = createDataSet(channel);
 
         for (int i = 0; i < dataPoints.size() - 1; i++) {
             g2d.drawLine(graphPadding + i, graphHeight + graphPadding - dataPoints.get(i), graphPadding + 1 + i, graphHeight + graphPadding - dataPoints.get(i + 1));

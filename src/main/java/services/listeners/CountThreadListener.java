@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static boolean spamPingProtection = false;
-    private static int lastSent, interruptCount = 60;
+    public static int lastSent, interruptCount = 60;
     private static ThreadChannel thread;
     public static String listenTo = "742380498986205234";
 
