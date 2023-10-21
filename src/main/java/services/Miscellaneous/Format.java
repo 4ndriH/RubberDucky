@@ -1,7 +1,13 @@
 package services.Miscellaneous;
 
-public class TimeFormat {
-    public static String timeFormat(int linesCnt) {
+import java.text.DecimalFormat;
+
+public class Format {
+    public static String Number(int n) {
+        return new DecimalFormat("###,###,###").format(n).replaceAll("[,,.]", "'");
+    }
+
+    public static String Time(int linesCnt) {
         int seconds = linesCnt % 60;
         int minutes = (linesCnt - seconds) / 60 % 60;
         int hours = ((linesCnt - seconds) / 60 - minutes) / 60;

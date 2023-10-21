@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.Miscellaneous.TimeFormat;
+import services.Miscellaneous.Format;
 import services.discordHelpers.EmbedHelper;
 
 import java.lang.management.ManagementFactory;
@@ -29,7 +29,7 @@ public class About implements CommandInterface {
         embed.setDescription("[GitHub](https://github.com/4ndriH/RubberDucky)");
         embed.addField("**JDA version:**", JDAInfo.VERSION_MAJOR + "."
                 + JDAInfo.VERSION_MINOR + "." + JDAInfo.VERSION_REVISION, true);
-        embed.addField("**Uptime:**", TimeFormat.timeFormat((int)(rmb.getUptime() / 1000)), true);
+        embed.addField("**Uptime:**", Format.Time((int)(rmb.getUptime() / 1000)), true);
 
         EmbedHelper.sendEmbed(ctx, embed, 32);
     }

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.CONFIG;
 import services.BotExceptions;
-import services.Miscellaneous.TimeFormat;
+import services.Miscellaneous.Format;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -120,7 +120,7 @@ public class PlaceEncode implements CommandInterface {
 
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    TimeFormat.timeFormat((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
+                    Format.Time((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
                     msg -> deleteMsg(msg, 128)
             );
         } catch (IllegalArgumentException e) {

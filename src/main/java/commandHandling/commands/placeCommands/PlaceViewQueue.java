@@ -5,6 +5,7 @@ import commandHandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.Miscellaneous.Format;
 import services.database.DBHandlerPlace;
 import services.discordHelpers.EmbedHelper;
 
@@ -30,7 +31,7 @@ public class PlaceViewQueue implements CommandInterface {
             embed.setDescription("The Queue is empty");
         } else {
             int pixelsInQueue = getPixelsInQueue();
-            embed.setDescription("There are " + String.format(Locale.US, "%,d", pixelsInQueue).replace(',', '\'') + " pixels in the queue.\n" +
+            embed.setDescription("There are " + Format.Number(pixelsInQueue) + " pixels in the queue.\n" +
                     "Earliest completion <t:" + (Instant.now().getEpochSecond() + (int)(pixelsInQueue * 1.0587)) + ":R>");
             embed.addField("__ID__", strings[0], true);
             embed.addField("__Drawn Pixels__", strings[1], true);

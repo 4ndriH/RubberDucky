@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.EMOTES;
+import services.Miscellaneous.Format;
 import services.discordHelpers.EmbedHelper;
 import assets.Objects.PlaceData;
 
@@ -29,13 +30,13 @@ public class PlaceStatus implements CommandInterface {
             embed.addField("__Estimated completion time__", "<t:" +
                     (Instant.now().getEpochSecond() + (int)((PlaceData.totalPixels - PlaceData.drawnPixels + PlaceData.fixingQ.size() - PlaceData.fixedPixels) * 1.0587)) + ":F>", false);
 
-            embed.addField("__Total Pixels:__", "" + formatNr(PlaceData.totalPixels), true);
-            embed.addField("__Drawn Pixels:__", "" + formatNr(PlaceData.drawnPixels), true);
-            embed.addField("__Pixels Left:__", "" + formatNr(PlaceData.totalPixels - PlaceData.drawnPixels), true);
+            embed.addField("__Total Pixels:__", "" + Format.Number(PlaceData.totalPixels), true);
+            embed.addField("__Drawn Pixels:__", "" + Format.Number(PlaceData.drawnPixels), true);
+            embed.addField("__Pixels Left:__", "" + Format.Number(PlaceData.totalPixels - PlaceData.drawnPixels), true);
 
             if (!PlaceData.fixingQ.isEmpty() || PlaceData.fixedPixels > 0) {
-                embed.addField("__Pixels to fix:__", "" + formatNr(PlaceData.fixingQ.size()), true);
-                embed.addField("__Fixed Pixels:__", "" + formatNr(PlaceData.fixedPixels), true);
+                embed.addField("__Pixels to fix:__", "" + Format.Number(PlaceData.fixingQ.size()), true);
+                embed.addField("__Fixed Pixels:__", "" + Format.Number(PlaceData.fixedPixels), true);
                 embed.addBlankField(true);
             }
 
@@ -47,10 +48,6 @@ public class PlaceStatus implements CommandInterface {
         }
 
         EmbedHelper.sendEmbed(ctx, embed, 64);
-    }
-
-    private String formatNr(int n) {
-        return new DecimalFormat("###,###,###").format(n).replaceAll("[,,.]", "'");
     }
 
     private String progress () {
