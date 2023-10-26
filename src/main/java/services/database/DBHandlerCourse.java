@@ -15,7 +15,7 @@ public class DBHandlerCourse {
 
     public static String getCourseName(String courseNumber) {
         String course = "";
-        try (Connection connection = ConnectionPool.getConnection()){
+        try (Connection connection = ConnectionPoolCR.getConnection()){
             PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM Courses WHERE CourseNumber=?"
             );
