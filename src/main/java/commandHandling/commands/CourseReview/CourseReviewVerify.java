@@ -53,7 +53,7 @@ public class CourseReviewVerify implements CommandInterface {
     private static void sendEmbedCRV() {
         if (!reviews.isEmpty()) {
             Review review  = reviews.entrySet().iterator().next().getValue();
-            EmbedBuilder embed = embedBuilder(review.courseNumber + " - " + getCourseName(review.courseNumber));
+            EmbedBuilder embed = embedBuilder(getCourseName(review.courseNumber));
             embed.setDescription(review.review);
 
             if (review.discordUserId != null) {
