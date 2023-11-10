@@ -60,7 +60,7 @@ public class CountThreadListener extends ListenerAdapter {
             if (!spamPingProtection && --interruptCount <= 0) {
                 checkRecentMessages();
 
-                event.getGuild().getTextChannelById("768600365602963496").sendMessage("<@155419933998579713> RubberDucky detected something weird in https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId() + " <a:dinkdonk:1006477116835110942>").queue();
+                LOGGER.warn("RubberDucky detected something weird in https://discord.com/channels/747752542741725244/996746797236105236/" + event.getMessage().getId() + " <a:dinkdonk:1006477116835110942>");
                 thread.sendMessage("" + lastSent).queue();
                 spamPingProtection = true;
             }
