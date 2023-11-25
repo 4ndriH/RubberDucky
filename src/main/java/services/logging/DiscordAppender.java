@@ -27,7 +27,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
         sb.append("```");
 
         embed.setColor(eventObject.getLevel().toString().equals("WARN") ? new Color(0xff9100) : new Color(0xff0000));
-        embed.setTitle(eventObject.getLevel() + ": " + eventObject.getThrowableProxy().getClassName());
+        embed.setTitle(eventObject.getLevel() + ": " + eventObject.getMessage());
 
         if (sb.length() > 4096) {
             embed.setDescription(sb.substring(0, 4096));
@@ -35,7 +35,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
             embed.setDescription(sb);
         }
 
-        embed.setFooter(eventObject.getLoggerName());
+        embed.setFooter(eventObject.getThrowableProxy().getClassName());
 
         jda.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
                 .sendMessageEmbeds(embed.build()).queue();
