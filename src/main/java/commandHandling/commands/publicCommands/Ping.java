@@ -19,10 +19,6 @@ public class Ping implements CommandInterface {
     public void handle(CommandContext ctx) {
         JDA jda = ctx.getJDA();
 
-        LOGGER.warn("test");
-        LOGGER.error("test");
-        LOGGER.info("test");
-
         jda.getRestPing().queue(
                 ping -> {
                     EmbedBuilder embed = EmbedHelper.embedBuilder("Ping");
