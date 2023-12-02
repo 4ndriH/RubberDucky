@@ -1,6 +1,5 @@
 package services.place;
 
-import assets.CONFIG;
 import assets.Objects.PlaceData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ public class PlaceWebSocket {
     public static BufferedImage getImage (boolean colored) {
         BufferedImage img;
         ByteBuffer buffer;
-        int retryCnt = 0;
 
         do {
             img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
@@ -41,7 +39,7 @@ public class PlaceWebSocket {
                             .buildAsync(URI.create("wss://ws.battlerush.dev/"), wsc)
                             .join();
                 } catch (CompletionException ce) {
-                    LOGGER.error("Websocket Problem", ce);
+                    LOGGER.error("Websocket Dead", ce);
                     PlaceData.websocketFailed = true;
                     return img;
                 } catch(Exception e) {
