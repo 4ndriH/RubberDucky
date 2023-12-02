@@ -1,5 +1,6 @@
 package services.logging;
 
+import assets.Objects.PlaceData;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,6 +11,7 @@ import java.awt.*;
 
 public class DiscordAppender extends AppenderBase<ILoggingEvent> {
     private static JDA jda;
+    private static boolean startUpBlock = true;
 
     public static void setJDA(JDA jda) {
         DiscordAppender.jda = jda;
@@ -39,5 +41,14 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
 
         jda.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
                 .sendMessageEmbeds(embed.build()).queue();
+
+
+        if (eventObject.getMessage().equals("Websocket Dead")) {
+            if (!startUpBlock) {
+                jda.openPrivateChannelById("153929916977643521").complete().sendMessage("Hi\nI tried accessing the websocket and as it turns out, it is (still) dead.\nCould you please fix it?").queue();
+            } else {
+                startUpBlock = false;
+            }
+        }
     }
 }
