@@ -9,7 +9,7 @@ updates:
         patterns:
           - '*'
     ignore:
-      - dependency-name: "JDA"
+      - dependency-name: "net.dv8tion:JDA"
     commit-message:
       prefix: "mvn"
   # Maintain dependencies for GitHub Actions
