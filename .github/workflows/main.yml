@@ -3,6 +3,8 @@ name: GitHub RubberDucky
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - '.github/**'
 
   workflow_dispatch:
 
