@@ -46,11 +46,15 @@ public class CountThreadListener extends ListenerAdapter {
                 event.getMessage().delete().queue();
             }
 
-            if (interruptCount < 60 && EXPONENTIAL_BACKOFF == 60) {
+            if (interruptCount < 60) {
                 interruptCount++;
             } else {
-                interruptCount = 60;
-                EXPONENTIAL_BACKOFF = 60;
+                if (interruptCount < 2 * EXPONENTIAL_BACKOFF) {
+                    interruptCount++;
+                } else {
+                    interruptCount = 60;
+                    EXPONENTIAL_BACKOFF = 60;
+                }
             }
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (--interruptCount <= 0) {
