@@ -46,7 +46,7 @@ public class CountThreadListener extends ListenerAdapter {
                 event.getMessage().delete().queue();
             }
 
-            if (interruptCount < 60) {
+            if (interruptCount < 60 && EXPONENTIAL_BACKOFF == 60) {
                 interruptCount++;
             } else {
                 interruptCount = 60;
