@@ -1,6 +1,6 @@
 package services.place;
 
-import assets.Objects.PlaceData;
+import assets.objects.PlaceData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

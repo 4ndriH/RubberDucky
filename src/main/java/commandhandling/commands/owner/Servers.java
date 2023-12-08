@@ -1,0 +1,90 @@
+package commandhandling.commands.owner;
+
+import commandhandling.CommandContext;
+import commandhandling.CommandInterface;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import assets.Emotes;
+import services.PermissionManager;
+import services.database.DBHandlerWhitelistedServers;
+import services.discordhelpers.EmbedHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
+import static services.PermissionManager.getWhitelistedServers;
+
+
+public class Servers implements CommandInterface {
+    private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
+
+    public Servers(Logger cmdManagerLogger) {
+        cmdManagerLogger.info("Loaded Command " + getName());
+    }
+
+    @Override
+    public void handle(CommandContext ctx) {
+        ArrayList<String> serverIds = getWhitelistedServers();
+
+        if (ctx.getArguments().size() > 0) {
+            String argument = ctx.getArguments().get(0);
+
+            if (argument.equals("this")) {
+                argument = ctx.getGuild().getId();
+            }
+
+            if (serverIds.contains(argument)) {
+                DBHandlerWhitelistedServers.removeServerFromWhitelist(ctx.getGuild().getId());
+            } else {
+                DBHandlerWhitelistedServers.addServerToWhitelist(ctx.getGuild().getId());
+            }
+
+            PermissionManager.reload();
+        } else {
+            EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted servers");
+            HashMap<String, String> servers = new HashMap<>();
+            ArrayList<String> names = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+
+            for (Guild guild : ctx.getJDA().getGuilds()) {
+                String name = guild.getName();
+                names.add(name);
+
+                if (serverIds.contains(guild.getId())) {
+                    servers.put(name, Emotes.RDG.getAsEmote() + " " + name);
+                } else {
+                    servers.put(name, Emotes.RDR.getAsEmote() + " " + name);
+                }
+            }
+
+            Collections.sort(names);
+
+            for (String s : names) {
+                sb.append(servers.get(s)).append("\n");
+            }
+
+            embed.setDescription(sb.toString());
+            EmbedHelper.sendEmbed(ctx, embed, 64);
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "Servers";
+    }
+
+    @Override
+    public EmbedBuilder getHelp() {
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Adds or removes a server from the whitelist");
+        return embed;
+    }
+
+    @Override
+    public int getRestrictionLevel() {
+        return 0;
+    }
+}
