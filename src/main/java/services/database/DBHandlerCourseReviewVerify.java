@@ -2,7 +2,7 @@ package services.database;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import assets.Objects.Review;
+import assets.objects.Review;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

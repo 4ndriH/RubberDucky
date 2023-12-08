@@ -1,7 +1,7 @@
 package services;
 
-import commandHandling.CommandContext;
-import commandHandling.CommandInterface;
+import commandhandling.CommandContext;
+import commandhandling.CommandInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerBlacklistedUsers;
@@ -12,7 +12,7 @@ import services.database.DBHandlerWhitelistedServers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static services.discordHelpers.ReactionHelper.addReaction;
+import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class PermissionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
