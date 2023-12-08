@@ -1,6 +1,6 @@
 package services.database;
 
-import assets.objects.DeletableMessage;
+import assets.Objects.DeletableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DBHandlerMessageDeleteTracker {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBHandlerMessageDeleteTracker.class);

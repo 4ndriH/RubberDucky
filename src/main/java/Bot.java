@@ -1,11 +1,11 @@
-import assets.Config;
+import assets.CONFIG;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import services.listeners.*;
-import services.startup.StartUp;
+import services.onStartup.StartUp;
 
 public class Bot {
     public static void main(String[] args) {
@@ -15,7 +15,7 @@ public class Bot {
     }
 
     private static void connectToDiscord() {
-        JDABuilder.createDefault(Config.token
+        JDABuilder.createDefault(CONFIG.token
             ).enableIntents(
                     GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_MESSAGE_REACTIONS,

@@ -1,14 +1,14 @@
 package services;
 
-import commandhandling.CommandContext;
+import commandHandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import assets.Emotes;
+import assets.EMOTES;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.awt.*;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
-import static services.discordhelpers.ReactionHelper.addReaction;
+import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordHelpers.ReactionHelper.addReaction;
 
 public class BotExceptions {
     public static void invalidArgumentsException(CommandContext ctx) {
@@ -76,7 +76,7 @@ public class BotExceptions {
         }
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
-            msg.addReaction(Emoji.fromFormatted(Emotes.NLD.getAsReaction())).queue();
+            msg.addReaction(Emoji.fromFormatted(EMOTES.NLD.getAsReaction())).queue();
             deleteMsg(msg, 32);
         });
     }

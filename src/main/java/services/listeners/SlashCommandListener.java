@@ -1,6 +1,6 @@
 package services.listeners;
 
-import commandhandling.commands.pubIic.ChannelEfficiency;
+import commandHandling.commands.publicCommands.ChannelEfficiency;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;

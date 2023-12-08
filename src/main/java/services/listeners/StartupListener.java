@@ -1,8 +1,8 @@
 package services.listeners;
 
-import assets.Config;
-import assets.objects.DeletableMessage;
-import commandhandling.commands.place.PlaceDraw;
+import assets.CONFIG;
+import assets.Objects.DeletableMessage;
+import commandHandling.commands.placeCommands.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
@@ -39,7 +39,7 @@ public class StartupListener extends ListenerAdapter {
                 }
             }
 
-            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(Config.logChannelID).sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
+            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(CONFIG.logChannelID).sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
 
             // set up DB connection pool for CR
             if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
