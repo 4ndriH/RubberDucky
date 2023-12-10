@@ -1,4 +1,4 @@
-package commandhandling.commands.pubIic;
+package commandhandling.commands.pleb;
 
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;

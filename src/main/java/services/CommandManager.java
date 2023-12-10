@@ -13,7 +13,7 @@ import commandhandling.commands.mod.BlackList;
 import commandhandling.commands.mod.Channel;
 import commandhandling.commands.owner.*;
 import commandhandling.commands.place.*;
-import commandhandling.commands.pubIic.*;
+import commandhandling.commands.pleb.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
