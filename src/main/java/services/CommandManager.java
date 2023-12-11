@@ -1,19 +1,19 @@
 package services;
 
-import assets.CONFIG;
-import commandHandling.CommandContext;
-import commandHandling.CommandInterface;
-import commandHandling.commands.CourseReview.Course;
-import commandHandling.commands.CourseReview.CourseReviewStats;
-import commandHandling.commands.CourseReview.CourseReviewVerify;
-import commandHandling.commands.adminCommands.LockDown;
-import commandHandling.commands.adminCommands.Nuke;
-import commandHandling.commands.adminCommands.Watch;
-import commandHandling.commands.modCommands.BlackList;
-import commandHandling.commands.modCommands.Channel;
-import commandHandling.commands.ownerCommands.*;
-import commandHandling.commands.placeCommands.*;
-import commandHandling.commands.publicCommands.*;
+import assets.Config;
+import commandhandling.CommandContext;
+import commandhandling.CommandInterface;
+import commandhandling.commands.coursereview.Course;
+import commandhandling.commands.coursereview.CourseReviewStats;
+import commandhandling.commands.coursereview.CourseReviewVerify;
+import commandhandling.commands.admin.LockDown;
+import commandhandling.commands.admin.Nuke;
+import commandhandling.commands.admin.Watch;
+import commandhandling.commands.mod.BlackList;
+import commandhandling.commands.mod.Channel;
+import commandhandling.commands.owner.*;
+import commandhandling.commands.place.*;
+import commandhandling.commands.pleb.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
-import static services.discordHelpers.ReactionHelper.addReaction;
+import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordhelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
@@ -102,7 +102,7 @@ public class CommandManager {
 
     public void handle(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(CONFIG.prefix), "").split("\\s+");
+                .replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);

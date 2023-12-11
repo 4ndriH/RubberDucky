@@ -1,10 +1,9 @@
 package services.logging;
 
-import assets.Objects.PlaceData;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import net.dv8tion.jda.api.EmbedBuilder;
-import assets.CONFIG;
+import assets.Config;
 import net.dv8tion.jda.api.JDA;
 
 import java.awt.*;
@@ -39,7 +38,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
 
         embed.setFooter(eventObject.getThrowableProxy().getClassName());
 
-        jda.getGuildById("817850050013036605").getTextChannelById(CONFIG.logChannelID)
+        jda.getGuildById("817850050013036605").getTextChannelById(Config.logChannelID)
                 .sendMessageEmbeds(embed.build()).queue();
 
 
