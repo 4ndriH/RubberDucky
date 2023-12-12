@@ -49,8 +49,7 @@ public class DirectoryVerification {
                 new ArrayList<>(List.of(
                     "nuke.gif",
                     "shutdown.gif",
-                    "sudoku.jpg",
-                    "token.txt"
+                    "sudoku.jpg"
                 )));
         files.put("resources/images/duckies/",
                 new ArrayList<>(List.of(
@@ -88,7 +87,7 @@ public class DirectoryVerification {
                 )));
 
         // change this to the non branch link
-        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/tree/filesystem_changes";
+        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/filesystem_changes/";
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
@@ -98,7 +97,7 @@ public class DirectoryVerification {
                         LOGGER.info("RubberDucky.db will be created by JDBC");
                     } else {
                         try {
-                            ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + file).openStream());
+                            ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
                             FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
                             fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
                             fileOutputStream.close();
