@@ -32,46 +32,58 @@ public class CommandManager {
     private static final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
-        addCommand(new About(LOGGER));
-        addCommand(new BlackList(LOGGER));
-        addCommand(new Channel(this, LOGGER));
-        addCommand(new Course(LOGGER));
-        addCommand(new CourseReviewVerify(LOGGER));
-        addCommand(new Delete(LOGGER));
-        addCommand(new Ducky(LOGGER));
-        addCommand(new SnowflakePermission(LOGGER));
-        addCommand(new Help(this, LOGGER));
-        addCommand(new Kill(LOGGER));
-        addCommand(new LetMeGoogleThatForYou(LOGGER));
-        addCommand(new LockDown(LOGGER));
-        addCommand(new NickName(LOGGER));
-        addCommand(new Nuke(LOGGER));
-        addCommand(new Ping(LOGGER));
-        addCommand(new Prefix(LOGGER));
-        addCommand(new ProfilePicture(LOGGER));
-        addCommand(new Purge(LOGGER));
-        addCommand(new PurgeDMs(LOGGER));
-        addCommand(new Say(LOGGER));
-        addCommand(new Servers(LOGGER));
-        addCommand(new SQL(LOGGER));
-        addCommand(new Status(LOGGER));
-        addCommand(new GetAPILog(LOGGER));
-        addCommand(new Watch(LOGGER));
-        addCommand(new CourseReviewStats(LOGGER));
+        // owner
+        addCommand(new Delete());
+        addCommand(new GetAPILog());
+        addCommand(new Kill());
+        addCommand(new NickName());
+        addCommand(new Prefix());
+        addCommand(new ProfilePicture());
+        addCommand(new Purge());
+        addCommand(new Say());
+        addCommand(new Servers());
+        addCommand(new SnowflakePermission());
+        addCommand(new SQL());
+        addCommand(new Status());
 
-        addCommand(new PlaceQueue(LOGGER));
-        addCommand(new PlaceDelete(LOGGER));
-        addCommand(new PlaceGetFile(LOGGER));
-        addCommand(new PlaceViewQueue(LOGGER));
-        addCommand(new PlaceView(LOGGER));
-        addCommand(new PlaceStatus(LOGGER));
-        addCommand(new PlacePreview(LOGGER));
-        addCommand(new PlaceEncode(LOGGER));
-        addCommand(new PlaceDraw(LOGGER));
-        addCommand(new PlaceStop(LOGGER));
-        addCommand(new PlaceStopQueue(LOGGER));
-        addCommand(new PlaceVerify(LOGGER));
-        addCommand(new ChannelEfficiency(LOGGER));
+        // admin
+        addCommand(new LockDown());
+        addCommand(new Nuke());
+        addCommand(new Watch());
+
+        // mod
+        addCommand(new BlackList());
+        addCommand(new Channel(this));
+
+        // pleb
+        addCommand(new About());
+        addCommand(new ChannelEfficiency());
+        addCommand(new Ducky());
+        addCommand(new Help(this));
+        addCommand(new LetMeGoogleThatForYou());
+        addCommand(new Ping());
+        addCommand(new PurgeDMs());
+
+        // courereview
+        addCommand(new Course());
+        addCommand(new CourseReviewStats());
+        addCommand(new CourseReviewVerify());
+
+        // place
+        addCommand(new PlaceDelete());
+        addCommand(new PlaceDraw());
+        addCommand(new PlaceEncode());
+        addCommand(new PlaceGetFile());
+        addCommand(new PlacePreview());
+        addCommand(new PlaceQueue());
+        addCommand(new PlaceStatus());
+        addCommand(new PlaceStop());
+        addCommand(new PlaceStopQueue());
+        addCommand(new PlaceVerify());
+        addCommand(new PlaceView());
+        addCommand(new PlaceViewQueue());
+
+        LOGGER.info("Commands have been loaded");
     }
 
     private void addCommand(CommandInterface cmd) {
