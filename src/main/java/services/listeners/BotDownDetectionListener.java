@@ -1,5 +1,6 @@
 package services.listeners;
 
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,12 @@ public class BotDownDetectionListener extends ListenerAdapter {
     private static final HashMap<String, String> sendTo = new HashMap<>(){{
        put("690548834610315286", "276462585690193921"); // Substiify -> Jackra1n
     }};
+
+    public void onReady(@NotNull ReadyEvent event) {
+        if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+            event.getJDA().removeEventListener(this);
+        }
+    }
 
     @Override
     public void onUserUpdateOnlineStatus(@NotNull UserUpdateOnlineStatusEvent event) {

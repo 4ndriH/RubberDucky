@@ -3,6 +3,7 @@ package services.listeners;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -15,6 +16,12 @@ public class BGListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static int nextNotification = 0;
     private static int myCurrentScore = Integer.parseInt(getConfig().get("ButtonScore"));
+
+    public void onReady(@NotNull ReadyEvent event) {
+        if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+            event.getJDA().removeEventListener(this);
+        }
+    }
 
     @Override
     public void onMessageUpdate(@NotNull MessageUpdateEvent event) {

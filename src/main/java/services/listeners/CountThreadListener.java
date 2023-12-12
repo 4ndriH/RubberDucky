@@ -19,6 +19,7 @@ public class CountThreadListener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+            event.getJDA().removeEventListener(this);
             return;
         }
 
