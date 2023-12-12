@@ -83,7 +83,7 @@ public class CommandManager {
         addCommand(new PlaceView());
         addCommand(new PlaceViewQueue());
 
-        LOGGER.info("Commands have been loaded");
+        LOGGER.info(commands.size() + " commands loaded");
     }
 
     private void addCommand(CommandInterface cmd) {
