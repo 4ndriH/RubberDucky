@@ -10,7 +10,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 
 public class DirectoryVerification {
     public static void verifyDirectoryIntegrity(Logger LOGGER) {
@@ -20,9 +19,10 @@ public class DirectoryVerification {
         directories.add(new File("DB"));
         directories.add(new File("logs"));
         directories.add(new File("resources"));
-        directories.add(new File("resources/purge"));
-        directories.add(new File("resources/duckies"));
-        directories.add(new File("resources/lmgtfy"));
+        directories.add(new File("resources/images"));
+        directories.add(new File("resources/images/purge"));
+        directories.add(new File("resources/images/duckies"));
+        directories.add(new File("resources/images/lmgtfy"));
         directories.add(new File("tempFiles"));
         directories.add(new File("tempFiles/place"));
         directories.add(new File("tempFiles/place/queue"));
@@ -45,13 +45,14 @@ public class DirectoryVerification {
         boolean fileDownloaded = false;
 
         files.put("DB/", new ArrayList<>(List.of("RubberDucky.db")));
-        files.put("resources/",
+        files.put("resources/images/",
                 new ArrayList<>(List.of(
+                    "nuke.gif",
                     "shutdown.gif",
                     "sudoku.jpg",
-                    "nuke.gif"
+                    "token.txt"
                 )));
-        files.put("resources/duckies/",
+        files.put("resources/images/duckies/",
                 new ArrayList<>(List.of(
                         "ducky0.png",
                         "ducky1.png",
@@ -62,13 +63,13 @@ public class DirectoryVerification {
                         "ducky6.png",
                         "ducky7.png"
                 )));
-        files.put("resources/purge/",
+        files.put("resources/images/purge/",
                 new ArrayList<>(List.of(
                         "busyPurging.png",
                         "purgeCommenced.jpg",
-                    "purgeEnded.jpg"
+                        "purgeEnded.jpg"
                 )));
-        files.put("resources/lmgtfy/",
+        files.put("resources/images/lmgtfy/",
                 new ArrayList<>(List.of(
                         "lmgtfy.png",
                         "lmgtfyResult.png",
@@ -86,36 +87,34 @@ public class DirectoryVerification {
                         "cursor10.png"
                 )));
 
-        String url;
-        try {
-            Scanner scanner = new Scanner(new File("url.txt"));
-            url = scanner.nextLine();
-            scanner.close();
-        } catch (Exception e) {
-            LOGGER.warn("Please provide a file called \"url.txt\" with a link to the file storage");
-            return;
-        }
+        // change this to the non branch link
+        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/tree/filesystem_changes";
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
                 File current = new File(directory + file);
                 if (!current.exists()) {
-                    try {
-                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + file).openStream());
-                        FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
-                        fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
-                        fileOutputStream.close();
-                        fileDownloaded = true;
-                    } catch (Exception e) {
-                        LOGGER.error("There was a problem while downloading file: " + file, e);
+                    if (file.equals("RubberDucky.db")) {
+                        LOGGER.info("RubberDucky.db will be created by JDBC");
+                    } else {
+                        try {
+                            ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + file).openStream());
+                            FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
+                            fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+                            fileOutputStream.close();
+                            fileDownloaded = true;
+                        } catch (Exception e) {
+                            LOGGER.error("There was a problem while downloading file: " + file, e);
+                            continue;
+                        }
+                        LOGGER.info("Downloaded file: " + directory + file);
                     }
-                    LOGGER.info("Downloaded file: " + directory + file);
                 }
             }
         }
 
         if (!fileDownloaded) {
-            LOGGER.info("No files needed to be downloaded");
+            LOGGER.info("File Verification completed");
         }
     }
 }
