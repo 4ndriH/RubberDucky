@@ -26,6 +26,6 @@ public class Config {
         embedColor = Color.decode(config.get("embedColor"));
         placeVerify = Boolean.parseBoolean(config.get("PlaceVerify"));
 
-        LOGGER.warn("Config loaded");
+        LOGGER.info("Config loaded");
     }
 }
