@@ -14,10 +14,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class Prefix implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);
 
-    public Prefix(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         try {

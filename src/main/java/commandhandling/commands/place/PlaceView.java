@@ -62,8 +62,4 @@ public class PlaceView implements CommandInterface {
     public List<String> getAliases() {
         return List.of("pv");
     }
-
-    public PlaceView(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
 }

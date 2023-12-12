@@ -28,10 +28,6 @@ import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 public class PlacePreview implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlacePreview.class);
 
-    public PlacePreview(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);

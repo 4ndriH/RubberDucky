@@ -13,10 +13,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class Status implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
 
-    public Status(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();

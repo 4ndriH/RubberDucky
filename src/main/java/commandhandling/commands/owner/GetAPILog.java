@@ -15,10 +15,6 @@ import java.util.Scanner;
 public class GetAPILog implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetAPILog.class);
 
-    public GetAPILog(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         Scanner scanner;

@@ -21,10 +21,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class Course implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(Course.class);
 
-    public Course(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         HashSet<String> courses = DBHandlerCourse.getCoursesWithVerifiedReviews();

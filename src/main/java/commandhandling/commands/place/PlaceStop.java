@@ -12,10 +12,6 @@ import java.util.List;
 public class PlaceStop implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceStop.class);
 
-    public PlaceStop(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         PlaceData.stop = true;

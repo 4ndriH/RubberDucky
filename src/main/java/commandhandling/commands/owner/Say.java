@@ -15,10 +15,6 @@ public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
     private volatile HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
 
-    public Say(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();

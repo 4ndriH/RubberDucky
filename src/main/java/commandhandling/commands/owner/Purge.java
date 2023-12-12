@@ -19,8 +19,7 @@ public class Purge implements CommandInterface {
     private static final AtomicBoolean isRunning = new AtomicBoolean(false);
     private static final AtomicBoolean stop = new AtomicBoolean(false);
 
-    public Purge(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
+    public Purge() {
         embedSetUp();
     }
 

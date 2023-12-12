@@ -18,10 +18,6 @@ import java.util.List;
 public class PlaceVerify implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceVerify.class);
 
-    public PlaceVerify(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         if (ctx.getMessage().getReferencedMessage() == null) {

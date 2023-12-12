@@ -25,10 +25,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class SnowflakePermission implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(SnowflakePermission.class);
 
-    public SnowflakePermission(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = getSnowflakes();

@@ -16,10 +16,6 @@ import java.util.List;
 public class PlaceStatus implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceStatus.class);
 
-    public PlaceStatus(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");

@@ -14,10 +14,6 @@ import java.io.File;
 public class Nuke implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
 
-    public Nuke(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         new Thread(() -> {

@@ -23,10 +23,6 @@ public class CourseReviewVerify implements CommandInterface {
     private static Map<Integer, Review> reviews;
     private static CommandContext ctx;
 
-    public CourseReviewVerify(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         if (alreadyVerifying.compareAndSet(false, true)) {

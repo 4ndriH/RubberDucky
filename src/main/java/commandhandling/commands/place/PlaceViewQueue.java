@@ -17,10 +17,6 @@ import static services.database.DBHandlerPlace.getPixelsInQueue;
 public class PlaceViewQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceViewQueue.class);
 
-    public PlaceViewQueue(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");

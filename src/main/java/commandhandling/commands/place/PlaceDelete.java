@@ -16,10 +16,6 @@ import java.util.ArrayList;
 public class PlaceDelete implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceDelete.class);
 
-    public PlaceDelete(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
