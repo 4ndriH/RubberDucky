@@ -49,11 +49,6 @@ public class PlaceVerify implements CommandInterface {
     }
 
     @Override
-    public List<String> getAliases() {
-        return List.of("pv");
-    }
-
-    @Override
     public int getRestrictionLevel() {
         return 0;
     }
