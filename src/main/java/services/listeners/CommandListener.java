@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import assets.CONFIG;
+import assets.Config;
 import services.CommandManager;
 
 public class CommandListener extends ListenerAdapter {
@@ -24,7 +24,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContentRaw().startsWith(CONFIG.prefix)) {
+        if (event.getMessage().getContentRaw().startsWith(Config.prefix)) {
             manager.handle(event);
         }
 

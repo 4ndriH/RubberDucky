@@ -1,19 +1,19 @@
 package services;
 
-import assets.CONFIG;
-import commandHandling.CommandContext;
-import commandHandling.CommandInterface;
-import commandHandling.commands.CourseReview.Course;
-import commandHandling.commands.CourseReview.CourseReviewStats;
-import commandHandling.commands.CourseReview.CourseReviewVerify;
-import commandHandling.commands.adminCommands.LockDown;
-import commandHandling.commands.adminCommands.Nuke;
-import commandHandling.commands.adminCommands.Watch;
-import commandHandling.commands.modCommands.BlackList;
-import commandHandling.commands.modCommands.Channel;
-import commandHandling.commands.ownerCommands.*;
-import commandHandling.commands.placeCommands.*;
-import commandHandling.commands.publicCommands.*;
+import assets.Config;
+import commandhandling.CommandContext;
+import commandhandling.CommandInterface;
+import commandhandling.commands.coursereview.Course;
+import commandhandling.commands.coursereview.CourseReviewStats;
+import commandhandling.commands.coursereview.CourseReviewVerify;
+import commandhandling.commands.admin.LockDown;
+import commandhandling.commands.admin.Nuke;
+import commandhandling.commands.admin.Watch;
+import commandhandling.commands.mod.BlackList;
+import commandhandling.commands.mod.Channel;
+import commandhandling.commands.owner.*;
+import commandhandling.commands.place.*;
+import commandhandling.commands.pleb.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
-import static services.discordHelpers.ReactionHelper.addReaction;
+import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordhelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
@@ -32,46 +32,58 @@ public class CommandManager {
     private static final List<CommandInterface> commands = new ArrayList<>();
 
     public CommandManager() {
-        addCommand(new About(LOGGER));
-        addCommand(new BlackList(LOGGER));
-        addCommand(new Channel(this, LOGGER));
-        addCommand(new Course(LOGGER));
-        addCommand(new CourseReviewVerify(LOGGER));
-        addCommand(new Delete(LOGGER));
-        addCommand(new Ducky(LOGGER));
-        addCommand(new SnowflakePermission(LOGGER));
-        addCommand(new Help(this, LOGGER));
-        addCommand(new Kill(LOGGER));
-        addCommand(new LetMeGoogleThatForYou(LOGGER));
-        addCommand(new LockDown(LOGGER));
-        addCommand(new NickName(LOGGER));
-        addCommand(new Nuke(LOGGER));
-        addCommand(new Ping(LOGGER));
-        addCommand(new Prefix(LOGGER));
-        addCommand(new ProfilePicture(LOGGER));
-        addCommand(new Purge(LOGGER));
-        addCommand(new PurgeDMs(LOGGER));
-        addCommand(new Say(LOGGER));
-        addCommand(new Servers(LOGGER));
-        addCommand(new SQL(LOGGER));
-        addCommand(new Status(LOGGER));
-        addCommand(new GetAPILog(LOGGER));
-        addCommand(new Watch(LOGGER));
-        addCommand(new CourseReviewStats(LOGGER));
+        // owner
+        addCommand(new Delete());
+        addCommand(new GetAPILog());
+        addCommand(new Kill());
+        addCommand(new NickName());
+        addCommand(new Prefix());
+        addCommand(new ProfilePicture());
+        addCommand(new Purge());
+        addCommand(new Say());
+        addCommand(new Servers());
+        addCommand(new SnowflakePermission());
+        addCommand(new SQL());
+        addCommand(new Status());
 
-        addCommand(new PlaceQueue(LOGGER));
-        addCommand(new PlaceDelete(LOGGER));
-        addCommand(new PlaceGetFile(LOGGER));
-        addCommand(new PlaceViewQueue(LOGGER));
-        addCommand(new PlaceView(LOGGER));
-        addCommand(new PlaceStatus(LOGGER));
-        addCommand(new PlacePreview(LOGGER));
-        addCommand(new PlaceEncode(LOGGER));
-        addCommand(new PlaceDraw(LOGGER));
-        addCommand(new PlaceStop(LOGGER));
-        addCommand(new PlaceStopQueue(LOGGER));
-        addCommand(new PlaceVerify(LOGGER));
-        addCommand(new ChannelEfficiency(LOGGER));
+        // admin
+        addCommand(new LockDown());
+        addCommand(new Nuke());
+        addCommand(new Watch());
+
+        // mod
+        addCommand(new BlackList());
+        addCommand(new Channel(this));
+
+        // pleb
+        addCommand(new About());
+        addCommand(new ChannelEfficiency());
+        addCommand(new Ducky());
+        addCommand(new Help(this));
+        addCommand(new LetMeGoogleThatForYou());
+        addCommand(new Ping());
+        addCommand(new PurgeDMs());
+
+        // courereview
+        addCommand(new Course());
+        addCommand(new CourseReviewStats());
+        addCommand(new CourseReviewVerify());
+
+        // place
+        addCommand(new PlaceDelete());
+        addCommand(new PlaceDraw());
+        addCommand(new PlaceEncode());
+        addCommand(new PlaceGetFile());
+        addCommand(new PlacePreview());
+        addCommand(new PlaceQueue());
+        addCommand(new PlaceStatus());
+        addCommand(new PlaceStop());
+        addCommand(new PlaceStopQueue());
+        addCommand(new PlaceVerify());
+        addCommand(new PlaceView());
+        addCommand(new PlaceViewQueue());
+
+        LOGGER.info(commands.size() + " commands loaded");
     }
 
     private void addCommand(CommandInterface cmd) {
@@ -102,7 +114,7 @@ public class CommandManager {
 
     public void handle(MessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(CONFIG.prefix), "").split("\\s+");
+                .replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = this.getCommand(invoke);

@@ -1,6 +1,6 @@
 package services.logging;
 
-import commandHandling.CommandContext;
+import commandhandling.CommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

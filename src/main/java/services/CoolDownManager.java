@@ -1,13 +1,13 @@
 package services;
 
-import commandHandling.CommandContext;
+import commandhandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.util.HashMap;
 
-import static services.discordHelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 
 public class CoolDownManager {
     private static HashMap<String, HashMap<String, Long>> coolDown = new HashMap<>();
