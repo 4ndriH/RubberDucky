@@ -50,4 +50,4 @@ Contributions are always welcome and greatly appreciated.
 This project is licensed under the MIT License. For more details, see [LICENSE](LICENSE).
 
 ---
-Written by [xHarlock](https://github.com/xHarlock)
+Written by [Za Warudo](https://github.com/xHarlock)
