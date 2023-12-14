@@ -1,4 +1,4 @@
-<img align="right" src="https://cdn.discordapp.com/avatars/817846061347242026/f15aa5c506f81ddfa5004db915a1c50d.png?size=1024" width="200" alt="rubberducky">
+<img align="right" src="https://cdn.discordapp.com/avatars/817846061347242026/f15aa5c506f81ddfa5004db915a1c50d.png?size=1024" width="180" alt="rubberducky">
 
 # RubberDucky (Java Discord bot)
 
