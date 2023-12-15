@@ -23,10 +23,6 @@ public class Kill implements CommandInterface{
     private static final Logger LOGGER = LoggerFactory.getLogger(Kill.class);
     private static CommandContext ctx;
 
-    public Kill(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Are you Sure you want to kill this instance?");

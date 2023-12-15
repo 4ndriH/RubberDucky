@@ -21,6 +21,12 @@ public class DatabaseVerification {
                 Value TEXT,
                 PRIMARY KEY(Key)"""
         );
+        database.put("EfficiencyLog", """
+                PiT	INTEGER,
+                EthPlaceBots INTEGER DEFAULT 0,
+                CountThread	INTEGER DEFAULT 0,
+                PRIMARY KEY(PiT)"""
+        );
         database.put("MessageDeleteTracker", """
                 DiscordServerId TEXT,
                 DiscordChannelId TEXT,
@@ -29,11 +35,12 @@ public class DatabaseVerification {
                 UptimeNumber INTEGER,
                 PRIMARY KEY(DiscordServerId, DiscordChannelId, DiscordMessageId)"""
         );
-        database.put("PlaceProjects", """
-                Id INTEGER NOT NULL,
-                Progress INTEGER DEFAULT 0,
-                DiscordUserId TEXT NOT NULL,
-                PRIMARY KEY(Id)"""
+        database.put("PlaceEfficiencyLog", """
+                Key INTEGER,
+                NumberOfPixels INTEGER NOT NULL DEFAULT 3600,
+                SecondsTaken INTEGER NOT NULL,
+                Date INTEGER DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY(Key AUTOINCREMENT)"""
         );
         database.put("PlacePixels", """
                 Id INTEGER NOT NULL,
@@ -46,14 +53,11 @@ public class DatabaseVerification {
                 FOREIGN KEY(Id) REFERENCES PlaceProjects on update cascade on delete cascade,
                 PRIMARY KEY(Id, Idx)"""
         );
-        database.put("WhitelistedChannels", """
-                DiscordChannelId TEXT,
-                Command TEXT,
-                PRIMARY KEY(DiscordChannelId, Command)"""
-        );
-        database.put("WhitelistedServers", """
-                DiscordServerId TEXT,
-                PRIMARY KEY(DiscordServerId)"""
+        database.put("PlaceProjects", """
+                Id INTEGER NOT NULL,
+                Progress INTEGER DEFAULT 0,
+                DiscordUserId TEXT NOT NULL,
+                PRIMARY KEY(Id)"""
         );
         database.put("SnowflakePermissions", """
                 DiscordUserId TEXT,
@@ -62,18 +66,14 @@ public class DatabaseVerification {
                 Command TEXT,
                 PRIMARY KEY(DiscordUserId, DiscordServerId, DiscordChannelId, Command)"""
         );
-        database.put("PlaceEfficiencyLog", """
-                Key INTEGER,
-                NumberOfPixels INTEGER NOT NULL DEFAULT 3600,
-                SecondsTaken INTEGER NOT NULL,
-                Date INTEGER DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY(Key AUTOINCREMENT)"""
+        database.put("WhitelistedChannels", """
+                DiscordChannelId TEXT,
+                Command TEXT,
+                PRIMARY KEY(DiscordChannelId, Command)"""
         );
-        database.put("EfficiencyLog", """
-                PiT	INTEGER,
-                EthPlaceBots INTEGER DEFAULT 0,
-                CountThread	INTEGER DEFAULT 0,
-                PRIMARY KEY(PiT)"""
+        database.put("WhitelistedServers", """
+                DiscordServerId TEXT,
+                PRIMARY KEY(DiscordServerId)"""
         );
 
         for (String table : database.keySet()) {

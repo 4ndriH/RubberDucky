@@ -12,10 +12,6 @@ import java.util.List;
 public class PlaceStopQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceStopQueue.class);
 
-    public PlaceStopQueue(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         PlaceData.stopQ = !PlaceData.stopQ;

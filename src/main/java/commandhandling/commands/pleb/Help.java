@@ -21,8 +21,7 @@ public class Help implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Help.class);
     private final CommandManager manager;
 
-    public Help(CommandManager manager, Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
+    public Help(CommandManager manager) {
         this.manager = manager;
     }
 

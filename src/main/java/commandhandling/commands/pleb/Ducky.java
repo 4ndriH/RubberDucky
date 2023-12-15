@@ -14,10 +14,6 @@ import java.util.Random;
 public class Ducky implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Ducky.class);
 
-    public Ducky(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky.png");

@@ -25,10 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class ChannelEfficiency implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(ChannelEfficiency.class);
 
-    public ChannelEfficiency(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         String parameter = "Count";

@@ -16,10 +16,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class Watch implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
 
-    public Watch(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         String tempId = ctx.getMessage().getContentRaw().replaceAll("\\D", "");

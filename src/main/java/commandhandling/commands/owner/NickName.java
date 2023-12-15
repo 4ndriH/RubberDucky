@@ -11,10 +11,6 @@ import java.util.List;
 public class NickName implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
 
-    public NickName(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();

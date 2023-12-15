@@ -11,10 +11,6 @@ import services.discordhelpers.EmbedHelper;
 public class Ping implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Ping.class);
 
-    public Ping(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         JDA jda = ctx.getJDA();

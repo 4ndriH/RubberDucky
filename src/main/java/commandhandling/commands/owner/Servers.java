@@ -21,10 +21,6 @@ import static services.PermissionManager.getWhitelistedServers;
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
 
-    public Servers(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<String> serverIds = getWhitelistedServers();

@@ -21,10 +21,6 @@ import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 public class PlaceGetFile implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
 
-    public PlaceGetFile(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         int id;

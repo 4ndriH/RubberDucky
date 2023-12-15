@@ -33,10 +33,6 @@ public class PlaceEncode implements CommandInterface {
     private int x, y;
     private boolean spreadContained = false;
 
-    public PlaceEncode(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         String fileName, pattern;

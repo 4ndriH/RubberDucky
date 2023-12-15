@@ -15,10 +15,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class SQL implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(SQL.class);
 
-    public SQL(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();

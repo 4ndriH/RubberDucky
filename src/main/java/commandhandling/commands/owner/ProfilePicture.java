@@ -22,10 +22,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class ProfilePicture implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(ProfilePicture.class);
 
-    public ProfilePicture(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         try {

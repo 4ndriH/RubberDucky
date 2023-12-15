@@ -25,10 +25,6 @@ public class LetMeGoogleThatForYou implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LetMeGoogleThatForYou.class);
     private final Color txtC = new Color(0xe8eaed);
 
-    public LetMeGoogleThatForYou(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         (new Thread(() -> {

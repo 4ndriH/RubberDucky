@@ -16,10 +16,6 @@ import static services.discordhelpers.EmbedHelper.sendEmbed;
 public class CourseReviewStats implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReviewStats.class);
 
-    public CourseReviewStats(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("CourseReview Statistics");

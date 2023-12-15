@@ -21,10 +21,6 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 public class PlaceQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
 
-    public PlaceQueue(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();

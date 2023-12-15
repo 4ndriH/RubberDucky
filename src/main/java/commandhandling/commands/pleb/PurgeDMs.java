@@ -19,8 +19,7 @@ public class PurgeDMs implements CommandInterface {
     private final EmbedBuilder purgeCommenced = EmbedHelper.embedBuilder("Happy purging");
     private final EmbedBuilder purgeEnded = EmbedHelper.embedBuilder();
 
-    public PurgeDMs(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
+    public PurgeDMs() {
         embedSetUp();
     }
 

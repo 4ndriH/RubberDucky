@@ -18,10 +18,6 @@ import static services.PermissionManager.getBlacklist;
 public class BlackList implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(BlackList.class);
 
-    public BlackList(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<String> blacklist = getBlacklist();

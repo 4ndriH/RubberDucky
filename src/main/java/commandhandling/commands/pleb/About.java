@@ -16,10 +16,6 @@ import java.util.List;
 public class About implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(About.class);
 
-    public About(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         RuntimeMXBean rmb = ManagementFactory.getRuntimeMXBean();

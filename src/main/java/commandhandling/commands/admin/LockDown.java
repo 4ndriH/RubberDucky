@@ -14,10 +14,6 @@ import static services.PermissionManager.getWhitelistedChannels;
 public class LockDown implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LockDown.class);
 
-    public LockDown(Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
-    }
-
     @Override
     public void handle(CommandContext ctx) {
         if (getWhitelistedChannels().size() == 0) {

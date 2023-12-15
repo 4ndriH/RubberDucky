@@ -21,8 +21,7 @@ public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
     private final CommandManager cm;
 
-    public Channel(CommandManager cm, Logger cmdManagerLogger) {
-        cmdManagerLogger.info("Loaded Command " + getName());
+    public Channel(CommandManager cm) {
         this.cm = cm;
     }
 
