@@ -5,7 +5,8 @@
 RubberDucky is a multipurpose Discord bot written in Java designed to enhance your Discord experience with a variety of features and functionalities.
 
 ## Features
-Look at the code and find out yourself. ¯\_(ツ)_/¯
+Look at the code and find out yourself. ¯\\\_(ツ)_/¯
+
 ## Set Up
 
 ### Prerequisites
