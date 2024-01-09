@@ -1,4 +1,4 @@
-<img align="right" src="https://cdn.discordapp.com/avatars/817846061347242026/f15aa5c506f81ddfa5004db915a1c50d.png?size=1024" width="180" alt="rubberducky">
+<img align="right" src="https://cdn.discordapp.com/avatars/817846061347242026/6776f8e371dc47c659a37df26e8c6ee8.png?size=1024" width="180" alt="rubberducky">
 
 # RubberDucky (Java Discord bot)
 
@@ -51,4 +51,4 @@ Contributions are always welcome and greatly appreciated.
 This project is licensed under the MIT License. For more details, see [LICENSE](LICENSE).
 
 ---
-Written by [Za Warudo](https://github.com/xHarlock)
+Written by [Za Warudo](https://github.com/zaw4rud0)
