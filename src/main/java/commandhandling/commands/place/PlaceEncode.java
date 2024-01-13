@@ -21,11 +21,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class PlaceEncode implements CommandInterface {
+    public final Pattern argumentPattern = Pattern.compile("(?:\\d{1,3} ?|1000 ?){4}(?: (?:-r|-c)){0,2}(?:topdown|td|random|diagonal|lr|topdown|spiral|random|circle|spread|)(?: (?:-r|-c|-s(?: (?:\\d{1,3} |1000 )(?:\\d{1,3}|1000) ?)+)){0,3} ?");
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
     private ArrayList<String> pixels;
     private ArrayList<int[]> startingPoints;
@@ -117,7 +119,7 @@ public class PlaceEncode implements CommandInterface {
         try {
             ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
                     Format.Time((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
-                    msg -> deleteMsg(msg, 128)
+                    msg -> deleteMsg(ctx, msg, 128)
             );
         } catch (IllegalArgumentException e) {
             LOGGER.error("PlaceEncode Error", e);
@@ -361,5 +363,10 @@ public class PlaceEncode implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("pe");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

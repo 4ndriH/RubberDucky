@@ -129,13 +129,13 @@ public class PlacePreview implements CommandInterface {
             embed.setImage("attachment://preview.gif");
             switch (sendMessageCase) {
                 case 0 -> ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(msg, 1024)
+                        msg -> deleteMsg(ctx, msg, 1024)
                 );
                 case 1 -> ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(msg, 1024)
+                        msg -> deleteMsg(ctx, msg, 1024)
                 );
                 case 2 -> ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(msg, 1024)
+                        msg -> deleteMsg(ctx, msg, 1024)
                 );
             }
         } catch (IllegalArgumentException e) {

@@ -113,27 +113,24 @@ public class CommandManager {
     }
 
     public void handle(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
+        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
-        CommandInterface cmd = this.getCommand(invoke);
+        CommandInterface cmd = getCommand(invoke);
+
         ArrayList<String> arguments = new ArrayList<>(Arrays.asList(split).subList(1, split.length));
         CommandContext ctx = new CommandContext(event, arguments);
 
-        if (arguments.contains("--persist")) {
-            ctx.setPersistent();
-        }
+        StringBuilder argRegexCheck = new StringBuilder();
+        arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
 
         deleteMsg(ctx.getMessage(), 128);
         commandLogger(ctx);
 
-        if (cmd != null) {
-            if (PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
+        if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck()) {
+            if (PermissionManager.permissionCheck(ctx, cmd)) {
                 (new Thread(() -> cmd.handle(ctx))).start();
-                if (!getCommand(invoke).requiresFurtherChecks()) {
-                    addReaction(ctx, 0);
-                }
+                addReaction(ctx, 0);
             }
         } else {
             addReaction(ctx, 5);
