@@ -41,6 +41,7 @@ public class CommandManager {
         addCommand(new ProfilePicture());
         addCommand(new Purge());
         addCommand(new Say());
+        addCommand(new Scrape());
         addCommand(new Servers());
         addCommand(new SnowflakePermission());
         addCommand(new SQL());
