@@ -34,6 +34,7 @@ public class Bot {
             .addEventListeners(new ButtonListener())
             .addEventListeners(new StartupListener())
             .addEventListeners(new BGListener())
+            .addEventListeners(new PlaceListener())
             .addEventListeners(new CountThreadListener())
             .addEventListeners(new PlaceListener())
             .addEventListeners(new BotDownDetectionListener())
