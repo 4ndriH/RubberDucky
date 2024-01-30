@@ -36,7 +36,7 @@ public class Bot {
             .addEventListeners(new BGListener())
             .addEventListeners(new PlaceListener())
             .addEventListeners(new CountThreadListener())
-            .addEventListeners(new PlaceListener())
+            //.addEventListeners(new PlaceListener())
             .addEventListeners(new BotDownDetectionListener())
             .addEventListeners(new ForumListener())
             .addEventListeners(new SlashCommandListener())
