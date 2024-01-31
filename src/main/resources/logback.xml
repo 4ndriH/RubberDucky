@@ -41,8 +41,14 @@
     </appender>
 
     <appender name="DISCORD" class="services.logging.DiscordAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression>return logger.equals("Command Logger");</expression>
+            </evaluator>
+            <onMatch>DENY</onMatch>
+        </filter>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
+            <level>INFO</level>
         </filter>
     </appender>
 
