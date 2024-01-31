@@ -27,20 +27,22 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
 
         sb.append("```");
 
-        embed.setColor(eventObject.getLevel().toString().equals("WARN") ? new Color(0xff9100) : new Color(0xff0000));
+        Color embedColor = switch (eventObject.getLevel().toString()) {
+            case "INFO" -> new Color(0x42a2fc);
+            case "WARN" -> new Color(0xff9100);
+            case "ERROR" -> new Color(0xff0000);
+            default -> new Color(0x000000);
+        };
+
+        embed.setColor(embedColor);
         embed.setTitle(eventObject.getLevel() + ": " + eventObject.getMessage());
 
-        if (sb.length() > 4096) {
+        if (!eventObject.getLevel().toString().equals("INFO")) {
             embed.setDescription(sb.substring(0, 4096));
-        } else {
-            embed.setDescription(sb);
+            embed.setFooter(eventObject.getThrowableProxy().getClassName());
         }
 
-        embed.setFooter(eventObject.getThrowableProxy().getClassName());
-
-        jda.getGuildById("817850050013036605").getTextChannelById(Config.logChannelID)
-                .sendMessageEmbeds(embed.build()).queue();
-
+        jda.getGuildById("817850050013036605").getTextChannelById(Config.logChannelID).sendMessageEmbeds(embed.build()).queue();
 
         if (eventObject.getMessage().equals("Websocket Dead")) {
             if (!startUpBlock) {
