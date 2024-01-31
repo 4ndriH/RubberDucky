@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.place.TimelapseHelper;
 
 public class PlaceListener extends ListenerAdapter {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceListener.class);
@@ -28,8 +29,9 @@ public class PlaceListener extends ListenerAdapter {
                     LOGGER.warn("Could not parse chunk number", e);
                 }
 
-                LOGGER.warn("got chunk number " + chunk, new InterruptedException());
-                LOGGER.info("got chunk number " + chunk, new InterruptedException());
+                LOGGER.info("Chunk number " + chunk + " is available", new InterruptedException());
+                int finalChunk = chunk;
+                (new Thread(() -> TimelapseHelper.generate(finalChunk))).start();
             }
         }
     }
