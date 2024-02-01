@@ -93,7 +93,7 @@ public class DirectoryVerification {
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
                 File current = new File(directory + file);
-                if (!current.exists()) {
+                if (!current.isFile()) {
                     if (file.equals("RubberDucky.db")) {
                         LOGGER.info("RubberDucky.db will be created by JDBC");
                     } else {
