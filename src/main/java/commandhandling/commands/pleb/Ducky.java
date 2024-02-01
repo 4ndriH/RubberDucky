@@ -17,8 +17,8 @@ public class Ducky implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky.png");
-        int nr = new Random().nextInt(new File("resources/duckies/").list().length);
-        EmbedHelper.sendEmbedWithFile(ctx, embed, 32, "resources/duckies/ducky" + nr + ".png", "ducky.png");
+        int nr = new Random().nextInt(new File("resources/imagse/duckies/").list().length);
+        EmbedHelper.sendEmbedWithFile(ctx, embed, 32, "resources/images/duckies/ducky" + nr + ".png", "ducky.png");
     }
 
     @Override
