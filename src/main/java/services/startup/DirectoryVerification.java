@@ -108,16 +108,16 @@ public class DirectoryVerification {
         }
 
         File temp2 = new File("/usr/games/RubberDucky/resources/images/nuke.gif");
-        LOGGER.warn(temp1.getAbsolutePath(), new Exception());
-        LOGGER.warn(temp1.getPath(), new Exception());
+        LOGGER.warn(temp2.getAbsolutePath(), new Exception());
+        LOGGER.warn(temp2.getPath(), new Exception());
 
-        if (temp1.exists()) {
+        if (temp2.exists()) {
             LOGGER.warn("exists", new Exception());
         } else {
             LOGGER.warn("does not exist", new Exception());
         }
 
-        if (temp1.isFile()) {
+        if (temp2.isFile()) {
             LOGGER.warn("isfile", new Exception());
         } else {
             LOGGER.warn("does not isfile", new Exception());
