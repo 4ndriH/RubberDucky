@@ -93,8 +93,6 @@ public class DirectoryVerification {
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
                 File current = new File(directory + file);
-//                LOGGER.info("Checking file: " + current.getAbsoluteFile());
-                LOGGER.info("Checking file: " + current.getAbsolutePath());
                 if (!current.exists()) {
                     try {
                         ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
@@ -107,8 +105,6 @@ public class DirectoryVerification {
                         continue;
                     }
                     LOGGER.info("Downloaded file: " + directory + file);
-                } else {
-                    LOGGER.info("File already exists: " + directory + file);
                 }
             }
         }
