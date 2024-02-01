@@ -27,11 +27,12 @@ public class PlaceListener extends ListenerAdapter {
                     chunk = Integer.parseInt(nr);
                 } catch (NumberFormatException e) {
                     LOGGER.warn("Could not parse chunk number", e);
+                    return;
                 }
 
                 LOGGER.info("Chunk number " + chunk + " is available", new InterruptedException());
                 int finalChunk = chunk;
-                (new Thread(() -> TimelapseHelper.generate(finalChunk))).start();
+                (new Thread(() -> TimelapseHelper.generate(finalChunk, event))).start();
             }
         }
     }
