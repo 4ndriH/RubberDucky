@@ -101,6 +101,7 @@ public class TimelapseHelper {
 
             writer.close();
             output.close();
+            LOGGER.info("Timelapse of chunk " + chunk + " saved", new Exception());
         } catch (IOException e) {
             LOGGER.error("Could not create gif", e);
             return;
@@ -114,10 +115,8 @@ public class TimelapseHelper {
 
         File gif = new File("tempFiles/place/timelapse/chunk_" + chunk + ".gif");
         EmbedBuilder embed = EmbedHelper.embedBuilder("Timelapse of chunk " + chunk);
-        embed.setImage("chunk_" + chunk + ".gif");
+        embed.setImage("attachment://chunk_" + chunk + ".gif");
         event.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue();
-
-        LOGGER.info("Timelapse of chunk " + chunk + " saved", new Exception());
 
 //        try {
 //            Thread.sleep(10000);
