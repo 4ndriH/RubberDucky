@@ -90,43 +90,10 @@ public class DirectoryVerification {
         // change this to the non branch link
         String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/master/";
 
-
-        File temp1 = new File("resources/images/nuke.gif");
-        LOGGER.warn(temp1.getAbsolutePath(), new Exception());
-        LOGGER.warn(temp1.getPath(), new Exception());
-
-        if (temp1.exists()) {
-            LOGGER.warn("exists", new Exception());
-        } else {
-            LOGGER.warn("does not exist", new Exception());
-        }
-
-        if (temp1.isFile()) {
-            LOGGER.warn("isfile", new Exception());
-        } else {
-            LOGGER.warn("does not isfile", new Exception());
-        }
-
-        File temp2 = new File("/usr/games/RubberDucky/resources/images/nuke.gif");
-        LOGGER.warn(temp2.getAbsolutePath(), new Exception());
-        LOGGER.warn(temp2.getPath(), new Exception());
-
-        if (temp2.exists()) {
-            LOGGER.warn("exists", new Exception());
-        } else {
-            LOGGER.warn("does not exist", new Exception());
-        }
-
-        if (temp2.isFile()) {
-            LOGGER.warn("isfile", new Exception());
-        } else {
-            LOGGER.warn("does not isfile", new Exception());
-        }
-
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
                 File current = new File(directory + file);
-                if (!current.isFile()) {
+                if (!current.getAbsoluteFile().exists()) {
                     if (file.equals("RubberDucky.db")) {
                         LOGGER.info("RubberDucky.db will be created by JDBC");
                     } else {
