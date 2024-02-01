@@ -88,7 +88,7 @@ public class DirectoryVerification {
                 )));
 
         // change this to the non branch link
-        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/";
+        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/master/";
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
