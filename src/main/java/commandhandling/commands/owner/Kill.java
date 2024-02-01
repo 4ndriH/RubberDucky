@@ -46,7 +46,7 @@ public class Kill implements CommandInterface{
         EmbedBuilder embed = EmbedHelper.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
 
         Message msg = ctx.getChannel().sendMessageEmbeds(embed.build())
-                .addFiles(FileUpload.fromData(new File("resources/" + file))).complete();
+                .addFiles(FileUpload.fromData(new File("resources/images/" + file))).complete();
         deleteMsg(msg, 64);
         ctx.getJDA().shutdownNow();
         ConnectionPool.closeDBConnection();
