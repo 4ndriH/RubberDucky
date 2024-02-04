@@ -111,7 +111,7 @@ public class PlaceDraw implements CommandInterface {
             }
 
             for (Pixel pixel : PlaceData.fixingQ) {
-                LOGGER.info("finishing left over pixels");
+                //LOGGER.info("finishing left over pixels");
                 placeChannel.sendMessage(pixel.getDrawCommand()).complete();
                 PlaceData.fixedPixels++;
 
