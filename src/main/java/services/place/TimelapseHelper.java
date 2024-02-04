@@ -79,7 +79,7 @@ public class TimelapseHelper {
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/timelapse/chunk_" + chunk + ".gif"));
-            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 23, true);
+            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
 
             writer.writeToSequence(image);
             BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
@@ -89,7 +89,7 @@ public class TimelapseHelper {
                 image.setRGB(Integer.parseInt(pixel[0]), Integer.parseInt(pixel[1]), Color.decode(pixel[2]).getRGB());
                 img.setRGB(Integer.parseInt(pixel[0]), Integer.parseInt(pixel[1]), Color.decode(pixel[2]).getRGB());
 
-                if (i % 100 == 0) {
+                if (i % 200 == 0) {
                     writer.writeToSequence(img);
                     img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
                 }
