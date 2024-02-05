@@ -111,12 +111,21 @@ public class PlaceDraw implements CommandInterface {
             }
             LOGGER.info("starting left over pixels");
             for (Pixel pixel : PlaceData.fixingQ) {
-                placeChannel.sendMessage(pixel.getDrawCommand()).complete();
-                PlaceData.fixedPixels++;
+                try {
+                    placeChannel.sendMessage(pixel.getDrawCommand()).complete();
+                    PlaceData.fixedPixels++;
 
-                if (PlaceData.stop || !PlaceData.verify) {
-                    LOGGER.info("BREAK");
-                    break;
+                    if (PlaceData.stop || !PlaceData.verify) {
+                        LOGGER.info("BREAK");
+                        break;
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("caught an error while fixing pixels", e);
+                    try {
+                        Thread.sleep(16000);
+                    } catch (InterruptedException ee) {
+                        LOGGER.error("Thread sleep error", ee);
+                    }
                 }
             }
 
