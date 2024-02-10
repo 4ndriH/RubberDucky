@@ -26,7 +26,6 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
         }
 
         sb.append("```");
-
         Color embedColor = switch (eventObject.getLevel().toString()) {
             case "INFO" -> new Color(0x42a2fc);
             case "WARN" -> new Color(0xff9100);
@@ -38,18 +37,10 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
         embed.setTitle(eventObject.getLevel() + ": " + eventObject.getMessage());
 
         if (!eventObject.getLevel().toString().equals("INFO")) {
-            embed.setDescription(sb.substring(0, 4096));
+            embed.setDescription(sb.length() > 4096 ? sb.toString().substring(0, 4096) : sb.toString());
             embed.setFooter(eventObject.getThrowableProxy().getClassName());
         }
 
         jda.getGuildById("817850050013036605").getTextChannelById(Config.logChannelID).sendMessageEmbeds(embed.build()).queue();
-
-        if (eventObject.getMessage().equals("Websocket Dead")) {
-            if (!startUpBlock) {
-                jda.openPrivateChannelById("153929916977643521").complete().sendMessage("Hi\nI tried accessing the websocket and as it turns out, it is (still) dead.\nCould you please fix it?").queue();
-            } else {
-                startUpBlock = false;
-            }
-        }
     }
 }
