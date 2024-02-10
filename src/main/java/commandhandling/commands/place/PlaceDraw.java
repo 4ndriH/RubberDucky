@@ -65,7 +65,7 @@ public class PlaceDraw implements CommandInterface {
         int pixelDrawnCnt3600 = 0;
 
         while (!PlaceData.stopQ) {
-            LOGGER.info("started drawing project: " + id);
+            LOGGER.debug("started drawing project: " + id);
             if (id < 0) {
                 break;
             }
@@ -98,7 +98,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.verificationCondition()) {
-                    LOGGER.info("Verify");
+                    LOGGER.debug("Verify");
                     PlaceVerifier.verify();
                 }
 
@@ -116,7 +116,7 @@ public class PlaceDraw implements CommandInterface {
                     PlaceData.fixedPixels++;
 
                     if (PlaceData.stop || !PlaceData.verify) {
-                        LOGGER.info("BREAK");
+                        LOGGER.debug("BREAK");
                         break;
                     }
                 } catch (Exception e) {
@@ -131,7 +131,7 @@ public class PlaceDraw implements CommandInterface {
 
             LOGGER.info("completed leftover pixels");
             if (!PlaceData.stop) {
-                LOGGER.info("stop");
+                LOGGER.debug("stop");
                 DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
                 id = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);

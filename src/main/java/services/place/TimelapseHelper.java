@@ -64,7 +64,7 @@ public class TimelapseHelper {
 
         jda.getGuildById("817850050013036605").getTextChannelById("969901898389925959").sendMessage(fileName).addFiles(FileUpload.fromData(stream, fileName)).queue();
 
-        LOGGER.info("Chunk " + chunk + " saved", new Exception());
+        LOGGER.debug("Chunk " + chunk + " saved", new Exception());
     }
 
     private static void generateTimeLapse(ArrayList<String> pixels, int chunk, MessageReceivedEvent event) {
@@ -101,7 +101,7 @@ public class TimelapseHelper {
 
             writer.close();
             output.close();
-            LOGGER.info("Timelapse of chunk " + chunk + " saved", new Exception());
+            LOGGER.debug("Timelapse of chunk " + chunk + " saved", new Exception());
         } catch (IOException e) {
             LOGGER.error("Could not create gif", e);
             return;
