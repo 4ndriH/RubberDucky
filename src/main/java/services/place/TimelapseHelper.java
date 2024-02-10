@@ -38,7 +38,7 @@ public class TimelapseHelper {
         }
 
         sendChunk(pixels, chunk, event.getJDA());
-        generateTimeLapse(pixels, chunk, event);
+        generateTimeLapse(pixels, chunk, event.getJDA());
     }
 
     private static void sendChunk(ArrayList<String> pixels, int chunk, JDA jda) {
@@ -67,7 +67,7 @@ public class TimelapseHelper {
         LOGGER.debug("Chunk " + chunk + " saved", new Exception());
     }
 
-    private static void generateTimeLapse(ArrayList<String> pixels, int chunk, MessageReceivedEvent event) {
+    private static void generateTimeLapse(ArrayList<String> pixels, int chunk, JDA jda) {
         BufferedImage image;
 
         try {
@@ -116,7 +116,7 @@ public class TimelapseHelper {
         File gif = new File("tempFiles/place/timelapse/chunk_" + chunk + ".gif");
         EmbedBuilder embed = EmbedHelper.embedBuilder("Timelapse of chunk " + chunk);
         embed.setImage("attachment://chunk_" + chunk + ".gif");
-        event.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue();
+        jda.getGuildById("747752542741725244").getThreadChannelById("1205890377295593503").sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue();
 
 //        try {
 //            Thread.sleep(10000);
