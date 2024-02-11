@@ -34,6 +34,10 @@ public class PlaceListener extends ListenerAdapter {
                 int finalChunk = chunk;
                 (new Thread(() -> TimelapseHelper.generate(finalChunk, event))).start();
             }
+
+            if (event.getAuthor().getId().equals("735170037282898061") && event.getMessage().getContentRaw().startsWith(".place setpixel 418 718")) {
+                LOGGER.info("rafeal restarted from the top");
+            }
         }
     }
 }
