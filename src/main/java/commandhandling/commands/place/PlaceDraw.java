@@ -132,7 +132,7 @@ public class PlaceDraw implements CommandInterface {
             LOGGER.info("completed leftover pixels");
             if (!PlaceData.stop) {
                 LOGGER.debug("stop");
-                DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
+                //DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
                 id = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
             } else {
