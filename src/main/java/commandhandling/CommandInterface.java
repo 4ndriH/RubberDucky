@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public interface CommandInterface {
-    Pattern argumentPattern = Pattern.compile(".*");
+    Pattern argumentPattern = Pattern.compile("^");
 
     void handle(CommandContext ctx);
 
@@ -22,8 +22,23 @@ public interface CommandInterface {
         return List.of();
     }
 
-    default int getRestrictionLevel() {
-        return 3;
+    // ---------------------------------------------------------
+    // SecurityClearance:
+    // 0 - Owner
+    // 1 - Administrator
+    // 2 - Moderators
+    // 3 - Plebs
+    // ---------------------------------------------------------
+
+     default int getRestrictionLevel() {
+        String packageName = this.getClass().getPackageName().split("\\.")[2];
+
+        return switch (packageName) {
+            case "owner" -> 0;
+            case "admin" -> 1;
+            case "mod"   -> 2;
+            default      -> 3;
+        };
     }
 
     @Deprecated
