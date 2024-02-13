@@ -3,7 +3,6 @@ package services;
 import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import commandhandling.commands.coursereview.Course;
 import commandhandling.commands.coursereview.CourseReviewStats;
 import commandhandling.commands.coursereview.CourseReviewVerify;
 import commandhandling.commands.admin.LockDown;
@@ -64,8 +63,7 @@ public class CommandManager {
         addCommand(new Ping());
         addCommand(new PurgeDMs());
 
-        // courereview
-        addCommand(new Course());
+        // coursereview
         addCommand(new CourseReviewStats());
         addCommand(new CourseReviewVerify());
 
