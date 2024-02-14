@@ -21,15 +21,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class ChannelEfficiency implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(ChannelEfficiency.class);
+    public static final Pattern argumentPattern = Pattern.compile("^(?:place|count)?\\s?$");
 
     @Override
     public void handle(CommandContext ctx) {
         String parameter = "Count";
 
-        if (ctx.getArguments().size() > 0 && ctx.getArguments().get(0).startsWith("p")) {
+        if (!ctx.getArguments().isEmpty() && ctx.getArguments().get(0).startsWith("p")) {
             parameter = "Place";
         }
 
@@ -37,8 +39,8 @@ public class ChannelEfficiency implements CommandInterface {
     }
 
     public static void doCommandStuff(MessageChannelUnion channel, String parameter) {
-        String embedTitel = parameter.equals("Count") ? "To Infinity And Beyond" : "ETH-Place-Bots";
-        EmbedBuilder embed = EmbedHelper.embedBuilder(embedTitel);
+        String embedTitle = parameter.equals("Count") ? "To Infinity And Beyond" : "ETH-Place-Bots";
+        EmbedBuilder embed = EmbedHelper.embedBuilder(embedTitle);
         ArrayList<Integer> dataPoints = createDataSet(parameter);
 
         int messageCnt = dataPoints.stream().mapToInt(Integer::intValue).sum();
@@ -52,7 +54,7 @@ public class ChannelEfficiency implements CommandInterface {
         embed.addField("__24h Progress__", Format.Number(messageCnt) + " msgs", true);
 
         if (parameter.equals("Count")) {
-            embed.addField("__Current Count __", "" + Format.Number(CountThreadListener.lastSent), true);
+            embed.addField("__Current Count __", Format.Number(CountThreadListener.lastSent), true);
         } else {
             embed.addBlankField(true);
         }
@@ -173,5 +175,10 @@ public class ChannelEfficiency implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("ce");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

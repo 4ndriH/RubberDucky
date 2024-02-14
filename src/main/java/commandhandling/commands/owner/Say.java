@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
-    public final Pattern argumentPattern = Pattern.compile("^.*\\S+.*$");
+    public static final Pattern argumentPattern = Pattern.compile("^.*\\S+.*$");
     private volatile HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
 
     @Override
