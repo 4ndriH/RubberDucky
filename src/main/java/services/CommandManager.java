@@ -41,7 +41,7 @@ public class CommandManager {
         addCommand(new Purge());
         addCommand(new Say());
         addCommand(new Servers());
-        addCommand(new SnowflakePermission());
+        addCommand(new SnowflakePermission(this));
         addCommand(new Status());
 
         // admin

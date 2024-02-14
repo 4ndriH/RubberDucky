@@ -46,7 +46,7 @@ public interface CommandInterface {
         return false;
     }
 
-    default boolean attachmentCheck() {
+    default boolean attachmentCheck(CommandContext ctx) {
         return true;
     }
 
