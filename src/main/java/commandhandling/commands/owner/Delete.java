@@ -37,9 +37,4 @@ public class Delete implements CommandInterface {
     public List<String> getAliases() {
         return List.of("d");
     }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 0;
-    }
 }

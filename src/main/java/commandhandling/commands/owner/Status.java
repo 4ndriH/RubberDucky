@@ -8,30 +8,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 
-import static services.discordhelpers.ReactionHelper.addReaction;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class Status implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
+    public final Pattern argumentPattern = Pattern.compile("^(?:competing|listening|playing|watching)?\\s?.{1,128}\\s?$");
+    private static final Set<String> activities = Set.of("competing", "listening", "playing", "watching");
 
     @Override
     public void handle(CommandContext ctx) {
         StringBuilder sb = new StringBuilder();
-        String activity;
+        String activity = ctx.getArguments().get(0);
 
-        try {
-            activity = ctx.getArguments().get(0);
-            for (int i = 1; i < ctx.getArguments().size(); i++) {
-                sb.append(ctx.getArguments().get(i)).append(" ");
-            }
-            if (sb.toString().length() > 128 || sb.toString().toCharArray().length == 0) {
-                BotExceptions.invalidArgumentsException(ctx);
-                return;
-            }
-        } catch (Exception e) {
-            activity = "";
+        if (activities.contains(activity)) {
+            ctx.getArguments().remove(0);
         }
 
-        addReaction(ctx, 0);
+        for (String s : ctx.getArguments()) {
+            sb.append(s).append(" ");
+        }
 
         switch (activity) {
             case "competing" -> ctx.getJDA().getPresence().setActivity(Activity.competing(sb.toString()));
@@ -51,12 +47,13 @@ public class Status implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Changes the bots status");
-        embed.addField("__Activities__", "competing\nlistening\nplaying\nwatching", false);
+        embed.addField("__Usage__", "```[competing|listening|playing|watching] <status>```\n" +
+                "The status can be at most 128 chars.", false);
         return embed;
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

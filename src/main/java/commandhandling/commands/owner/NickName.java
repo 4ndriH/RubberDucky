@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class NickName implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
+    public final Pattern argumentPattern = Pattern.compile("^\\S+$");
 
     @Override
     public void handle(CommandContext ctx) {
@@ -40,7 +42,7 @@ public class NickName implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

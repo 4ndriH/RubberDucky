@@ -14,6 +14,7 @@ import services.PermissionManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static services.PermissionManager.getSnowflakes;
 import static services.database.DBHandlerSnowflakePermissions.addSnowflakePermissions;
@@ -24,12 +25,17 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class SnowflakePermission implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(SnowflakePermission.class);
+    private final CommandManager cm;
+
+    public SnowflakePermission(CommandManager cm) {
+        this.cm = cm;
+    }
 
     @Override
     public void handle(CommandContext ctx) {
         HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = getSnowflakes();
 
-        if (ctx.getArguments().size() == 0){
+        if (ctx.getArguments().isEmpty()){
             EmbedBuilder embed = embedBuilder("Special Snowflakes");
 
             for (String discordUserId : snowflakes.keySet()) {
@@ -64,14 +70,14 @@ public class SnowflakePermission implements CommandInterface {
 
             if (ctx.getArguments().contains("-c")) {
                 idx = ctx.getArguments().indexOf("-c") + 1;
-                discordChannelId = ctx.getArguments().get(idx).replace("<#", "").replace(">", "");
+                discordChannelId = ctx.getArguments().get(idx).replaceAll("[<#>]", "");
             }  else {
                 discordChannelId = ctx.getChannel().getId();
             }
 
             try {
                 idx = ctx.getArguments().indexOf("-u") + 1;
-                discordUserId = ctx.getArguments().get(idx).replace("<@", "").replace(">", "");
+                discordUserId = ctx.getArguments().get(idx).replaceAll("[<@>]", "");
 
                 idx = ctx.getArguments().indexOf("-cmd") + 1;
                 command = ctx.getArguments().get(idx);
@@ -133,7 +139,7 @@ public class SnowflakePermission implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("sfp");
+        return List.of("sfp", "snowflake");
     }
 
     @Override
@@ -142,7 +148,19 @@ public class SnowflakePermission implements CommandInterface {
     }
 
     @Override
-    public boolean requiresFurtherChecks() {
-        return true;
+    public boolean argumentCheck(StringBuilder args) {
+        String regex = "^(?:-s\\s\\d{18,19}\\s)?(?:-c\\s(?:<#)?\\d{18,19}>?\\s)?(?:-u\\s(?:<@)?\\d{18,19}>?\\s)-cmd\\s\\w+\\s?";
+        StringBuilder sb = new StringBuilder();
+
+        for (CommandInterface ci : cm.getCommands()) {
+            if (ci.getRestrictionLevel() < 3) {
+                sb.append(ci.getNameLC()).append("|");
+            }
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+
+        Pattern argumentPattern = Pattern.compile(regex + "(?:" + sb + ")?$");
+        return argumentPattern.matcher(args).matches();
     }
 }

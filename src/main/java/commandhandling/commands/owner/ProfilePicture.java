@@ -4,6 +4,7 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Icon;
+import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
@@ -61,12 +62,11 @@ public class ProfilePicture implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
-    }
+    public boolean attachmentCheck(CommandContext ctx) {
+        if (ctx.getMessage().getAttachments().isEmpty()) {
+            return false;
+        }
 
-    @Override
-    public boolean requiresFurtherChecks() {
-        return true;
+        return ctx.getMessage().getAttachments().get(0).getContentType().startsWith("image");
     }
 }

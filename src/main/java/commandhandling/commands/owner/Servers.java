@@ -14,28 +14,26 @@ import services.discordhelpers.EmbedHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import static services.PermissionManager.getWhitelistedServers;
 
 
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
+    public final Pattern argumentPattern = Pattern.compile("^(?:this\\s?)?$");
 
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<String> serverIds = getWhitelistedServers();
 
-        if (ctx.getArguments().size() > 0) {
-            String argument = ctx.getArguments().get(0);
+        if (!ctx.getArguments().isEmpty() ) {
+            String serverId = ctx.getGuild().getId();
 
-            if (argument.equals("this")) {
-                argument = ctx.getGuild().getId();
-            }
-
-            if (serverIds.contains(argument)) {
-                DBHandlerWhitelistedServers.removeServerFromWhitelist(ctx.getGuild().getId());
+            if (serverIds.contains(serverId)) {
+                DBHandlerWhitelistedServers.removeServerFromWhitelist(serverId);
             } else {
-                DBHandlerWhitelistedServers.addServerToWhitelist(ctx.getGuild().getId());
+                DBHandlerWhitelistedServers.addServerToWhitelist(serverId);
             }
 
             PermissionManager.reload();
@@ -80,7 +78,7 @@ public class Servers implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

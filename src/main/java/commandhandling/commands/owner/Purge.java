@@ -23,7 +23,6 @@ public class Purge implements CommandInterface {
         embedSetUp();
     }
 
-
     @Override
     public void handle(CommandContext ctx) {
         if (isRunning.compareAndSet(false, true)) {
@@ -69,10 +68,5 @@ public class Purge implements CommandInterface {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Deletes all messages in the current channel");
         return embed;
-    }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 0;
     }
 }

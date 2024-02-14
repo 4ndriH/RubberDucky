@@ -9,10 +9,13 @@ import assets.Config;
 import services.BotExceptions;
 import services.database.DBHandlerConfig;
 
+import java.util.regex.Pattern;
+
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class Prefix implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);
+    public final Pattern argumentPattern = Pattern.compile("^\\S+$");
 
     @Override
     public void handle(CommandContext ctx) {
@@ -40,5 +43,10 @@ public class Prefix implements CommandInterface {
     @Override
     public int getRestrictionLevel() {
         return 0;
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }
