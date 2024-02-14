@@ -16,9 +16,11 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.regex.Pattern;
 
 public class Help implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Help.class);
+    private static Pattern argumentPattern = null;
     private final CommandManager manager;
 
     public Help(CommandManager manager) {
@@ -76,7 +78,7 @@ public class Help implements CommandInterface {
 
             StringBuilder aliases = new StringBuilder();
             for (String s : command.getAliases()) {
-                if (aliases.toString().length() == 0) {
+                if (aliases.toString().isEmpty()) {
                     aliases.append(prefix).append(s);
                 } else {
                     aliases.append(", ").append(prefix).append(s);
@@ -86,7 +88,7 @@ public class Help implements CommandInterface {
             EmbedBuilder embed = command.getHelp();
             embed.setTitle("Help - " + command.getName());
             embed.setColor(new Color(0xb074ad));
-            if (aliases.length() != 0) {
+            if (!aliases.isEmpty()) {
                 embed.addField("__Aliases__", "```" + aliases + "```", false);
             }
 
@@ -116,5 +118,23 @@ public class Help implements CommandInterface {
     @Override
     public boolean requiresFurtherChecks() {
         return true;
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        if (argumentPattern == null) {
+            StringBuilder sb = new StringBuilder();
+
+            for (CommandInterface ci : manager.getCommands()) {
+                sb.append(ci.getNameLC()).append("|");
+            }
+
+            sb.deleteCharAt(sb.length() - 1);
+            System.out.println(sb);
+
+            argumentPattern = Pattern.compile("^((?:" + sb + ")?)\\s?$");
+        }
+
+        return argumentPattern.matcher(args).matches();
     }
 }
