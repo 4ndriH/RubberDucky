@@ -100,7 +100,7 @@ public class Channel implements CommandInterface {
             }
         }
 
-        Pattern argumentPattern = Pattern.compile("^((?:" + sb + "|allOn|allOff)?)\\s?$");
+        Pattern argumentPattern = Pattern.compile("^((?:" + sb + "allOn|allOff)?)\\s?$");
         return argumentPattern.matcher(args).matches();
     }
 }
