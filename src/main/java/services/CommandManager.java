@@ -42,7 +42,6 @@ public class CommandManager {
         addCommand(new Say());
         addCommand(new Servers());
         addCommand(new SnowflakePermission());
-        addCommand(new SQL());
         addCommand(new Status());
 
         // admin
@@ -125,7 +124,7 @@ public class CommandManager {
         deleteMsg(ctx.getMessage(), 128);
         commandLogger(ctx);
 
-        if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck()) {
+        if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
             if (PermissionManager.permissionCheck(ctx, cmd)) {
                 (new Thread(() -> cmd.handle(ctx))).start();
                 addReaction(ctx, 0);
