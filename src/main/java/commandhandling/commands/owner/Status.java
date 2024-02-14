@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class Status implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
-    public final Pattern argumentPattern = Pattern.compile("^(?:competing|listening|playing|watching)?\\s?.{1,128}\\s?$");
+    public static final Pattern argumentPattern = Pattern.compile("^(?:competing|listening|playing|watching)?\\s?.{1,128}\\s?$");
     private static final Set<String> activities = Set.of("competing", "listening", "playing", "watching");
 
     @Override

@@ -15,7 +15,7 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class Prefix implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Prefix.class);
-    public final Pattern argumentPattern = Pattern.compile("^\\S+$");
+    public static final Pattern argumentPattern = Pattern.compile("^\\S+$");
 
     @Override
     public void handle(CommandContext ctx) {

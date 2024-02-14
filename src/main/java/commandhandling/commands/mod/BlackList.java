@@ -18,7 +18,7 @@ import static services.PermissionManager.getBlacklist;
 
 public class BlackList implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(BlackList.class);
-    public final Pattern argumentPattern = Pattern.compile("^(?:(?:<@)?\\d{18}>?\\s?)?$");
+    public static final Pattern argumentPattern = Pattern.compile("^(?:(?:<@)?\\d{18}>?\\s?)?$");
 
     @Override
     public void handle(CommandContext ctx) {

@@ -21,7 +21,7 @@ import static services.PermissionManager.getWhitelistedServers;
 
 public class Servers implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
-    public final Pattern argumentPattern = Pattern.compile("^(?:this\\s?)?$");
+    public static final Pattern argumentPattern = Pattern.compile("^(?:this\\s?)?$");
 
     @Override
     public void handle(CommandContext ctx) {

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class NickName implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
-    public final Pattern argumentPattern = Pattern.compile("^\\S+$");
+    public static final Pattern argumentPattern = Pattern.compile("^\\S+$");
 
     @Override
     public void handle(CommandContext ctx) {

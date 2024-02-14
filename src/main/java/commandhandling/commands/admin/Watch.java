@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static services.database.DBHandlerConfig.updateConfig;
 
 public class Watch implements CommandInterface {
-    public final Pattern argumentPattern = Pattern.compile("^(?:<@)?\\d{18}>?\\s?$");
+    public static final Pattern argumentPattern = Pattern.compile("^(?:<@)?\\d{18}>?\\s?$");
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
 
     @Override

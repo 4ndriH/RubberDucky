@@ -25,6 +25,7 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class SnowflakePermission implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(SnowflakePermission.class);
+    public static  Pattern argumentPattern = null;
     private final CommandManager cm;
 
     public SnowflakePermission(CommandManager cm) {
@@ -149,18 +150,21 @@ public class SnowflakePermission implements CommandInterface {
 
     @Override
     public boolean argumentCheck(StringBuilder args) {
-        String regex = "^(?:-s\\s\\d{18,19}\\s)?(?:-c\\s(?:<#)?\\d{18,19}>?\\s)?(?:-u\\s(?:<@)?\\d{18,19}>?\\s)-cmd\\s\\w+\\s?";
-        StringBuilder sb = new StringBuilder();
+        if (argumentPattern == null) {
+            String regex = "^(?:-s\\s\\d{18,19}\\s)?(?:-c\\s(?:<#)?\\d{18,19}>?\\s)?(?:-u\\s(?:<@)?\\d{18,19}>?\\s)-cmd\\s\\w+\\s?";
+            StringBuilder sb = new StringBuilder();
 
-        for (CommandInterface ci : cm.getCommands()) {
-            if (ci.getRestrictionLevel() < 3) {
-                sb.append(ci.getNameLC()).append("|");
+            for (CommandInterface ci : cm.getCommands()) {
+                if (ci.getRestrictionLevel() < 3) {
+                    sb.append(ci.getNameLC()).append("|");
+                }
             }
+
+            sb.deleteCharAt(sb.length() - 1);
+
+            argumentPattern = Pattern.compile(regex + "(?:" + sb + ")?$");
         }
 
-        sb.deleteCharAt(sb.length() - 1);
-
-        Pattern argumentPattern = Pattern.compile(regex + "(?:" + sb + ")?$");
         return argumentPattern.matcher(args).matches();
     }
 }

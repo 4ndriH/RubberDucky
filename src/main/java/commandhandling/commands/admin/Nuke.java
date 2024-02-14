@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class Nuke implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
-    public final Pattern argumentPattern = Pattern.compile("^\\d+\\s?$");
+    public static final Pattern argumentPattern = Pattern.compile("^\\d+\\s?$");
 
     @Override
     public void handle(CommandContext ctx) {

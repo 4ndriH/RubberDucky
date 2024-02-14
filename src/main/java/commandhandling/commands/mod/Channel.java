@@ -20,6 +20,7 @@ import static services.PermissionManager.getWhitelistedChannels;
 
 public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
+    public static Pattern argumentPattern = null;
     private final CommandManager cm;
 
     public Channel(CommandManager cm) {
@@ -92,15 +93,18 @@ public class Channel implements CommandInterface {
 
     @Override
     public boolean argumentCheck(StringBuilder args) {
-        StringBuilder sb = new StringBuilder();
+        if (argumentPattern == null) {
+            StringBuilder sb = new StringBuilder();
 
-        for (CommandInterface ci : cm.getCommands()) {
-            if (ci.getRestrictionLevel() == 3) {
-                sb.append(ci.getNameLC()).append("|");
+            for (CommandInterface ci : cm.getCommands()) {
+                if (ci.getRestrictionLevel() == 3) {
+                    sb.append(ci.getNameLC()).append("|");
+                }
             }
+
+            argumentPattern = Pattern.compile("^((?:" + sb + "allOn|allOff)?)\\s?$");
         }
 
-        Pattern argumentPattern = Pattern.compile("^((?:" + sb + "allOn|allOff)?)\\s?$");
         return argumentPattern.matcher(args).matches();
     }
 }
