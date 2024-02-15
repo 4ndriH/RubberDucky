@@ -79,7 +79,7 @@ public class TimelapseHelper {
 
         try {
             ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/timelapse/chunk_" + chunk + ".gif"));
-            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 23, true);
+            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 23, false);
 
             writer.writeToSequence(image);
             BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
