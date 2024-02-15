@@ -22,7 +22,7 @@ public class PlaceViewQueue implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         String[] strings = DBHandlerPlace.getPlaceProjectQueue();
 
-        if (strings[0].length() == 0) {
+        if (strings[0].isEmpty()) {
             embed.setDescription("The Queue is empty");
         } else {
             int pixelsInQueue = getPixelsInQueue();
@@ -30,7 +30,6 @@ public class PlaceViewQueue implements CommandInterface {
                     "Earliest completion <t:" + (Instant.now().getEpochSecond() + (int)(pixelsInQueue * 1.0587)) + ":R>");
             embed.addField("__ID__", strings[0], true);
             embed.addField("__Drawn Pixels__", strings[1], true);
-            //embed.addField("__Queued by__", strings[2], true);
         }
 
         EmbedHelper.sendEmbed(ctx, embed, 64);

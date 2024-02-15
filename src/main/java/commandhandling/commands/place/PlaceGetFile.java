@@ -14,11 +14,13 @@ import services.database.DBHandlerPlace;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlaceGetFile implements CommandInterface {
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)$");
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
 
     @Override
@@ -64,5 +66,10 @@ public class PlaceGetFile implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("pgf");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

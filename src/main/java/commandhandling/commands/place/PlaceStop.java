@@ -30,11 +30,6 @@ public class PlaceStop implements CommandInterface {
     }
 
     @Override
-    public List<String> getAliases() {
-        return List.of("ps");
-    }
-
-    @Override
     public int getRestrictionLevel() {
         return 0;
     }

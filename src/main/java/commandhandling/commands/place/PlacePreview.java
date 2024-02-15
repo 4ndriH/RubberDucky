@@ -22,21 +22,24 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlacePreview implements CommandInterface {
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?$");
     private final Logger LOGGER = LoggerFactory.getLogger(PlacePreview.class);
 
     @Override
     public void handle(CommandContext ctx) {
         BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+
         BufferedImage place = PlaceWebSocket.getImage(false);
         ArrayList<Pixel> pixels;
         // 0 = ID, 1 = sent, 2 = replied to
         int sendMessageCase, id = -1;
 
-        if (ctx.getArguments().size() > 0) {
+        if (!ctx.getArguments().isEmpty()) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
                 sendMessageCase = 0;
@@ -169,5 +172,10 @@ public class PlacePreview implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("pp");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

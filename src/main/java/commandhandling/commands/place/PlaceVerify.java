@@ -37,11 +37,6 @@ public class PlaceVerify implements CommandInterface {
     }
 
     @Override
-    public String getName() {
-        return "PlaceVerify";
-    }
-
-    @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Toggles whether or not placed pixels are getting verified");
