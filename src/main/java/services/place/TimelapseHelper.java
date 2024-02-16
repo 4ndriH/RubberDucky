@@ -107,6 +107,14 @@ public class TimelapseHelper {
             return;
         }
 
+        for(int i = 0; i < 1000; i++) {
+            for (int j = 0; j < 1000; j++) {
+                Color color = new Color(image.getRGB(i, j));
+                int rgb = (int)(color.getRed() * 0.299) + (int)(color.getGreen() * 0.587) + (int)(color.getBlue() * 0.114);
+                image.setRGB(i, j, new Color(rgb, rgb, rgb).getRGB());
+            }
+        }
+
         try {
             ImageIO.write(image, "png", new File("tempFiles/place/timelapse/chunk_" + chunk + ".png"));
         } catch (IOException e) {
