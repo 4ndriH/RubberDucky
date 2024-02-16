@@ -28,7 +28,7 @@ public class Purge implements CommandInterface {
         if (isRunning.compareAndSet(false, true)) {
             (new Thread(() -> {
                 List<Message> messages = ctx.getChannel().getHistory().retrievePast(64).complete();
-                EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "resources/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
+                EmbedHelper.sendEmbedWithFile(ctx, purgeCommenced, 32, "resources/images/purge/purgeCommenced.jpg", "purgeCommenced.jpg");
                 do {
                     for (int i = 0; i < messages.size() && !stop.get(); i++) {
                         messages.get(i).delete().queue();
@@ -38,7 +38,7 @@ public class Purge implements CommandInterface {
                     }
                     messages = ctx.getChannel().getHistory().retrievePast(64).complete();
                 } while (messages.size() != 0 && !stop.get());
-                EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "resources/purge/purgeEnded.jpg", "purgeEnded.jpg");
+                EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "resources/images/purge/purgeEnded.jpg", "purgeEnded.jpg");
                 isRunning.set(false);
                 stop.set(false);
             })).start();
@@ -46,7 +46,7 @@ public class Purge implements CommandInterface {
             if (ctx.getArguments().size() == 1 && ctx.getArguments().get(0).equalsIgnoreCase("stop")) {
                 stop.set(true);
             } else {
-                EmbedHelper.sendEmbedWithFile(ctx, busyPurging, 32, "resources/purge/busyPurging.png", "busyPurging.png");
+                EmbedHelper.sendEmbedWithFile(ctx, busyPurging, 32, "resources/images/purge/busyPurging.png", "busyPurging.png");
             }
         }
     }
