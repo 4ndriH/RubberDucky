@@ -41,6 +41,7 @@ public class Purge implements CommandInterface {
             return null;
         }).whenComplete((ignored, ignored2) -> {
             EmbedHelper.sendEmbedWithFile(ctx, purgeEnded, 32, "resources/images/purge/purgeEnded.jpg", "purgeEnded.jpg");
+            stop.set(false);
         });
     }
 
