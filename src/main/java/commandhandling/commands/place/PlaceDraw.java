@@ -65,7 +65,7 @@ public class PlaceDraw implements CommandInterface {
         int pixelDrawnCnt3600 = 0;
 
         while (!PlaceData.stopQ) {
-            LOGGER.info("started drawing project: " + id);
+            LOGGER.debug("started drawing project: " + id);
             if (id < 0) {
                 break;
             }
@@ -98,7 +98,7 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.verificationCondition()) {
-                    LOGGER.info("does this potentially fuck things up?");
+                    LOGGER.debug("Verify");
                     PlaceVerifier.verify();
                 }
 
@@ -109,21 +109,30 @@ public class PlaceDraw implements CommandInterface {
                     pixelDrawnCnt3600 = 0;
                 }
             }
-
+            LOGGER.info("starting left over pixels");
             for (Pixel pixel : PlaceData.fixingQ) {
-                LOGGER.info("finishing left over pixels");
-                placeChannel.sendMessage(pixel.getDrawCommand()).complete();
-                PlaceData.fixedPixels++;
+                try {
+                    placeChannel.sendMessage(pixel.getDrawCommand()).complete();
+                    PlaceData.fixedPixels++;
 
-                if (PlaceData.stop || !PlaceData.verify) {
-                    LOGGER.info("BREAK");
-                    break;
+                    if (PlaceData.stop || !PlaceData.verify) {
+                        LOGGER.debug("BREAK");
+                        break;
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("caught an error while fixing pixels", e);
+                    try {
+                        Thread.sleep(16000);
+                    } catch (InterruptedException ee) {
+                        LOGGER.error("Thread sleep error", ee);
+                    }
                 }
             }
 
+            LOGGER.info("completed leftover pixels");
             if (!PlaceData.stop) {
-                LOGGER.info("stop?");
-                DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
+                LOGGER.debug("stop");
+                //DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
                 id = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
             } else {

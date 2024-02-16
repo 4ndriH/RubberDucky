@@ -26,6 +26,7 @@ public class DirectoryVerification {
         directories.add(new File("tempFiles"));
         directories.add(new File("tempFiles/place"));
         directories.add(new File("tempFiles/place/queue"));
+        directories.add(new File("tempFiles/place/timelapse"));
 
         for (File directory : directories) {
             if (!directory.isDirectory()) {
@@ -44,7 +45,7 @@ public class DirectoryVerification {
         HashMap<String, ArrayList<String>> files = new HashMap<>();
         boolean fileDownloaded = false;
 
-        files.put("DB/", new ArrayList<>(List.of("RubberDucky.db")));
+        files.put("DB/", new ArrayList<>());
         files.put("resources/images/",
                 new ArrayList<>(List.of(
                     "nuke.gif",
@@ -87,27 +88,23 @@ public class DirectoryVerification {
                 )));
 
         // change this to the non branch link
-        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/";
+        String url = "https://raw.githubusercontent.com/4ndriH/RubberDucky/master/";
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
                 File current = new File(directory + file);
                 if (!current.exists()) {
-                    if (file.equals("RubberDucky.db")) {
-                        LOGGER.info("RubberDucky.db will be created by JDBC");
-                    } else {
-                        try {
-                            ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
-                            FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
-                            fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
-                            fileOutputStream.close();
-                            fileDownloaded = true;
-                        } catch (Exception e) {
-                            LOGGER.error("There was a problem while downloading file: " + file, e);
-                            continue;
-                        }
-                        LOGGER.info("Downloaded file: " + directory + file);
+                    try {
+                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
+                        FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
+                        fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+                        fileOutputStream.close();
+                        fileDownloaded = true;
+                    } catch (Exception e) {
+                        LOGGER.error("There was a problem while downloading file: " + file, e);
+                        continue;
                     }
+                    LOGGER.info("Downloaded file: " + directory + file);
                 }
             }
         }
