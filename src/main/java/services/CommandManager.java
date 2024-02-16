@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
@@ -27,6 +29,7 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
+    ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private static final List<CommandInterface> commands = new ArrayList<>();
 
@@ -126,7 +129,7 @@ public class CommandManager {
 
         if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
             if (PermissionManager.permissionCheck(ctx, cmd)) {
-                (new Thread(() -> cmd.handle(ctx))).start();
+                executorService.submit(() -> cmd.handle(ctx));
                 addReaction(ctx, 0);
             }
         } else {
