@@ -35,13 +35,13 @@ public class BotDownDetectionListener extends ListenerAdapter {
         if (trackedAccounts.contains(discordUserId)) {
             if (event.getNewOnlineStatus().getKey().equals("offline")) {
                 if (!notificationGracePeriod.containsKey(discordUserId) || notificationGracePeriod.get(discordUserId).isDone()) {
-                    LOGGER.info(event.getUser().getAsTag() + " went offline, triggered 60s notification countdown");
+                    //LOGGER.info(event.getUser().getAsTag() + " went offline, triggered 60s notification countdown");
                     ScheduledFuture<?> test = event.getJDA().openPrivateChannelById(sendTo.get(discordUserId)).complete().sendMessage(event.getUser().getAsTag() + " went offline").queueAfter(60, TimeUnit.SECONDS);
                     notificationGracePeriod.put(event.getUser().getId(), test);
                 }
             } else if (event.getNewOnlineStatus().getKey().equals("online")) {
                 if (notificationGracePeriod.containsKey(discordUserId) && !notificationGracePeriod.get(discordUserId).isDone()) {
-                    LOGGER.info(event.getUser().getAsTag() + " came back online within 60s, canceled notification");
+                    //LOGGER.info(event.getUser().getAsTag() + " came back online within 60s, canceled notification");
                     notificationGracePeriod.get(discordUserId).cancel(true);
                     notificationGracePeriod.remove(discordUserId);
                 }
