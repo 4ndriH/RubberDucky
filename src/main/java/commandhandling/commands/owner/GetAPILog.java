@@ -57,9 +57,4 @@ public class GetAPILog implements CommandInterface {
     public List<String> getAliases() {
         return List.of("gal");
     }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 0;
-    }
 }

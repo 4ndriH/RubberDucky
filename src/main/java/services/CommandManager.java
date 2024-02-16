@@ -3,7 +3,6 @@ package services;
 import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import commandhandling.commands.coursereview.Course;
 import commandhandling.commands.coursereview.CourseReviewStats;
 import commandhandling.commands.coursereview.CourseReviewVerify;
 import commandhandling.commands.admin.LockDown;
@@ -21,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
@@ -28,6 +29,7 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
 public class CommandManager {
+    ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private static final List<CommandInterface> commands = new ArrayList<>();
 
@@ -43,8 +45,7 @@ public class CommandManager {
         addCommand(new Say());
         addCommand(new Scrape());
         addCommand(new Servers());
-        addCommand(new SnowflakePermission());
-        addCommand(new SQL());
+        addCommand(new SnowflakePermission(this));
         addCommand(new Status());
 
         // admin
@@ -65,8 +66,7 @@ public class CommandManager {
         addCommand(new Ping());
         addCommand(new PurgeDMs());
 
-        // courereview
-        addCommand(new Course());
+        // coursereview
         addCommand(new CourseReviewStats());
         addCommand(new CourseReviewVerify());
 
@@ -114,27 +114,24 @@ public class CommandManager {
     }
 
     public void handle(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
+        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
-        CommandInterface cmd = this.getCommand(invoke);
+        CommandInterface cmd = getCommand(invoke);
+
         ArrayList<String> arguments = new ArrayList<>(Arrays.asList(split).subList(1, split.length));
         CommandContext ctx = new CommandContext(event, arguments);
 
-        if (arguments.contains("--persist")) {
-            ctx.setPersistent();
-        }
+        StringBuilder argRegexCheck = new StringBuilder();
+        arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
 
         deleteMsg(ctx.getMessage(), 128);
         commandLogger(ctx);
 
-        if (cmd != null) {
-            if (PermissionManager.permissionCheck(ctx, getCommand(invoke))) {
-                (new Thread(() -> cmd.handle(ctx))).start();
-                if (!getCommand(invoke).requiresFurtherChecks()) {
-                    addReaction(ctx, 0);
-                }
+        if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
+            if (PermissionManager.permissionCheck(ctx, cmd)) {
+                executorService.submit(() -> cmd.handle(ctx));
+                addReaction(ctx, 0);
             }
         } else {
             addReaction(ctx, 5);

@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
-
 public class Delete implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Delete.class);
 
@@ -17,8 +15,6 @@ public class Delete implements CommandInterface {
     public void handle(CommandContext ctx) {
         String id = ctx.getArguments().size() == 1 ? ctx.getArguments().get(0) :
                 ctx.getMessage().getReferencedMessage().getId();
-
-        deleteMsg(ctx.getMessage(), 0);
 
         ctx.getChannel().retrieveMessageById(id).queue(
                 message -> message.delete().queue()
@@ -40,10 +36,5 @@ public class Delete implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("d");
-    }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 0;
     }
 }

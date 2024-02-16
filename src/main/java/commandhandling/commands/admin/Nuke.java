@@ -3,51 +3,30 @@ package commandhandling.commands.admin;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
-import services.discordhelpers.EmbedHelper;
 
-import java.io.File;
+import java.util.regex.Pattern;
 
 public class Nuke implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
+    public static final Pattern argumentPattern = Pattern.compile("^\\d+\\s?$");
 
     @Override
     public void handle(CommandContext ctx) {
-        new Thread(() -> {
-            long nr = 1;
+        ctx.getMessage().delete().queue();
 
-            if (ctx.getMessage().getReferencedMessage() != null) {
-                String id = ctx.getMessage().getReferencedMessage().getId();
-                nr += ctx.getChannel().getIterableHistory().stream().takeWhile(msg -> !msg.getId().equals(id)).count();
-            } else {
-                try {
-                    nr += Integer.parseInt(ctx.getArguments().get(0));
-                } catch (Exception e) {
-                    BotExceptions.invalidArgumentsException(ctx);
-                    return;
-                }
-            }
+        int nr = 1;
 
-            ctx.getMessage().delete().queue();
+        try {
+            nr += Integer.parseInt(ctx.getArguments().get(0));
+        } catch (Exception e) {
+            BotExceptions.invalidArgumentsException(ctx);
+            return;
+        }
 
-            if (ctx.getMessage().getContentRaw().contains("-g")) {
-                nr++;
-                System.out.println("gif");
-                EmbedBuilder embed = EmbedHelper.embedBuilder("**TACTICAL NUKE INCOMING**");
-                embed.setImage("attachment://nuke.gif");
-
-                ctx.getChannel().sendMessageEmbeds(embed.build())
-                        .addFiles(FileUpload.fromData(new File("resources/nuke.gif"))).complete();
-                try {
-                    Thread.sleep(2048);
-                } catch (Exception ignored) {}
-            }
-
-            ctx.getChannel().getIterableHistory().takeAsync((int)nr).thenAccept(ctx.getChannel()::purgeMessages);
-        }).start();
+        ctx.getChannel().getIterableHistory().takeAsync(nr).thenAccept(ctx.getChannel()::purgeMessages);
     }
 
     @Override
@@ -58,12 +37,12 @@ public class Nuke implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Nukes the specified amount of messages, or up to the one replied to");
+        embed.setDescription("Nukes the specified amount of messages");
         return embed;
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 1;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

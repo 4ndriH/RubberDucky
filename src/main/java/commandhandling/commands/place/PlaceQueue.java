@@ -15,11 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class PlaceQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?$");
+    private static final List<String> types = List.of("jpg", "jpeg", "png");
 
     @Override
     public void handle(CommandContext ctx) {
@@ -29,7 +32,7 @@ public class PlaceQueue implements CommandInterface {
         Scanner scanner;
         int id = -1;
 
-        if (ctx.getArguments().size() == 1 && PermissionManager.authenticateOwner(ctx)) {
+        if (!ctx.getArguments().isEmpty() && PermissionManager.authenticateOwner(ctx)) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
             } catch (Exception e) {
@@ -37,9 +40,9 @@ public class PlaceQueue implements CommandInterface {
                 return;
             }
         } else {
-            while (id == -1 ||ids.contains(id)) {
+            do {
                 id = random.nextInt(10000);
-            }
+            } while (ids.contains(id));
         }
 
         try {
@@ -101,7 +104,18 @@ public class PlaceQueue implements CommandInterface {
     }
 
     @Override
-    public boolean requiresFurtherChecks() {
-        return true;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
+    }
+
+    @Override
+    public boolean attachmentCheck(CommandContext ctx) {
+        if (ctx.getMessage().getAttachments().isEmpty()) {
+            return false;
+        }
+
+        String type = ctx.getMessage().getAttachments().get(0).getContentType().split("/")[1];
+
+        return types.contains(type);
     }
 }

@@ -3,29 +3,22 @@ package commandhandling.commands.admin;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.listeners.CountThreadListener;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static services.database.DBHandlerConfig.updateConfig;
-import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class Watch implements CommandInterface {
+    public static final Pattern argumentPattern = Pattern.compile("^(?:<@)?\\d{18}>?\\s?$");
     private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
 
     @Override
     public void handle(CommandContext ctx) {
-        String tempId = ctx.getMessage().getContentRaw().replaceAll("\\D", "");
-
-        if (!StringUtils.isNumeric(tempId) || tempId.length() < 18) {
-            addReaction(ctx, 5);
-            return;
-        }
-
-        addReaction(ctx, 0);
+        String tempId = ctx.getArguments().get(0).replaceAll("[<@>]", "");
 
         CountThreadListener.listenTo = tempId;
         CountThreadListener.checkRecentMessages();
@@ -52,12 +45,7 @@ public class Watch implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 1;
-    }
-
-    @Override
-    public boolean requiresFurtherChecks() {
-        return true;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

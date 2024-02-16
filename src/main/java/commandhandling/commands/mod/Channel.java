@@ -14,11 +14,13 @@ import services.discordhelpers.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import static services.PermissionManager.getWhitelistedChannels;
 
 public class Channel implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Channel.class);
+    public static Pattern argumentPattern = null;
     private final CommandManager cm;
 
     public Channel(CommandManager cm) {
@@ -28,29 +30,9 @@ public class Channel implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         HashMap<String, ArrayList<String>> channels = getWhitelistedChannels();
-        String cmd, channel = ctx.getChannel().getId();
+        String channel = ctx.getChannel().getId();
 
-        try {
-            if (cm.getCommand((cmd = ctx.getArguments().get(0))) != null) {
-                if (cm.getCommand(cmd).getRestrictionLevel() < 3) {
-                    return;
-                } else if (channelCheck(channels, cmd, channel)) {
-                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, cmd);
-                } else {
-                    DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, cmd);
-                }
-            } else if (ctx.getArguments().get(0).equals("all")) {
-                for (CommandInterface ci : cm.getCommands()) {
-                    if (ci.getRestrictionLevel() == 3 && !channelCheck(channels, ci.getNameLC(), channel)) {
-                        DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, ci.getName().toLowerCase());
-                    }
-                }
-            } else {
-                BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
-                return;
-            }
-            PermissionManager.reload();
-        } catch (Exception e) {
+        if (ctx.getArguments().isEmpty()) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted commands for this channel");
             StringBuilder sb = new StringBuilder();
 
@@ -67,11 +49,34 @@ public class Channel implements CommandInterface {
             embed.setDescription(sb.toString());
 
             EmbedHelper.sendEmbed(ctx, embed, 32);
+        } else {
+            String cmd = ctx.getArguments().get(0);
+
+            if (cmd.equals("allOn")) {
+                for (CommandInterface ci : cm.getCommands()) {
+                    if (ci.getRestrictionLevel() == 3 && !channelCheck(channels, ci.getNameLC(), channel)) {
+                        DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, ci.getNameLC());
+                    }
+                }
+            } else if (ctx.getArguments().get(0).startsWith("allOff")) {
+                for (CommandInterface ci : cm.getCommands()) {
+                    if (ci.getRestrictionLevel() == 3 && channelCheck(channels, ci.getNameLC(), channel)) {
+                        DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, ci.getNameLC());
+                    }
+                }
+            } else {
+                if (channelCheck(channels, cmd, channel)) {
+                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, cmd);
+                } else {
+                    DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, cmd);
+                }
+            }
+            PermissionManager.reload();
         }
     }
 
-    private boolean channelCheck(HashMap<String, ArrayList<String>> channels, String discordChannelId, String command) {
-        return channels.get(discordChannelId) != null && channels.get(discordChannelId).contains(command);
+    private boolean channelCheck(HashMap<String, ArrayList<String>> channels, String command, String channelId) {
+        return channels.get(channelId) != null && channels.get(channelId).contains(command);
     }
 
     @Override
@@ -87,7 +92,19 @@ public class Channel implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 2;
+    public boolean argumentCheck(StringBuilder args) {
+        if (argumentPattern == null) {
+            StringBuilder sb = new StringBuilder();
+
+            for (CommandInterface ci : cm.getCommands()) {
+                if (ci.getRestrictionLevel() == 3) {
+                    sb.append(ci.getNameLC()).append("|");
+                }
+            }
+
+            argumentPattern = Pattern.compile("^((?:" + sb + "allOn|allOff)?)\\s?$");
+        }
+
+        return argumentPattern.matcher(args).matches();
     }
 }

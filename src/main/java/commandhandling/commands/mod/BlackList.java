@@ -12,18 +12,20 @@ import services.discordhelpers.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static services.PermissionManager.getBlacklist;
 
 public class BlackList implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(BlackList.class);
+    public static final Pattern argumentPattern = Pattern.compile("^(?:(?:<@)?\\d{18}>?\\s?)?$");
 
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<String> blacklist = getBlacklist();
 
-        if (ctx.getArguments().size() > 0 && !ctx.getArguments().get(0).contains("&")) {
-            String id = ctx.getArguments().get(0).replace("<@", "").replace(">", "");
+        if (!ctx.getArguments().isEmpty()) {
+            String id = ctx.getArguments().get(0).replaceAll("[<@>]", "");
             if (blacklist.contains(id)) {
                 DBHandlerBlacklistedUsers.removeUserFromBlacklist(id);
             } else {
@@ -34,7 +36,7 @@ public class BlackList implements CommandInterface {
             ArrayList<String> ids = blacklist;
             EmbedBuilder embed = EmbedHelper.embedBuilder("Blacklisted people");
 
-            if (ids.size() == 0) {
+            if (ids.isEmpty()) {
                 embed.setDescription("-");
             } else {
                 StringBuilder sb = new StringBuilder();
@@ -69,7 +71,7 @@ public class BlackList implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 2;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

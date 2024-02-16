@@ -15,11 +15,13 @@ public class CountThreadListener extends ListenerAdapter {
     public static int lastSent, interruptCount;
     private static ThreadChannel thread;
     public static String listenTo = "742380498986205234";
+    private static boolean disabled = false;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
             event.getJDA().removeEventListener(this);
+            disabled = true;
             return;
         }
 
@@ -73,6 +75,10 @@ public class CountThreadListener extends ListenerAdapter {
     }
 
     public static void checkRecentMessages() {
+        if (disabled) {
+            return;
+        }
+
         for (Message message : thread.getHistory().retrievePast(5).complete()) {
             try {
                 String authorId = message.getAuthor().getId();

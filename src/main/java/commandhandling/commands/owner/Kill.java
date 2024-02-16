@@ -65,9 +65,4 @@ public class Kill implements CommandInterface{
         embed.setDescription("Shuts down the JDA instance and cancels all pending rest actions");
         return embed;
     }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 0;
-    }
 }

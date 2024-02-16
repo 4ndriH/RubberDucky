@@ -13,7 +13,6 @@ import assets.objects.PlaceData;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class PlaceVerify implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceVerify.class);

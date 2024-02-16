@@ -3,8 +3,11 @@ package commandhandling;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public interface CommandInterface {
+    Pattern argumentPattern = Pattern.compile("^");
+
     void handle(CommandContext ctx);
 
     String getName();
@@ -19,11 +22,35 @@ public interface CommandInterface {
         return List.of();
     }
 
-    default int getRestrictionLevel() {
-        return 3;
+    // ---------------------------------------------------------
+    // SecurityClearance:
+    // 0 - Owner
+    // 1 - Administrator
+    // 2 - Moderators
+    // 3 - Plebs
+    // ---------------------------------------------------------
+
+     default int getRestrictionLevel() {
+        String packageName = this.getClass().getPackageName().split("\\.")[2];
+
+        return switch (packageName) {
+            case "owner" -> 0;
+            case "admin" -> 1;
+            case "mod"   -> 2;
+            default      -> 3;
+        };
     }
 
+    @Deprecated
     default boolean requiresFurtherChecks() {
         return false;
+    }
+
+    default boolean attachmentCheck(CommandContext ctx) {
+        return true;
+    }
+
+    default boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

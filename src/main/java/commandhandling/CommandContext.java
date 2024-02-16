@@ -8,11 +8,11 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandContext { //implements ICommandContext {
+public class CommandContext {
     private final MessageReceivedEvent event;
     private final ArrayList<String> arguments;
     private final int securityClearance;
-    private boolean persist;
+    public boolean persist;
 
     // ---------------------------------------------------------
     // SecurityClearance:
@@ -26,6 +26,8 @@ public class CommandContext { //implements ICommandContext {
         this.event = event;
         this.arguments = arguments;
 
+        persist = this.arguments.remove("--persist");
+
         securityClearance = event.getAuthor().getId().equals(Config.ownerID) ? 0 :
         event.getMember().hasPermission(Permission.ADMINISTRATOR) ? 1 :
         event.getMember().hasPermission(Permission.KICK_MEMBERS) ? 2 : 3;
@@ -35,7 +37,6 @@ public class CommandContext { //implements ICommandContext {
         return this.event;
     }
 
-//    @Override
     public Guild getGuild() {
         return this.getEvent().getGuild();
     }
@@ -78,12 +79,7 @@ public class CommandContext { //implements ICommandContext {
     }
 
     // allow only moderators or higher to set a message as persistent
-    public void setPersistent() {
-        arguments.remove("--persist");
-        persist = securityClearance < 3;
-    }
-
-    public boolean getPersist() {
-        return persist;
+    public boolean checkPersistence() {
+        return persist && securityClearance < 3;
     }
 }

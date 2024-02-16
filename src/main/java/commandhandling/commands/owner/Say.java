@@ -8,15 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
+import java.util.regex.Pattern;
 
 public class Say implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
+    public static final Pattern argumentPattern = Pattern.compile("^.*\\S+.*$");
     private volatile HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
 
     @Override
     public void handle(CommandContext ctx) {
+        ctx.getMessage().delete().queue();
+
         StringBuilder sb = new StringBuilder();
         MessageChannelUnion channel = ctx.getChannel();
         int repeats, i;
@@ -29,7 +31,7 @@ public class Say implements CommandInterface {
             i = 0;
         }
 
-        if (ctx.getArguments().size() == 0) {
+        if (ctx.getArguments().isEmpty()) {
             sayChannels.replace(channel, false);
             return;
         } else if (ctx.getArguments().get(0).equalsIgnoreCase("stopAll")) {
@@ -51,19 +53,16 @@ public class Say implements CommandInterface {
             }
         }
 
-        deleteMsg(ctx.getMessage(), 0);
-
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);
         }
 
         int finalRepeats = repeats;
-        (new Thread(() -> {
-            for (int j = 0; j < finalRepeats && sayChannels.get(channel); j++) {
-                channel.sendMessage(sb.toString()).queue();
-            }
-            sayChannels.remove(channel);
-        })).start();
+
+        for (int j = 0; j < finalRepeats && sayChannels.get(channel); j++) {
+            channel.sendMessage(sb.toString()).queue();
+        }
+        sayChannels.remove(channel);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class Say implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

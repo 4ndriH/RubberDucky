@@ -16,10 +16,10 @@ public class LockDown implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        if (getWhitelistedChannels().size() == 0) {
+        if (getWhitelistedChannels().isEmpty()) {
             PermissionManager.reload();
         } else {
-            LOGGER.info("Initiating Lockdown!");
+            LOGGER.warn("Initiating Lockdown!");
             PermissionManager.initiateLockdown();
         }
     }
@@ -39,10 +39,5 @@ public class LockDown implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("ld");
-    }
-
-    @Override
-    public int getRestrictionLevel() {
-        return 1;
     }
 }

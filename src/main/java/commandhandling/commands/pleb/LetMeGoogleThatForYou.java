@@ -17,12 +17,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 
 public class LetMeGoogleThatForYou implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(LetMeGoogleThatForYou.class);
+    public static final Pattern argumentPattern = Pattern.compile("^(?!\\s*$).+");
     private final Color txtC = new Color(0xe8eaed);
 
     @Override
@@ -141,5 +143,10 @@ public class LetMeGoogleThatForYou implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("lmgtfy");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

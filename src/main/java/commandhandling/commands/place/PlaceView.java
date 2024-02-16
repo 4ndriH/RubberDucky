@@ -28,11 +28,7 @@ public class PlaceView implements CommandInterface {
 
         ctx.getChannel().sendMessageEmbeds(embed.build())
                 .addFiles(FileUpload.fromData(convert(PlaceWebSocket.getImage(true)), "place.png")).queue(
-                        msg -> {
-                            if (!ctx.getPersist()) {
-                                deleteMsg(msg, 64);
-                            }
-                        }
+                        msg -> deleteMsg(ctx, msg, 128)
                 );
     }
 
