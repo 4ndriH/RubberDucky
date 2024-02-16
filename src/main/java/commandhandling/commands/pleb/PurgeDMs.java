@@ -25,41 +25,27 @@ public class PurgeDMs implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        (new Thread(() -> {
-            final String[] id = new String[1];
-            ctx.getAuthor().openPrivateChannel().queue(
-                    channel -> id[0] = channel.getId()
-            );
+        PrivateChannel channel = ctx.getAuthor().openPrivateChannel().complete();
+        channel.sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeCommenced.jpg"))).queue(
+                msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+        );
 
-            while (id[0] == null) {
+        channel.getIterableHistory().forEachAsync(msg -> {
+            if (msg.getAuthor().isBot()) {
+                msg.delete().queue();
                 try {
-                    Thread.sleep(32);
+                    Thread.sleep(1024);
                 } catch (Exception ignored) {}
             }
-
-            PrivateChannel channel = ctx.getJDA().getPrivateChannelById(id[0]);
-            channel.sendMessageEmbeds(purgeCommenced.build())
-                    .addFiles(FileUpload.fromData(new File("resources/purge/purgeCommenced.jpg")))
-                    .queueAfter(1, TimeUnit.SECONDS);
-            List<Message> messages;
-            do {
-                messages = channel.getHistory().retrievePast(64).complete();
-                for (int i = messages.size() - 1; i >= 0; i--) {
-                    if (!messages.get(i).getAuthor().getId().equals(ctx.getSelfUser().getId())) {
-                        messages.remove(i);
-                        continue;
-                    }
-                    messages.get(i).delete().complete();
-                    try {
-                        Thread.sleep(1024);
-                    } catch (Exception ignored) {}
-                }
-            } while(messages.size() != 0);
-
-            Message msg = channel.sendMessageEmbeds(purgeEnded.build())
-                    .addFiles(FileUpload.fromData(new File("resources/purge/purgeEnded.jpg"))).complete();
-            msg.delete().queueAfter(32, TimeUnit.SECONDS);
-        })).start();
+            return true;
+        }).exceptionally(e -> {
+            LOGGER.error("Error purging", e);
+            return null;
+        }).whenComplete((ignored, ignored2) -> {
+            channel.sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeEnded.jpg"))).queue(
+                    msg -> msg.delete().queueAfter(32, TimeUnit.SECONDS)
+            );
+        });
     }
 
     private void embedSetUp() {
