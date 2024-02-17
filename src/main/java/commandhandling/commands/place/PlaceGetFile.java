@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 
 public class PlaceGetFile implements CommandInterface {
-    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)\s?$");
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
 
     @Override
