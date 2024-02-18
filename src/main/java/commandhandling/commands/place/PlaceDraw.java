@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PlaceDraw implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
