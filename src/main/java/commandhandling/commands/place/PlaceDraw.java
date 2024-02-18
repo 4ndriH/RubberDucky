@@ -28,6 +28,7 @@ import java.util.List;
 
 public class PlaceDraw implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\s?$");
     private static boolean fixToggle = false;
 
     @Override
@@ -207,5 +208,10 @@ public class PlaceDraw implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("pd");
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }
