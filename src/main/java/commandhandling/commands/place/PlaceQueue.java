@@ -21,7 +21,7 @@ import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class PlaceQueue implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
-    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\\s?$");
     private static final List<String> types = List.of("jpg", "jpeg", "png");
 
     @Override
