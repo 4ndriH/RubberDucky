@@ -44,6 +44,7 @@ public class Kill implements CommandInterface{
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File("resources/images/" + file)));
         sendMessageComplete(mca, 64);
+
         ctx.getJDA().shutdownNow();
         ConnectionPool.closeDBConnection();
         ConnectionPoolCR.closeDBConnection();

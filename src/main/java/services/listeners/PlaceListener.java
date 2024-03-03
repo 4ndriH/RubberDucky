@@ -2,6 +2,7 @@ package services.listeners;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class PlaceListener extends ListenerAdapter {
             if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().startsWith(timelapseMatch)) {
                 String nr = event.getMessage().getContentRaw().split("_")[1].split("\\.")[0];
                 int chunk;
+
                 try {
                     chunk = Integer.parseInt(nr);
                 } catch (NumberFormatException e) {

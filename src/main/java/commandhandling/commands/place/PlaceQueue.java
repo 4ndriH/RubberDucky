@@ -19,7 +19,6 @@ import static services.discordhelpers.MessageSendHelper.sendMessage;
 public class PlaceQueue implements CommandInterface {
     private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\\s?$");
 
-
     @Override
     public void handle(CommandContext ctx) {
         ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
