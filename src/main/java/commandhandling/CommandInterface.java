@@ -41,11 +41,6 @@ public interface CommandInterface {
         };
     }
 
-    @Deprecated
-    default boolean requiresFurtherChecks() {
-        return false;
-    }
-
     default boolean attachmentCheck(CommandContext ctx) {
         return true;
     }

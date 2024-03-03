@@ -14,8 +14,10 @@ import commandhandling.commands.owner.*;
 import commandhandling.commands.place.*;
 import commandhandling.commands.pleb.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.discordhelpers.MessageDeleteHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 import static services.discordhelpers.ReactionHelper.addReaction;
 import static services.logging.LoggingHelper.commandLogger;
 
@@ -43,7 +44,6 @@ public class CommandManager {
         addCommand(new ProfilePicture());
         addCommand(new Purge());
         addCommand(new Say());
-        addCommand(new Scrape());
         addCommand(new Servers());
         addCommand(new SnowflakePermission(this));
         addCommand(new Status());
@@ -125,20 +125,24 @@ public class CommandManager {
         StringBuilder argRegexCheck = new StringBuilder();
         arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
 
-        deleteMsg(ctx.getMessage(), 128);
+        MessageDeleteHelper.deleteMessage(ctx.getMessage(), 128);
         commandLogger(ctx);
 
         if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
             if (PermissionManager.permissionCheck(ctx, cmd)) {
-                executorService.submit(() -> cmd.handle(ctx));
+                    executorService.submit(() -> {
+                            try {
+                                cmd.handle(ctx);
+                            } catch (InsufficientPermissionException ipe) {
+                                LOGGER.error("Bot is missing permissions", ipe);
+                            } catch (Exception e) {
+                                LOGGER.error("Command failed", e);
+                            }
+                    });
                 addReaction(ctx, 0);
             }
         } else {
             addReaction(ctx, 5);
         }
-    }
-
-    public static boolean isCommand(String command) {
-        return getCommand(command) != null;
     }
 }

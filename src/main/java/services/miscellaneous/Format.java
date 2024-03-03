@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 public class Format {
     public static String Number(int n) {
-        return new DecimalFormat("###,###,###").format(n).replaceAll("[,,.]", "'");
+        return new DecimalFormat("###,###,###").format(n).replaceAll("[,.]", "'");
     }
 
     public static String Time(int linesCnt) {

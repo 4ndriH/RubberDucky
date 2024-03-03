@@ -3,18 +3,19 @@ package commandhandling.commands.admin;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.listeners.CountThreadListener;
 
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static services.database.DBHandlerConfig.updateConfig;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class Watch implements CommandInterface {
-    public static final Pattern argumentPattern = Pattern.compile("^(?:<@)?\\d{18}>?\\s?$");
-    private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
+    private static final Pattern argumentPattern = Pattern.compile("^(?:<@)?\\d{18,19}>?\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Watch.class);
 
     @Override
     public void handle(CommandContext ctx) {
@@ -27,9 +28,8 @@ public class Watch implements CommandInterface {
 
         LOGGER.info(ctx.getAuthor().getAsTag() + " changed the follow ID to " + tempId);
 
-        ctx.getChannel().sendMessage("I am watching you <@" + tempId + "> <:bustinGood:747783377171644417>").queue(
-                (msg) -> msg.delete().queueAfter(60, TimeUnit.SECONDS)
-        );
+        MessageCreateAction mca = ctx.getChannel().sendMessage("I am watching you <@" + tempId + "> <:bustinGood:747783377171644417>");
+        sendMessage(mca, 64);
     }
 
     @Override

@@ -10,13 +10,11 @@ import services.BotExceptions;
 import java.util.regex.Pattern;
 
 public class Nuke implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
     public static final Pattern argumentPattern = Pattern.compile("^\\d+\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Nuke.class);
 
     @Override
     public void handle(CommandContext ctx) {
-        ctx.getMessage().delete().queue();
-
         int nr = 1;
 
         try {
@@ -25,6 +23,8 @@ public class Nuke implements CommandInterface {
             BotExceptions.invalidArgumentsException(ctx);
             return;
         }
+
+        LOGGER.debug("Nuking " + nr + " messages in " + ctx.getChannel().getName());
 
         ctx.getChannel().getIterableHistory().takeAsync(nr).thenAccept(ctx.getChannel()::purgeMessages);
     }

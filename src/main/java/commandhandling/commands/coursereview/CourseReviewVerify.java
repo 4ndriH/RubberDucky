@@ -5,6 +5,7 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerCourseReviewVerify;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static services.database.DBHandlerCourse.getCourseName;
 import static services.discordhelpers.EmbedHelper.embedBuilder;
-import static services.discordhelpers.EmbedHelper.sendEmbed;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class CourseReviewVerify implements CommandInterface {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseReviewVerify.class);
@@ -32,7 +33,8 @@ public class CourseReviewVerify implements CommandInterface {
         } else {
             EmbedBuilder embed = embedBuilder("Someone is already reviewing reviews");
             embed.setDescription(CourseReviewVerify.ctx.getAuthor().getAsTag());
-            sendEmbed(ctx, embed, 32);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(mca, 32);
         }
     }
 
@@ -52,11 +54,7 @@ public class CourseReviewVerify implements CommandInterface {
             EmbedBuilder embed = embedBuilder(getCourseName(review.courseNumber));
             embed.setDescription(review.review);
 
-            if (review.discordUserId != null) {
-                embed.setFooter(ctx.getJDA().getUserById(review.discordUserId).getAsTag());
-            } else {
-                embed.setFooter(review.uniqueUserId);
-            }
+            embed.setFooter(review.uniqueUserId);
 
             ctx.getChannel().sendMessageEmbeds(embed.build()).setActionRow(
                     Button.danger("cfvReject - " + review.key + " - " + ctx.getAuthor().getId(), "Reject"),
@@ -64,7 +62,8 @@ public class CourseReviewVerify implements CommandInterface {
                     Button.success("cfvAccept - " + review.key + " - " + ctx.getAuthor().getId(), "Accept")
             ).queue();
         } else {
-            sendEmbed(ctx, embedBuilder("Nothing to review"), 32);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
+            sendMessage(mca, 32);
             alreadyVerifying.set(false);
         }
     }

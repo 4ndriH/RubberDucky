@@ -5,10 +5,11 @@ import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import assets.objects.Pixel;
 import services.BotExceptions;
 import services.PermissionManager;
 import services.database.DBHandlerConfig;
@@ -25,118 +26,98 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class PlaceDraw implements CommandInterface {
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\\s?$");
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaceDraw.class);
-    private static boolean fixToggle = false;
 
     @Override
     public void handle(CommandContext ctx) {
-        int id = -1;
+        if (!PlaceData.drawing) {
+            int id = DBHandlerPlace.getNextProject();
 
-        if (PlaceData.drawing) {
-            return;
-        } else if (ctx.getArguments().size() > 0 && PermissionManager.authenticateOwner(ctx)) {
-            try {
+            if (!ctx.getArguments().isEmpty() && PermissionManager.authenticateOwner(ctx)) {
                 id = Integer.parseInt(ctx.getArguments().get(0));
                 if (!DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
                     BotExceptions.invalidIdException(ctx);
                     return;
                 }
-            } catch (Exception e) {
-                BotExceptions.invalidArgumentsException(ctx);
+            }
+
+            if (id == -1) {
+                BotExceptions.emptyQueueException(ctx);
                 return;
             }
-        } else {
-            id = DBHandlerPlace.getNextProject();
-        }
 
-        if (id == -1) {
-            BotExceptions.emptyQueueException(ctx);
-            return;
+            draw(ctx.getJDA(), id);
         }
-
-        draw(ctx.getJDA(), id);
     }
 
-    public static void draw(JDA jda, int id) {
-        TextChannel placeChannel = jda.getGuildById(747752542741725244L).getTextChannelById(819966095070330950L);
+    public static void draw(JDA jda, int projectId) {
+        TextChannel placeChannel = Objects.requireNonNull(jda.getGuildById(747752542741725244L)).getTextChannelById(819966095070330950L);
         long time3600 = System.currentTimeMillis();
         int pixelDrawnCnt3600 = 0;
 
-        while (!PlaceData.stopQ) {
-            LOGGER.debug("started drawing project: " + id);
-            if (id < 0) {
-                break;
-            }
+        assert placeChannel != null;
 
-            new PlaceData(id);
-            DBHandlerConfig.updateConfig("placeProject", "" + id);
+        while (!PlaceData.stopQ && projectId >= 0) {
+            LOGGER.debug("started drawing project: " + projectId);
+            DBHandlerConfig.updateConfig("placeProject", "" + projectId);
+            PlaceData.newProject(projectId);
 
-            while (PlaceData.drawnPixels < PlaceData.totalPixels && !PlaceData.stop) {
+            while (!PlaceData.stop && PlaceData.pixelsLeftToDraw()) {
                 try {
-                    if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+                    if (PlaceData.verify && !PlaceData.fixingQ.isEmpty()) {
                         placeChannel.sendMessage(PlaceData.fixingQ.poll().getDrawCommand()).complete();
                         PlaceData.fixedPixels++;
-                    } else {
-                        placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
-                        if (PlaceData.drawnPixels++ % 16 == 0) {
-                            DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
-                        }
+                        pixelDrawnCnt3600++;
                     }
-//                    placeChannel.sendMessage(messageGenerator()).complete();
 
-//                    if (PlaceData.drawnPixels++ % 16 == 0) {
-//                        DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
-//                    }
-                } catch (Exception e) {
-                    try {
-                        Thread.sleep(16000);
-                    } catch (InterruptedException ignored) {
-                        LOGGER.error("caught an error in PlaceDraw");
+                    if (PlaceData.drawnPixels < PlaceData.totalPixels) {
+                        placeChannel.sendMessage(PlaceData.getPixel().getDrawCommand()).complete();
+                        PlaceData.drawnPixels++;
+                        pixelDrawnCnt3600++;
                     }
+                } catch (ErrorResponseException e) {
+                    ErrorResponse er = e.getErrorResponse();
+                    LOGGER.warn("PlaceDraw ErrorResponse: " + er.getMeaning(), e);
+                    napTime();
+                } catch (Exception e) {
+                    LOGGER.warn("caught an error in PlaceDraw", e);
+                    napTime();
+                }
+
+                if (PlaceData.drawnPixels % 16 == 0) {
+                    DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
                 }
 
                 if (PlaceData.verificationCondition()) {
                     LOGGER.debug("Verify");
                     PlaceVerifier.verify();
+                    LOGGER.debug(PlaceData.fixingQ.size() + " pixels left to fix");
+
+                    if (PlaceData.drawnPixels == PlaceData.totalPixels) {
+                        PlaceData.finalVerification = true;
+                    }
                 }
 
-                if (++pixelDrawnCnt3600 == 3600) {
+                if (pixelDrawnCnt3600 == 3600) {
                     int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
                     DBHandlerPlace.insertTimeTaken(tempSec);
                     time3600 = System.currentTimeMillis();
                     pixelDrawnCnt3600 = 0;
                 }
             }
-            LOGGER.info("starting left over pixels");
-            for (Pixel pixel : PlaceData.fixingQ) {
-                try {
-                    placeChannel.sendMessage(pixel.getDrawCommand()).complete();
-                    PlaceData.fixedPixels++;
 
-                    if (PlaceData.stop || !PlaceData.verify) {
-                        LOGGER.debug("BREAK");
-                        break;
-                    }
-                } catch (Exception e) {
-                    LOGGER.warn("caught an error while fixing pixels", e);
-                    try {
-                        Thread.sleep(16000);
-                    } catch (InterruptedException ee) {
-                        LOGGER.error("Thread sleep error", ee);
-                    }
-                }
-            }
-
-            LOGGER.info("completed leftover pixels");
             if (!PlaceData.stop) {
-                LOGGER.debug("stop");
-                //DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
-                id = DBHandlerPlace.getNextProject();
+                LOGGER.debug("stopping project: " + projectId);
+                DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
+                projectId = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
             } else {
-                id = -1;
+                projectId = -1;
             }
         }
 
@@ -145,32 +126,38 @@ public class PlaceDraw implements CommandInterface {
         PlaceData.stopQ = false;
     }
 
-    private static String messageGenerator() {
-        StringBuilder command = new StringBuilder();
+//    private static String messageGenerator() {
+//        StringBuilder command = new StringBuilder();
+//
+//        command.append(drawOrContinue());
+//
+//        if (PlaceData.totalPixels - PlaceData.drawnPixels > 128) {
+//            if (PlaceData.openPixelRequests()) {
+//                command.append(" | ").append(PlaceData.getPixelRequest());
+//
+//                for (int i = 0; i < 60; i++) {
+//                    command.append(drawOrContinue());
+//                }
+//            }
+//        }
+//
+//        return command.toString();
+//    }
 
-        command.append(drawOrContinue());
+//    private static String drawOrContinue() {
+//        if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
+//            PlaceData.fixedPixels++;
+//            return "/" + PlaceData.fixingQ.poll().getDrawCommand();
+//        } else {
+//            PlaceData.drawnPixels++;
+//            return "/" + PlaceData.getPixel().getDrawCommand();
+//        }
+//    }
 
-        if (PlaceData.totalPixels - PlaceData.drawnPixels > 128) {
-            if (PlaceData.openPixelRequests()) {
-                command.append(" | ").append(PlaceData.getPixelRequest());
-
-                for (int i = 0; i < 60; i++) {
-                    command.append(drawOrContinue());
-                }
-            }
-        }
-
-        return command.toString();
-    }
-
-    private static String drawOrContinue() {
-        if (PlaceData.verify && !PlaceData.fixingQ.isEmpty() && (fixToggle = !fixToggle)) {
-            PlaceData.fixedPixels++;
-            return "/" + PlaceData.fixingQ.poll().getDrawCommand();
-        } else {
-            PlaceData.drawnPixels++;
-            return "/" + PlaceData.getPixel().getDrawCommand();
-        }
+    private static void napTime() {
+        try {
+            Thread.sleep(16000);
+        } catch (InterruptedException ignored) {}
     }
 
     private static void sendCompletionMessage(JDA jda) {
@@ -186,7 +173,7 @@ public class PlaceDraw implements CommandInterface {
         try {
             ImageIO.write(img, "png", os);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error converting image", e);
         }
         return new ByteArrayInputStream(os.toByteArray());
     }
@@ -208,4 +195,10 @@ public class PlaceDraw implements CommandInterface {
     public List<String> getAliases() {
         return List.of("pd");
     }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
+    }
+
 }

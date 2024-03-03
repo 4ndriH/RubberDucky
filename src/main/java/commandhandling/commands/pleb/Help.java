@@ -3,8 +3,7 @@ package commandhandling.commands.pleb;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import assets.Config;
 import services.BotExceptions;
 import services.CommandManager;
@@ -18,8 +17,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
+import static services.discordhelpers.MessageSendHelper.sendMessage;
+
 public class Help implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Help.class);
     private static Pattern argumentPattern = null;
     private final CommandManager manager;
 
@@ -66,9 +66,10 @@ public class Help implements CommandInterface {
             embed.setFooter(Config.prefix + "help <command> gives you a more detailed description" +
                     (ctx.getSecurityClearance() < 3 ? "\nAppending '--persist' prevents messages from being deleted" : ""));
 
-            EmbedHelper.sendEmbed(ctx, embed, 64);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(mca, 64);
         } else {
-            CommandInterface command = manager.getCommand(ctx.getArguments().get(0));
+            CommandInterface command = CommandManager.getCommand(ctx.getArguments().get(0));
 
             if (command == null) {
                 BotExceptions.commandNotFoundException(ctx, ctx.getArguments().get(0));
@@ -92,7 +93,8 @@ public class Help implements CommandInterface {
                 embed.addField("__Aliases__", "```" + aliases + "```", false);
             }
 
-            EmbedHelper.sendEmbed(ctx, embed, 64);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(mca, 64);
         }
             ReactionHelper.addReaction(ctx, 0);
     }
@@ -112,12 +114,7 @@ public class Help implements CommandInterface {
 
     @Override
     public List<String> getAliases() {
-        return List.of("commands", "cmds", "commandlist", "");
-    }
-
-    @Override
-    public boolean requiresFurtherChecks() {
-        return true;
+        return List.of("commands", "cmds", "");
     }
 
     @Override
@@ -127,12 +124,15 @@ public class Help implements CommandInterface {
 
             for (CommandInterface ci : manager.getCommands()) {
                 sb.append(ci.getNameLC()).append("|");
+
+                for (String alias : ci.getAliases()) {
+                    sb.append(alias).append("|");
+                }
             }
 
             sb.deleteCharAt(sb.length() - 1);
-            System.out.println(sb);
 
-            argumentPattern = Pattern.compile("^((?:" + sb + ")?)\\s?$");
+            argumentPattern = Pattern.compile("^(?:" + sb + ")?\\s?$");
         }
 
         return argumentPattern.matcher(args).matches();

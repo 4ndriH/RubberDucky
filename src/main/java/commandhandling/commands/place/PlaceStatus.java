@@ -3,8 +3,7 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import assets.Emotes;
 import services.miscellaneous.Format;
 import services.discordhelpers.EmbedHelper;
@@ -13,9 +12,9 @@ import assets.objects.PlaceData;
 import java.time.Instant;
 import java.util.List;
 
-public class PlaceStatus implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceStatus.class);
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
+public class PlaceStatus implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Status");
@@ -25,13 +24,13 @@ public class PlaceStatus implements CommandInterface {
             embed.addField("__Estimated completion time__", "<t:" +
                     (Instant.now().getEpochSecond() + (int)((PlaceData.totalPixels - PlaceData.drawnPixels + PlaceData.fixingQ.size() - PlaceData.fixedPixels) * 1.0587)) + ":F>", false);
 
-            embed.addField("__Total Pixels:__", "" + Format.Number(PlaceData.totalPixels), true);
-            embed.addField("__Drawn Pixels:__", "" + Format.Number(PlaceData.drawnPixels), true);
-            embed.addField("__Pixels Left:__", "" + Format.Number(PlaceData.totalPixels - PlaceData.drawnPixels), true);
+            embed.addField("__Total Pixels:__", Format.Number(PlaceData.totalPixels), true);
+            embed.addField("__Drawn Pixels:__", Format.Number(PlaceData.drawnPixels), true);
+            embed.addField("__Pixels Left:__", Format.Number(PlaceData.totalPixels - PlaceData.drawnPixels), true);
 
             if (!PlaceData.fixingQ.isEmpty() || PlaceData.fixedPixels > 0) {
-                embed.addField("__Pixels to fix:__", "" + Format.Number(PlaceData.fixingQ.size()), true);
-                embed.addField("__Fixed Pixels:__", "" + Format.Number(PlaceData.fixedPixels), true);
+                embed.addField("__Pixels to fix:__", Format.Number(PlaceData.fixingQ.size()), true);
+                embed.addField("__Fixed Pixels:__", Format.Number(PlaceData.fixedPixels), true);
                 embed.addBlankField(true);
             }
 
@@ -42,7 +41,8 @@ public class PlaceStatus implements CommandInterface {
             embed.setDescription("Currently not drawing");
         }
 
-        EmbedHelper.sendEmbed(ctx, embed, 64);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 64);
     }
 
     private String progress () {

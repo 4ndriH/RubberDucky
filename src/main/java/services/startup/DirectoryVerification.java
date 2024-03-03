@@ -30,9 +30,12 @@ public class DirectoryVerification {
 
         for (File directory : directories) {
             if (!directory.isDirectory()) {
-                directory.mkdir();
-                directoryCreated = true;
-                LOGGER.info("Directory \"" + directory.getPath() + "\" has been created");
+                if (directory.mkdir()) {
+                    directoryCreated = true;
+                    LOGGER.info("Directory \"" + directory.getPath() + "\" has been created");
+                } else {
+                    LOGGER.error("Directory: \"" + directory.getPath() + "\" could not be created");
+                }
             }
         }
 

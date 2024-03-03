@@ -5,14 +5,20 @@ import ch.qos.logback.core.AppenderBase;
 import net.dv8tion.jda.api.EmbedBuilder;
 import assets.Config;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class DiscordAppender extends AppenderBase<ILoggingEvent> {
-    private static JDA jda;
+    private static TextChannel channel;
 
     public static void setJDA(JDA jda) {
-        DiscordAppender.jda = jda;
+        channel = Objects.requireNonNull(jda.getGuildById("817850050013036605")).getTextChannelById(Config.logChannelID);
+
+        if (channel == null) {
+            throw new IllegalArgumentException("Log channel not found");
+        }
     }
 
     @Override
@@ -37,9 +43,9 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
             sb.append("```");
 
             embed.setDescription(sb.length() > 4096 ? sb.substring(0, 4096) : sb.toString());
-            embed.setFooter(eventObject.getThrowableProxy().getClassName());
+            embed.setFooter(eventObject.getThrowableProxy().getMessage());
         }
 
-        jda.getGuildById("817850050013036605").getTextChannelById(Config.logChannelID).sendMessageEmbeds(embed.build()).queue();
+        channel.sendMessageEmbeds(embed.build()).queue();
     }
 }

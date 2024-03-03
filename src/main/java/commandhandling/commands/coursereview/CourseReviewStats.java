@@ -3,19 +3,16 @@ package commandhandling.commands.coursereview;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import services.discordhelpers.EmbedHelper;
 
 import java.util.List;
 
 import static services.database.DBHandlerCourseReviewStats.getPublishedReviews;
 import static services.database.DBHandlerCourseReviewStats.getReviewedCourseCount;
-import static services.discordhelpers.EmbedHelper.sendEmbed;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class CourseReviewStats implements CommandInterface {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CourseReviewStats.class);
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("CourseReview Statistics");
@@ -23,7 +20,8 @@ public class CourseReviewStats implements CommandInterface {
         embed.setFooter("If you are curious about other stats let me know and maybe I add them");
         embed.setThumbnail("https://n.ethz.ch/~lteufelbe/coursereview/icon.png");
 
-        sendEmbed(ctx, embed, 128);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 128);
     }
 
     @Override

@@ -3,9 +3,8 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import assets.Config;
 import assets.objects.Pixel;
 import services.BotExceptions;
@@ -17,11 +16,10 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class PlaceGetFile implements CommandInterface {
-    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)$");
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceGetFile.class);
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)\\s?$");
 
     @Override
     public void handle(CommandContext ctx) {
@@ -39,9 +37,8 @@ public class PlaceGetFile implements CommandInterface {
                 ArrayList<Pixel> pixels = DBHandlerPlace.getProjectPixels(id);
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
-                ctx.getChannel().sendFiles(FileUpload.fromData(output.getBytes(), "RDdraw" + id + ".txt")).queue(
-                        msg -> deleteMsg(ctx, msg, 128)
-                );
+                MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(output.getBytes(), "RDdraw" + id + ".txt"));
+                sendMessage(mca, 128);
             } catch (IllegalArgumentException e) {
                 BotExceptions.FileExceedsUploadLimitException(ctx);
             }

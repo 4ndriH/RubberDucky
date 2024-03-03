@@ -3,6 +3,7 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +22,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
+import static services.discordhelpers.MessageSendHelper.sendMessageComplete;
 
 public class PlacePreview implements CommandInterface {
-    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\\s?$");
     private final Logger LOGGER = LoggerFactory.getLogger(PlacePreview.class);
 
     @Override
@@ -63,7 +65,7 @@ public class PlacePreview implements CommandInterface {
                 sendMessageCase = 1;
             } catch (Exception e) {
                 try {
-                    scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
+                    scanner = new Scanner(Objects.requireNonNull(ctx.getMessage().getReferencedMessage()).getAttachments().get(0)
                             .getProxy().download().get());
                     sendMessageCase = 2;
                 } catch (Exception ee) {
@@ -130,29 +132,24 @@ public class PlacePreview implements CommandInterface {
         try {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Preview" + (sendMessageCase == 0 ? " - " + id : ""));
             embed.setImage("attachment://preview.gif");
+            MessageCreateAction mca;
+
             switch (sendMessageCase) {
-                case 0 -> ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(ctx, msg, 1024)
-                );
-                case 1 -> ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(ctx, msg, 1024)
-                );
-                case 2 -> ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue(
-                        msg -> deleteMsg(ctx, msg, 1024)
-                );
+                case 1 -> mca = ctx.getMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif));
+                case 2 -> mca = ctx.getMessage().getReferencedMessage().replyEmbeds(embed.build()).addFiles(FileUpload.fromData(gif));
+                default -> mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif));
             }
+            sendMessageComplete(mca, 1024);
         } catch (IllegalArgumentException e) {
             LOGGER.error("PlacePreview Error", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (gif.delete()) {
+            LOGGER.debug("Deleted file: " + gif.getName());
+        } else {
+            LOGGER.error("Failed to delete file: " + gif.getName());
         }
-
-        gif.delete();
     }
 
     @Override
@@ -177,5 +174,15 @@ public class PlacePreview implements CommandInterface {
     @Override
     public boolean argumentCheck(StringBuilder args) {
         return argumentPattern.matcher(args).matches();
+    }
+
+    @Override
+    public boolean attachmentCheck(CommandContext ctx) {
+        if (!ctx.getMessage().getAttachments().isEmpty()) {
+            String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+
+            return type.startsWith("plain");
+        }
+        return true;
     }
 }

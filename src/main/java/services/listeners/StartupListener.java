@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
-import services.database.ConnectionPoolCR;
 import services.database.DBHandlerConfig;
 import services.database.DBHandlerMessageDeleteTracker;
 import services.database.DBHandlerPlace;
@@ -19,7 +18,9 @@ import services.logging.DiscordAppender;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
+
+import static services.discordhelpers.MessageDeleteHelper.deleteMessage;
 
 public class StartupListener extends ListenerAdapter {
     private static boolean onStartupTasks = true;
@@ -31,20 +32,14 @@ public class StartupListener extends ListenerAdapter {
             int placeID = Integer.parseInt(DBHandlerConfig.getConfig().get("placeProject"));
             if (placeID != -1) {
                 if (DBHandlerPlace.getPlaceProjectIDs().contains(placeID)) {
-                    (new Thread(() -> {
-                        PlaceDraw.draw(event.getJDA(), placeID);
-                    })).start();
+                    (new Thread(() -> PlaceDraw.draw(event.getJDA(), placeID))).start();
                 } else {
                     DBHandlerConfig.updateConfig("placeProject", "-1");
                 }
             }
 
-            event.getJDA().getGuildById(817850050013036605L).getTextChannelById(Config.logChannelID).sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
-
-            // set up DB connection pool for CR
-            if (event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
-                new ConnectionPoolCR();
-            }
+            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.logChannelID))
+                    .sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
 
             // add command for active dev badge
             event.getJDA().upsertCommand("channelefficiency", "How are channels performing").addOptions(new OptionData(OptionType.STRING, "channel", "Which channel to show")
@@ -52,7 +47,6 @@ public class StartupListener extends ListenerAdapter {
                     .addChoice("ETH-Place-Bots", "Place")
                     .setRequired(false)
             ).queue();
-            event.getJDA().deleteCommandById("1040679780690960526");
             DiscordAppender.setJDA(event.getJDA());
 
             // delete messages that were scheduled for deletion
@@ -68,7 +62,7 @@ public class StartupListener extends ListenerAdapter {
 
                     if (msg != null) {
                         if (dm.deleteLater(currentSystemTime)) {
-                            msg.delete().queueAfter(deletionDelay++, TimeUnit.SECONDS);
+                            deleteMessage(msg, deletionDelay++);
                         } else {
                             msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
                         }

@@ -4,7 +4,9 @@ import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
@@ -14,18 +16,19 @@ import services.PermissionManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static services.PermissionManager.getSnowflakes;
 import static services.database.DBHandlerSnowflakePermissions.addSnowflakePermissions;
 import static services.database.DBHandlerSnowflakePermissions.removeSnowflakePermissions;
 import static services.discordhelpers.EmbedHelper.embedBuilder;
-import static services.discordhelpers.EmbedHelper.sendEmbed;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class SnowflakePermission implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(SnowflakePermission.class);
-    public static  Pattern argumentPattern = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakePermission.class);
+    private static  Pattern argumentPattern = null;
     private final CommandManager cm;
 
     public SnowflakePermission(CommandManager cm) {
@@ -45,7 +48,7 @@ public class SnowflakePermission implements CommandInterface {
                 for (String discordServerId : snowflakes.get(discordUserId).keySet()) {
 
                     for (String discordChannelId : snowflakes.get(discordUserId).get(discordServerId).keySet()) {
-                        String channelName = ctx.getJDA().getGuildById(discordServerId).getTextChannelById(discordChannelId).getAsMention();
+                        String channelName = Objects.requireNonNull(Objects.requireNonNull(ctx.getJDA().getGuildById(discordServerId)).getTextChannelById(discordChannelId)).getAsMention();
 
                         for (String command : snowflakes.get(discordUserId).get(discordServerId).get(discordChannelId)) {
                             sb.append(channelName).append(" - ").append(command).append("\n");
@@ -57,7 +60,8 @@ public class SnowflakePermission implements CommandInterface {
                 embed.addField(user.getAsTag(), sb.toString(), false);
             }
 
-            sendEmbed(ctx, embed, 64);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(mca, 64);
         } else {
             String discordChannelId, discordServerId, discordUserId, command;
             int idx;
@@ -87,15 +91,11 @@ public class SnowflakePermission implements CommandInterface {
                     throw new IllegalArgumentException();
                 }
 
-                if (!CommandManager.isCommand(command)) {
-                    throw new IllegalArgumentException();
-                }
-
                 if (!PermissionManager.getWhitelistedServers().contains(discordServerId)) {
                     throw new IllegalArgumentException();
                 }
 
-                if (ctx.getJDA().getGuildById(discordServerId).getTextChannelById(discordChannelId) == null) {
+                if (Objects.requireNonNull(ctx.getJDA().getGuildById(discordServerId)).getTextChannelById(discordChannelId) == null) {
                     throw new IllegalArgumentException();
                 }
             } catch (Exception e) {
@@ -103,10 +103,18 @@ public class SnowflakePermission implements CommandInterface {
                 return;
             }
 
+            JDA jda = ctx.getJDA();
+
             if (snowFlakeCheck(snowflakes, discordUserId, discordServerId, discordChannelId, command)) {
                 removeSnowflakePermissions(discordUserId, discordServerId, discordChannelId, command);
+                LOGGER.info("Removed snowflake permission for " + Objects.requireNonNull(jda.getUserById(discordUserId)).getName()
+                        + " in " + Objects.requireNonNull(jda.getGuildById(discordServerId)).getName()
+                        + " > " + Objects.requireNonNull(jda.getTextChannelById(discordChannelId)).getName() + " for " + command);
             } else {
                 addSnowflakePermissions(discordUserId, discordServerId, discordChannelId, command);
+                LOGGER.info("Added snowflake permission for " + Objects.requireNonNull(jda.getUserById(discordUserId)).getName()
+                        + " in " + Objects.requireNonNull(jda.getGuildById(discordServerId)).getName()
+                        + " > " + Objects.requireNonNull(jda.getTextChannelById(discordChannelId)).getName() + " for " + command);
             }
 
             PermissionManager.reload();
@@ -151,8 +159,7 @@ public class SnowflakePermission implements CommandInterface {
     @Override
     public boolean argumentCheck(StringBuilder args) {
         if (argumentPattern == null) {
-            String regex = "^(?:-s\\s\\d{18,19}\\s)?(?:-c\\s(?:<#)?\\d{18,19}>?\\s)?(?:-u\\s(?:<@)?\\d{18,19}>?\\s)-cmd\\s\\w+\\s?";
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder("^(?:(?:-s\\s\\d{18,19}\\s)?(?:-c\\s(?:<#)?\\d{18,19}>?\\s)?-u\\s(?:<@)?\\d{18,19}>?(?:\\s-cmd\\s(?:");
 
             for (CommandInterface ci : cm.getCommands()) {
                 if (ci.getRestrictionLevel() < 3) {
@@ -161,8 +168,9 @@ public class SnowflakePermission implements CommandInterface {
             }
 
             sb.deleteCharAt(sb.length() - 1);
+            sb.append("))?)?\\s?$");
 
-            argumentPattern = Pattern.compile(regex + "(?:" + sb + ")?$");
+            argumentPattern = Pattern.compile(sb.toString());
         }
 
         return argumentPattern.matcher(args).matches();

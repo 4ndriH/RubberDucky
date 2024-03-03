@@ -4,6 +4,7 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Emotes;
@@ -14,14 +15,16 @@ import services.discordhelpers.EmbedHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static services.PermissionManager.getWhitelistedServers;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 
 public class Servers implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
-    public static final Pattern argumentPattern = Pattern.compile("^(?:this\\s?)?$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:this\\s?)?\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
 
     @Override
     public void handle(CommandContext ctx) {
@@ -32,8 +35,10 @@ public class Servers implements CommandInterface {
 
             if (serverIds.contains(serverId)) {
                 DBHandlerWhitelistedServers.removeServerFromWhitelist(serverId);
+                LOGGER.info("Removed server " + Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName() + " from the whitelist");
             } else {
                 DBHandlerWhitelistedServers.addServerToWhitelist(serverId);
+                LOGGER.info("Added server " + Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName() + " the the whitelist");
             }
 
             PermissionManager.reload();
@@ -61,7 +66,8 @@ public class Servers implements CommandInterface {
             }
 
             embed.setDescription(sb.toString());
-            EmbedHelper.sendEmbed(ctx, embed, 64);
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(mca, 64);
         }
     }
 

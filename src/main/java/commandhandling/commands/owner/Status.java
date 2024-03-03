@@ -6,36 +6,40 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.BotExceptions;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Status implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Status.class);
-    public static final Pattern argumentPattern = Pattern.compile("^(?:competing|listening|playing|watching)?\\s?.{1,128}\\s?$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:(?:competing|listening|playing|watching)\\s.{1,128})?\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Status.class);
     private static final Set<String> activities = Set.of("competing", "listening", "playing", "watching");
 
     @Override
     public void handle(CommandContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        String activity = ctx.getArguments().get(0);
+        StringBuilder sb = new StringBuilder("With Duckies");
+        String activity = "playing";
 
-        if (activities.contains(activity)) {
-            ctx.getArguments().remove(0);
-        }
+        if (!ctx.getArguments().isEmpty()) {
+            activity = ctx.getArguments().get(0).toLowerCase();
 
-        for (String s : ctx.getArguments()) {
-            sb.append(s).append(" ");
+            if (activities.contains(activity)) {
+                ctx.getArguments().remove(0);
+            }
+
+            for (String s : ctx.getArguments()) {
+                sb.append(s).append(" ");
+            }
         }
 
         switch (activity) {
             case "competing" -> ctx.getJDA().getPresence().setActivity(Activity.competing(sb.toString()));
             case "listening" -> ctx.getJDA().getPresence().setActivity(Activity.listening(sb.toString()));
-            case "playing" -> ctx.getJDA().getPresence().setActivity(Activity.playing(sb.toString()));
-            case "watching" -> ctx.getJDA().getPresence().setActivity(Activity.watching(sb.toString()));
-            default -> ctx.getJDA().getPresence().setActivity(Activity.playing("With Duckies"));
+            case "playing"   -> ctx.getJDA().getPresence().setActivity(Activity.playing(sb.toString()));
+            case "watching"  -> ctx.getJDA().getPresence().setActivity(Activity.watching(sb.toString()));
         }
+
+        LOGGER.debug("Status changed to: " + activity + " | " + sb);
     }
 
     @Override

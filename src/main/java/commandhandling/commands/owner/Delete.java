@@ -7,18 +7,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
+
+import static services.discordhelpers.MessageDeleteHelper.deleteMessage;
 
 public class Delete implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Delete.class);
 
     @Override
     public void handle(CommandContext ctx) {
-        String id = ctx.getArguments().size() == 1 ? ctx.getArguments().get(0) :
-                ctx.getMessage().getReferencedMessage().getId();
-
-        ctx.getChannel().retrieveMessageById(id).queue(
+        deleteMessage(ctx.getMessage(), 0);
+        ctx.getChannel().retrieveMessageById(Objects.requireNonNull(ctx.getMessage().getReferencedMessage()).getId()).queue(
                 message -> message.delete().queue()
         );
+        LOGGER.debug("Deleted message: " + ctx.getMessage().getReferencedMessage().getContentRaw());
     }
 
     @Override

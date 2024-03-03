@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandContext {
     private final MessageReceivedEvent event;
@@ -29,7 +30,7 @@ public class CommandContext {
         persist = this.arguments.remove("--persist");
 
         securityClearance = event.getAuthor().getId().equals(Config.ownerID) ? 0 :
-        event.getMember().hasPermission(Permission.ADMINISTRATOR) ? 1 :
+        Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR) ? 1 :
         event.getMember().hasPermission(Permission.KICK_MEMBERS) ? 2 : 3;
     }
 
@@ -55,10 +56,6 @@ public class CommandContext {
 
     public net.dv8tion.jda.api.entities.User getAuthor() {
         return this.event.getAuthor();
-    }
-
-    public net.dv8tion.jda.api.entities.Member getMember() {
-        return this.event.getMember();
     }
 
     public net.dv8tion.jda.api.JDA getJDA() {
