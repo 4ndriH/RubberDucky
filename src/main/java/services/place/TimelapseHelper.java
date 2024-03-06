@@ -2,7 +2,6 @@ package services.place;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class TimelapseHelper {
@@ -62,7 +62,7 @@ public class TimelapseHelper {
         InputStream stream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
         String fileName = "chunk_" + chunk + ".txt";
 
-        jda.getGuildById("817850050013036605").getTextChannelById("969901898389925959").sendMessage(fileName).addFiles(FileUpload.fromData(stream, fileName)).queue();
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("817850050013036605")).getTextChannelById("969901898389925959")).sendMessage(fileName).addFiles(FileUpload.fromData(stream, fileName)).queue();
 
         LOGGER.debug("Chunk " + chunk + " saved", new Exception());
     }
@@ -124,7 +124,7 @@ public class TimelapseHelper {
         File gif = new File("tempFiles/place/timelapse/chunk_" + chunk + ".gif");
         EmbedBuilder embed = EmbedHelper.embedBuilder("Timelapse of chunk " + chunk);
         embed.setImage("attachment://chunk_" + chunk + ".gif");
-        jda.getGuildById("747752542741725244").getThreadChannelById("1205890377295593503").sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue();
+        Objects.requireNonNull(Objects.requireNonNull(jda.getGuildById("747752542741725244")).getThreadChannelById("1205890377295593503")).sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(gif)).queue();
 
 //        try {
 //            Thread.sleep(10000);
