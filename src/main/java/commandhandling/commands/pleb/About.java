@@ -4,8 +4,7 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import services.miscellaneous.Format;
 import services.discordhelpers.EmbedHelper;
 
@@ -13,9 +12,9 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
-public class About implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(About.class);
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
+public class About implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         RuntimeMXBean rmb = ManagementFactory.getRuntimeMXBean();
@@ -27,7 +26,8 @@ public class About implements CommandInterface {
                 + JDAInfo.VERSION_MINOR + "." + JDAInfo.VERSION_REVISION, true);
         embed.addField("**Uptime:**", Format.Time((int)(rmb.getUptime() / 1000)), true);
 
-        EmbedHelper.sendEmbed(ctx, embed, 32);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 32);
     }
 
     @Override

@@ -17,7 +17,22 @@ public class Config {
     public static Color embedColor;
     public static boolean placeVerify;
 
-    public static void reload() {
+    public static void updateConfig(String key, String value) {
+        DBHandlerConfig.updateConfig(key, value);
+
+        switch (key) {
+            case "token" -> token = value;
+            case "prefix" -> prefix = value;
+            case "ownerId" -> ownerID = value;
+            case "logChannel" -> logChannelID = value;
+            case "embedColor" -> embedColor = Color.decode(value);
+            case "PlaceVerify" -> placeVerify = Boolean.parseBoolean(value);
+        }
+
+        LOGGER.info("Config updated: " + key.toUpperCase() + " change to \"" + value + "\"");
+    }
+
+    public static void initConfig() {
         HashMap<String, String> config = DBHandlerConfig.getConfig();
         token = config.get("token");
         prefix = config.get("prefix");
@@ -25,7 +40,6 @@ public class Config {
         logChannelID = config.get("logChannel");
         embedColor = Color.decode(config.get("embedColor"));
         placeVerify = Boolean.parseBoolean(config.get("PlaceVerify"));
-
-        LOGGER.info("Config loaded");
+        LOGGER.info("Config initialized");
     }
 }

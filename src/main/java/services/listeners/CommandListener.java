@@ -27,11 +27,5 @@ public class CommandListener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().startsWith(Config.prefix)) {
             manager.handle(event);
         }
-
-        // place logger
-        /*if (event.getChannel().getId().equals("819966095070330950") || event.getChannel().getId().equals("955751651942211604")) {
-            event.getJDA().getGuildById("817850050013036605").getTextChannelById("969901898389925959")
-                    .sendMessage(event.getAuthor().getName() + " [" + event.getChannel().getName() +"]: " + event.getMessage().getContentRaw()).queue();
-        }*/
     }
 }

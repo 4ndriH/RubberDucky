@@ -34,7 +34,7 @@ public class ChunkFetcher {
                 throw new RuntimeException(e);
             }
             ws.abort();
-            buffer = wsc.buffer;
+            buffer = WebSocketClient.buffer;
         } while (buffer.remaining() < 1_200_003);
 
         int r, g, b, x, y;
@@ -75,17 +75,17 @@ public class ChunkFetcher {
     }
 
     private static String toBinary(int n) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         while (n > 0) {
-            s = ((n % 2) == 0 ? "0" : "1") + s;
+            s.insert(0, ((n % 2) == 0 ? "0" : "1"));
             n = n / 2;
         }
 
         while (s.length() < 8) {
-            s = "0" + s;
+            s.insert(0, "0");
         }
 
-        return s;
+        return s.toString();
     }
 
     private static int toInt(String s) {

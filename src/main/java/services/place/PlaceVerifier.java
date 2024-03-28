@@ -2,15 +2,11 @@ package services.place;
 
 import assets.objects.Pixel;
 import assets.objects.PlaceData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Collections;
 
 public class PlaceVerifier {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceVerifier.class);
-
     public static void verify() {
         PlaceData.triggerPlaceImageReload();
 

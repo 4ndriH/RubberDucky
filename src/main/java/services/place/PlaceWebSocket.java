@@ -4,17 +4,13 @@ import assets.objects.PlaceData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
-import java.net.http.WebSocket.Listener;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CountDownLatch;
 
 public class PlaceWebSocket {
@@ -53,7 +49,7 @@ public class PlaceWebSocket {
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Latch Interrupted", e);
                 }
 
                 buffer = WebSocketClient.buffer;
@@ -96,53 +92,5 @@ public class PlaceWebSocket {
         } while (img == null);
 
         return img;
-    }
-
-    private static InputStream convert(BufferedImage img) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(img, "png", os);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ByteArrayInputStream(os.toByteArray());
-    }
-
-    private static class WebSocketClient implements WebSocket.Listener {
-        private final CountDownLatch latch;
-        public static ByteBuffer buffer = ByteBuffer.allocate(0);
-
-        public WebSocketClient(CountDownLatch latch) {
-            this.latch = latch;
-        }
-
-        @Override
-        public CompletionStage<?> onBinary(WebSocket webSocket, ByteBuffer data, boolean last) {
-            // Live Pixels arriving
-            if(data.remaining() == 9 && last && buffer.remaining() < 1000) {
-                return WebSocket.Listener.super.onBinary(webSocket, data, last);
-            }
-
-            // concatenate the ByteBuffers
-            buffer = ByteBuffer.allocate(buffer.remaining() + data.remaining()).put(buffer).put(data).flip();
-
-            if(last) {
-                latch.countDown();
-            }
-
-            return WebSocket.Listener.super.onBinary(webSocket, data, last);
-        }
-
-        @Override
-        public void onError(WebSocket webSocket, Throwable error) {
-            latch.countDown();
-            Listener.super.onError(webSocket, error);
-        }
-
-        @Override
-        public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-            latch.countDown();
-            return Listener.super.onClose(webSocket, statusCode, reason);
-        }
     }
 }

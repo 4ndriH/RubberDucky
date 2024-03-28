@@ -19,7 +19,7 @@ public class CustomFileAppenderLayout extends LayoutBase<ILoggingEvent> {
 
     @Override
     public String doLayout(ILoggingEvent event) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String[] arr = event.getLoggerName().split("\\.");
 
         sb.append(formatter.format(event.getTimeStamp()));

@@ -50,7 +50,7 @@ public enum Emotes {
 
     private final String id;
 
-    private Emotes(String id) {
+    Emotes(String id) {
         this.id = id;
     }
 

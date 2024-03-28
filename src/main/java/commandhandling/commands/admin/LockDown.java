@@ -9,15 +9,16 @@ import services.PermissionManager;
 
 import java.util.List;
 
-import static services.PermissionManager.getWhitelistedChannels;
+import static services.PermissionManager.getWhitelistedServers;
 
 public class LockDown implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(LockDown.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LockDown.class);
 
     @Override
     public void handle(CommandContext ctx) {
-        if (getWhitelistedChannels().isEmpty()) {
-            PermissionManager.reload();
+        if (getWhitelistedServers().isEmpty()) {
+            PermissionManager.endLockdown();
+            LOGGER.info("Lockdown ended");
         } else {
             LOGGER.warn("Initiating Lockdown!");
             PermissionManager.initiateLockdown();
@@ -32,7 +33,7 @@ public class LockDown implements CommandInterface {
     @Override
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setDescription("Prevents anyone from using this bot. Except me of course");
+        embed.setDescription("Prevents anyone from using this bot. Except me of course :)");
         return embed;
     }
 

@@ -3,26 +3,21 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import assets.objects.Pixel;
 import services.BotExceptions;
 import services.discordhelpers.EmbedHelper;
 import services.PermissionManager;
 import services.database.DBHandlerPlace;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
-import static services.discordhelpers.ReactionHelper.addReaction;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class PlaceQueue implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceQueue.class);
     private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)?\\s?$");
-    private static final List<String> types = List.of("jpg", "jpeg", "png");
 
     @Override
     public void handle(CommandContext ctx) {
@@ -30,13 +25,12 @@ public class PlaceQueue implements CommandInterface {
         Random random = new Random();
         ArrayList<Pixel> pixels = new ArrayList<>();
         Scanner scanner;
-        int id = -1;
+        int id;
 
         if (!ctx.getArguments().isEmpty() && PermissionManager.authenticateOwner(ctx)) {
             try {
                 id = Integer.parseInt(ctx.getArguments().get(0));
             } catch (Exception e) {
-                BotExceptions.invalidArgumentsException(ctx);
                 return;
             }
         } else {
@@ -49,15 +43,12 @@ public class PlaceQueue implements CommandInterface {
             scanner = new Scanner(ctx.getMessage().getAttachments().get(0).getProxy().download().get());
         } catch (Exception e) {
             try {
-                scanner = new Scanner(ctx.getMessage().getReferencedMessage().getAttachments().get(0)
-                        .getProxy().download().get());
+                scanner = new Scanner(Objects.requireNonNull(ctx.getMessage().getReferencedMessage()).getAttachments().get(0).getProxy().download().get());
             } catch (Exception ee) {
                 BotExceptions.missingAttachmentException(ctx);
                 return;
             }
         }
-
-        long time = System.currentTimeMillis();
 
         while (scanner.hasNextLine()) {
             int x, y;
@@ -80,10 +71,10 @@ public class PlaceQueue implements CommandInterface {
         DBHandlerPlace.insertProjectIntoQueue(id, ctx.getAuthor().getId(), pixels);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
-        addReaction(ctx, 0);
         embed.setDescription("Your file got ID " + id);
 
-        EmbedHelper.sendEmbed(ctx, embed, 32);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 32);
     }
 
     @Override
@@ -111,11 +102,13 @@ public class PlaceQueue implements CommandInterface {
     @Override
     public boolean attachmentCheck(CommandContext ctx) {
         if (ctx.getMessage().getAttachments().isEmpty()) {
-            return false;
+            Message refMsg = ctx.getMessage().getReferencedMessage();
+
+            return refMsg != null && !refMsg.getAttachments().isEmpty();
         }
 
-        String type = ctx.getMessage().getAttachments().get(0).getContentType().split("/")[1];
+        String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
 
-        return types.contains(type);
+        return type.contains("plain");
     }
 }

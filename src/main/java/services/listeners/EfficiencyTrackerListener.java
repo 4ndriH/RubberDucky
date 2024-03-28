@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class EfficiencyTrackerListener extends ListenerAdapter {
-    private final Logger LOGGER = LoggerFactory.getLogger(EfficiencyTrackerListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EfficiencyTrackerListener.class);
     private ScheduledExecutorService sqlExecutor;
     private int ethPlaceBots;
     private int countThread;

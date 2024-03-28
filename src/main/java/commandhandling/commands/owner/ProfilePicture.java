@@ -4,10 +4,8 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.BotExceptions;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,8 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-
-import static services.discordhelpers.ReactionHelper.addReaction;
+import java.util.Objects;
 
 public class ProfilePicture implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(ProfilePicture.class);
@@ -28,9 +25,9 @@ public class ProfilePicture implements CommandInterface {
         try {
             Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
-            addReaction(ctx, 0);
+            LOGGER.info("Changed profile picture");
         } catch (Exception e) {
-            BotExceptions.missingAttachmentException(ctx);
+            LOGGER.error("Error while changing profile picture", e);
         }
     }
 
@@ -39,7 +36,7 @@ public class ProfilePicture implements CommandInterface {
         try {
             ImageIO.write(img, "png", os);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while converting image", e);
         }
         return new ByteArrayInputStream(os.toByteArray());
     }
@@ -67,6 +64,6 @@ public class ProfilePicture implements CommandInterface {
             return false;
         }
 
-        return ctx.getMessage().getAttachments().get(0).getContentType().startsWith("image");
+        return Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).startsWith("image");
     }
 }

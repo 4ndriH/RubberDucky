@@ -10,27 +10,45 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.locks.ReentrantLock;
+//import java.util.concurrent.locks.ReentrantLock;
 
 public class PlaceData {
-    private final static ReentrantLock lock = new ReentrantLock();
-    private static LinkedList<String> requests;
+//    private final static ReentrantLock lock = new ReentrantLock();
+//    private static LinkedList<String> requests;
     private static boolean runVerificationNow;
     private static BufferedImage place;
     private static long lastRequestTime;
 
     public static int ID, totalPixels, drawnPixels, fixedPixels;
-    public static boolean drawing, stop, stopQ, verify, websocketFailed;
+    public static boolean drawing, stop, stopQ, verify, websocketFailed, finalVerification;
     public static LinkedList<Pixel>  fixingQ;
     public static ArrayList<Pixel> pixels;
     public static String user;
 
-    public PlaceData(int id) {
+//    public PlaceData(int id) {
+//        drawnPixels = DBHandlerPlace.getProjectProgress(id);
+//        user = DBHandlerPlace.getProjectAuthor(id);
+//        ID = id;
+//
+//        requests = new LinkedList<>();
+//        fixingQ = new LinkedList<>();
+//        pixels = DBHandlerPlace.getProjectPixels(id);
+//
+//        totalPixels = pixels.size();
+//        fixedPixels = 0;
+//        lastRequestTime = 0L;
+//
+//        drawing = true;
+//        verify = Config.placeVerify;
+//        stop = stopQ = websocketFailed = runVerificationNow = false;
+//    }
+
+    public static void newProject(int id) {
         drawnPixels = DBHandlerPlace.getProjectProgress(id);
         user = DBHandlerPlace.getProjectAuthor(id);
         ID = id;
 
-        requests = new LinkedList<>();
+//        requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
         pixels = DBHandlerPlace.getProjectPixels(id);
 
@@ -40,7 +58,7 @@ public class PlaceData {
 
         drawing = true;
         verify = Config.placeVerify;
-        stop = stopQ = websocketFailed = runVerificationNow = false;
+        stop = stopQ = websocketFailed = runVerificationNow = finalVerification = false;
     }
 
     public static int getProgress() {
@@ -66,7 +84,11 @@ public class PlaceData {
     }
 
     public static boolean verificationCondition() {
-        return verify && fixingQ.isEmpty() && drawnPixels % 2000 == 0 || fixingQ.isEmpty() && drawnPixels == totalPixels || runVerificationNow;
+        return verify && fixingQ.isEmpty() && !finalVerification && (drawnPixels % 2000 == 0 || drawnPixels == totalPixels || runVerificationNow);
+    }
+
+    public static boolean pixelsLeftToDraw() {
+        return drawnPixels < totalPixels || (!fixingQ.isEmpty() && verify);
     }
 
     public static void triggerPlaceImageReload() {
@@ -74,7 +96,7 @@ public class PlaceData {
             place = PlaceWebSocket.getImage(true);
         } else {
             if (!runVerificationNow) {
-                verify = !websocketFailed;
+                verify = false;
             } else {
                 runVerificationNow = false;
             }
@@ -93,30 +115,30 @@ public class PlaceData {
         place = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
-    public static void addPixelRequest(String id) {
-        lock.lock();
-        try {
-            requests.add(id);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public static boolean openPixelRequests() {
-        lock.lock();
-        try {
-            return !requests.isEmpty();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public static String getPixelRequest() {
-        lock.lock();
-        try {
-            return requests.poll();
-        } finally {
-            lock.unlock();
-        }
-    }
+//    public static void addPixelRequest(String id) {
+//        lock.lock();
+//        try {
+//            requests.add(id);
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
+//
+//    public static boolean openPixelRequests() {
+//        lock.lock();
+//        try {
+//            return !requests.isEmpty();
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
+//
+//    public static String getPixelRequest() {
+//        lock.lock();
+//        try {
+//            return requests.poll();
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
 }

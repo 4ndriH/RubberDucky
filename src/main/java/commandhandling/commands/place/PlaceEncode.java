@@ -1,75 +1,65 @@
 package commandhandling.commands.place;
 
+import assets.objects.Pixel;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Config;
 import services.BotExceptions;
 import services.miscellaneous.Format;
+import services.place.patterns.*;
+import services.place.patterns.Random;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
-import static services.discordhelpers.ReactionHelper.addReaction;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class PlaceEncode implements CommandInterface {
-    public final Pattern argumentPattern = Pattern.compile("(?:\\d{1,3} ?|1000 ?){4}(?: (?:-r|-c)){0,2}(?:topdown|td|random|diagonal|lr|topdown|spiral|random|circle|spread|)(?: (?:-r|-c|-s(?: (?:\\d{1,3} |1000 )(?:\\d{1,3}|1000) ?)+)){0,3} ?");
+    public final Pattern argumentPattern = Pattern.compile("(?:\\d{1,3} ?|1000 ?){4}(?: (?:-r|-c)){0,2}(?:topdown|td|diagonal|spiral|random|circle|spread|lefttoright|lr|)(?: (?:-r|-c|-s(?: (?:\\d{1,3} |1000 )(?:\\d{1,3}|1000) ?)+)){0,3} ?");
+    private static final List<String> types = List.of("jpg", "jpeg", "png");
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceEncode.class);
-    private ArrayList<String> pixels;
-    private ArrayList<int[]> startingPoints;
-    private BufferedImage img = null;
-    private int x, y;
-    private boolean spreadContained = false;
 
     @Override
     public void handle(CommandContext ctx) {
-        String fileName, pattern;
-        startingPoints = new ArrayList<>();
-        pixels = new ArrayList<>();
-        int width, height;
+        String fileName, pattern = "lefttoright";
+        ArrayList<Pixel> pixels;
+        BufferedImage img ;
+        ArrayList<int[]> startingPoints = new ArrayList<>();
+        boolean spreadContained = false;
 
         try {
             fileName = ctx.getMessage().getAttachments().get(0).getFileName();
             fileName = fileName.substring(0, fileName.length() - 4) + ".txt";
             img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
-            ctx.getMessage().delete().queue();
-        } catch (Exception e) {
-            System.out.println(e);
-            BotExceptions.missingAttachmentException(ctx);
+        } catch (IOException e) {
+            LOGGER.error("PlaceEncode Error", e);
             return;
         }
 
-        try {
-            x = Integer.parseInt(ctx.getArguments().get(0));
-            y = Integer.parseInt(ctx.getArguments().get(1));
-            width = Integer.parseInt(ctx.getArguments().get(2));
-            height = Integer.parseInt(ctx.getArguments().get(3));
-        } catch (Exception e) {
-            BotExceptions.invalidArgumentsException(ctx);
-            return;
-        }
+        ctx.getMessage().delete().queue();
 
-        try {
+        int xOffset = Integer.parseInt(ctx.getArguments().get(0));
+        int yOffset = Integer.parseInt(ctx.getArguments().get(1));
+        int width = Integer.parseInt(ctx.getArguments().get(2));
+        int height = Integer.parseInt(ctx.getArguments().get(3));
+
+        if (ctx.getArguments().size() >= 5) {
             pattern = ctx.getArguments().get(4).toLowerCase();
-        } catch (Exception e) {
-            pattern = "";
         }
-
-        addReaction(ctx, 0);
 
         if (ctx.getArguments().contains("-c")) {
             spreadContained = true;
@@ -80,28 +70,29 @@ public class PlaceEncode implements CommandInterface {
             int lastDashIdx = ctx.getArguments().lastIndexOf("-");
 
             for (int i = dashSIdx + 1; i + 1 < ctx.getArguments().size() || i + 1 < lastDashIdx; i += 2) {
-                int x = 0, y = 0;
-                try {
-                    x = Integer.parseInt(ctx.getArguments().get(i));
-                    y = Integer.parseInt(ctx.getArguments().get(i + 1));
-                } catch (Exception e) {
-                    BotExceptions.invalidArgumentsException(ctx);
-                    return;
-                }
+                int x = Integer.parseInt(ctx.getArguments().get(i));
+                int y = Integer.parseInt(ctx.getArguments().get(i + 1));
                 startingPoints.add(new int[]{x, y});
             }
         }
 
+        LOGGER.debug("xOffset: " + xOffset + " yOffset: " + yOffset + " width: " + width + " height: " + height);
+        LOGGER.debug("Pattern: " + pattern);
+        LOGGER.debug("SpreadContained: " + spreadContained);
+        LOGGER.debug("StartingPoints: " + startingPoints);
+
         img = resize(img, width, height);
 
+        LOGGER.debug("Image Resized, Width: " + img.getWidth() + " Height: " + img.getHeight());
+
         switch (pattern) {
-            case "topdown", "td" -> topDown();
-            case "diagonal" -> diagonal();
-            case "spiral" -> spiral();
-            case "random" -> random();
-            case "circle" -> circle();
-            case "spread" -> spread();
-            default -> leftToRight();
+            case "topdown", "td" -> pixels = TopDown.encode(img, xOffset, yOffset);
+            case "diagonal"      -> pixels = Diagonal.encode(img, xOffset, yOffset);
+            case "spiral"        -> pixels = Spiral.encode(img, xOffset, yOffset);
+            case "random"        -> pixels = Random.encode(img, xOffset, yOffset);
+            case "circle"        -> pixels = Circle.encode(img, xOffset, yOffset);
+            case "spread"        -> pixels = Spread.encode(img, xOffset, yOffset, spreadContained, startingPoints);
+            default              -> pixels = LeftToRight.encode(img, xOffset, yOffset);
         }
 
         if (ctx.getArguments().contains("-r")) {
@@ -110,221 +101,21 @@ public class PlaceEncode implements CommandInterface {
 
         StringBuilder sb = new StringBuilder();
 
-        for (String s : pixels) {
-            sb.append(s).append("\n");
+        LOGGER.debug("Pixels: " + pixels.size());
+
+        for (Pixel p : pixels) {
+            sb.append(p).append("\n");
         }
 
         InputStream stream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
 
         try {
-            ctx.getChannel().sendMessage("Estimated drawing time: \n**" +
-                    Format.Time((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName)).queue(
-                    msg -> deleteMsg(ctx, msg, 128)
-            );
+            MessageCreateAction mca = ctx.getChannel().sendMessage("Estimated drawing time: \n**" + Format.Time((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName));
+            sendMessage(mca, 128);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("PlaceEncode Error", e);
+            LOGGER.error("File Upload Limit", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);
         }
-    }
-
-    private void leftToRight() {
-        for (int i = 0; i < img.getWidth(); i++) {
-            for (int j = 0; j < img.getHeight(); j++) {
-                writerUtility(new Color(img.getRGB(i, j), true), i, j);
-            }
-        }
-    }
-
-    private void topDown() {
-        for (int i = 0; i < img.getWidth(); i++) {
-            for (int j = 0; j < img.getHeight(); j++) {
-                writerUtility(new Color(img.getRGB(j, i), true), j, i);
-            }
-        }
-    }
-
-    private void diagonal() {
-        boolean isUp = true;
-        int n = img.getWidth(), m = img.getHeight(), i = 0, j = 0;
-
-        for (int k = 0; k < n * m;) {
-            if (isUp) {
-                for (; i >= 0 && j < n; j++, i--) {
-                    writerUtility(new Color(img.getRGB(i, j), true), i, j);
-                    k++;
-                }
-                if (i < 0 && j <= n - 1){
-                    i = 0;
-                }
-                if (j == n) {
-                    i = i + 2;
-                    j--;
-                }
-            } else {
-                for (; j >= 0 && i < m; i++, j--) {
-                    writerUtility(new Color(img.getRGB(i, j), true), i, j);
-                    k++;
-                }
-                if (j < 0 && i <= m - 1) {
-                    j = 0;
-                }
-                if (i == m) {
-                    j = j + 2;
-                    i--;
-                }
-            }
-            isUp = !isUp;
-        }
-    }
-
-    private void spiral() {
-        int n = img.getWidth() - 1, m = img.getHeight() - 1, h = n, v = m;
-        boolean[][] usedPixels = new boolean[n + 1][m + 1];
-
-        while (h >= n / 2 || v >= m / 2) {
-            for (int y = m - v; y <= v; y++){
-                if (!usedPixels[h][y]) {
-                    writerUtility(new Color(img.getRGB(h, y), true), h, y);
-                    usedPixels[h][y] = true;
-                }
-            }
-
-            for (int x = --h; x >= n - h - 1; x--) {
-                if (!usedPixels[x][v]) {
-                    writerUtility(new Color(img.getRGB(x, v), true), x, v);
-                    usedPixels[x][v] = true;
-                }
-            }
-
-            for (int y = --v; y >= m - v - 1; y--) {
-                if (!usedPixels[n - h - 1][y]) {
-                    writerUtility(new Color(img.getRGB(n - h - 1, y), true), n - h - 1, y);
-                    usedPixels[n - h - 1][y] = true;
-                }
-            }
-
-            for (int x = n - h; x <= h; x++) {
-                if (!usedPixels[x][m - v - 1]) {
-                    writerUtility(new Color(img.getRGB(x, m - v - 1), true), x, m - v - 1);
-                    usedPixels[x][m - v - 1] = true;
-                }
-            }
-        }
-    }
-
-    private void random() {
-        leftToRight();
-        Collections.shuffle(pixels);
-    }
-
-    private void circle() {
-        int n = img.getWidth(), m = img.getHeight(), limit = (int)(Math.max(m, n) * 1.25);
-        boolean[][] usedPixels = new boolean[n][m];
-
-        for (int i = limit; i >= -10; i--) {
-            for (double j = 0; j < 2 * Math.PI; j += 0.0001) {
-                int x = n / 2 + (int)(Math.sin(j) * i);
-                int y = m / 2 - (int)(Math.cos(j) * i);
-
-                if (x < n && x >= 0 && y < m && y >= 0 && !usedPixels[x][y]) {
-                    writerUtility(new Color(img.getRGB(x, y), true), x, y);
-                    usedPixels[x][y] = true;
-                }
-            }
-        }
-    }
-
-    private void spread() {
-        boolean[][] pM = new boolean[img.getWidth()][img.getHeight()];
-        ArrayList<int[]> pixelProcessQueue = new ArrayList<>();
-        Random random = new Random();
-
-        for (int[] point : startingPoints) {
-            if (new Color(img.getRGB(point[0], point[1]), true).getAlpha() > 10) {
-                pixelProcessQueue.add(point);
-                pM[point[0]][point[1]] = true;
-            }
-        }
-
-        if (pixelProcessQueue.size() == 0) {
-            int startX;
-            int startY;
-
-            do {
-                startX = random.nextInt(img.getWidth());
-                startY = random.nextInt(img.getHeight());
-            } while (spreadContained && new Color(img.getRGB(startX, startY), true).getAlpha() <= 10);
-
-            pixelProcessQueue.add(new int[]{startX + x, startY + y});
-            pM[startX + x][startY + y] = true;
-        }
-
-        int idx;
-
-        while(!pixelProcessQueue.isEmpty() && pixels.size() <= 1_000_000) {
-            idx = random.nextInt(pixelProcessQueue.size());
-            int pixelX = pixelProcessQueue.get(idx)[0];
-            int pixelY = pixelProcessQueue.get(idx)[1];
-            pixelProcessQueue.remove(idx);
-
-            writerUtility(new Color(img.getRGB(pixelX, pixelY), true), x + pixelX, y + pixelY);
-
-            while(spreadPixelCheckComplete(pM, pixelX, pixelY)) {
-                switch (random.nextInt(4)) {
-                    case 0 -> {
-                        if (spreadPixelCheck(pM, pixelX - 1, pixelY)) {
-                            pM[pixelX - 1][pixelY] = true;
-                            pixelProcessQueue.add(new int[]{pixelX - 1, pixelY});
-                        }
-                    }
-                    case 1 -> {
-                        if (spreadPixelCheck(pM, pixelX + 1, pixelY)) {
-                            pM[pixelX + 1][pixelY] = true;
-                            pixelProcessQueue.add(new int[]{pixelX + 1, pixelY});
-                        }
-                    }
-                    case 2 -> {
-                        if (spreadPixelCheck(pM, pixelX, pixelY - 1)) {
-                            pM[pixelX][pixelY - 1] = true;
-                            pixelProcessQueue.add(new int[]{pixelX, pixelY - 1});
-                        }
-                    }
-                    case 3 -> {
-                        if (spreadPixelCheck(pM, pixelX, pixelY + 1)) {
-                            pM[pixelX][pixelY + 1] = true;
-                            pixelProcessQueue.add(new int[]{pixelX, pixelY + 1});
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean spreadPixelCheckComplete(boolean[][] pM, int x, int y) {
-        return spreadPixelCheck(pM, x - 1, y) || spreadPixelCheck(pM, x + 1, y) ||
-                spreadPixelCheck(pM, x, y - 1) || spreadPixelCheck(pM, x, y + 1);
-    }
-
-    private boolean spreadPixelCheck(boolean[][] pM, int x, int y) {
-        if (spreadContained) {
-            return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y] && new Color(img.getRGB(x, y), true).getAlpha() != 0;
-        } else {
-            return x >= 0 && x < pM.length && y >= 0 && y < pM[1].length && !pM[x][y];
-        }
-    }
-
-    private void writerUtility (Color color, int i, int j) {
-        if (color.getAlpha() > 0 && x + i >= 0 && x + i < 1000 && y + j >= 0 && y + j < 1000) {
-            if (color.getAlpha() != 255 && color.getAlpha() != 0) {
-                pixels.add((x + i) + " " + (y + j) + " " + rgbToHex(color) + " " + color.getAlpha());
-            } else {
-                pixels.add((x + i) + " " + (y + j) + " " + rgbToHex(color));
-            }
-        }
-    }
-
-    private String rgbToHex(Color c) {
-        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
     }
 
     private BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -349,8 +140,16 @@ public class PlaceEncode implements CommandInterface {
         embed.addField("__Usage__", "```" + Config.prefix + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
         embed.addField("__<Position/Size>__", "Set the top left corner as well as the desired width and height" +
                                                           "```<Position/Size> = <X> <Y> <width> <height>```", false);
-        embed.addField("__<Pattern>__", "If nothing is provided or nothing can be matched, it defaults to `lefttoright`\n" +
-                                                    "```\ntopdown\ndiagonal\nspiral\nrandom\rcircle\nspread\nlefttoright```", false);
+        embed.addField("__<Pattern>__", """
+                If nothing is provided or nothing can be matched, it defaults to `lefttoright`
+                ```
+                topdown
+                diagonal
+                spiral
+                random
+                circle
+                spread
+                lefttoright```""", false);
         embed.addField("__<Parameters>__", """
             These are completely optional and mostly only affect the `spread` pattern
             ```-c             forces spread to stay within image bounds
@@ -368,5 +167,16 @@ public class PlaceEncode implements CommandInterface {
     @Override
     public boolean argumentCheck(StringBuilder args) {
         return argumentPattern.matcher(args).matches();
+    }
+
+    @Override
+    public boolean attachmentCheck(CommandContext ctx) {
+        if (ctx.getMessage().getAttachments().isEmpty()) {
+            return false;
+        }
+
+        String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+
+        return types.contains(type);
     }
 }

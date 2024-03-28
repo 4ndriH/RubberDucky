@@ -2,13 +2,16 @@ package services.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPoolCR {
-    private static HikariConfig config = new HikariConfig();
-    private static HikariDataSource dataSource;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPoolCR.class);
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource dataSource;
 
     static {
         config.setJdbcUrl( "jdbc:sqlite:/usr/games/CRAPI/CourseReview.db" );
@@ -23,7 +26,7 @@ public class ConnectionPoolCR {
         try {
             return dataSource.getConnection();
         } catch (SQLException sqlE) {
-            sqlE.printStackTrace();
+            LOGGER.error("Could not establish connection to the CR database", sqlE);
             return null;
         }
     }

@@ -3,17 +3,20 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Config;
-import services.BotExceptions;
 import services.database.DBHandlerPlace;
 import services.discordhelpers.EmbedHelper;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class PlaceDelete implements CommandInterface {
+    private static final Pattern argumentPattern = Pattern.compile("^(?:10000|[1-9][0-9]{0,3}|0)\\s?$");
     private final Logger LOGGER = LoggerFactory.getLogger(PlaceDelete.class);
 
     @Override
@@ -25,20 +28,18 @@ public class PlaceDelete implements CommandInterface {
         try {
             id = Integer.parseInt(ctx.getArguments().get(0));
             if (ids.contains(id)) {
-                File myTxtObj = new File("tempFiles/place/queue/RDdraw" + id + ".txt");
                 DBHandlerPlace.removeProjectFromQueue(id);
-                while(myTxtObj.exists() && !myTxtObj.delete());
-                embed.setDescription("File " + id + " has been deleted");
+                embed.setDescription("Project " + id + " has been deleted");
             } else {
-                embed.setDescription("There is no file with id: " + id);
+                embed.setDescription("There is no project with id: " + id);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            BotExceptions.invalidArgumentsException(ctx);
+            LOGGER.error("Something slipped past the argument check in PlaceDelete", e);
             return;
         }
 
-        EmbedHelper.sendEmbed(ctx, embed, 32);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 32);
     }
 
     @Override
@@ -57,5 +58,10 @@ public class PlaceDelete implements CommandInterface {
     @Override
     public int getRestrictionLevel() {
         return 0;
+    }
+
+    @Override
+    public boolean argumentCheck(StringBuilder args) {
+        return argumentPattern.matcher(args).matches();
     }
 }

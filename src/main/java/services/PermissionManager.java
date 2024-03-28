@@ -2,8 +2,6 @@ package services;
 
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import services.database.DBHandlerBlacklistedUsers;
 import services.database.DBHandlerSnowflakePermissions;
 import services.database.DBHandlerWhitelistedChannels;
@@ -15,8 +13,6 @@ import java.util.HashMap;
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class PermissionManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
-
     private static HashMap<String, ArrayList<String>> channels = new HashMap<>();
     private static HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = new HashMap<>();
     private static ArrayList<String> blackList = new ArrayList<>();
@@ -77,22 +73,21 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean coolDownCheck(CommandContext ctx, String command) {
-        return CoolDownManager.coolDownCheck(ctx, command);
-    }
-
     public static void reload() {
         blackList = DBHandlerBlacklistedUsers.getBlacklistedUsers();
         servers = DBHandlerWhitelistedServers.getWhitelistedServers();
         channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
         snowflakes = DBHandlerSnowflakePermissions.getSnowflakePermissions();
-
-        LOGGER.info("Permissions loaded");
     }
 
     public static void initiateLockdown() {
         channels = new HashMap<>();
         servers = new ArrayList<>();
+    }
+
+    public static void endLockdown() {
+        servers = DBHandlerWhitelistedServers.getWhitelistedServers();
+        channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
     }
 
     public static ArrayList<String> getBlacklist() {

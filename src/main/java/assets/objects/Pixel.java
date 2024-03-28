@@ -90,6 +90,10 @@ public class Pixel {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
         Pixel pObj = (Pixel) obj;
         return x == pObj.x && y == pObj.y;
     }

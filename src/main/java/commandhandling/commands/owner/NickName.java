@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class NickName implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
-    public static final Pattern argumentPattern = Pattern.compile("^\\S+$");
+    private static final Pattern argumentPattern = Pattern.compile("^\\S+\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(NickName.class);
 
     @Override
     public void handle(CommandContext ctx) {
@@ -22,6 +22,7 @@ public class NickName implements CommandInterface {
         }
 
         ctx.getSelfMember().modifyNickname(sb.toString()).queue();
+        LOGGER.info("Nickname changed to: " + sb);
     }
 
     @Override

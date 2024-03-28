@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
     private static int EXPONENTIAL_BACKOFF = 60;
@@ -27,7 +29,7 @@ public class CountThreadListener extends ListenerAdapter {
 
         interruptCount = EXPONENTIAL_BACKOFF;
 
-        thread = event.getJDA().getGuildById("747752542741725244").getThreadChannelById("996746797236105236");
+        thread = Objects.requireNonNull(event.getJDA().getGuildById("747752542741725244")).getThreadChannelById("996746797236105236");
         checkRecentMessages();
     }
 

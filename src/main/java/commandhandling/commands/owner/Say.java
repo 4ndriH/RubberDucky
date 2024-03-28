@@ -4,16 +4,13 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class Say implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Say.class);
-    public static final Pattern argumentPattern = Pattern.compile("^.*\\S+.*$");
-    private volatile HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
+    private static final Pattern argumentPattern = Pattern.compile("^.*\\S+.*\\s?$");
+    private final HashMap<MessageChannelUnion, Boolean> sayChannels = new HashMap<>();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -57,10 +54,8 @@ public class Say implements CommandInterface {
             sayChannels.put(channel, true);
         }
 
-        int finalRepeats = repeats;
-
-        for (int j = 0; j < finalRepeats && sayChannels.get(channel); j++) {
-            channel.sendMessage(sb.toString()).queue();
+        for (int j = 0; j < repeats && sayChannels.get(channel); j++) {
+            channel.sendMessage(sb.toString()).complete();
         }
         sayChannels.remove(channel);
     }

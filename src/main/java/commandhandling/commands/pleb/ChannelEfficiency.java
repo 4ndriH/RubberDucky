@@ -4,6 +4,7 @@ import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static services.discordhelpers.MessageSendHelper.sendMessage;
+
 public class ChannelEfficiency implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(ChannelEfficiency.class);
-    public static final Pattern argumentPattern = Pattern.compile("^(?:place|count)?\\s?$");
+    private static final Pattern argumentPattern = Pattern.compile("^(?:place|count)?\\s?$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelEfficiency.class);
 
     @Override
     public void handle(CommandContext ctx) {
@@ -63,7 +65,8 @@ public class ChannelEfficiency implements CommandInterface {
         embed.setImage("attachment://LineChart.jpg");
         embed.setFooter("/channelefficency");
 
-        channel.sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg")).queue((msg) -> msg.delete().queueAfter(2, TimeUnit.MINUTES));
+        MessageCreateAction mca = channel.sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg"));
+        sendMessage(mca, 128);
     }
 
     public static BufferedImage generatePlot(ArrayList<Integer> dataPoints) {
@@ -125,10 +128,10 @@ public class ChannelEfficiency implements CommandInterface {
             Xaxis += 60;
         }
 
-        // draw x axis titel
+        // draw x-axis title
         g2d.drawString("Minutes", graphWidth / 2 + graphPadding, graphHeight + graphPadding + 45);
 
-        // draw y axis titel
+        // draw y-axis title
         AffineTransform at = new AffineTransform();
         at.rotate(Math.toRadians(-90), 0, 0);
         g2d.setFont(font.deriveFont(at));
@@ -153,7 +156,7 @@ public class ChannelEfficiency implements CommandInterface {
         try {
             ImageIO.write(img, "png", os);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error converting image", e);
         }
         return new ByteArrayInputStream(os.toByteArray());
     }
@@ -167,8 +170,11 @@ public class ChannelEfficiency implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns information about how many messages wer sent");
-        embed.addField("__Channel__", "You can select between these channels" +
-                "```\nCount\nPlace\n```", false);
+        embed.addField("__Channel__", """
+                You can select between these channels```
+                Count
+                Place
+                ```""", false);
         return embed;
     }
 

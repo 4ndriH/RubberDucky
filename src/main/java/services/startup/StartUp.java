@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Config;
 import services.PermissionManager;
-import services.database.ConnectionPool;
 import services.database.DBHandlerConfig;
 
 public class StartUp {
@@ -12,7 +11,6 @@ public class StartUp {
 
     public static void actions() {
         verifications();
-        new ConnectionPool();
         InitializeDB.loadBasicConfigValues();
         loadEssentials();
         DBHandlerConfig.incrementUptimeCounter();
@@ -25,7 +23,8 @@ public class StartUp {
     }
 
     private static void loadEssentials() {
-        Config.reload();
+        Config.initConfig();
         PermissionManager.reload();
+        LOGGER.info("Permissions loaded");
     }
 }

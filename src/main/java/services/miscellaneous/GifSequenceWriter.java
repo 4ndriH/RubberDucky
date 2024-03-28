@@ -47,7 +47,7 @@ public class GifSequenceWriter {
 
         int loopContinuously = loop ? 0 : 1;
         child.setUserObject(
-                new byte[] { 0x1, (byte) (loopContinuously & 0xFF), (byte) ((loopContinuously >> 8) & 0xFF) });
+                new byte[] { 0x1, (byte) (loopContinuously & 0xFF), (byte)0 });
         appExtensionsNode.appendChild(child);
         metadata.setFromTree(metaFormatName, root);
     }

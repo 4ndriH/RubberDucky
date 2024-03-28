@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.place.TimelapseHelper;
 
-import java.util.Queue;
-
 public class PlaceListener extends ListenerAdapter {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaceListener.class);
     private static final String timelapseMatch = "Saved Chunk_";
 
     @Override
@@ -25,7 +23,8 @@ public class PlaceListener extends ListenerAdapter {
 
             if (event.getAuthor().getId().equals("774276700557148170") && event.getMessage().getContentRaw().startsWith(timelapseMatch)) {
                 String nr = event.getMessage().getContentRaw().split("_")[1].split("\\.")[0];
-                int chunk = 0;
+                int chunk;
+
                 try {
                     chunk = Integer.parseInt(nr);
                 } catch (NumberFormatException e) {

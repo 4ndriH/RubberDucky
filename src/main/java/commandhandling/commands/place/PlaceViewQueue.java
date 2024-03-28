@@ -3,8 +3,7 @@ package commandhandling.commands.place;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import services.miscellaneous.Format;
 import services.database.DBHandlerPlace;
 import services.discordhelpers.EmbedHelper;
@@ -13,10 +12,9 @@ import java.time.Instant;
 import java.util.List;
 
 import static services.database.DBHandlerPlace.getPixelsInQueue;
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class PlaceViewQueue implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(PlaceViewQueue.class);
-
     @Override
     public void handle(CommandContext ctx) {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
@@ -32,7 +30,8 @@ public class PlaceViewQueue implements CommandInterface {
             embed.addField("__Drawn Pixels__", strings[1], true);
         }
 
-        EmbedHelper.sendEmbed(ctx, embed, 64);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+        sendMessage(mca, 64);
     }
 
     @Override

@@ -3,22 +3,24 @@ package commandhandling.commands.pleb;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 import services.discordhelpers.EmbedHelper;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
-public class Ducky implements CommandInterface {
-    private final Logger LOGGER = LoggerFactory.getLogger(Ducky.class);
+import static services.discordhelpers.MessageSendHelper.sendMessage;
 
+public class Ducky implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
-        EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky.png");
-        int nr = new Random().nextInt(new File("resources/imagse/duckies/").list().length);
-        EmbedHelper.sendEmbedWithFile(ctx, embed, 32, "resources/images/duckies/ducky" + nr + ".png", "ducky.png");
+        int nr = new Random().nextInt(Objects.requireNonNull(new File("resources/images/duckies/").list()).length);
+        EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky" + nr + ".png");
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File("resources/images/duckies/ducky" + nr + ".png")));
+        sendMessage(mca, 32);
     }
 
     @Override

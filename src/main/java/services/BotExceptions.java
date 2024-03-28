@@ -4,10 +4,10 @@ import commandhandling.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import assets.Emotes;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import services.discordhelpers.MessageDeleteHelper;
 
 import java.awt.*;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMsg;
 import static services.discordhelpers.ReactionHelper.addReaction;
 
 public class BotExceptions {
@@ -28,11 +28,6 @@ public class BotExceptions {
         sendMessage("fileDoesNotExistException", "File does not exist!", ctx, true);
     }
 
-    public static void missingPermissionException(CommandContext ctx) {
-        sendMessage("missingPermissionException",
-                "You do not have the required permissions to run this command!", ctx, false);
-    }
-
     public static void invalidIdException(CommandContext ctx) {
         sendMessage("invalidIdException", "This ID does not exist!", ctx, false);
     }
@@ -47,16 +42,8 @@ public class BotExceptions {
                 (boost <= 1 ? 8 : boost == 2 ? 50 : 100) + "mb!", ctx, false);
     }
 
-    public static void unknownPatternException(CommandContext ctx) {
-        sendMessage("unknownPatternException","This is not a valid pattern!", ctx, true);
-    }
-
     public static void faultyPixelFormatException(CommandContext ctx, String s) {
         sendMessage("faultyPixelFormatException", "\"" + s + "\" is not a valid setpixel command!", ctx, false);
-    }
-
-    public static void invalidCourseNumber(CommandContext ctx, String s) {
-        sendMessage("This is not a valid course number", ctx.getArguments().get(0) + s, ctx, false);
     }
 
     // Builds the embed and sends it as a response to a failed sub command
@@ -77,7 +64,7 @@ public class BotExceptions {
 
         ctx.getMessage().replyEmbeds(embed.build()).queue(msg -> {
             msg.addReaction(Emoji.fromFormatted(Emotes.NLD.getAsReaction())).queue();
-            deleteMsg(msg, 32);
+            MessageDeleteHelper.deleteMessage(msg, 32);
         });
     }
 }
