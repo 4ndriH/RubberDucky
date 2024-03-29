@@ -2,7 +2,6 @@ package services.listeners;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class PlaceListener extends ListenerAdapter {
                     return;
                 }
 
-                LOGGER.info("Chunk number " + chunk + " is available", new InterruptedException());
+                LOGGER.info("Chunk number " + chunk + " is available");
                 int finalChunk = chunk;
                 (new Thread(() -> TimelapseHelper.generate(finalChunk, event))).start();
             }

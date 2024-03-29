@@ -63,7 +63,7 @@ public class CountThreadListener extends ListenerAdapter {
             }
         } else if (event.getChannel().getId().equals("819966095070330950")) {
             if (--interruptCount <= 0) {
-                LOGGER.warn("Count thread interrupted, resuming...", new InterruptedException());
+                LOGGER.warn("Count thread interrupted, resuming...");
 
                 checkRecentMessages();
 
