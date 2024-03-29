@@ -74,7 +74,7 @@ public class PlaceQueue implements CommandInterface {
         embed.setDescription("Your file got ID " + id);
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-        sendMessage(mca, 32);
+        sendMessage(ctx, mca, 32);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Kill implements CommandInterface{
                 Button.success("$KillProceed", "Proceed")
         );
 
-        sendMessage(mca, 64);
+        sendMessage(ctx, mca, 64);
     }
 
     public static void executeKill() {

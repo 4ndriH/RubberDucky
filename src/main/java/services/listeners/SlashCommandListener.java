@@ -22,7 +22,9 @@ public class SlashCommandListener extends ListenerAdapter {
                 parameter = channelOption.getAsString();
             }
 
-            ChannelEfficiency.doCommandStuff(event.getChannel(), parameter);
+            event.reply("fix the ctx issue").setEphemeral(true).queue();
+
+            //ChannelEfficiency.doCommandStuff(event.getChannel(), parameter);
         } else {
             super.onSlashCommandInteraction(event);
         }

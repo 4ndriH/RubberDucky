@@ -38,11 +38,11 @@ public class Purge implements CommandInterface {
 
         if (purging.get()) {
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(busyPurging.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/busyPurging.png")));
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
             return;
         } else {
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeCommenced.jpg")));
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
             purging.set(true);
         }
 
@@ -58,7 +58,7 @@ public class Purge implements CommandInterface {
             return null;
         }).whenComplete((ignored, ignored2) -> {
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeEnded.jpg")));
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
             stop.set(false);
             purging.set(false);
         });

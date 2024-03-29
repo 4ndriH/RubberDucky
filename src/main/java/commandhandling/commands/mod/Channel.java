@@ -50,7 +50,7 @@ public class Channel implements CommandInterface {
             embed.setDescription(sb.toString());
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
         } else {
             String cmd = ctx.getArguments().get(0);
 

@@ -20,7 +20,7 @@ public class Ducky implements CommandInterface {
         int nr = new Random().nextInt(Objects.requireNonNull(new File("resources/images/duckies/").list()).length);
         EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky" + nr + ".png");
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File("resources/images/duckies/ducky" + nr + ".png")));
-        sendMessage(mca, 32);
+        sendMessage(ctx, mca, 32);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class Watch implements CommandInterface {
         LOGGER.info(ctx.getAuthor().getAsTag() + " changed the follow ID to " + tempId);
 
         MessageCreateAction mca = ctx.getChannel().sendMessage("I am watching you <@" + tempId + "> <:bustinGood:747783377171644417>");
-        sendMessage(mca, 64);
+        sendMessage(ctx, mca, 64);
     }
 
     @Override

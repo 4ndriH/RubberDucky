@@ -126,10 +126,10 @@ public class CommandManager {
         StringBuilder argRegexCheck = new StringBuilder();
         arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
 
-        MessageDeleteHelper.deleteMessage(ctx.getMessage(), 128);
         commandLogger(ctx);
 
         if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
+            MessageDeleteHelper.deleteMessage(ctx.getMessage(), cmd.deleteAfter());
             if (PermissionManager.permissionCheck(ctx, cmd)) {
                     executorService.submit(() -> {
                             try {
@@ -143,6 +143,7 @@ public class CommandManager {
                 addReaction(ctx, 0);
             }
         } else {
+            MessageDeleteHelper.deleteMessage(ctx.getMessage(), 128);
             addReaction(ctx, 5);
         }
     }

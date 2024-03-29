@@ -111,7 +111,7 @@ public class PlaceEncode implements CommandInterface {
 
         try {
             MessageCreateAction mca = ctx.getChannel().sendMessage("Estimated drawing time: \n**" + Format.Time((int)(pixels.size() * 1.0587)) + "**").addFiles(FileUpload.fromData(stream, fileName));
-            sendMessage(mca, 128);
+            sendMessage(ctx, mca, 128);
         } catch (IllegalArgumentException e) {
             LOGGER.error("File Upload Limit", e);
             BotExceptions.FileExceedsUploadLimitException(ctx);

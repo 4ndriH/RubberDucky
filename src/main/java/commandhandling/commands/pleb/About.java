@@ -27,7 +27,7 @@ public class About implements CommandInterface {
         embed.addField("**Uptime:**", Format.Time((int)(rmb.getUptime() / 1000)), true);
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-        sendMessage(mca, 32);
+        sendMessage(ctx, mca, 32);
     }
 
     @Override

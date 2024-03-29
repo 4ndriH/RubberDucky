@@ -21,7 +21,7 @@ public class CourseReviewStats implements CommandInterface {
         embed.setThumbnail("https://n.ethz.ch/~lteufelbe/coursereview/icon.png");
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-        sendMessage(mca, 128);
+        sendMessage(ctx, mca, 128);
     }
 
     @Override

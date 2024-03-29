@@ -37,10 +37,10 @@ public class ChannelEfficiency implements CommandInterface {
             parameter = "Place";
         }
 
-        doCommandStuff(ctx.getChannel(), parameter);
+        doCommandStuff(ctx, parameter);
     }
 
-    public static void doCommandStuff(MessageChannelUnion channel, String parameter) {
+    public static void doCommandStuff(CommandContext ctx, String parameter) {
         String embedTitle = parameter.equals("Count") ? "To Infinity And Beyond" : "ETH-Place-Bots";
         EmbedBuilder embed = EmbedHelper.embedBuilder(embedTitle);
         ArrayList<Integer> dataPoints = createDataSet(parameter);
@@ -65,8 +65,8 @@ public class ChannelEfficiency implements CommandInterface {
         embed.setImage("attachment://LineChart.jpg");
         embed.setFooter("/channelefficency");
 
-        MessageCreateAction mca = channel.sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg"));
-        sendMessage(mca, 128);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg"));
+        sendMessage(ctx, mca, 128);
     }
 
     public static BufferedImage generatePlot(ArrayList<Integer> dataPoints) {

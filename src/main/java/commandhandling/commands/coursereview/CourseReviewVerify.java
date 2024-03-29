@@ -34,7 +34,7 @@ public class CourseReviewVerify implements CommandInterface {
             EmbedBuilder embed = embedBuilder("Someone is already reviewing reviews");
             embed.setDescription(CourseReviewVerify.ctx.getAuthor().getAsTag());
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
         }
     }
 
@@ -63,7 +63,7 @@ public class CourseReviewVerify implements CommandInterface {
             ).queue();
         } else {
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
             alreadyVerifying.set(false);
         }
     }

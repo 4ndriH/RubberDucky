@@ -27,7 +27,7 @@ public class PurgeDMs implements CommandInterface {
     public void handle(CommandContext ctx) {
         PrivateChannel channel = ctx.getAuthor().openPrivateChannel().complete();
         MessageCreateAction mca = channel.sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeCommenced.jpg")));
-        sendMessage(mca, 32);
+        sendMessage(ctx, mca, 32);
 
         channel.getIterableHistory().forEachAsync(msg -> {
             if (msg.getAuthor().isBot()) {
@@ -42,7 +42,7 @@ public class PurgeDMs implements CommandInterface {
             return null;
         }).whenComplete((ignored, ignored2) -> {
             MessageCreateAction mca2 = channel.sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File("resources/images/purge/purgeEnded.jpg")));
-            sendMessage(mca2, 32);
+            sendMessage(ctx, mca2, 32);
         });
     }
 

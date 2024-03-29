@@ -28,7 +28,7 @@ public class PlaceView implements CommandInterface {
         EmbedBuilder embed = EmbedHelper.embedBuilder("Place").setImage("attachment://place.png");
         FileUpload fu = FileUpload.fromData(convert(PlaceWebSocket.getImage(true)), "place.png");
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(fu);
-        sendMessage(mca, 128);
+        sendMessage(ctx, mca, 128);
     }
 
     private InputStream convert (BufferedImage img) {

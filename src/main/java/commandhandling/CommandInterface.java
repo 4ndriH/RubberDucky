@@ -41,6 +41,10 @@ public interface CommandInterface {
         };
     }
 
+    default int deleteAfter() {
+        return 128;
+    }
+
     default boolean attachmentCheck(CommandContext ctx) {
         return true;
     }

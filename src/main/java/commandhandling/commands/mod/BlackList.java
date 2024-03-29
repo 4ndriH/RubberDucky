@@ -54,7 +54,7 @@ public class BlackList implements CommandInterface {
             }
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 32);
+            sendMessage(ctx, mca, 32);
         }
     }
 
