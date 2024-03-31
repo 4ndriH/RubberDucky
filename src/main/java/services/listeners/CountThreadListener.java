@@ -4,33 +4,44 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CountThreadListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
-    private static int EXPONENTIAL_BACKOFF = 60;
-    public static int lastSent, interruptCount;
+    private static ScheduledExecutorService countThreadExecutor;
+    private static long EXPONENTIAL_BACKOFF = 60_000;
+    public static int lastSent;
     private static ThreadChannel thread;
     public static String listenTo = "742380498986205234";
-    private static boolean disabled = false;
+    private static long lastMessageTime = 0;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
             event.getJDA().removeEventListener(this);
-            disabled = true;
             return;
         }
 
-        interruptCount = EXPONENTIAL_BACKOFF;
-
         thread = Objects.requireNonNull(event.getJDA().getGuildById("747752542741725244")).getThreadChannelById("996746797236105236");
+
+        countThreadExecutor = Executors.newSingleThreadScheduledExecutor();
+        countThreadExecutor.schedule(createRunnable(), EXPONENTIAL_BACKOFF, TimeUnit.MILLISECONDS);
+
         checkRecentMessages();
+    }
+
+    @Override
+    public void onShutdown(@NotNull ShutdownEvent event) {
+        countThreadExecutor.shutdownNow();
     }
 
     @Override
@@ -38,11 +49,23 @@ public class CountThreadListener extends ListenerAdapter {
         if (event.getChannel().getId().equals("996746797236105236")) {
             if (event.getAuthor().getId().equals(listenTo)) {
                 try {
-                    int nextNumber = (Integer.parseInt(event.getMessage().getContentRaw()) + 1);
+                    int nextNumber = Integer.parseInt(event.getMessage().getContentRaw()) + 1;
 
                     if (nextNumber > lastSent) {
                         event.getChannel().sendMessage("" + nextNumber).queue();
+                        lastMessageTime = System.currentTimeMillis();
                         lastSent = nextNumber;
+
+                        if (EXPONENTIAL_BACKOFF > 60_000) {
+                            EXPONENTIAL_BACKOFF = 60_000;
+
+                            countThreadExecutor.shutdownNow();
+                            countThreadExecutor = Executors.newSingleThreadScheduledExecutor();
+
+                            countThreadExecutor.schedule(createRunnable(), EXPONENTIAL_BACKOFF, TimeUnit.MILLISECONDS);
+
+                            LOGGER.info("Count Thread has been restarted");
+                        }
                     }
                 } catch (Exception ignored) {}
             }
@@ -50,37 +73,10 @@ public class CountThreadListener extends ListenerAdapter {
             if (!event.getAuthor().isBot()) {
                 event.getMessage().delete().queue();
             }
-
-            if (interruptCount < 60) {
-                interruptCount++;
-            } else {
-                if (interruptCount < 2 * EXPONENTIAL_BACKOFF) {
-                    interruptCount++;
-                } else {
-                    interruptCount = 60;
-                    EXPONENTIAL_BACKOFF = 60;
-                }
-            }
-        } else if (event.getChannel().getId().equals("819966095070330950")) {
-            if (--interruptCount <= 0) {
-                LOGGER.warn("Count thread interrupted, resuming...");
-
-                checkRecentMessages();
-
-                if (EXPONENTIAL_BACKOFF < 960) {
-                    EXPONENTIAL_BACKOFF *= 2;
-                }
-
-                interruptCount = EXPONENTIAL_BACKOFF;
-            }
         }
     }
 
     public static void checkRecentMessages() {
-        if (disabled) {
-            return;
-        }
-
         for (Message message : thread.getHistory().retrievePast(5).complete()) {
             try {
                 String authorId = message.getAuthor().getId();
@@ -96,5 +92,30 @@ public class CountThreadListener extends ListenerAdapter {
                 }
             } catch (Exception ignored) {}
         }
+    }
+
+    private static Runnable createRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (System.currentTimeMillis() - lastMessageTime > EXPONENTIAL_BACKOFF) {
+                        if (EXPONENTIAL_BACKOFF == 60_000) {
+                            LOGGER.warn("Count thread has been interrupted. Attempting to restart...");
+                        }
+
+                        thread.sendMessage("" + lastSent).queue();
+
+                        if (EXPONENTIAL_BACKOFF < 3_840_000) {
+                            EXPONENTIAL_BACKOFF *= 2;
+                        }
+                    }
+
+                    countThreadExecutor.schedule(this, EXPONENTIAL_BACKOFF, TimeUnit.MILLISECONDS);
+                } catch (Exception e) {
+                    LOGGER.error("Count thread executor crashed", e);
+                }
+            }
+        };
     }
 }
