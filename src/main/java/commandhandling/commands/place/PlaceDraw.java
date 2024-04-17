@@ -81,8 +81,7 @@ public class PlaceDraw implements CommandInterface {
                         pixelDrawnCnt3600++;
                     }
                 } catch (ErrorResponseException e) {
-                    ErrorResponse er = e.getErrorResponse();
-                    LOGGER.warn("PlaceDraw ErrorResponse: " + er.getMeaning(), e);
+                    LOGGER.warn("PlaceDraw ErrorResponse: " + e.getErrorCode(), e);
                     napTime();
                 } catch (Exception e) {
                     LOGGER.warn("caught an error in PlaceDraw", e);
