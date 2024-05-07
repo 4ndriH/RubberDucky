@@ -23,6 +23,7 @@ public class CountThreadListener extends ListenerAdapter {
     private static ThreadChannel thread;
     public static String listenTo = "742380498986205234";
     private static long lastMessageTime = 0;
+    private static boolean incrementing = false;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -64,7 +65,7 @@ public class CountThreadListener extends ListenerAdapter {
 
                             countThreadExecutor.schedule(createRunnable(), EXPONENTIAL_BACKOFF, TimeUnit.MILLISECONDS);
 
-//                            LOGGER.info("Count Thread has been restarted");
+                            LOGGER.info("Count Thread has been restarted");
                         }
                     }
                 } catch (Exception ignored) {}
@@ -100,9 +101,9 @@ public class CountThreadListener extends ListenerAdapter {
             public void run() {
                 try {
                     if (System.currentTimeMillis() - lastMessageTime > EXPONENTIAL_BACKOFF) {
-//                        if (EXPONENTIAL_BACKOFF == 60_000) {
-//                            LOGGER.warn("Count thread has been interrupted. Attempting to restart...");
-//                        }
+                        if (EXPONENTIAL_BACKOFF == 60_000) {
+                            LOGGER.warn("Count thread has been interrupted. Attempting to restart...");
+                        }
 
                         thread.sendMessage("" + lastSent).queue();
 
