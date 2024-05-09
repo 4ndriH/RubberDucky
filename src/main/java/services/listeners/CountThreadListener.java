@@ -23,7 +23,7 @@ public class CountThreadListener extends ListenerAdapter {
     private static ThreadChannel thread;
     public static String listenTo = "742380498986205234";
     private static long lastMessageTime = 0;
-    private static boolean incrementing = false;
+    private static int restartAttempts = 0;
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -58,14 +58,17 @@ public class CountThreadListener extends ListenerAdapter {
                         lastSent = nextNumber;
 
                         if (EXPONENTIAL_BACKOFF > 60_000) {
+                            if (EXPONENTIAL_BACKOFF > 240_000) {
+                                LOGGER.info("Count Thread has been restarted");
+                            }
+
                             EXPONENTIAL_BACKOFF = 60_000;
+                            restartAttempts = 0;
 
                             countThreadExecutor.shutdownNow();
                             countThreadExecutor = Executors.newSingleThreadScheduledExecutor();
 
                             countThreadExecutor.schedule(createRunnable(), EXPONENTIAL_BACKOFF, TimeUnit.MILLISECONDS);
-
-                            LOGGER.info("Count Thread has been restarted");
                         }
                     }
                 } catch (Exception ignored) {}
@@ -101,11 +104,12 @@ public class CountThreadListener extends ListenerAdapter {
             public void run() {
                 try {
                     if (System.currentTimeMillis() - lastMessageTime > EXPONENTIAL_BACKOFF) {
-                        if (EXPONENTIAL_BACKOFF == 60_000) {
-                            LOGGER.warn("Count thread has been interrupted. Attempting to restart...");
+                        if (EXPONENTIAL_BACKOFF == 480_000) {
+                            LOGGER.warn("Count thread has been interrupted. Attempting restart... \n[failed attempts: {}]", restartAttempts);
                         }
 
                         thread.sendMessage("" + lastSent).queue();
+                        restartAttempts++;
 
                         if (EXPONENTIAL_BACKOFF < 3_840_000) {
                             EXPONENTIAL_BACKOFF *= 2;
