@@ -21,7 +21,7 @@ public class CountThreadListener extends ListenerAdapter {
     private static long EXPONENTIAL_BACKOFF = 60_000;
     public static int lastSent;
     private static ThreadChannel thread;
-    public static String listenTo = "735170037282898061";
+    public static String listenTo = "742380498986205234";
     private static long lastMessageTime = 0;
     private static int restartAttempts = 0;
 
