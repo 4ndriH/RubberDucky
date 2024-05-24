@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import static services.database.DBHandlerConfig.getConfig;
 import static services.database.DBHandlerConfig.updateConfig;
 
-public class BGListener extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
+public class ButtonGameListener extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ButtonGameListener.class);
     private static int nextNotification = 0;
     private static int myCurrentScore = Integer.parseInt(getConfig().get("ButtonScore"));
 
@@ -50,7 +50,7 @@ public class BGListener extends ListenerAdapter {
 
             if (messageContent.contains("155419933998579713")) {
                 String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
-                LOGGER.info("Button Score Updated. New Score: " + score);
+                LOGGER.debug("Button Score Updated. New Score: " + score);
                 myCurrentScore = Integer.parseInt(score);
                 updateConfig("ButtonScore", score);
             }

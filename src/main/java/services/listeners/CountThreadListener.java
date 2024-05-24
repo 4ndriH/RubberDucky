@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class CountThreadListener extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BGListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountThreadListener.class);
     private static ScheduledExecutorService countThreadExecutor;
     private static long EXPONENTIAL_BACKOFF = 60_000;
     public static int lastSent;
@@ -105,7 +105,7 @@ public class CountThreadListener extends ListenerAdapter {
                 try {
                     if (System.currentTimeMillis() - lastMessageTime > EXPONENTIAL_BACKOFF) {
                         if (EXPONENTIAL_BACKOFF == 480_000) {
-                            LOGGER.warn("Count thread has been interrupted. Attempting restart... \n[failed attempts: {}]", restartAttempts);
+                            LOGGER.warn("Count thread has been interrupted. Attempting restart... \n[failed attempts: " + restartAttempts + "]");
                         }
 
                         thread.sendMessage("" + lastSent).queue();

@@ -33,7 +33,7 @@ public class Bot {
             .addEventListeners(new CommandListener())
             .addEventListeners(new ButtonListener())
             .addEventListeners(new StartupListener())
-            .addEventListeners(new BGListener())
+            .addEventListeners(new ButtonGameListener())
             .addEventListeners(new PlaceListener())
             .addEventListeners(new CountThreadListener())
             //.addEventListeners(new PlaceListener())
