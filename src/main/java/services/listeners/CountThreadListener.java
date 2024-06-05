@@ -104,7 +104,7 @@ public class CountThreadListener extends ListenerAdapter {
             public void run() {
                 try {
                     if (System.currentTimeMillis() - lastMessageTime > EXPONENTIAL_BACKOFF) {
-                        if (EXPONENTIAL_BACKOFF == 480_000) {
+                        if (EXPONENTIAL_BACKOFF >= 480_000) {
                             LOGGER.warn("Count thread has been interrupted. Attempting restart... \n[failed attempts: " + restartAttempts + "]");
                         }
 
