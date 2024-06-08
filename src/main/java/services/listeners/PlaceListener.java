@@ -32,8 +32,10 @@ public class PlaceListener extends ListenerAdapter {
                 }
 
                 LOGGER.info("Chunk number " + chunk + " is available");
-                int finalChunk = chunk;
-                (new Thread(() -> TimelapseHelper.generate(finalChunk, event))).start();
+
+                // last chunk 1322
+
+                //(new Thread(() -> TimelapseHelper.generate(chunk, event))).start();
             }
         }
     }
