@@ -42,33 +42,26 @@ public class SnowflakePermission implements CommandInterface {
         if (ctx.getArguments().isEmpty()){
             EmbedBuilder embed = embedBuilder("Special Snowflakes");
 
-            try {
-                for (String discordUserId : snowflakes.keySet()) {
-                    StringBuilder sb = new StringBuilder();
+            for (String discordUserId : snowflakes.keySet()) {
+                StringBuilder sb = new StringBuilder();
 
-                    for (String discordServerId : snowflakes.get(discordUserId).keySet()) {
+                for (String discordServerId : snowflakes.get(discordUserId).keySet()) {
 
-                        for (String discordChannelId : snowflakes.get(discordUserId).get(discordServerId).keySet()) {
-                            String channelName = Objects.requireNonNull(Objects.requireNonNull(ctx.getJDA().getGuildById(discordServerId)).getTextChannelById(discordChannelId)).getAsMention();
+                    for (String discordChannelId : snowflakes.get(discordUserId).get(discordServerId).keySet()) {
+                        String channelName = Objects.requireNonNull(Objects.requireNonNull(ctx.getJDA().getGuildById(discordServerId)).getTextChannelById(discordChannelId)).getAsMention();
 
-                            for (String command : snowflakes.get(discordUserId).get(discordServerId).get(discordChannelId)) {
-                                sb.append(channelName).append(" - ").append(command).append("\n");
-                            }
+                        for (String command : snowflakes.get(discordUserId).get(discordServerId).get(discordChannelId)) {
+                            sb.append(channelName).append(" - ").append(command).append("\n");
                         }
                     }
-
-                    User user = ctx.getJDA().retrieveUserById(discordUserId).complete();
-                    embed.addField(user.getAsTag(), sb.toString(), false);
                 }
 
-                MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-                sendMessage(ctx, mca, 64);
-            } catch (NullPointerException e) {
-                System.out.println("Error: " + e.getMessage());
-                return;
+                User user = ctx.getJDA().retrieveUserById(discordUserId).complete();
+                embed.addField(user.getAsTag(), sb.toString(), false);
             }
 
-
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
+            sendMessage(ctx, mca, 64);
         } else {
             String discordChannelId, discordServerId, discordUserId, command;
             int idx;
