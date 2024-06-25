@@ -136,8 +136,6 @@ public class CommandManager {
                                 cmd.handle(ctx);
                             } catch (InsufficientPermissionException ipe) {
                                 LOGGER.error("Bot is missing permissions", ipe);
-                            } catch (Exception e) {
-                                LOGGER.error("Command failed", e);
                             }
                     });
                 addReaction(ctx, 0);
