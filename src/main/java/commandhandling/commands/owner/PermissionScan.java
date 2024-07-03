@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class PermissionScan implements CommandInterface {
     @Override
@@ -22,7 +23,7 @@ public class PermissionScan implements CommandInterface {
         for (GuildChannel c : currentGuild.getChannels()) {
             sb.append("## ").append(c.getName()).append(" ##\n");
 
-            for (Permission p : currentMember.getPermissions(c)) {
+            for (Permission p : Objects.requireNonNull(currentMember).getPermissions(c)) {
                 sb.append("| ").append(p.getName()).append("\n");
             }
 
