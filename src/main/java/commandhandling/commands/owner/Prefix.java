@@ -28,11 +28,6 @@ public class Prefix implements CommandInterface {
     }
 
     @Override
-    public int getRestrictionLevel() {
-        return 0;
-    }
-
-    @Override
     public boolean argumentCheck(StringBuilder args) {
         return argumentPattern.matcher(args).matches();
     }
