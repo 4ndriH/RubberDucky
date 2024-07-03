@@ -40,6 +40,7 @@ public class CommandManager {
         addCommand(new GetAPILog());
         addCommand(new Kill());
         addCommand(new NickName());
+        addCommand(new PermissionScan());
         addCommand(new Prefix());
         addCommand(new ProfilePicture());
         addCommand(new Purge());
