@@ -45,6 +45,8 @@ public class PermissionScan implements CommandInterface {
 
     @Override
     public EmbedBuilder getHelp() {
-        return null;
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setDescription("Scans the permissions per channel of the current guild.");
+        return embed;
     }
 }
