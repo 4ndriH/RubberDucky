@@ -10,6 +10,9 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: index.docker.io
+      IMAGE_NAME: rubberducky
     permissions:
       packages: write
       contents: read
