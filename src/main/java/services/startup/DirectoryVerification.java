@@ -103,7 +103,7 @@ public class DirectoryVerification {
                 File current = new File(Config.directoryPath + directory + file);
                 if (!current.exists()) {
                     try {
-                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
+                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + Config.directoryPath + directory + file).openStream());
                         FileOutputStream fileOutputStream = new FileOutputStream(Config.directoryPath + directory + file);
                         fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
                         fileOutputStream.close();

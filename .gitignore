@@ -20,4 +20,5 @@ build/
 
 ### Stuff ###
 bot_data/*
+!bot_data/resources/
 token.txt
