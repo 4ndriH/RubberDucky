@@ -54,6 +54,8 @@ public class Say implements CommandInterface {
             sayChannels.put(channel, true);
         }
 
+        sb.append(" fetch worked");
+
         for (int j = 0; j < repeats && sayChannels.get(channel); j++) {
             channel.sendMessage(sb.toString()).complete();
         }
