@@ -11,7 +11,7 @@ jobs:
       - name: Send request
         uses: satak/webrequest-action@master
         with:
-          url: http://${{ secrets.ABCD }}/v1/update
+          url: http://${{ secrets.WATCHTOWER_URL }}/v1/update
           method: GET
           headers: '{"Authorization": "Bearer ${{ secrets.WATCHTOWER_TOKEN }}"}'
     
