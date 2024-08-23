@@ -9,7 +9,7 @@ jobs:
       - name: Send request
         uses: satak/webrequest-action@master
         with:
-          url: http://${{ secrets.WATCHTOWER_URL }}
+          url: 'http://${{ secrets.WATCHTOWER_URL }}'
           method: GET
           headers: '{"Authorization": "Bearer ${{ env.WATCHTOWER_TOKEN }}"}'
     
