@@ -1,0 +1,16 @@
+name: Build and Deploy the new Docker Image
+
+on:
+  push:
+    branches: [ gradle_docker ] #master ]
+  #   paths:
+  #     - 'src/**'
+
+jobs: 
+  build:
+    name: Run Build
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    name: Run Deploy
+    uses: ./.github/workflows/deploy.yml
