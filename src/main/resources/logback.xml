@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-    <property name="LOG_DIR_RAW" value="${DATA_DIRECTORY:-}" />
-    <property name="LOG_DIR" value="${LOG_DIR_RAW}${LOG_DIR_RAW:+/}" />
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator>
@@ -31,10 +28,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}logs/logFile.log</file>
+        <file>bot_data/logs/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_DIR}logs/logFile - %d{yyyy.MM.dd}.log</fileNamePattern>
+            <fileNamePattern>bot_data/logs/logFile - %d{yyyy.MM.dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
