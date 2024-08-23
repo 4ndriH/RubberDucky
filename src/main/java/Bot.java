@@ -42,5 +42,7 @@ public class Bot {
             .addEventListeners(new EfficiencyTrackerListener())
             .setActivity(Activity.playing("With Duckies"))
             .build();
+
+            System.out.println("Bot is ready! and deployed");
     }
 }
