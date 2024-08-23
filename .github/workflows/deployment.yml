@@ -3,8 +3,8 @@ name: Build and Deploy the new Docker Image
 on:
   push:
     branches: [ gradle_docker ] #master ]
-    paths:
-      - 'src/**'
+    # paths:
+    #   - 'src/**'
 
 jobs: 
   build:

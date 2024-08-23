@@ -1,8 +1,6 @@
 name: Notify Watchtower
 
-on: #workflow_call
-  push:
-    branches: [ gradle_docker ]
+on: workflow_call
 
 jobs:
   send-request-to-watchtower:
@@ -14,4 +12,3 @@ jobs:
           url: http://${{ secrets.WATCHTOWER_URL }}/v1/update
           method: GET
           headers: '{"Authorization": "Bearer ${{ secrets.WATCHTOWER_TOKEN }}"}'
-    
