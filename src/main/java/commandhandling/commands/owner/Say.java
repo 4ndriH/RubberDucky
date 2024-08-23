@@ -54,8 +54,6 @@ public class Say implements CommandInterface {
             sayChannels.put(channel, true);
         }
 
-        channel.sendMessage("DOCKER UPDATES WORK").complete();
-
         for (int j = 0; j < repeats && sayChannels.get(channel); j++) {
             channel.sendMessage(sb.toString()).complete();
         }
