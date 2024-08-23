@@ -1,5 +1,6 @@
 package commandhandling.commands.owner;
 
+import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -42,7 +43,7 @@ public class Kill implements CommandInterface{
         String file = attachments.get(new Random().nextInt(attachments.size()));
         EmbedBuilder embed = EmbedHelper.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
 
-        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File("resources/images/" + file)));
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/" + file)));
         sendMessageComplete(mca, 64);
 
         ctx.getJDA().shutdownNow();

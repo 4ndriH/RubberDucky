@@ -1,5 +1,6 @@
 package services.database;
 
+import assets.Config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ public class ConnectionPool {
     private static final HikariDataSource dataSource;
 
     static {
-        config.setJdbcUrl( "jdbc:sqlite:DB/RubberDucky.db" );
+        config.setJdbcUrl( "jdbc:sqlite:" + Config.directoryPath + "DB/RubberDucky.db" );
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );

@@ -94,7 +94,7 @@ public class PlacePreview implements CommandInterface {
         }
 
         try {
-            ImageOutputStream output = new FileImageOutputStream(new File("tempFiles/place/preview.gif"));
+            ImageOutputStream output = new FileImageOutputStream(new File(Config.directoryPath + "tempFiles/place/preview.gif"));
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
             boolean exception = false;
 
@@ -127,7 +127,7 @@ public class PlacePreview implements CommandInterface {
             LOGGER.error("PlacePreview Error", e);
         }
 
-        File gif = new File("tempFiles/place/preview.gif");
+        File gif = new File(Config.directoryPath + "tempFiles/place/preview.gif");
 
         try {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Preview" + (sendMessageCase == 0 ? " - " + id : ""));
