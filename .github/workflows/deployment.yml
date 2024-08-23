@@ -1,0 +1,19 @@
+name: Build and Deploy the new Docker Image
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/**'
+
+jobs: 
+  build:
+    name: Run Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  deploy:
+    name: Run Deploy
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
