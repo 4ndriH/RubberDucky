@@ -61,7 +61,7 @@ public class PlacePreview implements CommandInterface {
             Scanner scanner;
 
             try {
-                scanner = new Scanner(ctx.getMessage().getAttachments().get(0).getProxy().download().get());
+                scanner = new Scanner(ctx.getAttachments().get(0).getProxy().download().get());
                 sendMessageCase = 1;
             } catch (Exception e) {
                 try {
@@ -85,7 +85,6 @@ public class PlacePreview implements CommandInterface {
                     color = line[2];
                     alpha = (line.length == 4) ? Integer.parseInt(line[3]) / 255.0 : 1.0;
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
                     continue;
                 }
                 pixels.add(new Pixel(x, y, alpha, color));
@@ -178,8 +177,8 @@ public class PlacePreview implements CommandInterface {
 
     @Override
     public boolean attachmentCheck(CommandContext ctx) {
-        if (!ctx.getMessage().getAttachments().isEmpty()) {
-            String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+        if (!ctx.getAttachments().isEmpty()) {
+            String type = Objects.requireNonNull(ctx.getAttachments().get(0).getContentType()).split("/")[1];
 
             return type.startsWith("plain");
         }

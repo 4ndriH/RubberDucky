@@ -56,8 +56,8 @@ public class PlaceVerify implements CommandInterface {
 
     @Override
     public boolean attachmentCheck(CommandContext ctx) {
-        if (!ctx.getMessage().getAttachments().isEmpty()) {
-            String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+        if (!ctx.getAttachments().isEmpty()) {
+            String type = Objects.requireNonNull(ctx.getAttachments().get(0).getContentType()).split("/")[1];
 
             return types.contains(type);
         }

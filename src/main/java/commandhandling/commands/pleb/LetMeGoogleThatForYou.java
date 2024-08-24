@@ -31,7 +31,7 @@ public class LetMeGoogleThatForYou implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String id = ctx.getMessage().getId();
+        String id = "" + (System.currentTimeMillis() % 1_000_000);
         String input = ctx.getArguments().isEmpty() ? "lorem ipsum" : ctx.getArguments().stream().map(Object::toString).collect(Collectors.joining(" "));
         String searchURL = ctx.getArguments().isEmpty() ? "lorem+ipsum" : ctx.getArguments().stream().map(Object::toString).collect(Collectors.joining("+"));
 

@@ -40,7 +40,7 @@ public class PlaceQueue implements CommandInterface {
         }
 
         try {
-            scanner = new Scanner(ctx.getMessage().getAttachments().get(0).getProxy().download().get());
+            scanner = new Scanner(ctx.getAttachments().get(0).getProxy().download().get());
         } catch (Exception e) {
             try {
                 scanner = new Scanner(Objects.requireNonNull(ctx.getMessage().getReferencedMessage()).getAttachments().get(0).getProxy().download().get());
@@ -101,13 +101,13 @@ public class PlaceQueue implements CommandInterface {
 
     @Override
     public boolean attachmentCheck(CommandContext ctx) {
-        if (ctx.getMessage().getAttachments().isEmpty()) {
+        if (ctx.getAttachments().isEmpty()) {
             Message refMsg = ctx.getMessage().getReferencedMessage();
 
             return refMsg != null && !refMsg.getAttachments().isEmpty();
         }
 
-        String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+        String type = Objects.requireNonNull(ctx.getAttachments().get(0).getContentType()).split("/")[1];
 
         return type.contains("plain");
     }

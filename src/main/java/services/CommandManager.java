@@ -15,6 +15,7 @@ import commandhandling.commands.place.*;
 import commandhandling.commands.pleb.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.discordhelpers.MessageDeleteHelper;
@@ -115,17 +116,12 @@ public class CommandManager {
         return null;
     }
 
-    public void handle(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
-
-        String invoke = split[0].toLowerCase();
+    public void handle(CommandContext ctx, String invoke) {
         CommandInterface cmd = getCommand(invoke);
 
-        ArrayList<String> arguments = new ArrayList<>(Arrays.asList(split).subList(1, split.length));
-        CommandContext ctx = new CommandContext(event, arguments);
-
         StringBuilder argRegexCheck = new StringBuilder();
-        arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
+        // replace with content raw call on ctx
+        ctx.getArguments().forEach((it) -> argRegexCheck.append(it).append(" "));
 
         commandLogger(ctx);
 

@@ -23,7 +23,7 @@ public class ProfilePicture implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         try {
-            Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()))));
+            Icon icon = Icon.from(convert(ImageIO.read(new URL(ctx.getAttachments().get(0).getUrl()))));
             ctx.getJDA().getSelfUser().getManager().setAvatar(icon).queue();
             LOGGER.info("Changed profile picture");
         } catch (Exception e) {

@@ -14,8 +14,6 @@ public class Say implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ctx.getMessage().delete().queue();
-
         StringBuilder sb = new StringBuilder();
         MessageChannelUnion channel = ctx.getChannel();
         int repeats, i;
@@ -78,5 +76,10 @@ public class Say implements CommandInterface {
     @Override
     public boolean argumentCheck(StringBuilder args) {
         return argumentPattern.matcher(args).matches();
+    }
+
+    @Override
+    public int deleteAfter() {
+        return 0;
     }
 }

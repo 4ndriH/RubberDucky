@@ -42,15 +42,15 @@ public class PlaceEncode implements CommandInterface {
         boolean spreadContained = false;
 
         try {
-            fileName = ctx.getMessage().getAttachments().get(0).getFileName();
+            fileName = ctx.getAttachments().get(0).getFileName();
             fileName = fileName.substring(0, fileName.length() - 4) + ".txt";
-            img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
+            img = ImageIO.read(new URL(ctx.getAttachments().get(0).getUrl()));
         } catch (IOException e) {
             LOGGER.error("PlaceEncode Error", e);
             return;
         }
 
-        ctx.getMessage().delete().queue();
+//        ctx.getMessage().delete().queue();
 
         int xOffset = Integer.parseInt(ctx.getArguments().get(0));
         int yOffset = Integer.parseInt(ctx.getArguments().get(1));
@@ -165,17 +165,22 @@ public class PlaceEncode implements CommandInterface {
     }
 
     @Override
+    public int deleteAfter() {
+        return 0;
+    }
+
+    @Override
     public boolean argumentCheck(StringBuilder args) {
         return argumentPattern.matcher(args).matches();
     }
 
     @Override
     public boolean attachmentCheck(CommandContext ctx) {
-        if (ctx.getMessage().getAttachments().isEmpty()) {
+        if (ctx.getAttachments().isEmpty()) {
             return false;
         }
 
-        String type = Objects.requireNonNull(ctx.getMessage().getAttachments().get(0).getContentType()).split("/")[1];
+        String type = Objects.requireNonNull(ctx.getAttachments().get(0).getContentType()).split("/")[1];
 
         return types.contains(type);
     }
