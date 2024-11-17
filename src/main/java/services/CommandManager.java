@@ -40,6 +40,7 @@ public class CommandManager {
         addCommand(new GetAPILog());
         addCommand(new Kill());
         addCommand(new NickName());
+        addCommand(new PermissionScan());
         addCommand(new Prefix());
         addCommand(new ProfilePicture());
         addCommand(new Purge());
@@ -126,10 +127,10 @@ public class CommandManager {
         StringBuilder argRegexCheck = new StringBuilder();
         arguments.forEach((it) -> argRegexCheck.append(it).append(" "));
 
-        MessageDeleteHelper.deleteMessage(ctx.getMessage(), 128);
         commandLogger(ctx);
 
         if (cmd != null && cmd.argumentCheck(argRegexCheck) && cmd.attachmentCheck(ctx)) {
+            MessageDeleteHelper.deleteMessage(ctx.getMessage(), cmd.deleteAfter());
             if (PermissionManager.permissionCheck(ctx, cmd)) {
                     executorService.submit(() -> {
                             try {
@@ -137,12 +138,13 @@ public class CommandManager {
                             } catch (InsufficientPermissionException ipe) {
                                 LOGGER.error("Bot is missing permissions", ipe);
                             } catch (Exception e) {
-                                LOGGER.error("Command failed", e);
+                                LOGGER.error("Error while executing command", e);
                             }
                     });
                 addReaction(ctx, 0);
             }
         } else {
+            MessageDeleteHelper.deleteMessage(ctx.getMessage(), 128);
             addReaction(ctx, 5);
         }
     }

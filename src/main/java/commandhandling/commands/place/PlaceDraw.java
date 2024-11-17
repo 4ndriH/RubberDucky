@@ -63,7 +63,7 @@ public class PlaceDraw implements CommandInterface {
         assert placeChannel != null;
 
         while (!PlaceData.stopQ && projectId >= 0) {
-            LOGGER.debug("started drawing project: " + projectId);
+            LOGGER.debug("started drawing project: {}", projectId);
             DBHandlerConfig.updateConfig("placeProject", "" + projectId);
             PlaceData.newProject(projectId);
 
@@ -81,12 +81,13 @@ public class PlaceDraw implements CommandInterface {
                         pixelDrawnCnt3600++;
                     }
                 } catch (ErrorResponseException e) {
-                    ErrorResponse er = e.getErrorResponse();
-                    LOGGER.warn("PlaceDraw ErrorResponse: " + er.getMeaning(), e);
-                    napTime();
+                    if (e.getErrorCode() != 503) {
+                        LOGGER.warn("PlaceDraw ErrorResponse", e);
+                    }
+                    napTime(8L);
                 } catch (Exception e) {
                     LOGGER.warn("caught an error in PlaceDraw", e);
-                    napTime();
+                    napTime(8L);
                 }
 
                 if (PlaceData.drawnPixels % 16 == 0) {
@@ -96,7 +97,7 @@ public class PlaceDraw implements CommandInterface {
                 if (PlaceData.verificationCondition()) {
                     LOGGER.debug("Verify");
                     PlaceVerifier.verify();
-                    LOGGER.debug(PlaceData.fixingQ.size() + " pixels left to fix");
+                    LOGGER.debug("{} pixels left to fix", PlaceData.fixingQ.size());
 
                     if (PlaceData.drawnPixels == PlaceData.totalPixels) {
                         PlaceData.finalVerification = true;
@@ -112,7 +113,7 @@ public class PlaceDraw implements CommandInterface {
             }
 
             if (!PlaceData.stop) {
-                LOGGER.debug("stopping project: " + projectId);
+                LOGGER.debug("stopping project: {}", projectId);
                 DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
                 projectId = DBHandlerPlace.getNextProject();
                 sendCompletionMessage(jda);
@@ -154,9 +155,9 @@ public class PlaceDraw implements CommandInterface {
 //        }
 //    }
 
-    private static void napTime() {
+    private static void napTime(long seconds) {
         try {
-            Thread.sleep(16000);
+            Thread.sleep(seconds * 1000);
         } catch (InterruptedException ignored) {}
     }
 

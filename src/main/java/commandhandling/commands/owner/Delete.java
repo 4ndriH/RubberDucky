@@ -9,14 +9,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Objects;
 
-import static services.discordhelpers.MessageDeleteHelper.deleteMessage;
-
 public class Delete implements CommandInterface {
     private final Logger LOGGER = LoggerFactory.getLogger(Delete.class);
 
     @Override
     public void handle(CommandContext ctx) {
-        deleteMessage(ctx.getMessage(), 0);
         ctx.getChannel().retrieveMessageById(Objects.requireNonNull(ctx.getMessage().getReferencedMessage()).getId()).queue(
                 message -> message.delete().queue()
         );
@@ -38,5 +35,10 @@ public class Delete implements CommandInterface {
     @Override
     public List<String> getAliases() {
         return List.of("d");
+    }
+
+    @Override
+    public int deleteAfter() {
+        return 0;
     }
 }

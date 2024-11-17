@@ -67,7 +67,7 @@ public class Servers implements CommandInterface {
 
             embed.setDescription(sb.toString());
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 64);
+            sendMessage(ctx, mca, 64);
         }
     }
 

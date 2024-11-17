@@ -15,7 +15,7 @@ public class MessageDeleteHelper {
     }
 
     public static void deleteMessagePersistenceCheck(CommandContext ctx, Message msg, int delay) {
-        if (ctx.checkPersistence()) {
+        if (!ctx.isPersistent()) {
             deleteMessage(msg, delay);
         }
     }

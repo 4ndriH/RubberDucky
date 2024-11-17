@@ -1,5 +1,6 @@
 package services.startup;
 
+import assets.Config;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -16,17 +17,21 @@ public class DirectoryVerification {
         ArrayList<File> directories = new ArrayList<>();
         boolean directoryCreated = false;
 
-        directories.add(new File("DB"));
-        directories.add(new File("logs"));
-        directories.add(new File("resources"));
-        directories.add(new File("resources/images"));
-        directories.add(new File("resources/images/purge"));
-        directories.add(new File("resources/images/duckies"));
-        directories.add(new File("resources/images/lmgtfy"));
-        directories.add(new File("tempFiles"));
-        directories.add(new File("tempFiles/place"));
-        directories.add(new File("tempFiles/place/queue"));
-        directories.add(new File("tempFiles/place/timelapse"));
+        if (!Config.directoryPath.isEmpty()) {
+            directories.add(new File(Config.directoryPath));
+        }
+
+        directories.add(new File(Config.directoryPath + "DB"));
+        directories.add(new File(Config.directoryPath + "logs"));
+        directories.add(new File(Config.directoryPath + "resources"));
+        directories.add(new File(Config.directoryPath + "resources/images"));
+        directories.add(new File(Config.directoryPath + "resources/images/purge"));
+        directories.add(new File(Config.directoryPath + "resources/images/duckies"));
+        directories.add(new File(Config.directoryPath + "resources/images/lmgtfy"));
+        directories.add(new File(Config.directoryPath + "tempFiles"));
+        directories.add(new File(Config.directoryPath + "tempFiles/place"));
+        directories.add(new File(Config.directoryPath + "tempFiles/place/queue"));
+        directories.add(new File(Config.directoryPath + "tempFiles/place/timelapse"));
 
         for (File directory : directories) {
             if (!directory.isDirectory()) {
@@ -95,11 +100,11 @@ public class DirectoryVerification {
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
-                File current = new File(directory + file);
+                File current = new File(Config.directoryPath + directory + file);
                 if (!current.exists()) {
                     try {
-                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + directory + file).openStream());
-                        FileOutputStream fileOutputStream = new FileOutputStream(directory + file);
+                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + Config.directoryPath + directory + file).openStream());
+                        FileOutputStream fileOutputStream = new FileOutputStream(Config.directoryPath + directory + file);
                         fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
                         fileOutputStream.close();
                         fileDownloaded = true;

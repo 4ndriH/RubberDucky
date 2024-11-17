@@ -53,7 +53,7 @@ public class Say implements CommandInterface {
         if (!sayChannels.containsKey(channel)) {
             sayChannels.put(channel, true);
         }
-
+        sb.append(" hgfdsdfghjkjhgfdsdfghj");
         for (int j = 0; j < repeats && sayChannels.get(channel); j++) {
             channel.sendMessage(sb.toString()).complete();
         }

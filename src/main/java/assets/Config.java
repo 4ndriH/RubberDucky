@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class Config {
     private static final Logger LOGGER = LoggerFactory.getLogger("Config");
 
+    public static String directoryPath = "bot_data/";
     public static String token;
     public static String prefix;
     public static String ownerID;

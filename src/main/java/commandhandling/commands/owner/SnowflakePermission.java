@@ -61,7 +61,7 @@ public class SnowflakePermission implements CommandInterface {
             }
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 64);
+            sendMessage(ctx, mca, 64);
         } else {
             String discordChannelId, discordServerId, discordUserId, command;
             int idx;

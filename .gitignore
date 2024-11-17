@@ -1,10 +1,24 @@
-.idea/
-build/
+### IntelliJ IDEA ###
+.idea
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
 out/
-tempFiles/
-DB/
-META-INF/
-target/
-logs/
-url.txt
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Gradle ###
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Stuff ###
+bot_data/*
+!bot_data/resources/
 token.txt

@@ -1,5 +1,6 @@
 package commandhandling.commands.pleb;
 
+import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -17,10 +18,10 @@ import static services.discordhelpers.MessageSendHelper.sendMessage;
 public class Ducky implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
-        int nr = new Random().nextInt(Objects.requireNonNull(new File("resources/images/duckies/").list()).length);
+        int nr = new Random().nextInt(Objects.requireNonNull(new File(Config.directoryPath + "resources/images/duckies/").list()).length);
         EmbedBuilder embed = EmbedHelper.embedBuilder("A RubberDucky").setImage("attachment://ducky" + nr + ".png");
-        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File("resources/images/duckies/ducky" + nr + ".png")));
-        sendMessage(mca, 32);
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/duckies/ducky" + nr + ".png")));
+        sendMessage(ctx, mca, 32);
     }
 
     @Override

@@ -64,10 +64,10 @@ public class Help implements CommandInterface {
             }
 
             embed.setFooter(Config.prefix + "help <command> gives you a more detailed description" +
-                    (ctx.getSecurityClearance() < 3 ? "\nAppending '--persist' prevents messages from being deleted" : ""));
+                    (ctx.getSecurityClearance() < 3 ? "\nAppending '-p' prevents messages from being deleted" : ""));
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 64);
+            sendMessage(ctx, mca, 64);
         } else {
             CommandInterface command = CommandManager.getCommand(ctx.getArguments().get(0));
 
@@ -94,7 +94,7 @@ public class Help implements CommandInterface {
             }
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-            sendMessage(mca, 64);
+            sendMessage(ctx, mca, 64);
         }
             ReactionHelper.addReaction(ctx, 0);
     }

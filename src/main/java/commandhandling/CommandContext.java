@@ -27,7 +27,7 @@ public class CommandContext {
         this.event = event;
         this.arguments = arguments;
 
-        persist = this.arguments.remove("--persist");
+        persist = this.arguments.remove("-p");
 
         securityClearance = event.getAuthor().getId().equals(Config.ownerID) ? 0 :
         Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR) ? 1 :
@@ -76,7 +76,7 @@ public class CommandContext {
     }
 
     // allow only moderators or higher to set a message as persistent
-    public boolean checkPersistence() {
+    public boolean isPersistent() {
         return persist && securityClearance < 3;
     }
 }

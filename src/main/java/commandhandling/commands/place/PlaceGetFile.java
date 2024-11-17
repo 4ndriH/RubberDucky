@@ -38,7 +38,7 @@ public class PlaceGetFile implements CommandInterface {
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
                 MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(output.getBytes(), "RDdraw" + id + ".txt"));
-                sendMessage(mca, 128);
+                sendMessage(ctx, mca, 128);
             } catch (IllegalArgumentException e) {
                 BotExceptions.FileExceedsUploadLimitException(ctx);
             }

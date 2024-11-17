@@ -41,7 +41,7 @@ public class EfficiencyTrackerListener extends ListenerAdapter {
 
     @Override
     public void onShutdown(@NotNull ShutdownEvent event) {
-        sqlExecutor.shutdown();
+        sqlExecutor.shutdownNow();
     }
 
     @Override

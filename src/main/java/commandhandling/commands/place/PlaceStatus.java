@@ -42,7 +42,7 @@ public class PlaceStatus implements CommandInterface {
         }
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());
-        sendMessage(mca, 64);
+        sendMessage(ctx, mca, 64);
     }
 
     private String progress () {

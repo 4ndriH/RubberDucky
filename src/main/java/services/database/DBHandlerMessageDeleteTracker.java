@@ -24,8 +24,18 @@ public class DBHandlerMessageDeleteTracker {
             ps.setLong(4, deleteTime);
             ps.setInt(5, Integer.parseInt(DBHandlerConfig.getConfig().get("systemStartUps")));
             ps.executeUpdate();
-        } catch (SQLException sqlE) {
-            LOGGER.error("SQL Exception", sqlE);
+        } catch (SQLException e) {
+            LOGGER.debug("updating message delete tracker");
+            try (Connection connection = ConnectionPool.getConnection()){
+                PreparedStatement ps = connection.prepareStatement(
+                        "UPDATE MessageDeleteTracker SET DeleteTime = ? WHERE DiscordMessageId = ?"
+                );
+                ps.setLong(1, deleteTime);
+                ps.setString(2, discordMessageId);
+                ps.executeUpdate();
+            } catch (SQLException sqlE) {
+                LOGGER.error("SQL Exception", sqlE);
+            }
         }
     }
 
