@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 import services.CommandManager;
 import services.PermissionManager;
+import services.database.daos.UsersDAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,9 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static services.PermissionManager.getSnowflakes;
-import static services.database.DBHandlerSnowflakePermissions.addSnowflakePermissions;
-import static services.database.DBHandlerSnowflakePermissions.removeSnowflakePermissions;
 import static services.discordhelpers.EmbedHelper.embedBuilder;
 import static services.discordhelpers.MessageSendHelper.sendMessage;
 import static services.discordhelpers.ReactionHelper.addReaction;
@@ -37,7 +35,8 @@ public class SnowflakePermission implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = getSnowflakes();
+        UsersDAO usersDAO = new UsersDAO();
+        HashMap<String, HashMap<String, HashMap<String, ArrayList<String>>>> snowflakes = usersDAO.getSnowflakePermissions();
 
         if (ctx.getArguments().isEmpty()){
             EmbedBuilder embed = embedBuilder("Special Snowflakes");
@@ -104,14 +103,38 @@ public class SnowflakePermission implements CommandInterface {
             }
 
             JDA jda = ctx.getJDA();
+            HashMap<String, HashMap<String, ArrayList<String>>> snowflakeUserPermissions;
+            boolean remove = snowFlakeCheck(snowflakes, discordUserId, discordServerId, discordChannelId, command);
 
-            if (snowFlakeCheck(snowflakes, discordUserId, discordServerId, discordChannelId, command)) {
-                removeSnowflakePermissions(discordUserId, discordServerId, discordChannelId, command);
+            if (snowflakes.containsKey(discordUserId)) {
+                snowflakeUserPermissions = snowflakes.get(discordUserId);
+            } else {
+                snowflakeUserPermissions = new HashMap<>();
+            }
+
+            if (!remove) {
+                snowflakeUserPermissions.putIfAbsent(discordServerId, new HashMap<>());
+                snowflakeUserPermissions.get(discordServerId).putIfAbsent(discordChannelId, new ArrayList<>());
+                snowflakeUserPermissions.get(discordServerId).get(discordChannelId).add(command);
+            } else {
+                snowflakeUserPermissions.get(discordServerId).get(discordChannelId).remove(command);
+
+                if (snowflakeUserPermissions.get(discordServerId).get(discordChannelId).isEmpty()) {
+                    snowflakeUserPermissions.get(discordServerId).remove(discordChannelId);
+
+                    if (snowflakeUserPermissions.get(discordServerId).isEmpty()) {
+                        snowflakeUserPermissions.remove(discordServerId);
+                    }
+                }
+            }
+
+            usersDAO.updateSnowflakePermissions(discordUserId, snowflakeUserPermissions);
+
+            if (remove) {
                 LOGGER.info("Removed snowflake permission for " + Objects.requireNonNull(jda.getUserById(discordUserId)).getName()
                         + " in " + Objects.requireNonNull(jda.getGuildById(discordServerId)).getName()
                         + " > " + Objects.requireNonNull(jda.getTextChannelById(discordChannelId)).getName() + " for " + command);
             } else {
-                addSnowflakePermissions(discordUserId, discordServerId, discordChannelId, command);
                 LOGGER.info("Added snowflake permission for " + Objects.requireNonNull(jda.getUserById(discordUserId)).getName()
                         + " in " + Objects.requireNonNull(jda.getGuildById(discordServerId)).getName()
                         + " > " + Objects.requireNonNull(jda.getTextChannelById(discordChannelId)).getName() + " for " + command);
@@ -138,7 +161,7 @@ public class SnowflakePermission implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Give permissions to some special snowflake which they are usually not meant to have");
-        embed.addField("__Usage__", "```" + Config.prefix + getName() + " [<-s> <Server ID>] [<-c> <Channel ID>] <-u> <User> <-cmd> <Command>```", false);
+        embed.addField("__Usage__", "```" + Config.PREFIX + getName() + " [<-s> <Server ID>] [<-c> <Channel ID>] <-u> <User> <-cmd> <Command>```", false);
         embed.addField("__Server ID__", "Specify the server which the channel is in, defaults to current server", false);
         embed.addField("__<Channel ID>__", "Specify the channel where the command should be usable, defaults to current channel", false);
         embed.addField("__<User>__", "Specify who to give the perms to. Can be ping or user ID", false);

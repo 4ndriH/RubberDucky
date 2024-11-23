@@ -4,17 +4,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
+
 public class DeletableMessage implements Comparable<DeletableMessage> {
     String DiscordServerID;
     String DiscordChannelID;
     String DiscordMessageID;
     long deletionTime;
 
-    public DeletableMessage(String DiscordServerID, String DiscordChannelID, String DiscordMessageID, long deletionTime) {
+    public DeletableMessage(String DiscordServerID, String DiscordChannelID, String DiscordMessageID, LocalDateTime deletionTime) {
         this.DiscordServerID = DiscordServerID;
         this.DiscordChannelID = DiscordChannelID;
         this.DiscordMessageID = DiscordMessageID;
-        this.deletionTime = deletionTime;
+        this.deletionTime = deletionTime.toEpochSecond(java.time.ZoneOffset.UTC);
     }
 
     public Message getMessage(JDA jda) {

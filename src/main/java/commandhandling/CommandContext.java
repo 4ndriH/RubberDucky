@@ -29,7 +29,7 @@ public class CommandContext {
 
         persist = this.arguments.remove("-p");
 
-        securityClearance = event.getAuthor().getId().equals(Config.ownerID) ? 0 :
+        securityClearance = event.getAuthor().getId().equals(Config.OWNER_ID) ? 0 :
         Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR) ? 1 :
         event.getMember().hasPermission(Permission.KICK_MEMBERS) ? 2 : 3;
     }

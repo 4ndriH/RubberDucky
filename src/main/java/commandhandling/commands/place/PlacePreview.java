@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 import assets.Config;
 import assets.objects.Pixel;
 import services.BotExceptions;
+import services.database.daos.PlacePixelsDAO;
+import services.database.daos.PlaceProjectsDAO;
 import services.miscellaneous.GifSequenceWriter;
-import services.database.DBHandlerPlace;
 import services.discordhelpers.EmbedHelper;
 import services.place.PlaceWebSocket;
 
@@ -50,8 +51,11 @@ public class PlacePreview implements CommandInterface {
                 return;
             }
 
-            if (DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
-                    pixels = DBHandlerPlace.getProjectPixels(id);
+            PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+
+            if (placeProjectsDAO.getProjectIds().contains(id)) {
+                PlacePixelsDAO placePixelsDAO = new PlacePixelsDAO();
+                pixels = placePixelsDAO.getPixels(id);
             } else {
                 BotExceptions.fileDoesNotExistException(ctx);
                 return;
@@ -94,7 +98,7 @@ public class PlacePreview implements CommandInterface {
         }
 
         try {
-            ImageOutputStream output = new FileImageOutputStream(new File(Config.directoryPath + "tempFiles/place/preview.gif"));
+            ImageOutputStream output = new FileImageOutputStream(new File(Config.DIRECTORY_PATH + "tempFiles/place/preview.gif"));
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
             boolean exception = false;
 
@@ -127,7 +131,7 @@ public class PlacePreview implements CommandInterface {
             LOGGER.error("PlacePreview Error", e);
         }
 
-        File gif = new File(Config.directoryPath + "tempFiles/place/preview.gif");
+        File gif = new File(Config.DIRECTORY_PATH + "tempFiles/place/preview.gif");
 
         try {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Preview" + (sendMessageCase == 0 ? " - " + id : ""));
@@ -162,7 +166,7 @@ public class PlacePreview implements CommandInterface {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns an animated preview of the given project\n" +
                              "You can either specify the ID, reply to a text file or send it as an attachment");
-        embed.addField("__Usage__", "```" + Config.prefix + getName() + " [<ID>]```", false);
+        embed.addField("__Usage__", "```" + Config.PREFIX + getName() + " [<ID>]```", false);
         return embed;
     }
 

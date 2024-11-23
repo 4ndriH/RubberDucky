@@ -1,19 +1,19 @@
 package commandhandling.commands.place;
 
+import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.BotExceptions;
 import services.PermissionManager;
-import services.database.DBHandlerConfig;
-import services.database.DBHandlerPlace;
+import services.database.daos.PlaceProjectsDAO;
+import services.database.daos.PlaceThroughputLogDAO;
 import services.discordhelpers.EmbedHelper;
 import assets.objects.PlaceData;
 import services.place.PlaceWebSocket;
@@ -36,11 +36,12 @@ public class PlaceDraw implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         if (!PlaceData.drawing) {
-            int id = DBHandlerPlace.getNextProject();
+            PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+            int id = placeProjectsDAO.getNextProject();
 
             if (!ctx.getArguments().isEmpty() && PermissionManager.authenticateOwner(ctx)) {
                 id = Integer.parseInt(ctx.getArguments().get(0));
-                if (!DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
+                if (!placeProjectsDAO.getProjectIds().contains(id)) {
                     BotExceptions.invalidIdException(ctx);
                     return;
                 }
@@ -64,7 +65,7 @@ public class PlaceDraw implements CommandInterface {
 
         while (!PlaceData.stopQ && projectId >= 0) {
             LOGGER.debug("started drawing project: {}", projectId);
-            DBHandlerConfig.updateConfig("placeProject", "" + projectId);
+            Config.updateConfig("placeProject", Integer.toString(projectId));
             PlaceData.newProject(projectId);
 
             while (!PlaceData.stop && PlaceData.pixelsLeftToDraw()) {
@@ -91,7 +92,8 @@ public class PlaceDraw implements CommandInterface {
                 }
 
                 if (PlaceData.drawnPixels % 16 == 0) {
-                    DBHandlerPlace.updateProgress(PlaceData.ID, PlaceData.drawnPixels);
+                    PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+                    placeProjectsDAO.updateProjectProgress(PlaceData.ID, PlaceData.drawnPixels);
                 }
 
                 if (PlaceData.verificationCondition()) {
@@ -106,7 +108,8 @@ public class PlaceDraw implements CommandInterface {
 
                 if (pixelDrawnCnt3600 == 3600) {
                     int tempSec = (int) ((System.currentTimeMillis() - time3600) / 1000);
-                    DBHandlerPlace.insertTimeTaken(tempSec);
+                    PlaceThroughputLogDAO placeThroughputLogDAO = new PlaceThroughputLogDAO();
+                    placeThroughputLogDAO.logThroughput(pixelDrawnCnt3600, tempSec);
                     time3600 = System.currentTimeMillis();
                     pixelDrawnCnt3600 = 0;
                 }
@@ -114,15 +117,16 @@ public class PlaceDraw implements CommandInterface {
 
             if (!PlaceData.stop) {
                 LOGGER.debug("stopping project: {}", projectId);
-                DBHandlerPlace.removeProjectFromQueue(PlaceData.ID);
-                projectId = DBHandlerPlace.getNextProject();
+                PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+                placeProjectsDAO.dequeueProject(PlaceData.ID);
+                projectId = placeProjectsDAO.getNextProject();
                 sendCompletionMessage(jda);
             } else {
                 projectId = -1;
             }
         }
 
-        DBHandlerConfig.updateConfig("placeProject", "-1");
+        Config.updateConfig("placeProject", "-1");
         PlaceData.drawing = false;
         PlaceData.stopQ = false;
     }

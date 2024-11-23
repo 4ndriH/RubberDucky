@@ -29,9 +29,9 @@ public class Help implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        String prefix = Config.prefix;
+        String prefix = Config.PREFIX;
 
-        if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(Config.prefix + " ")) {
+        if (ctx.getArguments().isEmpty() || ctx.getMessage().getContentRaw().contains(Config.PREFIX + " ")) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Help");
 
             HashMap<String, HelpEntry> commandGroups = new HashMap<>();
@@ -63,7 +63,7 @@ public class Help implements CommandInterface {
                 embed.addBlankField(true);
             }
 
-            embed.setFooter(Config.prefix + "help <command> gives you a more detailed description" +
+            embed.setFooter(Config.PREFIX + "help <command> gives you a more detailed description" +
                     (ctx.getSecurityClearance() < 3 ? "\nAppending '-p' prevents messages from being deleted" : ""));
 
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build());

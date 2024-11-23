@@ -1,5 +1,6 @@
 package services.listeners;
 
+import assets.Config;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
@@ -9,13 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static services.database.DBHandlerConfig.getConfig;
-import static services.database.DBHandlerConfig.updateConfig;
 
 public class ButtonGameListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(ButtonGameListener.class);
     private static int nextNotification = 0;
-    private static int myCurrentScore = Integer.parseInt(getConfig().get("ButtonScore"));
+    private static int myCurrentScore = Config.BUTTON_SCORE;
 
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
@@ -52,7 +51,7 @@ public class ButtonGameListener extends ListenerAdapter {
                 String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
                 LOGGER.debug("Button Score Updated. New Score: " + score);
                 myCurrentScore = Integer.parseInt(score);
-                updateConfig("ButtonScore", score);
+                Config.updateConfig("ButtonScore", score);
             }
 
             if (messageContent.contains("has claimed")) {

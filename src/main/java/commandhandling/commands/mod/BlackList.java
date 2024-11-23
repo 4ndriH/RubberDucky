@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.PermissionManager;
-import services.database.DBHandlerBlacklistedUsers;
+import services.database.daos.UsersDAO;
 import services.discordhelpers.EmbedHelper;
 
 import java.util.ArrayList;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static services.PermissionManager.getBlacklist;
 import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class BlackList implements CommandInterface {
@@ -25,17 +24,16 @@ public class BlackList implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<String> blacklist = getBlacklist();
+        UsersDAO usersDAO = new UsersDAO();
+        ArrayList<String> blacklist = usersDAO.getUserBlacklist();
 
         if (!ctx.getArguments().isEmpty()) {
             String id = ctx.getArguments().get(0).replaceAll("[<@>]", "");
-            if (blacklist.contains(id)) {
-                DBHandlerBlacklistedUsers.removeUserFromBlacklist(id);
-                LOGGER.info("Removed user `" + Objects.requireNonNull(ctx.getJDA().getUserById(id)).getName() + "` from the blacklist");
-            } else {
-                DBHandlerBlacklistedUsers.addUserToBlacklist(id);
-                LOGGER.info("Added user `" + Objects.requireNonNull(ctx.getJDA().getUserById(id)).getName() + "` from the blacklist");
-            }
+
+            usersDAO.toggleUserBlacklist(id);
+            String logMessage = (blacklist.contains(id) ? "Removed" : "Added") + "user `{}` from the blacklist";
+            LOGGER.info(logMessage, Objects.requireNonNull(ctx.getJDA().getUserById(id)).getName());
+
             PermissionManager.reload();
         } else {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Blacklisted people");

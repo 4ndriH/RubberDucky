@@ -2,10 +2,8 @@ package services;
 
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import services.database.DBHandlerBlacklistedUsers;
-import services.database.DBHandlerSnowflakePermissions;
-import services.database.DBHandlerWhitelistedChannels;
-import services.database.DBHandlerWhitelistedServers;
+import services.database.daos.AccessControlDAO;
+import services.database.daos.UsersDAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,10 +72,13 @@ public class PermissionManager {
     }
 
     public static void reload() {
-        blackList = DBHandlerBlacklistedUsers.getBlacklistedUsers();
-        servers = DBHandlerWhitelistedServers.getWhitelistedServers();
-        channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
-        snowflakes = DBHandlerSnowflakePermissions.getSnowflakePermissions();
+        UsersDAO usersDAO = new UsersDAO();
+        AccessControlDAO accessControlDAO = new AccessControlDAO();
+
+        blackList = usersDAO.getUserBlacklist();
+        servers = accessControlDAO.getWhitelistedServers();
+        channels = accessControlDAO.getChannelIds();
+        snowflakes = usersDAO.getSnowflakePermissions();
     }
 
     public static void initiateLockdown() {
@@ -86,8 +87,10 @@ public class PermissionManager {
     }
 
     public static void endLockdown() {
-        servers = DBHandlerWhitelistedServers.getWhitelistedServers();
-        channels = DBHandlerWhitelistedChannels.getWhitelistedChannels();
+        AccessControlDAO accessControlDAO = new AccessControlDAO();
+
+        servers = accessControlDAO.getWhitelistedServers();
+        channels = accessControlDAO.getChannelIds();
     }
 
     public static ArrayList<String> getBlacklist() {

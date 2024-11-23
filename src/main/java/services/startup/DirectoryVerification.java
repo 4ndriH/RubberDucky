@@ -17,21 +17,21 @@ public class DirectoryVerification {
         ArrayList<File> directories = new ArrayList<>();
         boolean directoryCreated = false;
 
-        if (!Config.directoryPath.isEmpty()) {
-            directories.add(new File(Config.directoryPath));
+        if (!Config.DIRECTORY_PATH.isEmpty()) {
+            directories.add(new File(Config.DIRECTORY_PATH));
         }
 
-        directories.add(new File(Config.directoryPath + "DB"));
-        directories.add(new File(Config.directoryPath + "logs"));
-        directories.add(new File(Config.directoryPath + "resources"));
-        directories.add(new File(Config.directoryPath + "resources/images"));
-        directories.add(new File(Config.directoryPath + "resources/images/purge"));
-        directories.add(new File(Config.directoryPath + "resources/images/duckies"));
-        directories.add(new File(Config.directoryPath + "resources/images/lmgtfy"));
-        directories.add(new File(Config.directoryPath + "tempFiles"));
-        directories.add(new File(Config.directoryPath + "tempFiles/place"));
-        directories.add(new File(Config.directoryPath + "tempFiles/place/queue"));
-        directories.add(new File(Config.directoryPath + "tempFiles/place/timelapse"));
+        directories.add(new File(Config.DIRECTORY_PATH + "DB"));
+        directories.add(new File(Config.DIRECTORY_PATH + "logs"));
+        directories.add(new File(Config.DIRECTORY_PATH + "resources"));
+        directories.add(new File(Config.DIRECTORY_PATH + "resources/images"));
+        directories.add(new File(Config.DIRECTORY_PATH + "resources/images/purge"));
+        directories.add(new File(Config.DIRECTORY_PATH + "resources/images/duckies"));
+        directories.add(new File(Config.DIRECTORY_PATH + "resources/images/lmgtfy"));
+        directories.add(new File(Config.DIRECTORY_PATH + "tempFiles"));
+        directories.add(new File(Config.DIRECTORY_PATH + "tempFiles/place"));
+        directories.add(new File(Config.DIRECTORY_PATH + "tempFiles/place/queue"));
+        directories.add(new File(Config.DIRECTORY_PATH + "tempFiles/place/timelapse"));
 
         for (File directory : directories) {
             if (!directory.isDirectory()) {
@@ -100,11 +100,11 @@ public class DirectoryVerification {
 
         for (String directory : files.keySet()) {
             for (String file : files.get(directory)) {
-                File current = new File(Config.directoryPath + directory + file);
+                File current = new File(Config.DIRECTORY_PATH + directory + file);
                 if (!current.exists()) {
                     try {
-                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + Config.directoryPath + directory + file).openStream());
-                        FileOutputStream fileOutputStream = new FileOutputStream(Config.directoryPath + directory + file);
+                        ReadableByteChannel byteChannel = Channels.newChannel(new URL(url + Config.DIRECTORY_PATH + directory + file).openStream());
+                        FileOutputStream fileOutputStream = new FileOutputStream(Config.DIRECTORY_PATH + directory + file);
                         fileOutputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
                         fileOutputStream.close();
                         fileDownloaded = true;

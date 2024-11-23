@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Emotes;
 import services.PermissionManager;
-import services.database.DBHandlerWhitelistedServers;
+import services.database.daos.AccessControlDAO;
 import services.discordhelpers.EmbedHelper;
 
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static services.PermissionManager.getWhitelistedServers;
 import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 
@@ -28,17 +27,18 @@ public class Servers implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<String> serverIds = getWhitelistedServers();
+        AccessControlDAO accessControlDAO = new AccessControlDAO();
+        ArrayList<String> serverIds = accessControlDAO.getWhitelistedServers();
 
         if (!ctx.getArguments().isEmpty() ) {
             String serverId = ctx.getGuild().getId();
 
             if (serverIds.contains(serverId)) {
-                DBHandlerWhitelistedServers.removeServerFromWhitelist(serverId);
-                LOGGER.info("Removed server " + Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName() + " from the whitelist");
+                accessControlDAO.removeServer(serverId);
+                LOGGER.info("Removed server {} from the whitelist", Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName());
             } else {
-                DBHandlerWhitelistedServers.addServerToWhitelist(serverId);
-                LOGGER.info("Added server " + Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName() + " the the whitelist");
+                accessControlDAO.addServer(serverId);
+                LOGGER.info("Added server {} the the whitelist", Objects.requireNonNull(ctx.getJDA().getGuildById(serverId)).getName());
             }
 
             PermissionManager.reload();

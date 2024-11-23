@@ -11,9 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
-import services.database.DBHandlerConfig;
-import services.database.DBHandlerMessageDeleteTracker;
-import services.database.DBHandlerPlace;
+import services.database.daos.MessageDeleteTrackerDAO;
+import services.database.daos.PlaceProjectsDAO;
 import services.logging.DiscordAppender;
 
 import java.util.ArrayList;
@@ -29,16 +28,17 @@ public class StartupListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         if (onStartupTasks) {
             // restart place drawing
-            int placeID = Integer.parseInt(DBHandlerConfig.getConfig().get("placeProject"));
+            int placeID = Config.PLACE_PROJECT_ID;
             if (placeID != -1) {
-                if (DBHandlerPlace.getPlaceProjectIDs().contains(placeID)) {
+                PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+                if (placeProjectsDAO.getProjectIds().contains(placeID)) {
                     (new Thread(() -> PlaceDraw.draw(event.getJDA(), placeID))).start();
                 } else {
-                    DBHandlerConfig.updateConfig("placeProject", "-1");
+                    Config.updateConfig("placeProject", "-1");
                 }
             }
 
-            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.logChannelID))
+            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.LOG_CHANNEL_ID))
                     .sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
 
             // add command for active dev badge
@@ -51,7 +51,8 @@ public class StartupListener extends ListenerAdapter {
 
             // delete messages that were scheduled for deletion
             (new Thread(() -> {
-                ArrayList<DeletableMessage> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
+                MessageDeleteTrackerDAO messageDeleteTrackerDAO = new MessageDeleteTrackerDAO();
+                ArrayList<DeletableMessage> messages = messageDeleteTrackerDAO.getMessagesToDelete();
                 Collections.sort(messages);
 
                 long currentSystemTime = System.currentTimeMillis();
@@ -68,6 +69,8 @@ public class StartupListener extends ListenerAdapter {
                         }
                     }
                 }
+
+                messageDeleteTrackerDAO.pruneMessageDeleteTracker();
             })).start();
 
             onStartupTasks = false;

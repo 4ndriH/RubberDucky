@@ -69,8 +69,8 @@ public class CommandManager {
         addCommand(new PurgeDMs());
 
         // coursereview
-        addCommand(new CourseReviewStats());
-        addCommand(new CourseReviewVerify());
+//        addCommand(new CourseReviewStats());
+//        addCommand(new CourseReviewVerify());
 
         // place
         addCommand(new PlaceDelete());
@@ -116,7 +116,7 @@ public class CommandManager {
     }
 
     public void handle(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
+        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.PREFIX), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = getCommand(invoke);

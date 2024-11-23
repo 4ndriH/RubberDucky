@@ -15,7 +15,7 @@ public class Bot {
     }
 
     private static void connectToDiscord() {
-        JDABuilder.createDefault(Config.token
+        JDABuilder.createDefault(Config.TOKEN
             ).enableIntents(
                     GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_MESSAGE_REACTIONS,

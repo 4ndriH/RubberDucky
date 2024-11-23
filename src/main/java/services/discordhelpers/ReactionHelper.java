@@ -7,8 +7,7 @@ import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import assets.Emotes;
 import services.PermissionManager;
-
-import static services.database.DBHandlerBlacklistedUsers.addUserToBlacklist;
+import services.database.daos.UsersDAO;
 
 public class ReactionHelper {
 
@@ -46,7 +45,8 @@ public class ReactionHelper {
         message.addReaction(Emoji.fromFormatted(reaction)).queue(
                 null, new ErrorHandler().handle(ErrorResponse.REACTION_BLOCKED,
                         (ex) -> {
-                            addUserToBlacklist(message.getAuthor().getId());
+                            UsersDAO usersDAO = new UsersDAO();
+                            usersDAO.toggleUserBlacklist(message.getAuthor().getId());
                             PermissionManager.reload();
                         }).ignore(ErrorResponse.UNKNOWN_MESSAGE)
         );

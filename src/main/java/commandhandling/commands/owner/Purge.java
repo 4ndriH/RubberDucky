@@ -38,11 +38,11 @@ public class Purge implements CommandInterface {
         }
 
         if (purging.get()) {
-            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(busyPurging.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/purge/busyPurging.png")));
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(busyPurging.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/purge/busyPurging.png")));
             sendMessage(ctx, mca, 32);
             return;
         } else {
-            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/purge/purgeCommenced.jpg")));
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/purge/purgeCommenced.jpg")));
             sendMessage(ctx, mca, 32);
             purging.set(true);
         }
@@ -58,7 +58,7 @@ public class Purge implements CommandInterface {
             LOGGER.error("Error purging", e);
             return null;
         }).whenComplete((ignored, ignored2) -> {
-            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/purge/purgeEnded.jpg")));
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/purge/purgeEnded.jpg")));
             sendMessage(ctx, mca, 32);
             stop.set(false);
             purging.set(false);

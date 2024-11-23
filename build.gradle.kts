@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("application")
+    id("org.hibernate.orm") version "6.6.2.Final"
 }
 
 repositories {
@@ -34,12 +35,22 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.46.1.0") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    implementation("com.zaxxer:HikariCP:5.1.0") {
-        exclude(group = "org.slf4j", module = "slf4j-api")
-    }
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.apache.commons:commons-text:1.12.0")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.17.1")
+
+    implementation("org.postgresql:postgresql:42.7.2")
+
+    implementation("org.hibernate:hibernate-core:6.2.11.Final")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
+    implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
+    implementation("org.hibernate:hibernate-hikaricp:6.6.2.Final")
+
+    implementation("com.zaxxer:HikariCP:5.1.0") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
 }
 
 group = "org.RubberDucky"
@@ -49,6 +60,8 @@ description = "RubberDucky"
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+
+    sourceSets["main"].java.srcDirs("src/main/java")
 }
 
 application {

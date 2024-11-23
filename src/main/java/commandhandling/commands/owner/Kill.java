@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
-import services.database.ConnectionPool;
+import org.hibernate.Hibernate;
 import services.database.ConnectionPoolCR;
+import services.database.HibernateUtil;
 import services.discordhelpers.EmbedHelper;
 
 import java.io.File;
@@ -43,11 +44,11 @@ public class Kill implements CommandInterface{
         String file = attachments.get(new Random().nextInt(attachments.size()));
         EmbedBuilder embed = EmbedHelper.embedBuilder("Committing Sudoku").setImage("attachment://" + file);
 
-        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/" + file)));
+        MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/" + file)));
         sendMessageComplete(mca, 64);
 
         ctx.getJDA().shutdownNow();
-        ConnectionPool.closeDBConnection();
+        HibernateUtil.closeSessionFactory();
         ConnectionPoolCR.closeDBConnection();
         System.exit(0);
     }

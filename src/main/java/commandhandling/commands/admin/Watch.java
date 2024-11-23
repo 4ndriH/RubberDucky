@@ -1,5 +1,6 @@
 package commandhandling.commands.admin;
 
+import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,7 +11,6 @@ import services.listeners.CountThreadListener;
 
 import java.util.regex.Pattern;
 
-import static services.database.DBHandlerConfig.updateConfig;
 import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class Watch implements CommandInterface {
@@ -24,9 +24,9 @@ public class Watch implements CommandInterface {
         CountThreadListener.listenTo = tempId;
         CountThreadListener.checkRecentMessages();
 
-        updateConfig("CountThreadListenTo", tempId);
+        Config.updateConfig("CountThreadListenTo", tempId);
 
-        LOGGER.info(ctx.getAuthor().getAsTag() + " changed the follow ID to " + tempId);
+        LOGGER.info("{} changed the follow ID to {}", ctx.getAuthor().getAsTag(), tempId);
 
         MessageCreateAction mca = ctx.getChannel().sendMessage("I am watching you <@" + tempId + "> <:bustinGood:747783377171644417>");
         sendMessage(ctx, mca, 64);

@@ -24,7 +24,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContentRaw().startsWith(Config.prefix)) {
+        if (event.getMessage().getContentRaw().startsWith(Config.PREFIX)) {
             manager.handle(event);
         }
     }

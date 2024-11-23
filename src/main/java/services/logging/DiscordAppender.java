@@ -14,7 +14,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
     private static TextChannel channel;
 
     public static void setJDA(JDA jda) {
-        channel = Objects.requireNonNull(jda.getGuildById("817850050013036605")).getTextChannelById(Config.logChannelID);
+        channel = Objects.requireNonNull(jda.getGuildById("817850050013036605")).getTextChannelById(Config.LOG_CHANNEL_ID);
 
         if (channel == null) {
             throw new IllegalArgumentException("Log channel not found");
