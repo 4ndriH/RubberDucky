@@ -3,8 +3,6 @@ package services;
 import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import commandhandling.commands.coursereview.CourseReviewStats;
-import commandhandling.commands.coursereview.CourseReviewVerify;
 import commandhandling.commands.admin.LockDown;
 import commandhandling.commands.admin.Nuke;
 import commandhandling.commands.admin.Watch;
@@ -67,10 +65,6 @@ public class CommandManager {
         addCommand(new LetMeGoogleThatForYou());
         addCommand(new Ping());
         addCommand(new PurgeDMs());
-
-        // coursereview
-//        addCommand(new CourseReviewStats());
-//        addCommand(new CourseReviewVerify());
 
         // place
         addCommand(new PlaceDelete());

@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
-import org.hibernate.Hibernate;
-import services.database.ConnectionPoolCR;
 import services.database.HibernateUtil;
 import services.discordhelpers.EmbedHelper;
 
@@ -49,7 +47,6 @@ public class Kill implements CommandInterface{
 
         ctx.getJDA().shutdownNow();
         HibernateUtil.closeSessionFactory();
-        ConnectionPoolCR.closeDBConnection();
         System.exit(0);
     }
 
