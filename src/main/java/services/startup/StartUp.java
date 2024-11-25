@@ -16,7 +16,7 @@ public class StartUp {
     private static void verifications() {
         DirectoryVerification.verifyDirectoryIntegrity(LOGGER);
         DirectoryVerification.verifyFileIntegrity(LOGGER);
-        DatabaseVerification.verifyDatabaseIntegrity(LOGGER);
+        DatabaseVerification.importSqliteData(LOGGER);
     }
 
     private static void loadEssentials() {

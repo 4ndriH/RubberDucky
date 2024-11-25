@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import services.database.HibernateUtil;
 import services.database.entities.ChannelMessageTrafficORM;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class ChannelMessageTrafficDAO {
         try {
             transaction = session.beginTransaction();
             ChannelMessageTrafficORM channelMessageTraffic = new ChannelMessageTrafficORM();
-            channelMessageTraffic.setTimestamp(LocalDateTime.now());
             channelMessageTraffic.setEthPlaceBots(ethPlaceBots);
             channelMessageTraffic.setCountThread(countThread);
             session.persist(channelMessageTraffic);
@@ -48,7 +46,7 @@ public class ChannelMessageTrafficDAO {
             String column = channel.equals("Count") ? "countThread" : "ethPlaceBots";
 
             Query<Integer> query = session.createQuery(
-                    "SELECT c." + column + " FROM ChannelMessageTrafficORM c ORDER BY c.timestamp DESC", Integer.class
+                    "SELECT c." + column + " FROM ChannelMessageTrafficORM c ORDER BY c.createdAt DESC", Integer.class
             ).setMaxResults(1440);
             List<Integer> results = query.getResultList();
             dataPoints.addAll(results);
@@ -64,5 +62,28 @@ public class ChannelMessageTrafficDAO {
         }
 
         return dataPoints;
+    }
+
+    public void importLogEntry(ArrayList<ChannelMessageTrafficORM> logs) {
+        Session session = HibernateUtil.getSession();
+        session.setJdbcBatchSize(64_000);
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            for (ChannelMessageTrafficORM log : logs) {
+                session.persist(log);
+            }
+            transaction.commit();
+            session.clear();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+
+            LOGGER.error("Failed to import log entry, rolled back", e);
+        } finally {
+            HibernateUtil.closeSession(session);
+        }
     }
 }
