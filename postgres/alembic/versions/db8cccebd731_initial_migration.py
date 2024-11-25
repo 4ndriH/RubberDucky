@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 58298723b247
+Revision ID: db8cccebd731
 Revises: 
-Create Date: 2024-11-24 15:47:21.407320
+Create Date: 2024-11-25 21:41:54.633596
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '58298723b247'
+revision: str = 'db8cccebd731'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,10 +26,11 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('discord_server_id')
     )
     op.create_table('channel_message_traffic',
-    sa.Column('time_stamp', sa.DateTime(), nullable=False),
+    sa.Column('key', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('created_at', sa.BigInteger(), nullable=True),
     sa.Column('eth_place_bots', sa.Integer(), nullable=True),
     sa.Column('count_thread', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('time_stamp')
+    sa.PrimaryKeyConstraint('key')
     )
     op.create_table('config',
     sa.Column('key', sa.Text(), nullable=False),
@@ -41,7 +42,7 @@ def upgrade() -> None:
     sa.Column('discord_message_id', sa.String(length=20), nullable=False),
     sa.Column('discord_server_id', sa.String(length=20), nullable=True),
     sa.Column('discord_channel_id', sa.String(length=20), nullable=True),
-    sa.Column('time_to_delete', sa.DateTime(), nullable=True),
+    sa.Column('time_to_delete', sa.BigInteger(), nullable=True),
     sa.PrimaryKeyConstraint('discord_message_id')
     )
     op.create_table('place_projects',
@@ -51,10 +52,11 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('project_id')
     )
     op.create_table('place_throughput_log',
-    sa.Column('time_stamp', sa.DateTime(), nullable=False),
+    sa.Column('key', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('created_at', sa.BigInteger(), nullable=True),
     sa.Column('batch_size', sa.Integer(), nullable=True),
     sa.Column('message_batch_time', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('time_stamp')
+    sa.PrimaryKeyConstraint('key')
     )
     op.create_table('users',
     sa.Column('discord_user_id', sa.String(length=20), nullable=False),
@@ -67,9 +69,9 @@ def upgrade() -> None:
     sa.Column('index', sa.Integer(), nullable=False),
     sa.Column('x_coordinate', sa.Integer(), nullable=False),
     sa.Column('y_coordinate', sa.Integer(), nullable=False),
-    sa.Column('image_color', sa.String(length=6), nullable=True),
+    sa.Column('image_color', sa.String(length=7), nullable=True),
     sa.Column('alpha', sa.Float(), nullable=True),
-    sa.Column('place_color', sa.String(length=6), nullable=True),
+    sa.Column('place_color', sa.String(length=7), nullable=True),
     sa.ForeignKeyConstraint(['project_id'], ['place_projects.project_id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('project_id', 'index')
     )
@@ -85,5 +87,5 @@ def downgrade() -> None:
     op.drop_table('message_delete_tracker')
     op.drop_table('config')
     op.drop_table('channel_message_traffic')
-    op.drop_table('access_pontrol')
+    op.drop_table('access_control')
     # ### end Alembic commands ###

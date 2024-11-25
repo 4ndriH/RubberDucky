@@ -8,6 +8,7 @@ from sqlalchemy import (
     ForeignKey,
     DateTime,
     PrimaryKeyConstraint,
+    BigInteger,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
@@ -31,14 +32,16 @@ class Users(Base):
 
 class ChannelMessageTraffic(Base):
     __tablename__ = "channel_message_traffic"
-    time_stamp = Column(DateTime, primary_key=True, default=func.current_timestamp())
+    key = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(BigInteger, default=func.now())
     eth_place_bots = Column(Integer)
     count_thread = Column(Integer)
 
 
 class PlaceThroughputLog(Base):
     __tablename__ = "place_throughput_log"
-    time_stamp = Column(DateTime, primary_key=True, default=func.current_timestamp())
+    key = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(BigInteger, default=func.now())
     batch_size = Column(Integer, default=3600)
     message_batch_time = Column(Integer)
 
@@ -48,7 +51,7 @@ class MessageDeleteTracker(Base):
     discord_message_id = Column(String(20), primary_key=True)
     discord_server_id = Column(String(20))
     discord_channel_id = Column(String(20))
-    time_to_delete = Column(DateTime)
+    time_to_delete = Column(BigInteger)
 
 
 class PlaceProjects(Base):
@@ -64,9 +67,9 @@ class PlacePixels(Base):
     index = Column(Integer, primary_key=True)
     x_coordinate = Column(Integer, nullable=False)
     y_coordinate = Column(Integer, nullable=False)
-    image_color = Column(String(6))
+    image_color = Column(String(7))
     alpha = Column(Float, default=1.0)
-    place_color = Column(String(6))
+    place_color = Column(String(7))
 
 
 class AccessControl(Base):
