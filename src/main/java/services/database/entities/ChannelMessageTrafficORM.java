@@ -1,19 +1,16 @@
 package services.database.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "channel_message_traffic")
 public class ChannelMessageTrafficORM {
     @Id
-    @Column(name = "time_stamp")
-    private LocalDateTime timestamp;
+    @Column(name = "key")
+    private int key;
+
+    @Column(name = "created_at")
+    private long createdAt;
 
     @Column(name = "eth_place_bots")
     private int ethPlaceBots;
@@ -23,18 +20,27 @@ public class ChannelMessageTrafficORM {
 
     public ChannelMessageTrafficORM() {}
 
-    public ChannelMessageTrafficORM(LocalDateTime timestamp, int ethPlaceBots, int countThread) {
-        this.timestamp = timestamp;
+    public ChannelMessageTrafficORM(int key, long createdAt, int ethPlaceBots, int countThread) {
+        this.key = key;
+        this.createdAt = createdAt;
         this.ethPlaceBots = ethPlaceBots;
         this.countThread = countThread;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public int getKey() {
+        return key;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setKey(int key) {
+        this.key = key;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getEthPlaceBots() {

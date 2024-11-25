@@ -24,7 +24,7 @@ public class MessageDeleteTrackerDAO {
         try {
             transaction = session.beginTransaction();
             MessageDeleteTrackerORM messageDeleteTracker = new MessageDeleteTrackerORM(
-                    discordMessageId, discordServerId, discordChannelId, LocalDateTime.ofInstant(Instant.ofEpochMilli(deleteTime), java.time.ZoneOffset.UTC)
+                    discordMessageId, discordServerId, discordChannelId, deleteTime
             );
             session.persist(messageDeleteTracker);
             transaction.commit();

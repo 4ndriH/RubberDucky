@@ -19,16 +19,17 @@ public class PlacePixelsDAO {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
 
+        session.setJdbcBatchSize(64_000);
+
         try {
             transaction = session.beginTransaction();
             int idx = 1;
 
             for (Pixel pixel : pixels) {
                 PlacePixelsORM p = new PlacePixelsORM();
-                p.setProjectId(projectId);
-                p.setIndex(idx++);
-                p.setXcoordinate(pixel.getX());
-                p.setYcoordinate(pixel.getY());
+                p.setKey(new PlacePixelsORM.PlacePixelsKey(projectId, idx++));
+                p.setXCoordinate(pixel.getX());
+                p.setYCoordinate(pixel.getY());
                 p.setImageColor(pixel.getImageColor());
                 p.setAlpha(pixel.getAlpha());
                 session.persist(p);
@@ -53,12 +54,12 @@ public class PlacePixelsDAO {
 
         try {
             transaction = session.beginTransaction();
-            Query<PlacePixelsORM> query = session.createQuery("FROM PlacePixelsORM WHERE projectId = :projectId", PlacePixelsORM.class);
+            Query<PlacePixelsORM> query = session.createQuery("FROM PlacePixelsORM WHERE key.projectId = :projectId", PlacePixelsORM.class);
             query.setParameter("projectId", projectId);
             List<PlacePixelsORM> pixelORMs = query.list();
 
             for (PlacePixelsORM pixelORM : pixelORMs) {
-                Pixel pixel = new Pixel(pixelORM.getXcoordinate(), pixelORM.getYcoordinate(), pixelORM.getAlpha(), pixelORM.getImageColor());
+                Pixel pixel = new Pixel(pixelORM.getXCoordinate(), pixelORM.getYCoordinate(), pixelORM.getAlpha(), pixelORM.getImageColor());
                 pixels.add(pixel);
             }
 
@@ -106,7 +107,7 @@ public class PlacePixelsDAO {
 
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("UPDATE PlacePixelsORM SET placeColor = :placeColor WHERE xcoordinate = :x AND ycoordinate = :y AND alpha = :alpha AND imageColor = :imageColor");
+            Query<PlacePixelsORM> query = session.createQuery("UPDATE PlacePixelsORM SET placeColor = :placeColor WHERE xCoordinate = :x AND yCoordinate = :y AND alpha = :alpha AND imageColor = :imageColor", PlacePixelsORM.class);
             query.setParameter("alpha", alpha);
             query.setParameter("imageColor", imageColor);
             query.setParameter("placeColor", placeColor);

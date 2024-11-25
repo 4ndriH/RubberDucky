@@ -12,11 +12,11 @@ public class DeletableMessage implements Comparable<DeletableMessage> {
     String DiscordMessageID;
     long deletionTime;
 
-    public DeletableMessage(String DiscordServerID, String DiscordChannelID, String DiscordMessageID, LocalDateTime deletionTime) {
+    public DeletableMessage(String DiscordServerID, String DiscordChannelID, String DiscordMessageID, long deletionTime) {
         this.DiscordServerID = DiscordServerID;
         this.DiscordChannelID = DiscordChannelID;
         this.DiscordMessageID = DiscordMessageID;
-        this.deletionTime = deletionTime.toEpochSecond(java.time.ZoneOffset.UTC);
+        this.deletionTime = deletionTime;
     }
 
     public Message getMessage(JDA jda) {

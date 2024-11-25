@@ -1,25 +1,21 @@
 package services.database.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "place_pixels")
-public class PlacePixelsORM {
-    @Id
-    @Column(name = "project_id")
-    private int projectId;
-
-    @Column(name = "index")
-    private int index;
+public class PlacePixelsORM implements Serializable {
+    @EmbeddedId
+    private PlacePixelsKey key;
 
     @Column(name = "x_coordinate")
-    private int xcoordinate;
+    private int xCoordinate;
 
     @Column(name = "y_coordinate")
-    private int ycoordinate;
+    private int yCoordinate;
 
     @Column(name = "image_color")
     private String imageColor;
@@ -32,46 +28,37 @@ public class PlacePixelsORM {
 
     public PlacePixelsORM() {}
 
-    public PlacePixelsORM(int projectId, int index, int xcoordinate, int ycoordinate, String imageColor, double alpha, String placeColor) {
-        this.projectId = projectId;
-        this.index = index;
-        this.xcoordinate = xcoordinate;
-        this.ycoordinate = ycoordinate;
+    public PlacePixelsORM(PlacePixelsKey key, int xCoordinate, int yCoordinate, String imageColor, double alpha, String placeColor) {
+        this.key = key;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
         this.imageColor = imageColor;
         this.alpha = alpha;
         this.placeColor = placeColor;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public PlacePixelsKey getKey() {
+        return key;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setKey(PlacePixelsKey key) {
+        this.key = key;
     }
 
-    public int getIndex() {
-        return index;
+    public int getXCoordinate() {
+        return xCoordinate;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setXCoordinate(int xCoordinate) {
+        this.xCoordinate = xCoordinate;
     }
 
-    public int getXcoordinate() {
-        return xcoordinate;
+    public int getYCoordinate() {
+        return yCoordinate;
     }
 
-    public void setXcoordinate(int xcoordinate) {
-        this.xcoordinate = xcoordinate;
-    }
-
-    public int getYcoordinate() {
-        return ycoordinate;
-    }
-
-    public void setYcoordinate(int ycoordinate) {
-        this.ycoordinate = ycoordinate;
+    public void setYCoordinate(int yCoordinate) {
+        this.yCoordinate = yCoordinate;
     }
 
     public String getImageColor() {
@@ -96,5 +83,52 @@ public class PlacePixelsORM {
 
     public void setPlaceColor(String placeColor) {
         this.placeColor = placeColor;
+    }
+
+    @Embeddable
+    public static class PlacePixelsKey implements Serializable {
+        @Column(name = "project_id")
+        private int projectId;
+
+        @Column(name = "index")
+        private int index;
+
+        public PlacePixelsKey() {}
+
+        public PlacePixelsKey(int projectId, int index) {
+            this.projectId = projectId;
+            this.index = index;
+        }
+
+        public int getProjectId() {
+            return projectId;
+        }
+
+        public void setProjectId(int projectId) {
+            this.projectId = projectId;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            PlacePixelsKey that = (PlacePixelsKey) o;
+
+            return index == that.index && projectId == that.projectId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(projectId, index);
+        }
     }
 }

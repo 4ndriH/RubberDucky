@@ -1,11 +1,6 @@
 package services.database.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "message_delete_tracker")
@@ -21,11 +16,11 @@ public class MessageDeleteTrackerORM {
     private String discordChannelId;
 
     @Column(name = "time_to_delete")
-    private LocalDateTime timeToDelete;
+    private long timeToDelete;
 
     public MessageDeleteTrackerORM() {}
 
-    public MessageDeleteTrackerORM(String discordMessageId, String discordServerId, String discordChannelId, LocalDateTime timeToDelete) {
+    public MessageDeleteTrackerORM(String discordMessageId, String discordServerId, String discordChannelId, long timeToDelete) {
         this.discordMessageId = discordMessageId;
         this.discordServerId = discordServerId;
         this.discordChannelId = discordChannelId;
@@ -56,11 +51,11 @@ public class MessageDeleteTrackerORM {
         this.discordChannelId = discordChannelId;
     }
 
-    public LocalDateTime getTimeToDelete() {
+    public long getTimeToDelete() {
         return timeToDelete;
     }
 
-    public void setTimeToDelete(LocalDateTime timeToDelete) {
+    public void setTimeToDelete(long timeToDelete) {
         this.timeToDelete = timeToDelete;
     }
 }

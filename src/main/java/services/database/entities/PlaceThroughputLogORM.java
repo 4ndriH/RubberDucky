@@ -5,14 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "place_throughput_log")
 public class PlaceThroughputLogORM {
     @Id
-    @Column(name = "time_stamp")
-    private LocalDateTime timestamp;
+    @Column(name = "key")
+    private int key;
+
+    @Column(name = "created_at")
+    private long createdAt;
 
     @Column(name = "batch_size")
     private int batchSize;
@@ -22,18 +23,27 @@ public class PlaceThroughputLogORM {
 
     public PlaceThroughputLogORM() {}
 
-    public PlaceThroughputLogORM(LocalDateTime timestamp, int numberOfPixels, int messageBatchTime) {
-        this.timestamp = timestamp;
+    public PlaceThroughputLogORM(int key, long createdAt, int numberOfPixels, int messageBatchTime) {
+        this.key = key;
+        this.createdAt = createdAt;
         this.batchSize = numberOfPixels;
         this.messageBatchTime = messageBatchTime;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public int getKey() {
+        return key;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setKey(int key) {
+        this.key = key;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getBatchSize() {

@@ -20,7 +20,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(ChannelMessageTrafficORM.class)
                     .addAnnotatedClass(MessageDeleteTrackerORM.class)
                     .addAnnotatedClass(PlaceProjectsORM.class)
-                    .addAnnotatedClass(PlaceThroughputLogORM.class)
+                    .addAnnotatedClass(PlacePixelsORM.class)
                     .addAnnotatedClass(PlaceThroughputLogORM.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
