@@ -1,15 +1,14 @@
 package services.database.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "place_throughput_log")
 public class PlaceThroughputLogORM {
     @Id
     @Column(name = "key")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "place_throughput_log_key_seq")
+    @SequenceGenerator(name = "place_throughput_log_key_seq", sequenceName = "place_throughput_log_key_seq", allocationSize = 1)
     private int key;
 
     @Column(name = "created_at")

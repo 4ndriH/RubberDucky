@@ -44,6 +44,7 @@ public class PlaceThroughputLogDAO {
             for (PlaceThroughputLogORM log : logs) {
                 session.persist(log);
             }
+            session.flush();
             transaction.commit();
             session.clear();
         } catch (Exception e) {

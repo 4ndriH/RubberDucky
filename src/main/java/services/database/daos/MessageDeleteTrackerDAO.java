@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import services.database.HibernateUtil;
 import services.database.entities.MessageDeleteTrackerORM;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class MessageDeleteTrackerDAO {
             Query<MessageDeleteTrackerORM> query = session.createQuery(
                     "FROM MessageDeleteTrackerORM WHERE timeToDelete < :currentSystemTime", MessageDeleteTrackerORM.class
             );
-            query.setParameter("currentSystemTime", LocalDateTime.now());
+            query.setParameter("currentSystemTime", System.currentTimeMillis());
             List<MessageDeleteTrackerORM> messageDeleteTrackerORMs = query.list();
 
             for (MessageDeleteTrackerORM messageDeleteTrackerORM : messageDeleteTrackerORMs) {
@@ -83,7 +81,7 @@ public class MessageDeleteTrackerDAO {
             transaction = session.beginTransaction();
 
             Query<MessageDeleteTrackerORM> query = session.createQuery("FROM MessageDeleteTrackerORM WHERE timeToDelete < :currentSystemTime", MessageDeleteTrackerORM.class);
-            query.setParameter("currentSystemTime", LocalDateTime.now());
+            query.setParameter("currentSystemTime", System.currentTimeMillis());
             List<MessageDeleteTrackerORM> messageDeleteTrackerORMs = query.list();
 
             for (MessageDeleteTrackerORM messageDeleteTrackerORM : messageDeleteTrackerORMs) {

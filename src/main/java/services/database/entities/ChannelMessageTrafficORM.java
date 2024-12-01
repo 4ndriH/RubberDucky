@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 public class ChannelMessageTrafficORM {
     @Id
     @Column(name = "key")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "channel_message_traffic_key_seq")
+    @SequenceGenerator(name = "channel_message_traffic_key_seq", sequenceName = "channel_message_traffic_key_seq", allocationSize = 1)
     private int key;
 
     @Column(name = "created_at")

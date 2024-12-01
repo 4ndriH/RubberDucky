@@ -28,15 +28,10 @@ public class DatabaseVerification {
         ArrayList<PlaceThroughputLogORM> placeThroughput = new ArrayList<>();
         ArrayList<ChannelMessageTrafficORM> channelMessageTraffic = new ArrayList<>();
 
-        int ptlIndex = 0;
-        int cmtIndex = 0;
-
-
         try {
-            scanner = new Scanner(new File("sqlite.sql"));
+            scanner = new Scanner(new File("bot_data/sqlite.sql"));
         } catch (FileNotFoundException e) {
             LOGGER.error("sqlite.sql not found");
-            System.exit(1);
             return;
         }
 
@@ -108,8 +103,12 @@ public class DatabaseVerification {
                 int batchTime = Integer.parseInt(values[2]);
                 String timeStamp = values[3];
 
+                PlaceThroughputLogORM temp = new PlaceThroughputLogORM();
+                temp.setBatchSize(batchSize);
+                temp.setMessageBatchTime(batchTime);
+                temp.setCreatedAt(timeStampToUnix(timeStamp));
 
-                placeThroughput.add(new PlaceThroughputLogORM(ptlIndex++, timeStampToUnix(timeStamp), batchSize, batchTime));
+                placeThroughput.add(temp);
             } else if (table.equals("EfficiencyLog") && line.contains("INSERT INTO") && !line.contains("sqlite_sequence")) {
                 String[] values = insertMatcher(line).split(",");
 
@@ -117,7 +116,12 @@ public class DatabaseVerification {
                 int place = Integer.parseInt(values[1]);
                 int count = Integer.parseInt(values[2]);
 
-                channelMessageTraffic.add(new ChannelMessageTrafficORM(cmtIndex++, seconds, place, count));
+                ChannelMessageTrafficORM temp = new ChannelMessageTrafficORM();
+                temp.setCountThread(count);
+                temp.setEthPlaceBots(place);
+                temp.setCreatedAt(seconds);
+
+                channelMessageTraffic.add(temp);
             }
         }
 
@@ -131,6 +135,13 @@ public class DatabaseVerification {
         for (int placeId : placePixels.keySet()) {
             LOGGER.info("Importing place pixels for project {}", placeId);
             dao.queuePixels(placeId, placePixels.get(placeId));
+        }
+
+        File file = new File("bot_data/sqlite.sql");
+        if (file.delete()) {
+            LOGGER.info("sqlite.sql deleted");
+        } else {
+            LOGGER.error("Failed to delete sqlite.sql");
         }
     }
 

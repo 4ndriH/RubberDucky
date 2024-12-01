@@ -19,7 +19,7 @@ public class PlacePixelsDAO {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
 
-        session.setJdbcBatchSize(64_000);
+        session.setJdbcBatchSize(32_000);
 
         try {
             transaction = session.beginTransaction();
@@ -35,6 +35,8 @@ public class PlacePixelsDAO {
                 session.persist(p);
             }
 
+            session.flush();
+            session.setJdbcBatchSize(10);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {

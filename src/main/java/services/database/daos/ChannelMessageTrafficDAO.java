@@ -23,6 +23,7 @@ public class ChannelMessageTrafficDAO {
             ChannelMessageTrafficORM channelMessageTraffic = new ChannelMessageTrafficORM();
             channelMessageTraffic.setEthPlaceBots(ethPlaceBots);
             channelMessageTraffic.setCountThread(countThread);
+            channelMessageTraffic.setCreatedAt(System.currentTimeMillis());
             session.persist(channelMessageTraffic);
             transaction.commit();
         }  catch (Exception e) {
@@ -74,6 +75,7 @@ public class ChannelMessageTrafficDAO {
             for (ChannelMessageTrafficORM log : logs) {
                 session.persist(log);
             }
+            session.flush();
             transaction.commit();
             session.clear();
         } catch (Exception e) {
