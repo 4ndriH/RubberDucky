@@ -4,8 +4,3 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: alembic_migration
-    environment:
-      POSTGRES_DB: RubberDucky
-      POSTGRES_USER: rd_bot
-      POSTGRES_PASSWORD: password1234
-      DATABASE_URL: postgresql://rd_bot:password1234@postgres:5432/RubberDucky

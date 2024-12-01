@@ -2,8 +2,8 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_PASSWORD: password1234
       POSTGRES_USER: rd_bot
+      POSTGRES_PASSWORD: password1234
       POSTGRES_DB: RubberDucky
     volumes:
       - pg-data:/var/lib/postgresql/data
@@ -21,6 +21,8 @@ services:
     extends:
       file: postgres/compose.yml
       service: alembic
+    environment:
+      DATABASE_URL: postgresql://rd_bot:password1234@postgres:5432/RubberDucky
     depends_on:
       postgres:
         condition: service_healthy
@@ -31,7 +33,9 @@ services:
       dockerfile: Dockerfile
     container_name: rubber_ducky
     environment:
-      DATABASE_URL: postgresql://rd_bot:password1234@postgres:5432/RubberDucky
+      DATABASE_URL: jdbc:postgresql://postgres:5432/RubberDucky
+      POSTGRES_USER: rd_bot
+      POSTGRES_PASSWORD: password1234
     depends_on:
       postgres:
         condition: service_healthy

@@ -13,7 +13,25 @@ public class HibernateUtil {
 
     static {
         try {
+            String dbUrl = System.getenv("DATABASE_URL");
+            String dbUser = System.getenv("POSTGRES_USER");
+            String dbPass = System.getenv("POSTGRES_PASSWORD");
+
+            if (dbUrl == null || dbUser == null || dbPass == null) {
+                LOGGER.warn("Environment variables not set, using default values");
+                dbUrl = "jdbc:postgresql://localhost:5432/RubberDucky";
+                dbUser = "rd_bot";
+                dbPass = "password1234";
+            }
+
+            System.out.println("dbUrl: " + dbUrl);
+            System.out.println("dbUser: " + dbUser);
+            System.out.println("dbPass: " + dbPass);
+
             sessionFactory = new Configuration().configure("hibernate.cfg.xml")
+                    .setProperty("hibernate.hikari.dataSource.url", dbUrl)
+                    .setProperty("hibernate.hikari.dataSource.user", dbUser)
+                    .setProperty("hibernate.hikari.dataSource.password", dbPass)
                     .addAnnotatedClass(ConfigORM.class)
                     .addAnnotatedClass(UsersORM.class)
                     .addAnnotatedClass(AccessControlORM.class)

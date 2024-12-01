@@ -4,9 +4,6 @@
     <session-factory>
         <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
         <property name="hibernate.hikari.dataSourceClassName">org.postgresql.ds.PGSimpleDataSource</property>
-        <property name="hibernate.hikari.dataSource.url">jdbc:postgresql://localhost:5432/RubberDucky</property>
-        <property name="hibernate.hikari.dataSource.user">rd_bot</property>
-        <property name="hibernate.hikari.dataSource.password">password1234</property>
 
         <property name="hibernate.hikari.minimumIdle">5</property>
         <property name="hibernate.hikari.maximumPoolSize">20</property>
