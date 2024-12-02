@@ -45,9 +45,8 @@ public class MessageDeleteTrackerDAO {
         try {
             transaction = session.beginTransaction();
             Query<MessageDeleteTrackerORM> query = session.createQuery(
-                    "FROM MessageDeleteTrackerORM WHERE timeToDelete < :currentSystemTime", MessageDeleteTrackerORM.class
+                    "FROM MessageDeleteTrackerORM", MessageDeleteTrackerORM.class
             );
-            query.setParameter("currentSystemTime", System.currentTimeMillis());
             List<MessageDeleteTrackerORM> messageDeleteTrackerORMs = query.list();
 
             for (MessageDeleteTrackerORM messageDeleteTrackerORM : messageDeleteTrackerORMs) {
@@ -80,8 +79,7 @@ public class MessageDeleteTrackerDAO {
         try {
             transaction = session.beginTransaction();
 
-            Query<MessageDeleteTrackerORM> query = session.createQuery("FROM MessageDeleteTrackerORM WHERE timeToDelete < :currentSystemTime", MessageDeleteTrackerORM.class);
-            query.setParameter("currentSystemTime", System.currentTimeMillis());
+            Query<MessageDeleteTrackerORM> query = session.createQuery("FROM MessageDeleteTrackerORM", MessageDeleteTrackerORM.class);
             List<MessageDeleteTrackerORM> messageDeleteTrackerORMs = query.list();
 
             for (MessageDeleteTrackerORM messageDeleteTrackerORM : messageDeleteTrackerORMs) {

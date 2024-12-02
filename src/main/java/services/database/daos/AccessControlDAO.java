@@ -126,6 +126,7 @@ public class AccessControlDAO {
         try {
             transaction = session.beginTransaction();
             AccessControlORM server = session.get(AccessControlORM.class, discordServerId);
+            server.getDiscordChannelIds().putIfAbsent(discordChannelId, new ArrayList<>());
             server.getDiscordChannelIds().get(discordChannelId).add(command);
             session.merge(server);
             transaction.commit();

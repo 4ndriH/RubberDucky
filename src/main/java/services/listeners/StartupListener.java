@@ -5,11 +5,9 @@ import assets.objects.DeletableMessage;
 import commandhandling.commands.place.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 import services.database.daos.MessageDeleteTrackerDAO;
 import services.database.daos.PlaceProjectsDAO;
@@ -53,24 +51,22 @@ public class StartupListener extends ListenerAdapter {
             (new Thread(() -> {
                 MessageDeleteTrackerDAO messageDeleteTrackerDAO = new MessageDeleteTrackerDAO();
                 ArrayList<DeletableMessage> messages = messageDeleteTrackerDAO.getMessagesToDelete();
-                Collections.sort(messages);
+                messageDeleteTrackerDAO.pruneMessageDeleteTracker();
 
-                long currentSystemTime = System.currentTimeMillis();
+                Collections.sort(messages);
                 int deletionDelay = 16;
 
                 for (DeletableMessage dm : messages) {
                     Message msg = dm.getMessage(event.getJDA());
 
                     if (msg != null) {
-                        if (dm.deleteLater(currentSystemTime)) {
-                            deleteMessage(msg, deletionDelay++);
+                        if (dm.futureDeletion()) {
+                            deleteMessage(msg, dm.deleteTime());
                         } else {
-                            msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                            deleteMessage(msg, deletionDelay++);
                         }
                     }
                 }
-
-                messageDeleteTrackerDAO.pruneMessageDeleteTracker();
             })).start();
 
             onStartupTasks = false;

@@ -4,8 +4,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDateTime;
-
 public class DeletableMessage implements Comparable<DeletableMessage> {
     String DiscordServerID;
     String DiscordChannelID;
@@ -31,8 +29,12 @@ public class DeletableMessage implements Comparable<DeletableMessage> {
         }
     }
 
-    public boolean deleteLater(long currentSystemTime) {
-        return deletionTime - currentSystemTime > 0;
+    public boolean futureDeletion() {
+        return deletionTime - System.currentTimeMillis() > 0;
+    }
+
+    public int deleteTime() {
+        return (int)(deletionTime - System.currentTimeMillis()) / 1000;
     }
 
     @Override
