@@ -20,6 +20,7 @@ public class Config {
     public static int PLACE_PROJECT_ID;
     public static int BUTTON_SCORE;
     public static boolean PLACE_VERIFY;
+    public static String ENVIRONMENT = "development";
 
     public static void updateConfig(String key, String value) {
         ConfigDAO configDao = new ConfigDAO();
