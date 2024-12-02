@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import assets.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.awt.*;
 import java.util.Objects;
@@ -24,6 +25,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
     @Override
     protected void append(ILoggingEvent eventObject) {
         EmbedBuilder embed = new EmbedBuilder();
+        String formattedMessage = MessageFormatter.arrayFormat(eventObject.getMessage(), eventObject.getArgumentArray()).getMessage();
 
         Color embedColor = switch (eventObject.getLevel().toString()) {
             case "INFO" -> new Color(0x42a2fc);
@@ -33,7 +35,7 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
         };
 
         embed.setColor(embedColor);
-        embed.setTitle(eventObject.getLevel() + ": " + eventObject.getMessage());
+        embed.setTitle(eventObject.getLevel() + ": " + formattedMessage);
 
         if (eventObject.getThrowableProxy() != null) {
             StringBuilder sb = new StringBuilder().append("```");
