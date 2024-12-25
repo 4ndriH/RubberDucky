@@ -1,19 +1,27 @@
-name: Build and Deploy the new Docker Image
+name: Build and Deploy the new Docker Images
 
 on:
   push:
     branches: [ master ]
     paths:
       - 'src/**'
+      - 'postgres/**'
 
 jobs: 
-  build:
-    name: Run Build
-    uses: ./.github/workflows/build.yml
+  build_alembic:
+    name: Building alembic Docker Image
+    if: ${{ github.event_name == 'push' && (github.event.commits | json).contains('postgres/') }}
+    uses: ./.github/workflows/build_alembic.yml
+    secrets: inherit
+
+  build_bot:
+    name: Building Bot Docker Image
+    uses: ./.github/workflows/build_alembic.yml
     secrets: inherit
 
   deploy:
-    name: Run Deploy
-    needs: build
-    uses: ./.github/workflows/deploy.yml
+    name: Deploying the new Docker Images
+    needs: [build_alembic, build_bot]
+    if: always()
+    uses: ./.github/workflows/notify_watchtower.yml
     secrets: inherit
