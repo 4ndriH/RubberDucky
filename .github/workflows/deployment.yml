@@ -14,10 +14,10 @@ jobs:
     uses: ./.github/workflows/build_alembic.yml
     secrets: inherit
 
-  build_bot:
-    name: Building Bot Docker Image
-    uses: ./.github/workflows/build_bot.yml
-    secrets: inherit
+#  build_bot:
+#    name: Building Bot Docker Image
+#    uses: ./.github/workflows/build_bot.yml
+#    secrets: inherit
 
   deploy:
     name: Deploying the new Docker Images
