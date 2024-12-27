@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY /postgres /app/postgres
+COPY . /app/postgres
 
 WORKDIR /app/postgres
 

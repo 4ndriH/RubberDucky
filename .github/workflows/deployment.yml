@@ -10,14 +10,15 @@ on:
 jobs: 
   build_alembic:
     name: Building alembic Docker Image
+    working-directory: ./postgres
 #    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
     uses: ./.github/workflows/build_alembic.yml
     secrets: inherit
 
-#  build_bot:
-#    name: Building Bot Docker Image
-#    uses: ./.github/workflows/build_bot.yml
-#    secrets: inherit
+  build_bot:
+    name: Building Bot Docker Image
+    uses: ./.github/workflows/build_bot.yml
+    secrets: inherit
 
   deploy:
     name: Deploying the new Docker Images
