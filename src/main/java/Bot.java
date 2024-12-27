@@ -30,7 +30,7 @@ public class Bot {
             ).setMemberCachePolicy(
                     MemberCachePolicy.ALL
             )
-            .addEventListeners(new CommandListener())
+            .addEventListeners(new CommandListener() )
             .addEventListeners(new ButtonListener())
             .addEventListeners(new StartupListener())
             .addEventListeners(new ButtonGameListener())
