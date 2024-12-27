@@ -3,9 +3,9 @@ name: Build and Deploy the new Docker Images
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'src/**'
-      - 'postgres/**'
+#    paths:
+#      - 'src/**'
+#      - 'postgres/**'
 
 jobs: 
   build_alembic:
