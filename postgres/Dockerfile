@@ -8,7 +8,6 @@ COPY . /app/database
 # Debug: Print destination directory after COPY
 RUN echo "Current directory after COPY:" && pwd && echo "Contents of /app/database:" && ls -la /app/database
 
-
 WORKDIR /app/database
 
 RUN apt-get update && apt-get install -y \
