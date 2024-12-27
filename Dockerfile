@@ -8,7 +8,7 @@ RUN echo "Current directory before COPY:" && pwd && echo "Contents:" && ls -la
 COPY . .
 
 # Debug: Print destination directory after COPY
-RUN echo "Current directory after COPY:" && pwd && echo "Contents of /app/database:" && ls -la /app/database
+RUN echo "Current directory after COPY:" && pwd && echo "Contents of /app:" && ls -la
 
 RUN gradle build --no-daemon
 
