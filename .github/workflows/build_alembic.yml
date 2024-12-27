@@ -32,16 +32,14 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
-        working-directory: ./postgres
         id: push
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85
         with:
-          context: .
+          context: ./postgres
           file: ./postgres/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-        run:
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
