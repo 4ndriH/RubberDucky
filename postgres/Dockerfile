@@ -1,6 +1,13 @@
 FROM python:3.11-slim
 
+# Debug: Print current directory before COPY
+RUN echo "Current directory before COPY:" && pwd && echo "Contents:" && ls -la
+
 COPY . /app/database
+
+# Debug: Print destination directory after COPY
+RUN echo "Current directory after COPY:" && pwd && echo "Contents of /app/database:" && ls -la /app/database
+
 
 WORKDIR /app/database
 

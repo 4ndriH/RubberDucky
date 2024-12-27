@@ -2,7 +2,7 @@ name: Build and Deploy the new Docker Images
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, fix_deployment ]
 #    paths:
 #      - 'src/**'
 #      - 'postgres/**'
