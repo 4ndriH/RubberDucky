@@ -10,7 +10,8 @@ on:
 jobs: 
   build_alembic:
     name: Building alembic Docker Image
-    if: ${{ github.event_name == 'push' && (github.event.commits | json).contains('postgres/') }}
+    if: >
+      ${{ github.event_name == 'push' && github.event.commits.some(commit => commit.modified.includes('postgres/')) }}
     uses: ./.github/workflows/build_alembic.yml
     secrets: inherit
 
