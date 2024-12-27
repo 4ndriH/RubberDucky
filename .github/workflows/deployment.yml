@@ -10,7 +10,7 @@ on:
 jobs: 
   build_alembic:
     name: Building alembic Docker Image
-    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
+#    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
     uses: ./.github/workflows/build_alembic.yml
     secrets: inherit
 
