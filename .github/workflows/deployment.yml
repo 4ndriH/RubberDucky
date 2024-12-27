@@ -24,4 +24,4 @@ jobs:
     needs: [build_alembic, build_bot]
 #    if: always()
     uses: ./.github/workflows/notify_watchtower.yml
-    secrets: inherit
+    
