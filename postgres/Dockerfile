@@ -1,10 +1,8 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /app/postgres
 
 COPY . /app/postgres
-
-WORKDIR /app/postgres
 
 RUN ls -la
 
