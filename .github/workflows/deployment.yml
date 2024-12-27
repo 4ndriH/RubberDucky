@@ -16,7 +16,7 @@ jobs:
 
   build_bot:
     name: Building Bot Docker Image
-    uses: ./.github/workflows/build_alembic.yml
+    uses: ./.github/workflows/build_bot.yml
     secrets: inherit
 
   deploy:
