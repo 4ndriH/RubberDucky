@@ -21,7 +21,7 @@ jobs:
 
   deploy:
     name: Deploying the new Docker Images
-    needs: [build_alembic] #, build_bot]
+    needs: [build_alembic, build_bot]
 #    if: always()
     uses: ./.github/workflows/notify_watchtower.yml
     
