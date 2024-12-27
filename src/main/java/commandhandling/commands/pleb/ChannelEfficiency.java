@@ -3,13 +3,12 @@ package commandhandling.commands.pleb;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.database.daos.ChannelMessageTrafficDAO;
 import services.miscellaneous.Format;
-import services.database.DBHandlerEfficiencyLog;
 import services.discordhelpers.EmbedHelper;
 import services.listeners.CountThreadListener;
 
@@ -141,7 +140,8 @@ public class ChannelEfficiency implements CommandInterface {
     }
 
     private static ArrayList<Integer> createDataSet(String channel) {
-        ArrayList<Integer> dataPoints = DBHandlerEfficiencyLog.getDataPoints(channel);
+        ChannelMessageTrafficDAO channelMessageTrafficDAO = new ChannelMessageTrafficDAO();
+        ArrayList<Integer> dataPoints = channelMessageTrafficDAO.getChannelMessageTraffic(channel);
         Collections.reverse(dataPoints);
 
         while (dataPoints.size() < 1440) {

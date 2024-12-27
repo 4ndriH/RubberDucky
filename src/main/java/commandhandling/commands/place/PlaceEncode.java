@@ -137,7 +137,7 @@ public class PlaceEncode implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns a file containing the commands to draw the provided image");
-        embed.addField("__Usage__", "```" + Config.prefix + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
+        embed.addField("__Usage__", "```" + Config.PREFIX + getName() + " <Position/Size> [<Pattern>] [<Parameters>]```", false);
         embed.addField("__<Position/Size>__", "Set the top left corner as well as the desired width and height" +
                                                           "```<Position/Size> = <X> <Y> <width> <height>```", false);
         embed.addField("__<Pattern>__", """

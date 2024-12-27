@@ -3,8 +3,6 @@ package services;
 import assets.Config;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
-import commandhandling.commands.coursereview.CourseReviewStats;
-import commandhandling.commands.coursereview.CourseReviewVerify;
 import commandhandling.commands.admin.LockDown;
 import commandhandling.commands.admin.Nuke;
 import commandhandling.commands.admin.Watch;
@@ -68,10 +66,6 @@ public class CommandManager {
         addCommand(new Ping());
         addCommand(new PurgeDMs());
 
-        // coursereview
-        addCommand(new CourseReviewStats());
-        addCommand(new CourseReviewVerify());
-
         // place
         addCommand(new PlaceDelete());
         addCommand(new PlaceDraw());
@@ -116,7 +110,7 @@ public class CommandManager {
     }
 
     public void handle(MessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.prefix), "").split("\\s+");
+        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(Config.PREFIX), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         CommandInterface cmd = getCommand(invoke);

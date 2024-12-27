@@ -7,10 +7,10 @@ import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import assets.Config;
-import services.database.DBHandlerPlace;
+import services.database.daos.PlaceProjectsDAO;
 import services.discordhelpers.EmbedHelper;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static services.discordhelpers.MessageSendHelper.sendMessage;
@@ -21,14 +21,15 @@ public class PlaceDelete implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
+        PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+        List<Integer> ids = placeProjectsDAO.getProjectIds();
         EmbedBuilder embed = EmbedHelper.embedBuilder("Delete");
         int id;
 
         try {
             id = Integer.parseInt(ctx.getArguments().get(0));
             if (ids.contains(id)) {
-                DBHandlerPlace.removeProjectFromQueue(id);
+                placeProjectsDAO.dequeueProject(id);
                 embed.setDescription("Project " + id + " has been deleted");
             } else {
                 embed.setDescription("There is no project with id: " + id);
@@ -51,7 +52,7 @@ public class PlaceDelete implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Deletes the project with the given ID");
-        embed.addField("__Usage__", "```" + Config.prefix + getName() + " <ID>```", false);
+        embed.addField("__Usage__", "```" + Config.PREFIX + getName() + " <ID>```", false);
         return embed;
     }
 

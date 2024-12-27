@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.database.DBHandlerEfficiencyLog;
+import services.database.daos.ChannelMessageTrafficDAO;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +25,8 @@ public class EfficiencyTrackerListener extends ListenerAdapter {
 
         Runnable r = () -> {
             try {
-                DBHandlerEfficiencyLog.addDataPoint(ethPlaceBots, countThread);
+                ChannelMessageTrafficDAO channelMessageTrafficDAO = new ChannelMessageTrafficDAO();
+                channelMessageTrafficDAO.addChannelMessageTraffic(ethPlaceBots, countThread);
                 ethPlaceBots = countThread = 0;
             } catch (Exception e) {
                 LOGGER.error("SQL Executor experienced an issue", e);

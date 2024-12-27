@@ -9,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.CommandManager;
 import services.PermissionManager;
-import services.database.DBHandlerWhitelistedChannels;
+import services.database.daos.AccessControlDAO;
 import services.discordhelpers.EmbedHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import static services.PermissionManager.getWhitelistedChannels;
 import static services.discordhelpers.MessageSendHelper.sendMessage;
 
 public class Channel implements CommandInterface {
@@ -30,8 +29,10 @@ public class Channel implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        HashMap<String, ArrayList<String>> channels = getWhitelistedChannels();
+        AccessControlDAO accessControlDAO = new AccessControlDAO();
+        HashMap<String, ArrayList<String>> channels = accessControlDAO.getChannelIds();
         String channel = ctx.getChannel().getId();
+        String server = ctx.getGuild().getId();
 
         if (ctx.getArguments().isEmpty()) {
             EmbedBuilder embed = EmbedHelper.embedBuilder("Whitelisted commands for this channel");
@@ -57,24 +58,24 @@ public class Channel implements CommandInterface {
             if (cmd.equals("allOn")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (ci.getRestrictionLevel() == 3 && !channelCheck(channels, ci.getNameLC(), channel)) {
-                        DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, ci.getNameLC());
+                        accessControlDAO.addCommand(server, channel, ci.getNameLC());
                     }
                 }
-                LOGGER.info("All commands enabled for channel " + ctx.getChannel().getName());
+                LOGGER.info("All commands enabled for channel {}", ctx.getChannel().getName());
             } else if (cmd.startsWith("allOff")) {
                 for (CommandInterface ci : cm.getCommands()) {
                     if (ci.getRestrictionLevel() == 3 && channelCheck(channels, ci.getNameLC(), channel)) {
-                        DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, ci.getNameLC());
+                        accessControlDAO.removeCommand(server, channel, ci.getNameLC());
                     }
                 }
-                LOGGER.info("All commands disabled for channel " + ctx.getChannel().getName());
+                LOGGER.info("All commands disabled for channel {}", ctx.getChannel().getName());
             } else {
                 if (channelCheck(channels, cmd, channel)) {
-                    DBHandlerWhitelistedChannels.removeChannelFromWhitelist(channel, cmd);
-                    LOGGER.info("Command `" + cmd + "` disabled for channel " + ctx.getChannel().getName());
+                    accessControlDAO.removeCommand(server, channel, cmd);
+                    LOGGER.info("Command `{}` disabled for channel {}", cmd, ctx.getChannel().getName());
                 } else {
-                    DBHandlerWhitelistedChannels.addChannelToWhitelist(channel, cmd);
-                    LOGGER.info("Command `" + cmd + "` enabled for channel " + ctx.getChannel().getName());
+                    accessControlDAO.addCommand(server, channel, cmd);
+                    LOGGER.info("Command `{}` enabled for channel {}", cmd, ctx.getChannel().getName());
                 }
             }
             PermissionManager.reload();

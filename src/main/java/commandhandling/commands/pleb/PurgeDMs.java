@@ -27,7 +27,7 @@ public class PurgeDMs implements CommandInterface {
     @Override
     public void handle(CommandContext ctx) {
         PrivateChannel channel = ctx.getAuthor().openPrivateChannel().complete();
-        MessageCreateAction mca = channel.sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/purge/purgeCommenced.jpg")));
+        MessageCreateAction mca = channel.sendMessageEmbeds(purgeCommenced.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/purge/purgeCommenced.jpg")));
         sendMessage(ctx, mca, 32);
 
         channel.getIterableHistory().forEachAsync(msg -> {
@@ -42,7 +42,7 @@ public class PurgeDMs implements CommandInterface {
             LOGGER.error("Error purging dms", e);
             return null;
         }).whenComplete((ignored, ignored2) -> {
-            MessageCreateAction mca2 = channel.sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File(Config.directoryPath + "resources/images/purge/purgeEnded.jpg")));
+            MessageCreateAction mca2 = channel.sendMessageEmbeds(purgeEnded.build()).addFiles(FileUpload.fromData(new File(Config.DIRECTORY_PATH + "resources/images/purge/purgeEnded.jpg")));
             sendMessage(ctx, mca2, 32);
         });
     }

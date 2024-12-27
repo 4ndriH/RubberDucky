@@ -5,15 +5,12 @@ import assets.objects.DeletableMessage;
 import commandhandling.commands.place.PlaceDraw;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
-import services.database.DBHandlerConfig;
-import services.database.DBHandlerMessageDeleteTracker;
-import services.database.DBHandlerPlace;
+import services.database.daos.MessageDeleteTrackerDAO;
+import services.database.daos.PlaceProjectsDAO;
 import services.logging.DiscordAppender;
 
 import java.util.ArrayList;
@@ -29,16 +26,17 @@ public class StartupListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         if (onStartupTasks) {
             // restart place drawing
-            int placeID = Integer.parseInt(DBHandlerConfig.getConfig().get("placeProject"));
-            if (placeID != -1) {
-                if (DBHandlerPlace.getPlaceProjectIDs().contains(placeID)) {
+            int placeID = Config.PLACE_PROJECT_ID;
+            if (placeID != -1 && event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+                PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+                if (placeProjectsDAO.getProjectIds().contains(placeID)) {
                     (new Thread(() -> PlaceDraw.draw(event.getJDA(), placeID))).start();
                 } else {
-                    DBHandlerConfig.updateConfig("placeProject", "-1");
+                    Config.updateConfig("placeProject", "-1");
                 }
             }
 
-            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.logChannelID))
+            Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.LOG_CHANNEL_ID))
                     .sendMessage(event.getJDA().getSelfUser().getAsMention() + " started successfully and is ready to go").queue();
 
             // add command for active dev badge
@@ -51,20 +49,21 @@ public class StartupListener extends ListenerAdapter {
 
             // delete messages that were scheduled for deletion
             (new Thread(() -> {
-                ArrayList<DeletableMessage> messages = DBHandlerMessageDeleteTracker.getMessagesToDelete();
-                Collections.sort(messages);
+                MessageDeleteTrackerDAO messageDeleteTrackerDAO = new MessageDeleteTrackerDAO();
+                ArrayList<DeletableMessage> messages = messageDeleteTrackerDAO.getMessagesToDelete();
+                messageDeleteTrackerDAO.pruneMessageDeleteTracker();
 
-                long currentSystemTime = System.currentTimeMillis();
+                Collections.sort(messages);
                 int deletionDelay = 16;
 
                 for (DeletableMessage dm : messages) {
                     Message msg = dm.getMessage(event.getJDA());
 
                     if (msg != null) {
-                        if (dm.deleteLater(currentSystemTime)) {
-                            deleteMessage(msg, deletionDelay++);
+                        if (dm.futureDeletion()) {
+                            deleteMessage(msg, dm.deleteTime());
                         } else {
-                            msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                            deleteMessage(msg, deletionDelay++);
                         }
                     }
                 }

@@ -1,7 +1,8 @@
 package assets.objects;
 
 import assets.Config;
-import services.database.DBHandlerPlace;
+import services.database.daos.PlacePixelsDAO;
+import services.database.daos.PlaceProjectsDAO;
 import services.place.PlaceWebSocket;
 
 import java.awt.*;
@@ -44,20 +45,23 @@ public class PlaceData {
 //    }
 
     public static void newProject(int id) {
-        drawnPixels = DBHandlerPlace.getProjectProgress(id);
-        user = DBHandlerPlace.getProjectAuthor(id);
+        PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+        PlacePixelsDAO placePixelsDAO = new PlacePixelsDAO();
+
+        drawnPixels = placeProjectsDAO.getProjectProgress(id);
+        user = placeProjectsDAO.getProjectAuthor(id);
         ID = id;
 
 //        requests = new LinkedList<>();
         fixingQ = new LinkedList<>();
-        pixels = DBHandlerPlace.getProjectPixels(id);
+        pixels = placePixelsDAO.getPixels(id);
 
         totalPixels = pixels.size();
         fixedPixels = 0;
         lastRequestTime = 0L;
 
         drawing = true;
-        verify = Config.placeVerify;
+        verify = Config.PLACE_VERIFY;
         stop = stopQ = websocketFailed = runVerificationNow = finalVerification = false;
     }
 

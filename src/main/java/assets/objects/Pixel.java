@@ -1,6 +1,6 @@
 package assets.objects;
 
-import services.database.DBHandlerPlace;
+import services.database.daos.PlacePixelsDAO;
 
 import java.awt.*;
 
@@ -83,7 +83,8 @@ public class Pixel {
 
         String color = String.format("#%02x%02x%02x", r, g, b);
         if (dbUpdate) {
-            DBHandlerPlace.updatePixelPlaceColor(alpha, x, y, imageColor, color);
+            PlacePixelsDAO pixelDAO = new PlacePixelsDAO();
+            pixelDAO.updatePlacePixelColor(alpha, x, y, imageColor, color);
         }
         return color;
     }

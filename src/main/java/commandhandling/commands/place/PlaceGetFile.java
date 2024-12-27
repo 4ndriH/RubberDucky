@@ -8,7 +8,8 @@ import net.dv8tion.jda.api.utils.FileUpload;
 import assets.Config;
 import assets.objects.Pixel;
 import services.BotExceptions;
-import services.database.DBHandlerPlace;
+import services.database.daos.PlacePixelsDAO;
+import services.database.daos.PlaceProjectsDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,12 @@ public class PlaceGetFile implements CommandInterface {
             return;
         }
 
-        if (DBHandlerPlace.getPlaceProjectIDs().contains(id)) {
+        PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+
+        if (placeProjectsDAO.getProjectIds().contains(id)) {
             try {
-                ArrayList<Pixel> pixels = DBHandlerPlace.getProjectPixels(id);
+                PlacePixelsDAO placePixelsDAO = new PlacePixelsDAO();
+                ArrayList<Pixel> pixels = placePixelsDAO.getPixels(id);
                 String output = pixels.stream().map(Objects::toString).collect(Collectors.joining("\n"));
 
                 MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(output.getBytes(), "RDdraw" + id + ".txt"));
@@ -56,7 +60,7 @@ public class PlaceGetFile implements CommandInterface {
     public EmbedBuilder getHelp() {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setDescription("Returns the project with the given ID");
-        embed.addField("__Usage__", "```" + Config.prefix + getName() + " <ID>```", false);
+        embed.addField("__Usage__", "```" + Config.PREFIX + getName() + " <ID>```", false);
         return embed;
     }
 

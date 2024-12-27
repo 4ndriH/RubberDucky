@@ -29,8 +29,12 @@ public class DeletableMessage implements Comparable<DeletableMessage> {
         }
     }
 
-    public boolean deleteLater(long currentSystemTime) {
-        return deletionTime - currentSystemTime > 0;
+    public boolean futureDeletion() {
+        return deletionTime - System.currentTimeMillis() > 0;
+    }
+
+    public int deleteTime() {
+        return (int)(deletionTime - System.currentTimeMillis()) / 1000;
     }
 
     @Override

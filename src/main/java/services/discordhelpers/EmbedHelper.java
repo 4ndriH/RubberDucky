@@ -5,6 +5,6 @@ import assets.Config;
 
 public class EmbedHelper {
     public static EmbedBuilder embedBuilder(String title) {
-        return (new EmbedBuilder()).setColor(Config.embedColor).setTitle(title);
+        return (new EmbedBuilder()).setColor(Config.EMBED_COLOR).setTitle(title);
     }
 }

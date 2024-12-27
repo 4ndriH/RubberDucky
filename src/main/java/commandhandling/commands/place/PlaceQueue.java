@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import assets.objects.Pixel;
 import services.BotExceptions;
+import services.database.daos.PlaceProjectsDAO;
 import services.discordhelpers.EmbedHelper;
 import services.PermissionManager;
-import services.database.DBHandlerPlace;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -21,7 +21,8 @@ public class PlaceQueue implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        ArrayList<Integer> ids = DBHandlerPlace.getPlaceProjectIDs();
+        PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
+        List<Integer> ids = placeProjectsDAO.getProjectIds();
         Random random = new Random();
         ArrayList<Pixel> pixels = new ArrayList<>();
         Scanner scanner;
@@ -68,7 +69,7 @@ public class PlaceQueue implements CommandInterface {
         }
         scanner.close();
 
-        DBHandlerPlace.insertProjectIntoQueue(id, ctx.getAuthor().getId(), pixels);
+        placeProjectsDAO.queueProject(ctx.getAuthor().getId(), id);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         embed.setDescription("Your file got ID " + id);

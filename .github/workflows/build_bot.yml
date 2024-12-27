@@ -1,11 +1,10 @@
-#
 name: Create and publish a Docker image
 
 on: workflow_call
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}-bot
 
 jobs:
   build-and-push-image:

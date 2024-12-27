@@ -1,0 +1,6 @@
+services:
+  alembic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alembic_migration
