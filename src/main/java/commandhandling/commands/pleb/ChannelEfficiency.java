@@ -62,7 +62,7 @@ public class ChannelEfficiency implements CommandInterface {
 
         embed.addBlankField(true);
         embed.setImage("attachment://LineChart.jpg");
-        embed.setFooter("/channelefficency");
+        //embed.setFooter("/channelefficency");
 
         MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embed.build()).addFiles(FileUpload.fromData(convert(generatePlot(dataPoints)), "LineChart.jpg"));
         sendMessage(ctx, mca, 128);
