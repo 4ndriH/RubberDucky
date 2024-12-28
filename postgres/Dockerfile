@@ -1,14 +1,10 @@
 FROM python:3.11-slim
 
-COPY . /app/database
+WORKDIR /app/postgres
 
-WORKDIR /app/database
+COPY . /app/postgres
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    default-libmysqlclient-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN ls -la
 
 RUN pip install --no-cache-dir -r alembic_requirements.txt
 

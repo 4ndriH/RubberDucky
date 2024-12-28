@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create and publish alembic docker image
 
 on: workflow_call
 
@@ -30,17 +30,17 @@ jobs:
         uses: docker/metadata-action@60a0d343a0d8a18aedee9d34e62251f752153bdb
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-  
+
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85
         with:
-          context: .
+          context: ./postgres
           file: ./postgres/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-       
+
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:

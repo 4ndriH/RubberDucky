@@ -136,13 +136,6 @@ public class DatabaseVerification {
             LOGGER.info("Importing place pixels for project {}", placeId);
             dao.queuePixels(placeId, placePixels.get(placeId));
         }
-
-        File file = new File("bot_data/sqlite.sql");
-        if (file.delete()) {
-            LOGGER.info("sqlite.sql deleted");
-        } else {
-            LOGGER.error("Failed to delete sqlite.sql");
-        }
     }
 
     private static String insertMatcher(String line) {
