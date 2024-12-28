@@ -24,10 +24,6 @@ public class HibernateUtil {
                 dbPass = "password1234";
             }
 
-            System.out.println("dbUrl: " + dbUrl);
-            System.out.println("dbUser: " + dbUser);
-            System.out.println("dbPass: " + dbPass);
-
             sessionFactory = new Configuration().configure("hibernate.cfg.xml")
                     .setProperty("hibernate.hikari.dataSource.url", dbUrl)
                     .setProperty("hibernate.hikari.dataSource.user", dbUser)

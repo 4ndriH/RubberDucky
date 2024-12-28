@@ -64,28 +64,4 @@ public class ChannelMessageTrafficDAO {
 
         return dataPoints;
     }
-
-    public void importLogEntry(ArrayList<ChannelMessageTrafficORM> logs) {
-        Session session = HibernateUtil.getSession();
-        session.setJdbcBatchSize(256_000);
-        Transaction transaction = null;
-
-        try {
-            transaction = session.beginTransaction();
-            for (ChannelMessageTrafficORM log : logs) {
-                session.persist(log);
-            }
-            session.flush();
-            transaction.commit();
-            session.clear();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-
-            LOGGER.error("Failed to import log entry, rolled back", e);
-        } finally {
-            HibernateUtil.closeSession(session);
-        }
-    }
 }
