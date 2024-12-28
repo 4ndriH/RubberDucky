@@ -36,7 +36,7 @@ public class PlaceThroughputLogDAO {
 
     public void importLogEntry(ArrayList<PlaceThroughputLogORM> logs) {
         Session session = HibernateUtil.getSession();
-        session.setJdbcBatchSize(64_000);
+        session.setJdbcBatchSize(256_000);
         Transaction transaction = null;
 
         try {
