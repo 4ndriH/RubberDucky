@@ -56,7 +56,7 @@ public class PlaceProjectsDAO {
     public String[] getQueue() {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
-        String[] queue = new String[3];
+        String[] queue = new String[]{"" ,"" ,""};
 
         try {
             transaction = session.beginTransaction();
