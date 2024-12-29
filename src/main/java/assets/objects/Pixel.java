@@ -82,10 +82,10 @@ public class Pixel {
         int b = (int) (alpha * image.getBlue() + (1 - alpha) * place.getBlue());
 
         String color = String.format("#%02x%02x%02x", r, g, b);
-        if (dbUpdate) {
-            PlacePixelsDAO pixelDAO = new PlacePixelsDAO();
-            pixelDAO.updatePlacePixelColor(alpha, x, y, imageColor, color);
-        }
+//        if (dbUpdate) {
+//            PlacePixelsDAO pixelDAO = new PlacePixelsDAO();
+//            pixelDAO.updatePlacePixelColor(projectId, index, color);
+//        }
         return color;
     }
 

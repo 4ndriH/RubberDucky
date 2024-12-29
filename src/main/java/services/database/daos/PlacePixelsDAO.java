@@ -103,19 +103,15 @@ public class PlacePixelsDAO {
         return queuedPixels;
     }
 
-    public void updatePlacePixelColor(double alpha, int x, int y, String imageColor, String placeColor) {
+    public void updatePlacePixelColor(int projectId, int index, String placeColor) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
 
         try {
             transaction = session.beginTransaction();
-            Query<PlacePixelsORM> query = session.createQuery("UPDATE PlacePixelsORM SET placeColor = :placeColor WHERE xCoordinate = :x AND yCoordinate = :y AND alpha = :alpha AND imageColor = :imageColor", PlacePixelsORM.class);
-            query.setParameter("alpha", alpha);
-            query.setParameter("imageColor", imageColor);
-            query.setParameter("placeColor", placeColor);
-            query.setParameter("x", x);
-            query.setParameter("y", y);
-            query.executeUpdate();
+            PlacePixelsORM pixel = session.get(PlacePixelsORM.class, new PlacePixelsORM.PlacePixelsKey(projectId, index));
+            pixel.setPlaceColor(placeColor);
+            session.merge(pixel);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
