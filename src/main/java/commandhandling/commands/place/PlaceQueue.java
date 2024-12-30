@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import assets.objects.Pixel;
 import services.BotExceptions;
+import services.database.daos.PlacePixelsDAO;
 import services.database.daos.PlaceProjectsDAO;
 import services.discordhelpers.EmbedHelper;
 import services.PermissionManager;
@@ -70,6 +71,8 @@ public class PlaceQueue implements CommandInterface {
         scanner.close();
 
         placeProjectsDAO.queueProject(ctx.getAuthor().getId(), id);
+        PlacePixelsDAO placePixelsDAO = new PlacePixelsDAO();
+        placePixelsDAO.queuePixels(id, pixels);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         embed.setDescription("Your file got ID " + id);
