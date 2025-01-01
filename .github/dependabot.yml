@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     groups:
-      maven-dependencies:
+      gradle-dependencies:
         patterns:
           - '*'
     ignore:
