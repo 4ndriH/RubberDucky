@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: maven
+  - package-ecosystem: gradle
     directory: "/" # Location of package manifests
     schedule:
       interval: "monthly"
@@ -11,7 +11,7 @@ updates:
     ignore:
       - dependency-name: "net.dv8tion:JDA"
     commit-message:
-      prefix: "mvn"
+      prefix: "gradle"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
