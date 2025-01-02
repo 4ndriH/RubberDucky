@@ -20,7 +20,7 @@ public class PlacePixelsDAO {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
 
-        session.setJdbcBatchSize(32_000);
+        session.setJdbcBatchSize(32_100);
         int count = 0;
 
         try {
@@ -30,13 +30,12 @@ public class PlacePixelsDAO {
                 session.persist(pixel);
 
                 if (++count % 32_000 == 0) {
-                    LOGGER.info("Queued {} pixels", count);
+                    session.flush();
+                    session.clear();
                 }
             }
 
-            session.flush();
             transaction.commit();
-            session.clear();
             session.setJdbcBatchSize(10);
         } catch (Exception e) {
             if (transaction != null) {
