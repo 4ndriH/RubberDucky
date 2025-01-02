@@ -9,6 +9,7 @@ import assets.objects.Pixel;
 import services.BotExceptions;
 import services.database.daos.PlacePixelsDAO;
 import services.database.daos.PlaceProjectsDAO;
+import services.database.entities.PlacePixelsORM;
 import services.discordhelpers.EmbedHelper;
 import services.PermissionManager;
 
@@ -25,7 +26,7 @@ public class PlaceQueue implements CommandInterface {
         PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
         List<Integer> ids = placeProjectsDAO.getProjectIds();
         Random random = new Random();
-        ArrayList<Pixel> pixels = new ArrayList<>();
+        ArrayList<PlacePixelsORM> pixels = new ArrayList<>();
         Scanner scanner;
         int id;
 
@@ -52,6 +53,8 @@ public class PlaceQueue implements CommandInterface {
             }
         }
 
+        int idx = 1;
+
         while (scanner.hasNextLine()) {
             int x, y;
             double alpha;
@@ -66,13 +69,19 @@ public class PlaceQueue implements CommandInterface {
                 System.out.println(e.getMessage());
                 continue;
             }
-            pixels.add(new Pixel(x, y, alpha, color));
+            PlacePixelsORM p = new PlacePixelsORM();
+            p.setKey(new PlacePixelsORM.PlacePixelsKey(id, idx++));
+            p.setXCoordinate(x);
+            p.setYCoordinate(y);
+            p.setImageColor(color);
+            p.setAlpha(alpha);
+            pixels.add(p);
         }
         scanner.close();
 
         placeProjectsDAO.queueProject(ctx.getAuthor().getId(), id);
         PlacePixelsDAO placePixelsDAO = new PlacePixelsDAO();
-        placePixelsDAO.queuePixels(id, pixels);
+        placePixelsDAO.queuePixels(pixels);
 
         EmbedBuilder embed = EmbedHelper.embedBuilder("Queue");
         embed.setDescription("Your file got ID " + id);

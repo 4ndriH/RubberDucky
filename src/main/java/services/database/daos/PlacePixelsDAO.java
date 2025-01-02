@@ -15,29 +15,29 @@ import java.util.List;
 public class PlacePixelsDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlacePixelsDAO.class);
 
-    public void queuePixels(int projectId, ArrayList<Pixel> pixels) {
+    public void queuePixels(ArrayList<PlacePixelsORM> pixels) {
+        LOGGER.info("Queueing pixels");
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
 
         session.setJdbcBatchSize(32_000);
+        int count = 0;
 
         try {
             transaction = session.beginTransaction();
-            int idx = 1;
 
-            for (Pixel pixel : pixels) {
-                PlacePixelsORM p = new PlacePixelsORM();
-                p.setKey(new PlacePixelsORM.PlacePixelsKey(projectId, idx++));
-                p.setXCoordinate(pixel.getX());
-                p.setYCoordinate(pixel.getY());
-                p.setImageColor(pixel.getImageColor());
-                p.setAlpha(pixel.getAlpha());
-                session.persist(p);
+            for (PlacePixelsORM pixel : pixels) {
+                session.persist(pixel);
+
+                if (++count % 32_000 == 0) {
+                    LOGGER.info("Queued {} pixels", count);
+                }
             }
 
             session.flush();
-            session.setJdbcBatchSize(10);
             transaction.commit();
+            session.clear();
+            session.setJdbcBatchSize(10);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

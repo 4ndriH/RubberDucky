@@ -21,7 +21,7 @@ public class HibernateUtil {
                 LOGGER.warn("Environment variables not set, using default values");
                 dbUrl = "jdbc:postgresql://localhost:5432/RubberDucky";
                 dbUser = "rd_bot";
-                dbPass = "password1234";
+                dbPass = "vqg6ZEU.fjf9gmd.tnu";
             }
 
             sessionFactory = new Configuration().configure("hibernate.cfg.xml")
