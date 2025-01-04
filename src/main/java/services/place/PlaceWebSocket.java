@@ -32,6 +32,7 @@ public class PlaceWebSocket {
                     ws = HttpClient
                             .newHttpClient()
                             .newWebSocketBuilder()
+                            .connectTimeout(java.time.Duration.ofSeconds(5))
                             .buildAsync(URI.create("wss://ws.battlerush.dev/"), wsc)
                             .join();
                 } catch (CompletionException ce) {
