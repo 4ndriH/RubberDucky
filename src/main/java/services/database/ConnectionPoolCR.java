@@ -14,7 +14,7 @@ public class ConnectionPoolCR {
     private static final HikariDataSource dataSource;
 
     static {
-        config.setJdbcUrl( "jdbc:sqlite:/bot_data/CourseReview.db" );
+        config.setJdbcUrl( "jdbc:sqlite:/app/bot_data/CourseReview.db" );
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );

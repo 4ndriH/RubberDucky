@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerCourseReviewVerify;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,6 +27,14 @@ public class CourseReviewVerify implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        File directory = new File("/app/bot_data");
+        File[] files = directory.listFiles();
+
+        for (File file : files) {
+            System.out.println(file.getName());
+        }
+
+
         if (alreadyVerifying.compareAndSet(false, true)) {
             reviews = DBHandlerCourseReviewVerify.getUnverifiedReviews();
             CourseReviewVerify.ctx = ctx;
