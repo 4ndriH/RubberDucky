@@ -27,14 +27,6 @@ public class CourseReviewVerify implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
-        File directory = new File("/app/bot_data");
-        File[] files = directory.listFiles();
-
-        for (File file : files) {
-            System.out.println(file.getName());
-        }
-
-
         if (alreadyVerifying.compareAndSet(false, true)) {
             reviews = DBHandlerCourseReviewVerify.getUnverifiedReviews();
             CourseReviewVerify.ctx = ctx;
