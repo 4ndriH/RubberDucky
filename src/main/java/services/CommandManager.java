@@ -6,6 +6,7 @@ import commandhandling.CommandInterface;
 import commandhandling.commands.admin.LockDown;
 import commandhandling.commands.admin.Nuke;
 import commandhandling.commands.admin.Watch;
+import commandhandling.commands.coursereview.CourseReviewVerify;
 import commandhandling.commands.mod.BlackList;
 import commandhandling.commands.mod.Channel;
 import commandhandling.commands.owner.*;
@@ -79,6 +80,9 @@ public class CommandManager {
         addCommand(new PlaceVerify());
         addCommand(new PlaceView());
         addCommand(new PlaceViewQueue());
+
+        // course review
+        addCommand(new CourseReviewVerify());
 
         LOGGER.info(commands.size() + " commands loaded");
     }
