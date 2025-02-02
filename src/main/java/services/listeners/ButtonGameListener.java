@@ -51,7 +51,7 @@ public class ButtonGameListener extends ListenerAdapter {
                 String score = messageContent.replace("155419933998579713", "").replaceAll("\\D", "");
                 LOGGER.debug("Button Score Updated. New Score: " + score);
                 myCurrentScore = Integer.parseInt(score);
-                Config.updateConfig("ButtonScore", score);
+                Config.updateConfig("buttonScore", score);
             }
 
             if (messageContent.contains("has claimed")) {
