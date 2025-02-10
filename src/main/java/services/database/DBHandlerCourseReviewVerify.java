@@ -49,4 +49,8 @@ public class DBHandlerCourseReviewVerify {
             LOGGER.error("SQL Exception", sqlE);
         }
     }
+
+    public static boolean unverifiedReviewsExist() {
+        return !getUnverifiedReviews().isEmpty();
+    }
 }
