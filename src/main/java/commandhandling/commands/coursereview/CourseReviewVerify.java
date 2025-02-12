@@ -4,15 +4,20 @@ import assets.objects.Review;
 import commandhandling.CommandContext;
 import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerCourseReviewVerify;
+import services.listeners.ButtonGameListener;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static services.database.DBHandlerCourse.getCourseName;
@@ -63,6 +68,19 @@ public class CourseReviewVerify implements CommandInterface {
                     Button.success("cfvAccept - " + review.key + " - " + ctx.getAuthor().getId(), "Accept")
             ).queue();
         } else {
+            Message msg = null;
+
+            for (Message message : ctx.getChannel().getIterableHistory()) {
+                if (message.getId() == ButtonGameListener.notificationMessageID) {
+                    msg = message;
+                    break;
+                }
+            }
+
+            if (msg != null) {
+                msg.addReaction(Emoji.fromFormatted("<a:CheckMark:919320274900500510>")).queue();
+            }
+
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
             sendMessage(ctx, mca, 32);
             alreadyVerifying.set(false);

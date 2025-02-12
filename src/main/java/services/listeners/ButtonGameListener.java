@@ -1,8 +1,9 @@
 package services.listeners;
 
 import assets.Config;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import services.discordhelpers.EmbedHelper;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.List;
 
 import static services.database.DBHandlerCourseReviewVerify.unverifiedReviewsExist;
 
@@ -25,6 +28,27 @@ public class ButtonGameListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         if (!event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
             event.getJDA().removeEventListener(this);
+        }
+
+        TextChannel channel = Objects.requireNonNull(event.getJDA().getGuildById("817850050013036605")).getTextChannelById("988081117015973918");
+
+        if (channel == null) {
+            LOGGER.error("Could not find the channel for unverified reviews.");
+            return;
+        }
+
+        for (Message message : channel.getIterableHistory()) {
+            List<MessageEmbed> embeds = message.getEmbeds();
+
+            if (embeds.isEmpty()) {
+                continue;
+            }
+
+            if (Objects.requireNonNull(message.getEmbeds().getFirst().getTitle()).contains("Unverified Reviews Exist")) {
+                notificationMessageID = message.getId();
+                LOGGER.info("Found the notification message for unverified reviews.\nMessage ID: {}", notificationMessageID);
+                break;
+            }
         }
     }
 
@@ -64,30 +88,30 @@ public class ButtonGameListener extends ListenerAdapter {
             }
 
             if (messageContent.contains("has claimed")) {
-                //event.getJDA().openPrivateChannelById("155419933998579713").complete().sendMessage(
-                //        "The button will be claimable on <t:" + (System.currentTimeMillis() / 1000 + 60L * myCurrentScore) + ":f>"
-                //).queue();
-
                 nextNotification = 0;
             }
         }
     }
 
-    private LocalDate lastcheckedDate = null;
+    private LocalDate lastCheckedDate = null;
+    public static String notificationMessageID = null;
 
     private void dailyCheckForUnreviewedReviews(MessageUpdateEvent event) {
         LocalDate currentDate = LocalDate.now();
 
-        if (lastcheckedDate == null || !lastcheckedDate.equals(currentDate)) {
-            lastcheckedDate = currentDate;
+        if (lastCheckedDate == null || !lastCheckedDate.equals(currentDate)) {
+            lastCheckedDate = currentDate;
 
             if (unverifiedReviewsExist()) {
-                event.getJDA().getGuildById("817850050013036605").getTextChannelById("988081117015973918").sendMessageEmbeds(
+                Message message = Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById("817850050013036605")).getTextChannelById("988081117015973918")).sendMessageEmbeds(
                         EmbedHelper.embedBuilder("Unverified Reviews Exist")
                                 .setDescription("Go verify them!")
                                 .setFooter("Yes, I do it now. Also dont worry about how I do it. I am a bot. I am smart.")
                                 .build()
-                ).queue();
+                ).complete();
+
+                notificationMessageID = message.getId();
+                LOGGER.info("Notification message for unverified reviews sent.\nMessage ID: {}", notificationMessageID);
             }
         }
     }
