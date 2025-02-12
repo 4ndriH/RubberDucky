@@ -87,6 +87,7 @@ public class CourseReviewVerify implements CommandInterface {
             } else {
                 LOGGER.error("msg not found");
             }
+        }
     }
 
     @Override
