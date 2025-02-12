@@ -44,7 +44,7 @@ public class ButtonGameListener extends ListenerAdapter {
                 continue;
             }
 
-            if (Objects.requireNonNull(message.getEmbeds().getFirst().getTitle()).contains("Unverified Reviews Exist")) {
+            if (Objects.requireNonNull(embeds.getFirst().getTitle()).contains("Unverified")) {
                 notificationMessageID = message.getId();
                 LOGGER.info("Found the notification message for unverified reviews.\nMessage ID: {}", notificationMessageID);
                 break;
