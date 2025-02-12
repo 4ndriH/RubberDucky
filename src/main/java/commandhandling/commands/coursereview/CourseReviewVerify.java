@@ -69,6 +69,9 @@ public class CourseReviewVerify implements CommandInterface {
             ).queue();
         } else {
             Message msg = null;
+            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
+            sendMessage(ctx, mca, 32);
+            alreadyVerifying.set(false);
 
             for (Message message : ctx.getChannel().getIterableHistory()) {
                 if (message.getId() == ButtonGameListener.notificationMessageID) {
@@ -78,13 +81,12 @@ public class CourseReviewVerify implements CommandInterface {
             }
 
             if (msg != null) {
+                LOGGER.info("msg found, adding reaction");
                 msg.addReaction(Emoji.fromFormatted("<a:CheckMark:919320274900500510>")).queue();
+                LOGGER.info("reaction added");
+            } else {
+                LOGGER.error("msg not found");
             }
-
-            MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
-            sendMessage(ctx, mca, 32);
-            alreadyVerifying.set(false);
-        }
     }
 
     @Override
