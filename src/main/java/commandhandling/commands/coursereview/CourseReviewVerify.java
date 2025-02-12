@@ -74,7 +74,7 @@ public class CourseReviewVerify implements CommandInterface {
             alreadyVerifying.set(false);
 
             for (Message message : ctx.getChannel().getIterableHistory()) {
-                if (message.getId() == ButtonGameListener.notificationMessageID) {
+                if (message.getId().equals(ButtonGameListener.notificationMessageID)) {
                     msg = message;
                     break;
                 }
