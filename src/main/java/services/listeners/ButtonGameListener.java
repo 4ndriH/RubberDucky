@@ -30,26 +30,26 @@ public class ButtonGameListener extends ListenerAdapter {
             event.getJDA().removeEventListener(this);
         }
 
-        // TextChannel channel = Objects.requireNonNull(event.getJDA().getGuildById("817850050013036605")).getTextChannelById("988081117015973918");
+        TextChannel channel = Objects.requireNonNull(event.getJDA().getGuildById("817850050013036605")).getTextChannelById("988081117015973918");
 
-        // if (channel == null) {
-            // LOGGER.error("Could not find the channel for unverified reviews.");
-            // return;
-        // }
+        if (channel == null) {
+            LOGGER.error("Could not find the channel for unverified reviews.");
+            return;
+        }
 
-        // for (Message message : channel.getIterableHistory()) {
-            // List<MessageEmbed> embeds = message.getEmbeds();
+        for (Message message : channel.getIterableHistory()) {
+            List<MessageEmbed> embeds = message.getEmbeds();
 
-            // if (embeds.isEmpty()) {
-                // continue;
-            // }
+            if (embeds.isEmpty()) {
+                continue;
+            }
 
-            // if (Objects.requireNonNull(message.getEmbeds().getFirst().getTitle()).contains("Unverified Reviews Exist")) {
-                // notificationMessageID = message.getId();
-                // LOGGER.info("Found the notification message for unverified reviews.\nMessage ID: {}", notificationMessageID);
-                // break;
-            // }
-        // }
+            if (Objects.requireNonNull(message.getEmbeds().getFirst().getTitle()).contains("Unverified Reviews Exist")) {
+                notificationMessageID = message.getId();
+                LOGGER.info("Found the notification message for unverified reviews.\nMessage ID: {}", notificationMessageID);
+                break;
+            }
+        }
     }
 
     @Override
