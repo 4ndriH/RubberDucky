@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DBHandlerCourseReviewVerify;
@@ -58,7 +59,15 @@ public class CourseReviewVerify implements CommandInterface {
         if (!reviews.isEmpty()) {
             Review review  = reviews.entrySet().iterator().next().getValue();
             EmbedBuilder embed = embedBuilder(getCourseName(review.courseNumber));
-            embed.setDescription(review.review);
+
+            if (review.review.length() > 4090) {
+                embed.setDescription(review.review.substring(0, 4090) + "...");
+
+                MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(review.review.getBytes(), "review.txt"));
+                sendMessage(ctx, mca, 1028);
+            } else {
+                embed.setDescription(review.review);
+            }
 
             embed.setFooter(review.uniqueUserId);
 
