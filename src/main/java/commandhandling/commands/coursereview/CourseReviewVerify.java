@@ -62,9 +62,6 @@ public class CourseReviewVerify implements CommandInterface {
 
             if (review.review.length() > 4090) {
                 embed.setDescription(review.review.substring(0, 4090) + "...");
-
-                MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(review.review.getBytes(), "review.txt"));
-                sendMessage(ctx, mca, 1028);
             } else {
                 embed.setDescription(review.review);
             }
@@ -76,6 +73,11 @@ public class CourseReviewVerify implements CommandInterface {
                     Button.primary("cfvQuit - " + review.key + " - " + ctx.getAuthor().getId(), "Quit"),
                     Button.success("cfvAccept - " + review.key + " - " + ctx.getAuthor().getId(), "Accept")
             ).queue();
+
+            if (review.review.length() > 4090) {
+                MessageCreateAction mca = ctx.getChannel().sendFiles(FileUpload.fromData(review.review.getBytes(), "review.txt"));
+                sendMessage(ctx, mca, 1028);
+            }
         } else {
             Message msg = null;
             MessageCreateAction mca = ctx.getChannel().sendMessageEmbeds(embedBuilder("Nothing to review").build());
