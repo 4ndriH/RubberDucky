@@ -35,6 +35,8 @@ public class ButtonGameListener extends ListenerAdapter {
         if (channel == null) {
             LOGGER.error("Could not find the channel for unverified reviews.");
             return;
+        } else if (event.getJDA().getSelfUser().getId().equals("865483954075992086")) {
+            return;
         }
 
         for (Message message : channel.getIterableHistory()) {
