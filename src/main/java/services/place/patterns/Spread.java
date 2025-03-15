@@ -34,8 +34,8 @@ public class Spread extends PatternBase {
                 startY = random.nextInt(image.getHeight());
             } while (contained && new Color(image.getRGB(startX, startY), true).getAlpha() <= 10);
 
-            pixelProcessQueue.add(new int[]{startX + xOffset, startY + yOffset});
-            pM[startX + xOffset][startY + yOffset] = true;
+            pixelProcessQueue.add(new int[]{startX, startY});
+            pM[startX][startY] = true;
         }
 
         int idx;

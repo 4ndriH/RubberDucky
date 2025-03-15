@@ -35,6 +35,11 @@ public class PlaceDraw implements CommandInterface {
 
     @Override
     public void handle(CommandContext ctx) {
+        if (Config.PLACE_PROJECT_ID == -69) {
+            LOGGER.warn("PlaceInfinite is running, cannot start PlaceDraw");
+            return;
+        }
+
         if (!PlaceData.drawing) {
             PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
             int id = placeProjectsDAO.getNextProject();

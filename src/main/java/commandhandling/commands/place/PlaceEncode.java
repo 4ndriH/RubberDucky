@@ -118,7 +118,7 @@ public class PlaceEncode implements CommandInterface {
         }
     }
 
-    private BufferedImage resize(BufferedImage img, int newW, int newH) {
+    protected static BufferedImage resize(BufferedImage img, int newW, int newH) {
         BufferedImage newImage = new BufferedImage(newW, newH, img.getType());
         int w = img.getWidth(), h = img.getHeight();
         Graphics2D g = newImage.createGraphics();

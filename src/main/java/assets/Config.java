@@ -27,6 +27,7 @@ public class Config {
 
         try {
             configDao.updateConfig(key, value);
+            setClassVariables(key, value);
         } catch (Exception ignored) {
             LOGGER.error("Failed to update config: {{} : {}}", key, value);
             return;
