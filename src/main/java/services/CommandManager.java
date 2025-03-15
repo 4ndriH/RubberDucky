@@ -80,6 +80,7 @@ public class CommandManager {
         addCommand(new PlaceVerify());
         addCommand(new PlaceView());
         addCommand(new PlaceViewQueue());
+        addCommand(new PlaceInfinite());
 
         // course review
         addCommand(new CourseReviewVerify());
