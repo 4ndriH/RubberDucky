@@ -33,12 +33,10 @@ public class PlaceInfinite implements CommandInterface {
         if (Config.PLACE_PROJECT_ID == -1) {
             Config.updateConfig("placeProject", Integer.toString(-69));
             PLACE_INFINITE = true;
-            LOGGER.info("PlaceInfinite started");
             placeInfinite(ctx);
         } else if (Config.PLACE_PROJECT_ID == -69) {
             Config.updateConfig("placeProject", Integer.toString(-1));
             PLACE_INFINITE = false;
-            LOGGER.info("PlaceInfinite stopped");
         } else {
             LOGGER.warn("PlaceDraw is running, cannot start PlaceInfinite");
         }
@@ -57,7 +55,7 @@ public class PlaceInfinite implements CommandInterface {
 
             if (img == null) {
                 PLACE_INFINITE = false;
-                Config.updateConfig("placeProject", Integer.toString(-69));
+                Config.updateConfig("placeProject", Integer.toString(-1));
                 LOGGER.error("PlaceInfinite stopped due to error, image was null");
                 return;
             }
@@ -102,6 +100,8 @@ public class PlaceInfinite implements CommandInterface {
 
         Member m = members.get((int) (Math.random() * members.size()));
         String imageUrl = m.getUser().getAvatarUrl();
+
+        LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 
         try {
             return ImageIO.read(new URL(imageUrl));

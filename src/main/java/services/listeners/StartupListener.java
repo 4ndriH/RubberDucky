@@ -27,7 +27,7 @@ public class StartupListener extends ListenerAdapter {
         if (onStartupTasks) {
             // restart place drawing
             int placeID = Config.PLACE_PROJECT_ID;
-            if (placeID != -1 && event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
+            if (placeID >= 0 && event.getJDA().getSelfUser().getId().equals("817846061347242026")) {
                 PlaceProjectsDAO placeProjectsDAO = new PlaceProjectsDAO();
                 if (placeProjectsDAO.getProjectIds().contains(placeID)) {
                     (new Thread(() -> PlaceDraw.draw(event.getJDA(), placeID))).start();
