@@ -89,7 +89,7 @@ public class PlaceInfinite implements CommandInterface {
                 try {
                     channel.sendMessage(p.getDrawCommand()).complete();
                 } catch (final Exception e) {
-                    LOGGER.warn(e);
+                    LOGGER.warn("place infinite send error", e);
                 }
 
                 if (!PLACE_INFINITE) {
