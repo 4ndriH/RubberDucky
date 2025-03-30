@@ -101,6 +101,10 @@ public class PlaceInfinite implements CommandInterface {
         Member m = members.get((int) (Math.random() * members.size()));
         String imageUrl = m.getUser().getAvatarUrl();
 
+        if (imageUrl == null) {
+            imageUrl = m.getUser().getDefaultAvatarUrl();
+        }
+
         LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 
         try {
