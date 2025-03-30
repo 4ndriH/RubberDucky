@@ -86,7 +86,11 @@ public class PlaceInfinite implements CommandInterface {
             }
 
             for (Pixel p : pixels)     {
-                channel.sendMessage(p.getDrawCommand()).complete();
+                try {
+                    channel.sendMessage(p.getDrawCommand()).complete();
+                } catch (final Exception e) {
+                    LOGGER.warn(e);
+                }
 
                 if (!PLACE_INFINITE) {
                     return;
