@@ -67,7 +67,7 @@ public class PlaceInfinite implements CommandInterface {
             final String pattern = patterns.get(random.nextInt(patterns.size()));
             final boolean reverse = random.nextBoolean();
 
-//            img = PlaceEncode.resize(img, width, height);
+            img = PlaceEncode.resize(img, 128, 128);
 
             List<Pixel> pixels;
 
