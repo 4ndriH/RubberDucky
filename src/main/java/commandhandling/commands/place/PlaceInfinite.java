@@ -7,6 +7,7 @@ import commandhandling.CommandInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class PlaceInfinite implements CommandInterface {
     private static final String PLACE_CHANNEL_ID = "819966095070330950";
 
     private static boolean PLACE_INFINITE = false;
+    private final static Random RANDOM = new Random();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -49,8 +51,6 @@ public class PlaceInfinite implements CommandInterface {
         assert channel != null;
 
         while (PLACE_INFINITE) {
-            final Random random = new Random();
-
             BufferedImage img = getRandomProfilePicture(ctx.getJDA());
 
             if (img == null) {
@@ -60,14 +60,16 @@ public class PlaceInfinite implements CommandInterface {
                 return;
             }
 
-            final int x = random.nextInt(1000);
-            final int y = random.nextInt(1000);
-//            final int width = random.nextInt(img.getWidth());
-//            final int height = random.nextInt(img.getHeight());
-            final String pattern = patterns.get(random.nextInt(patterns.size()));
-            final boolean reverse = random.nextBoolean();
+            final int x = RANDOM.nextInt(1000);
+            final int y = RANDOM.nextInt(1000);
+//            final int width = RANDOM.nextInt(img.getWidth());
+//            final int height = RANDOM.nextInt(img.getHeight());
+            final String pattern = patterns.get(RANDOM.nextInt(patterns.size()));
+            final boolean reverse = RANDOM.nextBoolean();
 
-            img = PlaceEncode.resize(img, 128, 128);
+            if (img.getWidth() > 128 || img.getHeight() > 128) {
+                img = PlaceEncode.resize(img, 128, 128);
+            }
 
             List<Pixel> pixels;
 
@@ -103,11 +105,8 @@ public class PlaceInfinite implements CommandInterface {
         List<Member> members = Objects.requireNonNull(jda.getGuildById(SERVER_ID)).getMembers();
 
         Member m = members.get((int) (Math.random() * members.size()));
-        String imageUrl = m.getUser().getAvatarUrl();
-
-        if (imageUrl == null) {
-            imageUrl = m.getUser().getDefaultAvatarUrl();
-        }
+        User u = m.getUser();
+        String imageUrl = u.getEffectiveAvatarUrl();
 
         LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 

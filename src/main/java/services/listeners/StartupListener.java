@@ -34,6 +34,8 @@ public class StartupListener extends ListenerAdapter {
                 } else {
                     Config.updateConfig("placeProject", "-1");
                 }
+            } else {
+                Config.updateConfig("placeProject", "-1");
             }
 
             Objects.requireNonNull(Objects.requireNonNull(event.getJDA().getGuildById(817850050013036605L)).getTextChannelById(Config.LOG_CHANNEL_ID))
