@@ -105,8 +105,11 @@ public class PlaceInfinite implements CommandInterface {
         List<Member> members = Objects.requireNonNull(jda.getGuildById(SERVER_ID)).getMembers();
 
         Member m = members.get((int) (Math.random() * members.size()));
-        User u = m.getUser();
-        String imageUrl = u.getEffectiveAvatarUrl();
+        String imageUrl = m.getUser().getAvatarUrl();
+
+        if (imageUrl == null) {
+            imageUrl = "https://cdn.discordapp.com/embed/avatars/" + RANDOM.nextInt(6) + ".png";
+        }
 
         LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 
