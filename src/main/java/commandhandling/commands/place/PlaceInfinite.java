@@ -60,8 +60,8 @@ public class PlaceInfinite implements CommandInterface {
                 return;
             }
 
-            final int x = RANDOM.nextInt(1000);
-            final int y = RANDOM.nextInt(1000);
+            final int x = RANDOM.nextInt(1128) - 127;
+            final int y = RANDOM.nextInt(1128) - 127;
 //            final int width = RANDOM.nextInt(img.getWidth());
 //            final int height = RANDOM.nextInt(img.getHeight());
             final String pattern = patterns.get(RANDOM.nextInt(patterns.size()));
