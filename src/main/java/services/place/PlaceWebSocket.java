@@ -21,7 +21,7 @@ public class PlaceWebSocket {
         ByteBuffer buffer;
 
         do {
-            img = blameKarloPng();
+            img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
 
             do {
                 CountDownLatch latch = new CountDownLatch(1);
@@ -38,7 +38,7 @@ public class PlaceWebSocket {
                 } catch (CompletionException ce) {
                     LOGGER.error("Websocket Dead", ce);
                     PlaceData.websocketFailed = true;
-                    return img;
+                    return blameKarloPng();
                 } catch(Exception e) {
                     LOGGER.error("Websocket Problem", e);
                     return img;
