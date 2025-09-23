@@ -8,6 +8,14 @@ RUN gradle build --no-daemon
 
 FROM openjdk:17-jdk-alpine3.14
 
+RUN apk add --no-cache \
+    fontconfig \
+    ttf-dejavu \
+    freetype \
+    libx11 \
+    libxrender \
+    libxext
+
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar RubberDucky.jar
