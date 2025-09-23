@@ -141,6 +141,8 @@ public class PlaceWebSocket {
             int x2 = img.getWidth() / 2 - fm2.stringWidth(line2) / 2;
             g.setFont(f2);
             g.drawString(line2, x2, y2);
+        } catch(Exception e) {
+          LOGGER.error("Error", e);
         } finally {
             g.dispose();
         }
