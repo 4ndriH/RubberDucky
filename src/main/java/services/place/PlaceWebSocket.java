@@ -142,7 +142,7 @@ public class PlaceWebSocket {
             g.setFont(f2);
             g.drawString(line2, x2, y2);
         } catch(Exception e) {
-          LOGGER.error("Error", e);
+          LOGGER.error("Error when blaming garlo", e);
         } finally {
             g.dispose();
         }
