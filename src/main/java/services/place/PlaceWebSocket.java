@@ -21,7 +21,7 @@ public class PlaceWebSocket {
         ByteBuffer buffer;
 
         do {
-            img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+            img = blameKarloPng();
 
             do {
                 CountDownLatch latch = new CountDownLatch(1);
@@ -91,6 +91,59 @@ public class PlaceWebSocket {
                 }
             }
         } while (img == null);
+
+        return img;
+    }
+
+    private static BufferedImage blameKarloPng() {
+        final BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+
+        java.time.LocalDate start = java.time.LocalDate.of(2024, 3, 9);
+        long days = java.time.temporal.ChronoUnit.DAYS.between(start, java.time.LocalDate.now());
+
+        String line1 = "Karlos Websocket is Broken";
+        String line2 = "It has been " + days + " days since it worked";
+
+        Graphics2D g = img.createGraphics();
+        try {
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // semi-transparent background box
+            int boxWidth = 900;
+            int boxHeight = 180;
+            int boxX = (img.getWidth() - boxWidth) / 2;
+            int boxY = (img.getHeight() - boxHeight) / 2;
+            g.setColor(new Color(240, 0, 0, 170));
+            g.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 20, 20);
+
+            // fonts and metrics
+            Font f1 = new Font("SansSerif", Font.BOLD, 48);
+            Font f2 = new Font("SansSerif", Font.PLAIN, 36);
+            g.setFont(f1);
+            FontMetrics fm1 = g.getFontMetrics(f1);
+            FontMetrics fm2 = g.getFontMetrics(f2);
+
+            // compute vertical positions to center both lines
+            int paddingBetween = 10;
+            int totalTextHeight = fm1.getHeight() + fm2.getHeight() + paddingBetween;
+            int startY = img.getHeight() / 2 - totalTextHeight / 2 + fm1.getAscent();
+            int y1 = startY;
+            int y2 = startY + fm1.getHeight() + paddingBetween;
+
+            // draw first line
+            int x1 = img.getWidth() / 2 - fm1.stringWidth(line1) / 2;
+            g.setColor(Color.WHITE);
+            g.setFont(f1);
+            g.drawString(line1, x1, y1);
+
+            // draw second line
+            int x2 = img.getWidth() / 2 - fm2.stringWidth(line2) / 2;
+            g.setFont(f2);
+            g.drawString(line2, x2, y2);
+        } finally {
+            g.dispose();
+        }
 
         return img;
     }
