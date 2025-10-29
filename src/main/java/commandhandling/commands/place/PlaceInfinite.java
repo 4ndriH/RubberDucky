@@ -103,10 +103,11 @@ public class PlaceInfinite implements CommandInterface {
 
     private BufferedImage getRandomProfilePicture(JDA jda) {
         final List<Member> members = Objects.requireNonNull(jda.getGuildById(SERVER_ID)).getMembers();
+        Member m;
         String imageUrl;
 
         do {
-            final Member m = members.get((int) (Math.random() * members.size()));
+            m = members.get((int) (Math.random() * members.size()));
             imageUrl = m.getUser().getAvatarUrl();
         } while (imageUrl == null);
 
