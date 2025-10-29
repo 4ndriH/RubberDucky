@@ -102,14 +102,17 @@ public class PlaceInfinite implements CommandInterface {
     }
 
     private BufferedImage getRandomProfilePicture(JDA jda) {
-        List<Member> members = Objects.requireNonNull(jda.getGuildById(SERVER_ID)).getMembers();
+        final List<Member> members = Objects.requireNonNull(jda.getGuildById(SERVER_ID)).getMembers();
+        String imageUrl;
 
-        Member m = members.get((int) (Math.random() * members.size()));
-        String imageUrl = m.getUser().getAvatarUrl();
+        do {
+            final Member m = members.get((int) (Math.random() * members.size()));
+            imageUrl = m.getUser().getAvatarUrl();
+        } while (imageUrl == null);
 
-        if (imageUrl == null) {
-            imageUrl = "https://cdn.discordapp.com/embed/avatars/" + RANDOM.nextInt(6) + ".png";
-        }
+        // if (imageUrl == null) {
+        //     imageUrl = "https://cdn.discordapp.com/embed/avatars/" + RANDOM.nextInt(6) + ".png";
+        // }
 
         LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 
