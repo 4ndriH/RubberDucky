@@ -116,6 +116,7 @@ public class PlaceInfinite implements CommandInterface {
         // }
 
         // LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
+        // I should really work on this thing again
 
         try {
             return ImageIO.read(new URL(imageUrl));
