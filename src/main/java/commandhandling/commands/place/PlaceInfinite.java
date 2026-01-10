@@ -91,7 +91,7 @@ public class PlaceInfinite implements CommandInterface {
                 try {
                     channel.sendMessage(p.getDrawCommand()).complete();
                 } catch (final Exception e) {
-                    LOGGER.warn("place infinite send error", e);
+                    LOGGER.debug("place infinite send error", e);
                 }
 
                 if (!PLACE_INFINITE) {
@@ -115,7 +115,7 @@ public class PlaceInfinite implements CommandInterface {
         //     imageUrl = "https://cdn.discordapp.com/embed/avatars/" + RANDOM.nextInt(6) + ".png";
         // }
 
-        LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
+        // LOGGER.info("User: {} - {}", m.getUser().getName(), imageUrl);
 
         try {
             return ImageIO.read(new URL(imageUrl));
