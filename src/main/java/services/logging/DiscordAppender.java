@@ -27,6 +27,10 @@ public class DiscordAppender extends AppenderBase<ILoggingEvent> {
         EmbedBuilder embed = new EmbedBuilder();
         String formattedMessage = MessageFormatter.arrayFormat(eventObject.getMessage(), eventObject.getArgumentArray()).getMessage();
 
+        if (formattedMessage.contains("[ErrorResponseException] 503: N/A")) {
+            formattedMessage = "AAAAAAAAAAAAAAAAAAAAAAAAa";
+        }
+
         Color embedColor = switch (eventObject.getLevel().toString()) {
             case "INFO" -> new Color(0x42a2fc);
             case "WARN" -> new Color(0xff9100);
