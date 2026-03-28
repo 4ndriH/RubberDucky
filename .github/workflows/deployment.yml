@@ -7,12 +7,12 @@ on:
       - 'src/**'
       - 'postgres/**'
 
-jobs: 
-  build_alembic:
-    name: Building alembic Docker Image
-#    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
-    uses: ./.github/workflows/build_alembic.yml
-    secrets: inherit
+# jobs: 
+#   build_alembic:
+#     name: Building alembic Docker Image
+# #    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
+#     uses: ./.github/workflows/build_alembic.yml
+#     secrets: inherit
 
   build_bot:
     name: Building Bot Docker Image
@@ -21,7 +21,8 @@ jobs:
 
   deploy:
     name: Deploying the new Docker Images
-    needs: [build_alembic, build_bot]
+    # needs: [build_alembic, build_bot]
+    needs: [build_bot]
 #    if: always()
     uses: ./.github/workflows/notify_watchtower.yml
     secrets: inherit
