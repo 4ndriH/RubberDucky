@@ -51,14 +51,14 @@ public class PlaceInfinite implements CommandInterface {
         assert channel != null;
 
         while (PLACE_INFINITE) {
-            BufferedImage img = getRandomProfilePicture(ctx.getJDA());
-
-            if (img == null) {
-                PLACE_INFINITE = false;
-                Config.updateConfig("placeProject", Integer.toString(-1));
-                LOGGER.error("PlaceInfinite stopped due to error, image was null");
-                return;
-            }
+            // BufferedImage img = getRandomProfilePicture(ctx.getJDA());
+            BufferedImage img = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
+            // if (img == null) {
+            //     PLACE_INFINITE = false;
+            //     Config.updateConfig("placeProject", Integer.toString(-1));
+            //     LOGGER.error("PlaceInfinite stopped due to error, image was null");
+            //     return;
+            // }
 
             final int x = RANDOM.nextInt(1128) - 127;
             final int y = RANDOM.nextInt(1128) - 127;
@@ -67,9 +67,9 @@ public class PlaceInfinite implements CommandInterface {
             final String pattern = patterns.get(RANDOM.nextInt(patterns.size()));
             final boolean reverse = RANDOM.nextBoolean();
 
-            if (img.getWidth() > 128 || img.getHeight() > 128) {
-                img = PlaceEncode.resize(img, 128, 128);
-            }
+            // if (img.getWidth() > 128 || img.getHeight() > 128) {
+            //     img = PlaceEncode.resize(img, 128, 128);
+            // }
 
             List<Pixel> pixels;
 
@@ -88,8 +88,12 @@ public class PlaceInfinite implements CommandInterface {
             }
 
             for (Pixel p : pixels)     {
+                final String hexColor = String.format("#%06x", RANDOM.nextInt(0xFFFFFF + 1));
+                final String drawCommand = ".place setpixel " + p.getX() + " " + p.getY() + " " + hexColor;
+                
                 try {
-                    channel.sendMessage(p.getDrawCommand()).complete();
+                    // channel.sendMessage(p.getDrawCommand()).complete();
+                    channel.sendMessage(drawCommand).complete();
                 } catch (final Exception e) {
                     LOGGER.debug("place infinite send error", e);
                 }
