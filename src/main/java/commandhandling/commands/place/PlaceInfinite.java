@@ -49,7 +49,7 @@ public class PlaceInfinite implements CommandInterface {
         final List<String> patterns = List.of("topdown", "diagonal", "spiral", "random", "circle", "spread", "lefttoright");
 
         assert channel != null;
-        LOGGER.info("starting infinite placea");
+        // LOGGER.info("starting infinite placea");
 
         while (PLACE_INFINITE) {
             BufferedImage img = getRandomProfilePicture(ctx.getJDA());
@@ -68,7 +68,7 @@ public class PlaceInfinite implements CommandInterface {
             final String pattern = patterns.get(RANDOM.nextInt(patterns.size()));
             final boolean reverse = RANDOM.nextBoolean();
 
-            LOGGER.info("image and coordinates generated");
+            // LOGGER.info("image and coordinates generated");
 
             // if (img.getWidth() > 128 || img.getHeight() > 128) {
             //     img = PlaceEncode.resize(img, 128, 128);
@@ -89,7 +89,7 @@ public class PlaceInfinite implements CommandInterface {
             if (reverse) {
                 Collections.reverse(pixels);
             }
-            LOGGER.info("pattern set");
+            // LOGGER.info("pattern set");
 
             for (Pixel p : pixels)     {
                 final String hexColor = String.format("#%06x", RANDOM.nextInt(0xFFFFFF + 1));

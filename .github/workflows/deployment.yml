@@ -7,7 +7,7 @@ on:
       - 'src/**'
       - 'postgres/**'
 
-# jobs: 
+jobs:
 #   build_alembic:
 #     name: Building alembic Docker Image
 # #    if: ${{ contains(github.event.head_commit.message, 'postgres/') || github.event_name == 'workflow_dispatch' }}
