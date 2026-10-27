@@ -92,7 +92,7 @@ public class PlaceInfinite implements CommandInterface {
             // LOGGER.info("pattern set");
 
             for (Pixel p : pixels)     {
-                final String hexColor = String.format("#%06x", RANDOM.nextInt(0xFFFFFF + 1));
+                final String hexColor = "#62184c";//String.format("#%06x", RANDOM.nextInt(0xFFFFFF + 1));
                 final String drawCommand = ".place setpixel " + p.getX() + " " + p.getY() + " " + hexColor;
                 
                 try {
