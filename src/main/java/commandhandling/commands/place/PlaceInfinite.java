@@ -72,6 +72,7 @@ public class PlaceInfinite implements CommandInterface {
 
             // if (img.getWidth() > 128 || img.getHeight() > 128) {
             //     img = PlaceEncode.resize(img, 128, 128);
+// update
             // }
 
             List<Pixel> pixels;
