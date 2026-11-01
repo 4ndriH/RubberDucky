@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("application")
-    id("org.hibernate.orm") version "7.3.0.Final"
+    id("org.hibernate.orm") version "7.4.14.Final"
 }
 
 repositories {
@@ -27,30 +27,30 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-beta.2") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("ch.qos.logback:logback-classic:1.5.32") {
+    implementation("org.slf4j:slf4j-api:2.0.20")
+    implementation("ch.qos.logback:logback-classic:1.6.6") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
     implementation("org.codehaus.janino:janino:3.1.12")
-    implementation("org.xerial:sqlite-jdbc:3.51.3.0") {
+    implementation("org.xerial:sqlite-jdbc:3.54.1.0") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    implementation("com.squareup.okhttp3:okhttp:5.3.2")
+    implementation("com.squareup.okhttp3:okhttp:5.5.1")
     implementation("org.apache.commons:commons-text:1.15.0")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.21")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
 
-    implementation("org.postgresql:postgresql:42.7.10")
+    implementation("org.postgresql:postgresql:42.7.14")
 
-    implementation("org.hibernate:hibernate-core:7.3.0.Final")
+    implementation("org.hibernate:hibernate-core:7.4.14.Final")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
-    implementation("org.hibernate.validator:hibernate-validator:9.1.0.Final")
-    implementation("org.hibernate:hibernate-hikaricp:7.3.0.Final")
+    implementation("org.hibernate.validator:hibernate-validator:9.1.5.Final")
+    implementation("org.hibernate:hibernate-hikaricp:7.4.14.Final")
 
-    implementation("com.zaxxer:HikariCP:7.0.2") {
+    implementation("com.zaxxer:HikariCP:7.1.0") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
 
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.21")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.22")
 }
 
 group = "org.RubberDucky"
